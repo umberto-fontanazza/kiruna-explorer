@@ -1,0 +1,39 @@
+// src/styles/NavHeader.scss
+
+//@use "./variables" as *; // Importiamo le variabili globali
+
+.nav-header {
+  padding: 1rem 2rem;
+  display: flex;
+  background-color: #4ec3ac;
+
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .nav-brand {
+    color: black;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .btn-logout {
+    background-color: transparent;
+    border: 2px solid black;
+    color: black;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+
+    &:hover {
+      background: #456784;
+    }
+  }
+}

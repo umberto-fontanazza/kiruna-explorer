@@ -1,0 +1,152 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-size: 1.5vmin; 
+}
+
+.form {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  background-color: #f7f7f7;
+  max-height: fit-content;
+
+  .login-container {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .left-panel {
+    width: 56vw; 
+    height: 100vh;
+    background-color: #4ec3ac;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+    overflow: hidden;
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    
+    h1 {
+      font-size: 5vmin; 
+      padding: 5vmin;
+      margin-top: 5vmin;
+    }
+
+    p {
+      font-size: 2.3vmin;
+      padding: 5vmin;
+      margin-top: 5vmin;
+    }
+
+    img {
+      object-fit: cover;
+      transform: scale(1.2);
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .right-panel {
+    width: 44vw; 
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 3vmin;
+
+    h2 {
+      font-size: 5vmin;
+      margin-bottom: 5vmin;
+    }
+
+    form {
+      width: 100%;
+      max-width: 60%;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 2vmin;
+    }
+
+    label {
+      font-size: 2vmin;
+      margin-bottom: 1vmin;
+      color: black;
+      font-weight: bold;
+    }
+
+    .input-username {
+      padding: 1.5vmin;
+      font-size: 1.8vmin;
+      margin-bottom: 2vmin;
+      border: 0.2vmin solid #ddd;
+      border-radius: 1vmin;
+    }
+
+    .input-password{
+      padding: 1.5vmin;
+      font-size: 1.8vmin;
+      border: 0.2vmin solid #ddd;
+      border-radius: 1vmin;
+    }
+
+    input:focus {
+      border-color: #4ec3ac;
+      outline: none;
+    }
+
+    .forgot-password {
+      text-align: right;
+      margin-bottom: 5vmin;
+
+      a {
+        font-size: 1.5vmin;
+        color: #4ec3ac;
+        text-decoration: none;
+      }
+
+      :hover {
+        color: #43a694;
+      }
+    }
+
+    button {
+
+      width: 100%;
+      padding: 1.5vmin;
+      background-color: #4ec3ac;
+      font-size: 2vmin;
+      color: white;
+      border-radius: 1vmin;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #43a694;
+    }
+
+    .signup {
+      margin-top: 2vmin;
+      font-size: 1.5vmin;
+
+      a {
+        color: #4ec3ac;
+        text-decoration: none;
+
+        &:hover{
+          color: #43a694;
+        }
+      }
+    }
+  }
+}
