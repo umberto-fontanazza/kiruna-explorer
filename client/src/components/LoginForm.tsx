@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
-import { Form, Button, Card, Container, Row, Col } from "react-bootstrap";
 import { Credentials } from "../utils/interfaces";
-import "../styles/LoginForm.css";
+import "../styles/LoginForm.scss";
 
 interface LoginFormProps {
   login: (credentials: Credentials) => void;
@@ -17,67 +16,60 @@ const LoginForm: FC<LoginFormProps> = (props): JSX.Element => {
     props.login(credentials);
   };
 
-  const handleCancel = (event: { preventDefault: () => void }) => {
-    event.preventDefault();
-    setUsername("");
-    setPassword("");
-  };
-
   return (
-    <Container
-      fluid
-      className="vh-100 d-flex justify-content-center align-items-center"
-    >
-      <Row className="justify-content-center custom-row" xl={10}>
-        <Col>
-          <Card className="p-4 bg-dark text-white shadow-lg">
-            <Card.Body>
-              <Card.Title className="text-center mb-4">Login</Card.Title>
-              <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="username" className="mb-3">
-                  <Form.Label>Username</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={username}
-                    onChange={(ev) => setUsername(ev.target.value)}
-                    required={true}
-                    className="bg-secondary text-white"
-                  />
-                </Form.Group>
+    <div className="form">
+      <div className="login-container">
+        <div className="left-panel">
+          <h1>Kiruna eXplorer.</h1>
+          <p>
+            Welcome in the Kiruna eXplorer, <br />
+            I don't know what to write here, <br />
+            But I think we will show you <br />
+            the story of Kiruna in Sweden, <br />
+            Enjoy !
+          </p>
+          <img src="/public/kiruna-bg-1920-Photoroom.png" alt="Tourist destination"></img>
+        </div>
+        
+        <div className="right-panel">
+          <h2>Welcome Back!</h2>
+          <form onSubmit={handleSubmit}>
+              <label htmlFor="username">Username</label>
+              <input
+                type="email"
+                id="username"
+                name="username"
+                placeholder="example@gmail.com"
+                value={username}
+                onChange={ev => setUsername(ev.target.value)}
+                required
+                className="input-username"
+              />
 
-                <Form.Group controlId="password" className="mb-3">
-                  <Form.Label>Password</Form.Label>
-                  <Form.Control
-                    type="password"
-                    value={password}
-                    onChange={(ev) => setPassword(ev.target.value)}
-                    required={true}
-                    className="bg-secondary text-white"
-                  />
-                </Form.Group>
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={ev => setPassword(ev.target.value)}
+                required
+                className="input-password"
+              />
 
-                <Row>
-                  <Col>
-                    <Button type="submit" className="w-100 mt-2">
-                      {" "}
-                      Login
-                    </Button>
-                  </Col>
-                  <Col>
-                    <Button
-                      className="btn btn-danger w-100 mt-2"
-                      onClick={handleCancel}
-                    >
-                      Cancel
-                    </Button>
-                  </Col>
-                </Row>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+            <div className="forgot-password">
+              <a href="/forgot-password">Forgot password?</a>
+            </div>
+            <button type="submit">Login</button>
+          </form>
+
+          <div className="signup">
+            Doesn’t have an account? <a href="/signup">Sign up for free</a>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

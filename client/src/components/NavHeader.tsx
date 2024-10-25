@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Navbar, Container, Button } from "react-bootstrap";
+import "../styles/NavHeader.scss"; // Importiamo il file SCSS personalizzato
 
 interface NavHeaderProps {
   logout: () => void;
@@ -7,19 +7,14 @@ interface NavHeaderProps {
 
 const NavHeader: FC<NavHeaderProps> = (props): JSX.Element => {
   return (
-    <Navbar expand="lg" bg="dark" data-bs-theme="dark">
-      <Container>
-        <Navbar.Brand>Next Project</Navbar.Brand>
-      </Container>
-      <Button
-        variant="outline-light"
-        onClick={() => {
-          props.logout();
-        }}
-      >
-        Logout
-      </Button>
-    </Navbar>
+    <nav className="nav-header">
+      <div className="nav-container">
+        <div className="nav-brand">Next Project</div>
+        <button className="btn-logout" onClick={props.logout}>
+          Logout
+        </button>
+      </div>
+    </nav>
   );
 };
 

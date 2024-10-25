@@ -4,6 +4,7 @@ import LoginForm from "./components/LoginForm";
 import NavHeader from "./components/NavHeader";
 import NotFound from "./components/NotFound";
 import API from "./API/API";
+import "./styles/global.scss"
 
 function App() {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -33,7 +34,6 @@ function App() {
         path="/"
         element={
           <>
-            <NavHeader logout={handleLogout} />
             <Outlet />
           </>
         }
