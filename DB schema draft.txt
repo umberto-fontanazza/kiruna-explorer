@@ -1,0 +1,30 @@
+I need the PostGIS postgre extension to handle spatial data.
+
+type USER_ROLE = enum { PLANNER, RESIDENT, DEVELOPER }
+type LINK_TYPE = enum { DIRECT, COLLATERAL, PROJECTION, UPDATE}
+type LINK {
+    otherDocumentId: document_id (fk),
+    types: LYNK_TYPE[] // more than 1 link per document pair possible
+}
+
+DOCUMENT {
+    id: serial,
+    title: varchar(128),
+    description: text,
+    position: geography(POINT),
+    links: link[]
+    attachments: int[] (foreign key in ATTACHMENT)
+}
+
+ATTACHMENT {
+    id: serial,
+    url: text
+}
+
+USER {
+    name: varchar(64),
+    surname: varchar(64),
+    salt: bytea,
+    password_hash: bytea,
+    role: USER_ROLE
+}
