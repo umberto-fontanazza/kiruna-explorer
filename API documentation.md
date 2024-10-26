@@ -202,10 +202,11 @@ This API uses the following error codes:
 # Collection `links`
 
 A collection of links representing relationships between documents, serving as a sub-collection within the `documents` collection.
+Each pair of documents (nodes) is associated with at most one link. One link may be characterized by more than one association type.
 
 ## GET `/documents/{id}/links`
 
-Retrieve all links associated with a specific document.
+Retrieve all links associated with a specific document. If the document has no links an empty array is returned in the JSON body.
 
 ### Response body
 
@@ -213,72 +214,65 @@ Retrieve all links associated with a specific document.
 [
     {
         "targetNodeId": 2,
-        "linkType": "DIRECT"
+        "linkTypes": ["DIRECT"]
     },
-    ...
+    {
+        "targetNodeId": 4,
+        "linkTypes": ["PROJECTION", "COLLATERAL"]
+    }
 ]
 ```
+
+### Success status
+
+- `200 Ok`
 
 ### Errors
 
 This API uses the following error codes:
 
-- `401 Unauthorized`: You are unauthorized.
+- `401 Unauthorized`
 - `404 Not Found`: The requested document was not found.
-- `500 Internal Server Error`: An unexpected error occurred on the server.
+- `500 Internal Server Error`
 
 ## PUT `/documents/{id}/links`
 
-Create or update a link associated with a specific document.
+Create or update a link associated with a specific document. If a link existed the list of types is replaced.
 
 ### Request body
 
 ```json
 {
     "targetNodeId": 2,
-    "linkType": "DIRECT"
+    "linkTypes": ["DIRECT", "UPDATE"]
 }
 ```
 
-### Response body
+### Success status
 
-In case of link creation:
-```json
-{
-    "message": "Link created successfully"
-}
-```
-
-In case of link update:
-```json
-{
-    "message": "Link update successfully"
-}
-```
+- `201 Created`: The link has been created or replaced.
 
 ### Errors
 
 This API uses the following error codes:
 
 - `400 Bad Request`: The request was malformed or missing required parameters.
-- `401 Unauthorized`: You are unauthorized.
+- `401 Unauthorized`
 - `404 Not Found`: The requested document was not found.
-- `500 Internal Server Error`: An unexpected error occurred on the server.
+- `500 Internal Server Error`
 
 ## DELETE `/documents/{id}/links`
 
-Delete a link associated with a specific document.
+Deletes the link between the document with id = `{id}` and `targetNodeId` specified by the query parameter.
+If you want to remove just one of the `linkTypes` replace the link with `PUT /documents/{id}/links`
 
 ### Query parameters
 
-TODO: if we want to remove query parameters from this DELETE then we have uniquely identify a link
+ - `targetNodeId`: id of the document at the other end of the link.
 
- - `targetNodeId` (required): the document connected to the link;
- - `linkType` (required): link type.
+### Success status
 
-### Response body
-
-No response body. If the request is successfull, it returns `204 No Content`.
+- `204 No Content`: deletion successful.
 
 ### Errors
 
