@@ -112,7 +112,6 @@ Create a new document.
 
 ```json
 {
-    "id": 1,
     "title": "",
     "description": "",
     "coordinates": {
@@ -148,7 +147,6 @@ Update an existing document by its unique identifier.
 
 ```json
 {
-    "id": 1,
     "title": "",
     "description": "",
     "coordinates": {
@@ -163,7 +161,14 @@ Update an existing document by its unique identifier.
 
 ```json
 {
-    "message": "Document updated successfully"
+    "id": 1,
+    "title": "",
+    "description": "",
+    "coordinates": {
+        "latitude": "",
+        "longitude": ""
+    },
+    //other properties
 }
 ```
 
@@ -182,11 +187,7 @@ Delete an existing document by its unique identifier and all its links.
 
 ### Response body
 
-```json
-{
-    "message": "Document deleted successfully"
-}
-```
+No response body. If the request is successfull, it returns `204 No Content`.
 
 ### Errors
 
@@ -277,11 +278,7 @@ TODO: if we want to remove query parameters from this DELETE then we have unique
 
 ### Response body
 
-```json
-{
-    "message": "Link deleted successfully"
-}
-```
+No response body. If the request is successfull, it returns `204 No Content`.
 
 ### Errors
 
@@ -351,6 +348,10 @@ This API uses the following error codes:
 ## DELETE `/sessions/current`
 
 Log out the currently authenticated user.
+
+### Response body
+
+No response body. If the request is successfull, it returns `204 No Content`.
 
 ### Errors
 
