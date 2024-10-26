@@ -1,3 +1,9 @@
 import app from "./app";
+import * as dotenv from "dotenv";
 
-export const server = app.listen(3000, () => {});
+dotenv.config();
+
+export const server = app.listen(
+  process.env.PORT ? parseInt(process.env.PORT) : 3000,
+  () => {},
+);
