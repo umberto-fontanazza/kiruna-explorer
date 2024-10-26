@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
+import Home from "./components/Home";
 import NavHeader from "./components/NavHeader";
 import NotFound from "./components/NotFound";
 import API from "./API/API";
@@ -43,6 +44,9 @@ function App() {
 
         {/* Route /login for the Home page with the form to perform the login */}
         <Route path="/login" element={<LoginForm login={handleLogin} />} />
+
+        {/* Route /home for the Home page with the map and diagram */}
+        <Route path="/home" element={<Home />}/>
 
         {/* Route /* to cath all bad urls */}
         <Route path="*" element={<NotFound />} />

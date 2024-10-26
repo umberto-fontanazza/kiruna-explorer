@@ -4,3 +4,11 @@ export interface Credentials {
   username: string;
   password: string;
 }
+
+
+export interface Document {
+  id: number;
+  title: string;
+  description: string | null;
+  //coordinates: string;
+}

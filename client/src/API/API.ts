@@ -1,3 +1,5 @@
+import { Document } from "../utils/interfaces";
+
 const baseURL = "http://localhost:5173";
 
 async function login(credentials: unknown) {
@@ -31,15 +33,27 @@ const logout = async () => {
 /*************************   DOCUMENTS   *****************************/
 
 async function getDocuments() {
-  try{
-    const response = await fetch(baseURL + "/documents");
-    if(response.ok){
-      const documents = await response.json();
-      return documents;
-    }
-  }catch(err){
-    console.error(err);
-  }
+  // try{
+  //   const response = await fetch(baseURL + "/documents");
+  //   if(response.ok){
+  //     const documents = await response.json();
+  //     return documents;
+  //   }
+  // }catch(err){
+  //   console.error(err);
+  // }
+
+  return [
+    {id: 1, title: "Document 1", description: "Description 1"},
+    {id: 2, title: "Document 2", description: "Description 2"},
+    {id: 3, title: "Document 3", description: null},
+    {id: 4, title: "Document 4", description: null},
+    {id: 5, title: "Document 5", description: "Description 5"},
+    {id: 6, title: "Document 6", description: "Description 6"},
+    {id: 7, title: "Document 7", description: "Description 7"},
+    {id: 8, title: "Document 8", description: "Description 8"},
+    {id: 9, title: "Document 9", description: "Description 9"},
+  ]
 }
 
 async function postDocument(id: number, title: string, description: string) {

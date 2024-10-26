@@ -1,0 +1,70 @@
+
+
+.body-container {
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100vw;
+    height: 64vh;
+    overflow-y: auto;
+}
+
+img {
+    height: 30px;
+
+}
+
+
+.ol.documents {
+    align-items: center;
+    text-align: center;
+    
+}
+
+
+.li-doc {
+    display: flex;
+    align-items: center;
+}
+
+.doc-title {
+    margin-top: 7px;
+}
+
+
+
+.doc-description {
+    margin-top: 15px;
+    margin-left: 15px;
+    padding: 5px;
+}
+
+.btn-add-description {
+    margin-top: 17px;
+    margin-left: 15px;
+    border-radius: 4px;
+    background-color: rgb(247, 221, 155);
+    border: none;
+    padding: 5px;
+    font-size: 15px;
+    transition-duration: 0.4s;
+}
+
+.btn-add-description:hover {
+
+        color: white;
+        background-color: #4ec3ac;
+}
+
+.sidebar {
+    right: 0px;
+    margin-right: 0;
+    width: 35%;
+    height: inherit;
+    background: linear-gradient(180deg, #3a8deb, white);
+    position: fixed;
+}
+
+.diagram {
+    height:28vh;
+    background-color: #3a8deb;
+}
