@@ -31,7 +31,7 @@ documentRouter.post(
       return;
     }
     // Validation done
-    const insertedDocument = await Document.create(title, description);
+    const insertedDocument = await Document.insert(title, description);
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
     return;
   },

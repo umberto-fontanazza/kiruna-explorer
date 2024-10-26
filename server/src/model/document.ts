@@ -9,7 +9,7 @@ export class Document {
     this.description = description;
   }
 
-  static async create(title: string, description: string): Promise<Document> {
+  static async insert(title: string, description: string): Promise<Document> {
     const id = 3; //TODO: get from insertion in the DB
     return new Document(id, title, description);
   }
