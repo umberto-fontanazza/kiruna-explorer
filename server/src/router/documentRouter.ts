@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { raw, Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { strict as assert } from "assert";
 import { Document } from "../model/document";
@@ -7,10 +7,32 @@ import { DocumentNotFound } from "../error/documentError";
 export const documentRouter: Router = Router();
 
 documentRouter.get(
-  "",
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  async (request: Request, response: Response, _: NextFunction) => {
-    response.status(StatusCodes.OK).send("Hello, world!");
+  "", //TODO: authentication authorization
+  async (request: Request, response: Response) => {
+    const all: Document[] = await Document.all();
+    response.status(StatusCodes.OK).send([...all]);
+    return;
+  },
+);
+
+documentRouter.get(
+  "/:id",
+  //TODO: authentication authorization
+  async (request: Request, response: Response) => {
+    const rawId: string = request.params.id;
+    assert(typeof rawId === "string");
+    assert(rawId !== "");
+    const id: number = parseInt(rawId);
+    let doc: Document;
+    try {
+      doc = await Document.get(id);
+    } catch (error) {
+      if (!(error instanceof DocumentNotFound)) throw error;
+      response.status(StatusCodes.BAD_REQUEST).send();
+      return;
+    }
+    response.status(StatusCodes.OK).send(doc);
+    return;
   },
 );
 
