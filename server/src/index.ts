@@ -4,7 +4,7 @@ import { documentRouter } from "./router/documentRouter";
 
 dotenv.config();
 
-app.use("/document", documentRouter);
+app.use("/documents", documentRouter);
 
 export const server = app.listen(
   process.env.PORT ? parseInt(process.env.PORT) : 3000,
