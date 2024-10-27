@@ -8,29 +8,9 @@
     overflow-y: auto;
 }
 
-img {
-    height: 30px;
-
-}
-
-
-.ol.documents {
-    align-items: center;
-    text-align: center;
-    
-}
-
-
-.li-doc {
-    display: flex;
-    align-items: center;
-}
-
 .doc-title {
     margin-top: 7px;
 }
-
-
 
 .doc-description {
     margin-top: 15px;
@@ -38,33 +18,134 @@ img {
     padding: 5px;
 }
 
-.btn-add-description {
-    margin-top: 17px;
-    margin-left: 15px;
-    border-radius: 4px;
-    background-color: rgb(247, 221, 155);
-    border: none;
-    padding: 5px;
-    font-size: 15px;
-    transition-duration: 0.4s;
-}
-
-.btn-add-description:hover {
-
-        color: white;
-        background-color: #4ec3ac;
-}
-
 .sidebar {
-    right: 0px;
-    margin-right: 0;
-    width: 35%;
-    height: inherit;
+    right: -30%;
+    width: 30%;
+    height: 100vh;
     background: linear-gradient(180deg, #3a8deb, white);
     position: fixed;
+    overflow-x: hidden;
+    transition: right 0.5s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+  
+    &.open {
+        right: 0;
+    }
+
+
+    .container-btns {
+        display: flex;
+        width: 90%;
+        justify-content: right;
+        margin-top: 5px;
+        gap: 10px;
+    
+
+        .btn-download-sidebar {
+            padding: 3px 5px;
+            background-color: inherit;
+            border: none;
+            border-radius: 23px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+    
+            &:hover {
+                background-color: #245ea5;
+            }
+
+            .btn-download-img {
+                height: 25px;
+                padding-bottom: 2px;
+            }
+        }
+
+        .btn-close-sidebar {
+            padding: 3px 3px;
+            background-color: inherit;
+            border: none;
+            border-radius: 23px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+    
+            &:hover {
+                background-color: #245ea5;
+            }
+
+            .btn-close-img {
+                height: 28px;
+            }
+        }  
+
+    }
+    
+    
+      
+    .content {
+        width: 90%;
+        margin-top: 10px;
+        padding: 4px 15px;
+        background-color: #f4f7fb; /* Colore di sfondo chiaro */
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Ombra delicata */
+        color: #333; /* Colore testo */
+        font-size: 1rem;
+        line-height: 1.5;
+        overflow-y: auto;
+        max-height: 80vh;
+    
+        p {
+        margin-bottom: 10px;
+        font-size: 0.9rem;
+        }
+      
+        h2, h3 {
+        color: #3a8deb;
+        margin-top: 10px;
+        font-weight: bold;
+        }   
+    }  
 }
 
-.diagram {
-    height:28vh;
-    background-color: #3a8deb;
-}
+// .diagram {
+//     height:28vh;
+//     background-color: #3a8deb;
+// }
+
+
+/* Tabella documenti */
+.table-documents {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .table-documents th, .table-documents td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .doc-title {
+    font-size: 1rem;
+    color: #333;
+  }
+  
+  /* Icona documento */
+  .doc-icon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  /* Icona info */
+  .icon-info {
+    cursor: pointer;
+    transition: fill 0.3s ease;
+  }
+  
+  .icon-info:hover {
+    fill: #296bb2;
+  }

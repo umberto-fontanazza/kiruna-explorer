@@ -3,13 +3,14 @@ import API from "../API/API";
 import { Document } from "../utils/interfaces";
 import "../styles/Home.scss"
 import NavHeader from "./NavHeader";
+import "../styles/global.scss"
 
 
 function Home() {
 
     const [documents, setDocuments] = useState<Document[]>([]);
-    const [sideBarOpen, setSideBarOpen] = useState<Boolean>(true);
-
+    const [sidebarOpen, setSidebarOpen] = useState<Boolean>(false);
+    const [docSelected, setDocSelected] = useState<Document | null>(null);
 
 
     useEffect(() => {
@@ -31,35 +32,69 @@ function Home() {
             } } />
 
             <div className="body-container">
-                <ol className="ol-documents">
-                    {documents.map((document) => (
-                        <li className="li-doc" key={document.id}>
-                            <img  className="doc-icon" src="/public/document-icon.png" />
-                            <h5 className="doc-title">{document.title}</h5>
-                            {document.description ? <p className="doc-description">{document.description}</p> 
-                            : <p><button className="btn-add-description">Add description</button></p>}
-                        </li>
-                    ))}
-                </ol>
-                <div className="sidebar">
-                    {sideBarOpen && <SideBar />}
+            <table className="table-documents">
+          <thead>
+            <tr>
+              <th>Icon</th>
+              <th>Title</th>
+              <th>Info</th>
+            </tr>
+          </thead>
+          <tbody>
+            {documents.map((document) => (
+              <tr key={document.id}>
+                <td><img className="doc-icon" src="/document-icon.png" alt="Document icon" /></td>
+                <td className="doc-title">{document.title}</td>
+                <td>
+                  <button
+                    className="icon-info"
+                    onClick={() => { 
+                      setSidebarOpen(true);
+                      setDocSelected(document);
+                    }} 
+                  >Info</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+
+                <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+                    {<Sidebar setSidebarOpen={setSidebarOpen} document={docSelected}/>}
                 </div>
+
             </div>
 
-            <div className="diagram">
+            {/* <div className="diagram">
                 Diagram part
-            </div>
+            </div> */}
         </>
     )
 }
 
 
-function SideBar() {
+function Sidebar(props: { setSidebarOpen: (isOpen: boolean) => void; document: Document | null; }) {
+
+  
     return (
         <>
-            <h2>Sidebar</h2>
+        <div className="container-btns">
+            <button className="btn-download-sidebar" onClick={() => props.setSidebarOpen(false)}>
+                <img className="btn-download-img" src="/file-earmark-arrow-down.svg" />
+            </button>
+            <button className="btn-close-sidebar" onClick={() => props.setSidebarOpen(false)}>
+                <img className="btn-close-img" src="/x.svg" />
+            </button>
+        </div>
+        <div className="content">
+            <div >
+                <h3>{props.document?.title}</h3>
+                <p>{props.document?.description}</p>
+            </div>
+        </div>
         </>
-    )
-}
-
+      
+    );
+  };
+  
 export default Home;
