@@ -1,3 +1,5 @@
+import { Database } from "../database";
+
 export class Document {
   id: number;
   title: string;
@@ -10,7 +12,11 @@ export class Document {
   }
 
   static async insert(title: string, description: string): Promise<Document> {
-    const id = 3; //TODO: get from insertion in the DB
-    return new Document(id, title, description);
+    const result = await Database.query(
+      "INSERT INTO document(title, description) VALUES($1, $2) RETURNING id;",
+      [title, description],
+    );
+    const documentId: number = result.rows[0].id;
+    return new Document(documentId, title, description);
   }
 }
