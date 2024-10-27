@@ -1,4 +1,5 @@
 import { Database } from "../database";
+import { DocumentNotFound } from "../error/documentError";
 
 export class Document {
   id: number;
@@ -18,5 +19,14 @@ export class Document {
     );
     const documentId: number = result.rows[0].id;
     return new Document(documentId, title, description);
+  }
+
+  static async delete(id: number): Promise<void> {
+    const result = await Database.query("DELETE FROM document WHERE id = $1", [
+      id,
+    ]);
+    const affectedRows: number = result.rowCount || 0;
+    if (affectedRows < 1)
+      throw new DocumentNotFound("DELETE query affected rows were less than 1");
   }
 }
