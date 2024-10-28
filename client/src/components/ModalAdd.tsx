@@ -10,7 +10,7 @@ interface ModalAddProps {
 
 const ModalAdd: FC<ModalAddProps> = ({ modalOpen, onClose, onSubmit }) => {
   const [newDoc, setNewDoc] = useState<Document>({
-    id: 0,
+    id: "",
     title: "",
     description: "",
   });
@@ -18,7 +18,7 @@ const ModalAdd: FC<ModalAddProps> = ({ modalOpen, onClose, onSubmit }) => {
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
     onSubmit(newDoc);
-    setNewDoc({ id: 0, title: "", description: "" });
+    setNewDoc({ id: "", title: "", description: "" });
   };
 
   if (!modalOpen) return null;
@@ -28,53 +28,47 @@ const ModalAdd: FC<ModalAddProps> = ({ modalOpen, onClose, onSubmit }) => {
       {
         <div className="modal-overlay">
           <div className="modal-content">
+            <h2>Add here the information of the new Document</h2>
             <form onSubmit={handleFormSubmit}>
-              <label>
-                ID:
-                <input
-                  type="text"
-                  value={newDoc.id}
-                  onChange={(e) =>
-                    setNewDoc((prev) => ({
-                      ...prev,
-                      id: Number(e.target.value),
-                    }))
-                  }
-                  required
-                />
-              </label>
-              <label>
-                Title:
-                <input
-                  type="text"
-                  value={newDoc.title}
-                  onChange={(e) =>
-                    setNewDoc((prev) => ({ ...prev, title: e.target.value }))
-                  }
-                  required
-                />
-              </label>
-              <label>
-                Description:
-                <textarea
-                  value={newDoc.description || ""}
-                  onChange={(e) =>
-                    setNewDoc((prev) => ({
-                      ...prev,
-                      description: e.target.value,
-                    }))
-                  }
-                  required
-                />
-              </label>
-              <button type="submit">Add Document</button>
-              <button type="button" onClick={onClose}>
+              <label>ID</label>
+              <input
+                type="text"
+                value={newDoc.id}
+                onChange={(e) =>
+                  setNewDoc((prev) => ({
+                    ...prev,
+                    id: e.target.value,
+                  }))
+                }
+                required
+              />
+              <label>Title</label>
+              <input
+                type="text"
+                value={newDoc.title}
+                onChange={(e) =>
+                  setNewDoc((prev) => ({ ...prev, title: e.target.value }))
+                }
+                required
+              />
+              <label>Description:</label>
+              <textarea
+                value={newDoc.description || ""}
+                onChange={(e) =>
+                  setNewDoc((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+                required
+              />
+              <button className="submit-button" type="submit">
+                Add Document
+              </button>
+              <button className="cancel-button" type="button" onClick={onClose}>
                 Cancel
               </button>
             </form>
-            <button onClick={onClose} className="modal-close-button">
-              X
-            </button>
           </div>
         </div>
       }

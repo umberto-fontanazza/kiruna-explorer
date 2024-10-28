@@ -126,10 +126,21 @@ function Sidebar(props: {
         </button>
       </div>
       <div className="content">
-        <div>
-          <h3>{props.document?.title}</h3>
-          <p>{props.document?.description}</p>
-        </div>
+        <img src="/public/icons8-under-construction-100.png"></img>
+        <hr />
+        <h3>{props.document?.title}</h3>
+        <p>{props.document?.description}</p>
+        <hr className="separator" />
+        <h6>
+          Stakeholders: <a>LKAB</a>
+        </h6>
+        <h6>Scale:</h6>
+        <h6>Issuance Date:</h6>
+        <h6>Type:</h6>
+        <h6>Connections:</h6>
+        <h6>Language:</h6>
+        <h6>Pages:</h6>
+        <h6>Coordinates:</h6>
       </div>
     </>
   );

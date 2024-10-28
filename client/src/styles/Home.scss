@@ -20,7 +20,7 @@
   right: -30%;
   width: 30%;
   height: 100vh;
-  background: linear-gradient(180deg, #3a8deb, white);
+  background: linear-gradient(180deg, #4ec3ac, white);
   position: fixed;
   overflow-x: hidden;
   transition: right 0.5s;
@@ -32,6 +32,14 @@
 
   &.open {
     right: 0;
+  }
+
+  img {
+    transform: scale(0.7);
+  }
+
+  hr {
+    margin: 1%;
   }
 
   .container-btns {
@@ -50,7 +58,7 @@
       transition: background-color 0.3s;
 
       &:hover {
-        background-color: #245ea5;
+        background-color: #43a694;
       }
 
       .btn-download-img {
@@ -68,7 +76,7 @@
       transition: background-color 0.3s;
 
       &:hover {
-        background-color: #245ea5;
+        background-color: #43a694;
       }
 
       .btn-close-img {
@@ -98,8 +106,15 @@
     h2,
     h3 {
       color: #3a8deb;
-      margin-top: 10px;
+      font-size: 1.5rem;
       font-weight: bold;
+    }
+
+    h6 {
+      font-weight: normal;
+      a {
+        font-weight: bold;
+      }
     }
   }
 }
@@ -141,10 +156,12 @@
   border-radius: 1rem;
   background-color: #4ec3ac;
   padding: 0.5rem;
-}
+  border: 0.2rem solid black;
+  color: white;
 
-.icon-info:hover {
-  fill: #296bb2;
+  &:hover {
+    background-color: #43a694;
+  }
 }
 
 .add-document {
@@ -153,4 +170,10 @@
   border-radius: 2rem;
   background-color: #4ec3ac;
   padding: 1rem;
+  color: white;
+  border: 0.2rem solid black;
+
+  &:hover {
+    background-color: #43a694;
+  }
 }
