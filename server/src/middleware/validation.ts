@@ -15,3 +15,31 @@ export function validateBody(
     }
   };
 }
+
+export function validateQueryParameters(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  schema: z.ZodObject<any, any>,
+) {
+  return (request: Request, response: Response, nextFunction: NextFunction) => {
+    const { success } = schema.safeParse(request.query.params);
+    if (success) {
+      nextFunction();
+    } else {
+      response.status(StatusCodes.BAD_REQUEST).send();
+    }
+  };
+}
+
+export function validateRequestParameters(
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  schema: z.ZodObject<any, any>,
+) {
+  return (request: Request, response: Response, nextFunction: NextFunction) => {
+    const { success } = schema.safeParse(request.params);
+    if (success) {
+      nextFunction();
+    } else {
+      response.status(StatusCodes.BAD_REQUEST).send();
+    }
+  };
+}
