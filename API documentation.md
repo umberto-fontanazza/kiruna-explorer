@@ -43,21 +43,24 @@ TODO: filters
         "title": "",
         "description": "",
         "coordinates": {
-            "latitude": "",
-            "longitude": ""
+            "latitude": 67.9, // domain [-90 deg, +90 deg]
+            "longitude": 20.22 // domain [-180 deg, +180 deg]
         },
         "links": [
             {
-                "targetNodeId": 2,
-                "linkType": "DIRECT"
+                "targetDocumentId": 2,
+                "linkTypes": ["DIRECT", "UPDATE"]
             },
             ...
-        ],
-        //other properties
+        ]
     },
     ...
 ]
 ```
+
+### Success status
+
+- `200 Ok`
 
 ### Errors
 
@@ -70,10 +73,6 @@ This API can return the following error codes:
 
 Retrieve a specific document by its unique identifier.
 
-### Query parameters
-
-TODO:
-
 ### Response body
 
 ```json
@@ -82,19 +81,22 @@ TODO:
     "title": "",
     "description": "",
     "coordinates": {
-        "latitude": "",
-        "longitude": ""
+        "latitude": 67.9, // domain [-90 deg, +90 deg]
+        "longitude": 20.22 // domain [-180 deg, +180 deg]
     },
     "links": [
         {
-            "targetNodeId": 2,
-            "linkType": "DIRECT"
+            "targetDocumentId": 2,
+            "linkTypes": ["DIRECT", "UPDATE"]
         },
         ...
-    ],
-    //other properties
+    ]
 }
 ```
+
+### Success status
+
+- `200 Ok`
 
 ### Errors
 
@@ -115,8 +117,8 @@ Create a new document.
     "title": "",
     "description": "",
     "coordinates": {
-        "latitude": "",
-        "longitude": ""
+        "latitude": 67.9, // domain [-90 deg, +90 deg]
+        "longitude": 20.22 // domain [-180 deg, +180 deg]
     },
     //other properties
 }
@@ -130,6 +132,10 @@ Create a new document.
     "id": 1
 }
 ```
+
+### Success status
+
+- `201 Created`
 
 ### Errors
 
@@ -147,30 +153,18 @@ Update an existing document by its unique identifier.
 
 ```json
 {
-    "title": "",
-    "description": "",
+    // "title" omitted because it was not edited
+    "description": "A new and improved descripton",
     "coordinates": {
-        "latitude": "",
-        "longitude": ""
+        "latitude": 67.9, // domain [-90 deg, +90 deg]
+        "longitude": 20.22 // domain [-180 deg, +180 deg]
     },
-    //other properties
 }
 ```
 
-### Response body
+### Success status
 
-```json
-{
-    "id": 1,
-    "title": "",
-    "description": "",
-    "coordinates": {
-        "latitude": "",
-        "longitude": ""
-    },
-    //other properties
-}
-```
+- `204 No content`
 
 ### Errors
 
@@ -185,9 +179,9 @@ This API uses the following error codes:
 
 Delete an existing document by its unique identifier and all its links.
 
-### Response body
+### Success status
 
-No response body. If the request is successfull, it returns `204 No Content`.
+- `204 No content`
 
 ### Errors
 
@@ -202,83 +196,77 @@ This API uses the following error codes:
 # Collection `links`
 
 A collection of links representing relationships between documents, serving as a sub-collection within the `documents` collection.
+Each pair of documents (nodes) is associated with at most one link. One link may be characterized by more than one association type.
 
 ## GET `/documents/{id}/links`
 
-Retrieve all links associated with a specific document.
+Retrieve all links associated with a specific document. If the document has no links an empty array is returned in the JSON body.
 
 ### Response body
 
 ```json
 [
     {
-        "targetNodeId": 2,
-        "linkType": "DIRECT"
+        "targetDocumentId": 2,
+        "linkTypes": ["DIRECT"]
     },
-    ...
+    {
+        "targetDocumentId": 4,
+        "linkTypes": ["PROJECTION", "COLLATERAL"]
+    }
 ]
 ```
+
+### Success status
+
+- `200 Ok`
 
 ### Errors
 
 This API uses the following error codes:
 
-- `401 Unauthorized`: You are unauthorized.
+- `401 Unauthorized`
 - `404 Not Found`: The requested document was not found.
-- `500 Internal Server Error`: An unexpected error occurred on the server.
+- `500 Internal Server Error`
 
 ## PUT `/documents/{id}/links`
 
-Create or update a link associated with a specific document.
+Create or update a link associated with a specific document. If a link existed the list of types is replaced.
 
 ### Request body
 
 ```json
 {
-    "targetNodeId": 2,
-    "linkType": "DIRECT"
+    "targetDocumentId": 2,
+    "linkTypes": ["DIRECT", "UPDATE"]
 }
 ```
 
-### Response body
+### Success status
 
-In case of link creation:
-```json
-{
-    "message": "Link created successfully"
-}
-```
-
-In case of link update:
-```json
-{
-    "message": "Link update successfully"
-}
-```
+- `201 Created`: The link has been created or replaced.
 
 ### Errors
 
 This API uses the following error codes:
 
 - `400 Bad Request`: The request was malformed or missing required parameters.
-- `401 Unauthorized`: You are unauthorized.
+- `401 Unauthorized`
 - `404 Not Found`: The requested document was not found.
-- `500 Internal Server Error`: An unexpected error occurred on the server.
+- `500 Internal Server Error`
 
 ## DELETE `/documents/{id}/links`
 
-Delete a link associated with a specific document.
+Deletes the link between the document with id = `{id}` and `targetDocumentId` specified by the query parameter.
+If you want to remove just one of the `linkTypes` replace the link with `PUT /documents/{id}/links`
 
 ### Query parameters
 
-TODO: if we want to remove query parameters from this DELETE then we have uniquely identify a link
+ - `targetDocumentId`: id of the document at the other end of the link.
 
- - `targetNodeId` (required): the document connected to the link;
- - `linkType` (required): link type.
+### Success status
 
-### Response body
-
-No response body. If the request is successfull, it returns `204 No Content`.
+- `204 No Content`: deletion successful.
 
 ### Errors
 
@@ -303,7 +291,7 @@ Authenticate a user and create a session.
 
 ```json
 {
-    "username": "urban.planner",
+    "email": "urban.planner@gmail.com",
     "password": "PlannerPlanner.90"
 }
 ```
@@ -312,10 +300,16 @@ Authenticate a user and create a session.
 
 ```json
 {
-    "username": "urban.planner",
-    //other properties
+    "email": "urban.planner@gmail.com",
+    "name": "Luigi",
+    "surname": "Bianchi",
+    "role": "RESIDENT"
 }
 ```
+
+### Success status
+
+- `201 Created`
 
 ### Errors
 
@@ -333,10 +327,16 @@ Retrieve information about the currently authenticated user.
 
 ```json
 {
-    "username": "urban.planner",
-    //other properties
+    "email": "urban.planner@gmail.com",
+    "name": "Luigi",
+    "surname": "Bianchi",
+    "role": "RESIDENT"
 }
 ```
+
+### Success status
+
+- `200 Ok`
 
 ### Errors
 
@@ -349,9 +349,9 @@ This API uses the following error codes:
 
 Log out the currently authenticated user.
 
-### Response body
+### Success status
 
-No response body. If the request is successfull, it returns `204 No Content`.
+- `204 No Content`.
 
 ### Errors
 
@@ -374,7 +374,7 @@ Register a new user.
 
 ```json
 {
-    "username": "resident",
+    "email": "urban.planner@gmail.com",
     "password": "ResidentResident.91",
     "name": "Luigi",
     "surname": "Bianchi",
@@ -389,6 +389,10 @@ Register a new user.
     "message": "User created successfully",
 }
 ```
+
+### Success status
+
+- `201 Created`
 
 ### Errors
 
