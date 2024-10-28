@@ -291,7 +291,7 @@ Authenticate a user and create a session.
 
 ```json
 {
-    "username": "urban.planner",
+    "email": "urban.planner@gmail.com",
     "password": "PlannerPlanner.90"
 }
 ```
@@ -300,8 +300,10 @@ Authenticate a user and create a session.
 
 ```json
 {
-    "username": "urban.planner",
-    //other properties
+    "email": "urban.planner@gmail.com",
+    "name": "Luigi",
+    "surname": "Bianchi",
+    "role": "RESIDENT"
 }
 ```
 
@@ -321,8 +323,10 @@ Retrieve information about the currently authenticated user.
 
 ```json
 {
-    "username": "urban.planner",
-    //other properties
+    "email": "urban.planner@gmail.com",
+    "name": "Luigi",
+    "surname": "Bianchi",
+    "role": "RESIDENT"
 }
 ```
 
@@ -362,7 +366,7 @@ Register a new user.
 
 ```json
 {
-    "username": "resident",
+    "email": "urban.planner@gmail.com",
     "password": "ResidentResident.91",
     "name": "Luigi",
     "surname": "Bianchi",
