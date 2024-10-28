@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response, Router } from "express";
+import { Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { strict as assert } from "assert";
 import { Document } from "../model/document";
@@ -63,7 +63,7 @@ documentRouter.post(
 documentRouter.patch(
   "/:id",
   //TODO: authentication authorization
-  async (request: Request, response: Response, next: NextFunction) => {
+  async (request: Request, response: Response) => {
     const rawId: string = request.params.id;
     assert(rawId !== "");
     const id: number = parseInt(rawId);

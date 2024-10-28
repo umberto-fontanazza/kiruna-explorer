@@ -35,6 +35,7 @@ export class Document {
       this.description,
       this.id,
     ]);
+    if (result.rowCount != 1) throw new Error("Failed db update");
   }
 
   static async insert(title: string, description: string): Promise<Document> {
