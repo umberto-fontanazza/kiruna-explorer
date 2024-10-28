@@ -36,6 +36,32 @@ export class User {
     return new User(email, name, surname, role);
   }
 
+  static async insert(user: User, password: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const salt = crypto.randomBytes(16).toString("hex");
+      crypto.scrypt(password, salt, 32, async (err, hashedPassword) => {
+        if (err) return reject(err);
+
+        try {
+          await Database.query(
+            "INSERT INTO user (email, name, surname, salt, password_hash, role) VALUES ($1, $2, $3, $4, $5, $6)",
+            [
+              user.email,
+              user.name,
+              user.surname,
+              salt,
+              hashedPassword.toString("hex"),
+              user.role,
+            ],
+          );
+          resolve();
+        } catch (err) {
+          reject(err);
+        }
+      });
+    });
+  }
+
   static async get(email: string, password: string): Promise<User | false> {
     const result = await Database.query("SELECT * FROM user WHERE email = $1", [
       email,
