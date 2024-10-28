@@ -43,17 +43,16 @@ TODO: filters
         "title": "",
         "description": "",
         "coordinates": {
-            "latitude": "",
-            "longitude": ""
+            "latitude": 67.9, // domain [-90 deg, +90 deg]
+            "longitude": 20.22 // domain [-180 deg, +180 deg]
         },
         "links": [
             {
                 "targetDocumentId": 2,
-                "linkType": "DIRECT"
+                "linkTypes": ["DIRECT", "UPDATE"]
             },
             ...
-        ],
-        //other properties
+        ]
     },
     ...
 ]
@@ -78,17 +77,16 @@ Retrieve a specific document by its unique identifier.
     "title": "",
     "description": "",
     "coordinates": {
-        "latitude": "",
-        "longitude": ""
+        "latitude": 67.9, // domain [-90 deg, +90 deg]
+        "longitude": 20.22 // domain [-180 deg, +180 deg]
     },
     "links": [
         {
             "targetDocumentId": 2,
-            "linkType": "DIRECT"
+            "linkTypes": ["DIRECT", "UPDATE"]
         },
         ...
-    ],
-    //other properties
+    ]
 }
 ```
 
@@ -111,8 +109,8 @@ Create a new document.
     "title": "",
     "description": "",
     "coordinates": {
-        "latitude": "",
-        "longitude": ""
+        "latitude": 67.9, // domain [-90 deg, +90 deg]
+        "longitude": 20.22 // domain [-180 deg, +180 deg]
     },
     //other properties
 }
@@ -146,8 +144,8 @@ Update an existing document by its unique identifier.
     "title": "",
     "description": "",
     "coordinates": {
-        "latitude": "",
-        "longitude": ""
+        "latitude": 67.9, // domain [-90 deg, +90 deg]
+        "longitude": 20.22 // domain [-180 deg, +180 deg]
     },
     //other properties
 }
@@ -161,8 +159,8 @@ Update an existing document by its unique identifier.
     "title": "",
     "description": "",
     "coordinates": {
-        "latitude": "",
-        "longitude": ""
+        "latitude": 67.9, // domain [-90 deg, +90 deg]
+        "longitude": 20.22 // domain [-180 deg, +180 deg]
     },
     //other properties
 }
