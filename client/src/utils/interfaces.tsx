@@ -5,9 +5,8 @@ export interface Credentials {
   password: string;
 }
 
-
 export interface Document {
-  id: number;
+  id: number | string;
   title: string;
   description: string | null;
   //coordinates: string;

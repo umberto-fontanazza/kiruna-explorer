@@ -23,22 +23,23 @@ body {
   .nav-brand {
     font-size: 1.5rem;
     font-weight: bold;
+    color: white;
   }
 
   .btn-logout {
     background-color: transparent;
-    border: 2px solid black;
-    color: black;
+    border: 2px solid white;
+    color: white;
     padding: 0.5rem 1rem;
     font-size: 1rem;
-    border-radius: 4px;
+    border-radius: 1rem;
     cursor: pointer;
     transition:
       background-color 0.3s ease,
       color 0.3s ease;
 
     &:hover {
-      background: #456784;
+      background: #43a694;
     }
   }
 }
