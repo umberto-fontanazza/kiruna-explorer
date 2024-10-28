@@ -27,6 +27,16 @@ export class Document {
     return new Document(id, title, description);
   }
 
+  async update(): Promise<void> {
+    const sql =
+      "UPDATE document SET title = $1, description = $2 WHERE id = $3";
+    const result = await Database.query(sql, [
+      this.title,
+      this.description,
+      this.id,
+    ]);
+  }
+
   static async insert(title: string, description: string): Promise<Document> {
     const result = await Database.query(
       "INSERT INTO document(title, description) VALUES($1, $2) RETURNING id;",
