@@ -1,4 +1,4 @@
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { strict as assert } from "assert";
 import { Document } from "../model/document";
@@ -56,6 +56,35 @@ documentRouter.post(
     // Validation done
     const insertedDocument = await Document.insert(title, description);
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
+    return;
+  },
+);
+
+documentRouter.patch(
+  "/:id",
+  //TODO: authentication authorization
+  async (request: Request, response: Response, next: NextFunction) => {
+    const rawId: string = request.params.id;
+    assert(rawId !== "");
+    const id: number = parseInt(rawId);
+    const title: string | undefined = request.body.title;
+    const description: string | undefined = request.body.description;
+    assert(["string", "undefined"].includes(typeof title));
+    assert(["string", "undefined"].includes(typeof description));
+    assert(title || description);
+    // Validation done
+    let document: Document;
+    try {
+      document = await Document.get(id);
+    } catch (error) {
+      if (!(error instanceof DocumentNotFound)) throw error;
+      response.status(StatusCodes.NOT_FOUND).send();
+      return;
+    }
+    document.title = title || document.title;
+    document.description = description || document.description;
+    await document.update();
+    response.status(StatusCodes.NO_CONTENT).send();
     return;
   },
 );
