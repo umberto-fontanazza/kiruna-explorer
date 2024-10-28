@@ -70,10 +70,6 @@ This API can return the following error codes:
 
 Retrieve a specific document by its unique identifier.
 
-### Query parameters
-
-TODO:
-
 ### Response body
 
 ```json
