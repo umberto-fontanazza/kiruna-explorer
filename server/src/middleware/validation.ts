@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import { z } from "zod";
 import { StatusCodes } from "http-status-codes";
 
-export function validateBodySchema(
+export function validateBody(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   schema: z.ZodObject<any, any> | z.ZodArray<any>,
 ) {

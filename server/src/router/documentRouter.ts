@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { strict as assert } from "assert";
 import { Document } from "../model/document";
 import { DocumentNotFound } from "../error/documentError";
-import { validateBodySchema } from "../middleware/validation";
+import { validateBody } from "../middleware/validation";
 import { postBody, PostBody } from "../validation/documentSchema";
 
 export const documentRouter: Router = Router();
@@ -41,7 +41,7 @@ documentRouter.get(
 documentRouter.post(
   "",
   //TODO: authentication authorization
-  validateBodySchema(postBody),
+  validateBody(postBody),
   async (request: Request, response: Response) => {
     const body: PostBody = request.body;
     const { title, description } = body;
