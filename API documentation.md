@@ -58,6 +58,10 @@ TODO: filters
 ]
 ```
 
+### Success status
+
+- `200 Ok`
+
 ### Errors
 
 This API can return the following error codes:
@@ -89,6 +93,10 @@ Retrieve a specific document by its unique identifier.
     ]
 }
 ```
+
+### Success status
+
+- `200 Ok`
 
 ### Errors
 
@@ -125,6 +133,10 @@ Create a new document.
 }
 ```
 
+### Success status
+
+- `201 Created`
+
 ### Errors
 
 This API uses the following error codes:
@@ -141,30 +153,18 @@ Update an existing document by its unique identifier.
 
 ```json
 {
-    "title": "",
-    "description": "",
+    // "title" omitted because it was not edited
+    "description": "A new and improved descripton",
     "coordinates": {
         "latitude": 67.9, // domain [-90 deg, +90 deg]
         "longitude": 20.22 // domain [-180 deg, +180 deg]
     },
-    //other properties
 }
 ```
 
-### Response body
+### Success status
 
-```json
-{
-    "id": 1,
-    "title": "",
-    "description": "",
-    "coordinates": {
-        "latitude": 67.9, // domain [-90 deg, +90 deg]
-        "longitude": 20.22 // domain [-180 deg, +180 deg]
-    },
-    //other properties
-}
-```
+- `204 No content`
 
 ### Errors
 
@@ -179,9 +179,9 @@ This API uses the following error codes:
 
 Delete an existing document by its unique identifier and all its links.
 
-### Response body
+### Success status
 
-No response body. If the request is successfull, it returns `204 No Content`.
+- `204 No content`
 
 ### Errors
 
@@ -307,6 +307,10 @@ Authenticate a user and create a session.
 }
 ```
 
+### Success status
+
+- `201 Created`
+
 ### Errors
 
 This API uses the following error codes:
@@ -330,6 +334,10 @@ Retrieve information about the currently authenticated user.
 }
 ```
 
+### Success status
+
+- `200 Ok`
+
 ### Errors
 
 This API uses the following error codes:
@@ -341,9 +349,9 @@ This API uses the following error codes:
 
 Log out the currently authenticated user.
 
-### Response body
+### Success status
 
-No response body. If the request is successfull, it returns `204 No Content`.
+- `204 No Content`.
 
 ### Errors
 
@@ -381,6 +389,10 @@ Register a new user.
     "message": "User created successfully",
 }
 ```
+
+### Success status
+
+- `201 Created`
 
 ### Errors
 
