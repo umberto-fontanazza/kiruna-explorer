@@ -1,10 +1,11 @@
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
   overflow: hidden;
-  font-size: 1.5vmin; 
+  font-size: 1.5vmin;
 }
 
 .form {
@@ -24,7 +25,7 @@ html, body {
   }
 
   .left-panel {
-    width: 56vw; 
+    width: 56vw;
     height: 100vh;
     background-color: #4ec3ac;
     display: flex;
@@ -34,9 +35,9 @@ html, body {
     overflow: hidden;
     border-top-right-radius: 1rem;
     border-bottom-right-radius: 1rem;
-    
+
     h1 {
-      font-size: 5vmin; 
+      font-size: 5vmin;
       padding: 5vmin;
       margin-top: 5vmin;
     }
@@ -56,7 +57,7 @@ html, body {
   }
 
   .right-panel {
-    width: 44vw; 
+    width: 44vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -92,7 +93,7 @@ html, body {
       border-radius: 1vmin;
     }
 
-    .input-password{
+    .input-password {
       padding: 1.5vmin;
       font-size: 1.8vmin;
       border: 0.2vmin solid #ddd;
@@ -120,7 +121,6 @@ html, body {
     }
 
     button {
-
       width: 100%;
       padding: 1.5vmin;
       background-color: #4ec3ac;
@@ -143,7 +143,7 @@ html, body {
         color: #4ec3ac;
         text-decoration: none;
 
-        &:hover{
+        &:hover {
           color: #43a694;
         }
       }

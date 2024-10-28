@@ -1,6 +1,11 @@
-// src/styles/NavHeader.scss
-
-//@use "./variables" as *; // Importiamo le variabili globali
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
 
 .nav-header {
   height: 8vh;
@@ -16,7 +21,6 @@
   }
 
   .nav-brand {
-    color: black;
     font-size: 1.5rem;
     font-weight: bold;
   }

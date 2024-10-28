@@ -1,6 +1,5 @@
 import { FC } from "react";
 import "../styles/NavHeader.scss"; // Importiamo il file SCSS personalizzato
-
 interface NavHeaderProps {
   logout: () => void;
 }
