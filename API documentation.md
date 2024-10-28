@@ -48,7 +48,7 @@ TODO: filters
         },
         "links": [
             {
-                "targetNodeId": 2,
+                "targetDocumentId": 2,
                 "linkType": "DIRECT"
             },
             ...
@@ -87,7 +87,7 @@ TODO:
     },
     "links": [
         {
-            "targetNodeId": 2,
+            "targetDocumentId": 2,
             "linkType": "DIRECT"
         },
         ...
@@ -213,11 +213,11 @@ Retrieve all links associated with a specific document. If the document has no l
 ```json
 [
     {
-        "targetNodeId": 2,
+        "targetDocumentId": 2,
         "linkTypes": ["DIRECT"]
     },
     {
-        "targetNodeId": 4,
+        "targetDocumentId": 4,
         "linkTypes": ["PROJECTION", "COLLATERAL"]
     }
 ]
@@ -243,7 +243,7 @@ Create or update a link associated with a specific document. If a link existed t
 
 ```json
 {
-    "targetNodeId": 2,
+    "targetDocumentId": 2,
     "linkTypes": ["DIRECT", "UPDATE"]
 }
 ```
@@ -263,12 +263,12 @@ This API uses the following error codes:
 
 ## DELETE `/documents/{id}/links`
 
-Deletes the link between the document with id = `{id}` and `targetNodeId` specified by the query parameter.
+Deletes the link between the document with id = `{id}` and `targetDocumentId` specified by the query parameter.
 If you want to remove just one of the `linkTypes` replace the link with `PUT /documents/{id}/links`
 
 ### Query parameters
 
- - `targetNodeId`: id of the document at the other end of the link.
+ - `targetDocumentId`: id of the document at the other end of the link.
 
 ### Success status
 
