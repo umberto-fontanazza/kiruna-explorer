@@ -1,11 +1,15 @@
-import { useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import API from "../API/API";
 import { Document } from "../utils/interfaces";
 import "../styles/Home.scss";
 import NavHeader from "./NavHeader";
 import ModalAdd from "./ModalAdd";
 
-function Home() {
+interface HomeProps {
+  login: boolean;
+}
+
+const Home: FC<HomeProps> = (props): JSX.Element => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
   const [docSelected, setDocSelected] = useState<Document | null>(null);
@@ -38,6 +42,7 @@ function Home() {
         logout={function (): void {
           throw new Error("Function not implemented.");
         }}
+        login={props.login}
       />
 
       <div className="body-container">
@@ -100,7 +105,7 @@ function Home() {
             </div> */}
     </>
   );
-}
+};
 
 function Sidebar(props: {
   setSidebarOpen: (isOpen: boolean) => void;
