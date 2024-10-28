@@ -7,6 +7,7 @@ import ModalAdd from "./ModalAdd";
 
 interface HomeProps {
   login: boolean;
+  handleLogout: () => void;
 }
 
 const Home: FC<HomeProps> = (props): JSX.Element => {
@@ -38,12 +39,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
 
   return (
     <>
-      <NavHeader
-        logout={function (): void {
-          throw new Error("Function not implemented.");
-        }}
-        login={props.login}
-      />
+      <NavHeader logout={props.handleLogout} login={props.login} />
 
       <div className="body-container">
         <table className="table-documents">
