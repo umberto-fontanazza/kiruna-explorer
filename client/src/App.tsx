@@ -46,7 +46,7 @@ function App() {
         <Route path="/login" element={<LoginForm login={handleLogin} />} />
 
         {/* Route /home for the Home page with the map and diagram */}
-        <Route path="/home" element={<Home />} />
+        <Route path="/home" element={<Home login={loggedIn} />} />
 
         {/* Route /* to cath all bad urls */}
         <Route path="*" element={<NotFound />} />
