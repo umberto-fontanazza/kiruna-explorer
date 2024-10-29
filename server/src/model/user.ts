@@ -1,5 +1,6 @@
 import { strict as assert } from "assert";
 import crypto from "crypto";
+import { Database } from "../database";
 
 type UserDbRow = {
   email: string;
