@@ -1,6 +1,5 @@
 import { Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
-import { strict as assert } from "assert";
 import { Document } from "../model/document";
 import { DocumentNotFound } from "../error/documentError";
 import {
@@ -9,6 +8,8 @@ import {
 } from "../middleware/validation";
 import {
   idRequestParam,
+  PatchBody,
+  patchBody,
   postBody,
   PostBody,
 } from "../validation/documentSchema";
@@ -59,16 +60,11 @@ documentRouter.post(
 documentRouter.patch(
   "/:id",
   //TODO: authentication authorization
+  validateRequestParameters(idRequestParam),
+  validateBody(patchBody),
   async (request: Request, response: Response) => {
-    const rawId: string = request.params.id;
-    assert(rawId !== "");
-    const id: number = parseInt(rawId);
-    const title: string | undefined = request.body.title;
-    const description: string | undefined = request.body.description;
-    assert(["string", "undefined"].includes(typeof title));
-    assert(["string", "undefined"].includes(typeof description));
-    assert(title || description);
-    // Validation done
+    const id = Number(request.params.id);
+    const { title, description } = request.body as PatchBody;
     let document: Document;
     try {
       document = await Document.get(id);

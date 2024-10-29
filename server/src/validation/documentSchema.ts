@@ -9,3 +9,9 @@ export const postBody = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
 });
+
+export type PatchBody = z.infer<typeof patchBody>;
+export const patchBody = z.object({
+  title: z.string().min(1).optional(),
+  description: z.string().min(1).optional(),
+});
