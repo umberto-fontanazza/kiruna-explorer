@@ -13,14 +13,22 @@ const ModalAdd: FC<ModalAddProps> = ({ modalOpen, onClose, onSubmit }) => {
     id: "",
     title: "",
     description: "",
+    stakeholder: "",
+    scale: "",
+    issuanceDate: null,
+    type: "",
+    connections: "",
+    language: "",
+    pages: 0,
+    coordinates: "",
   });
-
-  const [Stakeholder, setStakeholder] = useState("");
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-    onSubmit(newDoc);
-    setNewDoc({ id: "", title: "", description: "" });
+    onSubmit({ ...newDoc, scale: "1:"+newDoc.scale });
+    setNewDoc({ id: "", title: "", description: "", stakeholder: "",
+                scale: "", issuanceDate: null, type: "", connections: "", language: "",
+                pages: 0, coordinates: "", });
   };
 
   if (!modalOpen) return null;
@@ -81,8 +89,13 @@ const ModalAdd: FC<ModalAddProps> = ({ modalOpen, onClose, onSubmit }) => {
                 <div className="form-group">
                   <label>StakeHolders *</label>
                   <select
-                    value={Stakeholder}
-                    onChange={(e) => setStakeholder(e.target.value)}
+                    value={newDoc.stakeholder}
+                    onChange={(e) => 
+                      setNewDoc((prev) => ({
+                        ...prev,
+                        stakeholder: e.target.value,
+                      }))
+                    }
                     required
                   >
                     <option value="" disabled>
@@ -104,16 +117,94 @@ const ModalAdd: FC<ModalAddProps> = ({ modalOpen, onClose, onSubmit }) => {
                   <label>
                     Scale <a>(optional)</a>
                   </label>
+                  <div>
+                    <span className="scale">1: </span>
                   <input
                     type="text"
-                    value={newDoc.title}
+                    value={newDoc.scale}
                     onChange={(e) =>
-                      setNewDoc((prev) => ({ ...prev, title: e.target.value }))
+                      setNewDoc((prev) => ({ ...prev, scale:e.target.value }))
+                    }
+                  />
+                  </div>
+                </div> 
+                </div> 
+               <div className="test">
+                <div className="form-group">
+                  <label>Issuance Date</label>
+                  <input
+                    type="date"
+                    value={newDoc.issuanceDate?.toISOString().split("T")[0] || ""}
+                    onChange={(e) =>
+                      setNewDoc((prev) => ({
+                        ...prev,
+                        issuanceDate: new Date(e.target.value),
+                      }))
+                    }
+                  />
+                  <label>Type</label>
+                  <select
+                    value={newDoc.type}
+                    onChange={(e) =>
+                      setNewDoc((prev) => ({ ...prev, type: e.target.value }))
                     }
                     required
+                  >
+                    <option value="" disabled>
+                        Select type
+                      </option>
+                      <option value="Informative Document">Informative Document</option>
+                      <option value="Prescriptive Document">Prescriptive Document</option>
+                      <option value="Design Document">Design Document</option>
+                      <option value="Technical Document">Technical Document</option>
+                      <option value="Material effect">Material effect</option>
+                      <option value="Others">Others</option>
+                    </select>
+                
+                </div>
+              </div>
+              <div className="test">
+                <div className="form-group">
+                  <label>Language</label>
+                  <select
+                    value={newDoc.language}
+                    onChange={(e) =>
+                      setNewDoc((prev) => ({ ...prev, language: e.target.value }))
+                    }
+                    required
+                  >
+                    <option value="" disabled>
+                        Select language
+                      </option>
+                      <option value="English">English</option>
+                      <option value="Italian">Italian</option>
+                      <option value="Sweden">Sweden</option>
+                      <option value="Others">Others</option>
+                    </select>
+                </div>
+                <div className="form-group">
+                  <label>Coordinates</label>
+                  <input type="number" 
+                    placeholder="Enter Coordinates x"
+                    value={newDoc.coordinates}
+                    onChange={(e) =>
+                      setNewDoc((prev) => ({ ...prev, coordinates: e.target.value }))
+                    }
+                    required
+                    className="input-coordinates"
+                  />
+                  <input type="number" 
+                    placeholder="Enter Coordinates y"
+                    value={newDoc.coordinates}
+                    onChange={(e) =>
+                      setNewDoc((prev) => ({ ...prev, coordinates: e.target.value }))
+                    }
+                    required
+                    className="input-coordinates"
                   />
                 </div>
               </div>
+
               {/*<label>Title</label>
               <input
                 type="text"
@@ -140,7 +231,6 @@ const ModalAdd: FC<ModalAddProps> = ({ modalOpen, onClose, onSubmit }) => {
                   className="cancel-button"
                   type="button"
                   onClick={() => {
-                    setStakeholder("");
                     onClose();
                   }}
                 >

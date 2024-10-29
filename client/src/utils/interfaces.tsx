@@ -9,5 +9,12 @@ export interface Document {
   id: number | string;
   title: string;
   description: string | null;
-  //coordinates: string;
+  stakeholder: string | undefined;
+  scale: string | undefined;
+  issuanceDate: Date | null,
+  type: string | undefined;
+  connections: string | null,
+  language: string | undefined;
+  pages: number | null;
+  coordinates: string | undefined;
 }

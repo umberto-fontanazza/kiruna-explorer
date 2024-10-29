@@ -6,12 +6,13 @@ Main page
 
         Lateral view:
         -   Icon
-        -   Title
-        -   Stakeholders
+        -   Title                       US1
+        -   Stakeholders                
+        -   Georeference                US3 -> update at US5
         -   Scale
         -   Issuance date
         -   Type
-        -   Connections: vedi sotto
+        -   Connections: vedi sotto     US2
         -   Language ?
         -   Pages ? 
         -   Description (magari piu in alto)
@@ -31,3 +32,4 @@ CONNECTIONS
 
 QUESTIONS
 - Se usiamo la barra laterale -> come lo implementiamo nella visualizzazione da smartphone?
+- Can the stakeholders be more than one?

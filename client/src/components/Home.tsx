@@ -19,7 +19,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const documents = await API.getDocuments();
+        const documents: Document[] = await API.getDocuments();
         setDocuments(documents);
       } catch (err) {
         console.error(err);
@@ -135,13 +135,13 @@ function Sidebar(props: {
         <h6>
           Stakeholders: <a>LKAB</a>
         </h6>
-        <h6>Scale:</h6>
-        <h6>Issuance Date:</h6>
-        <h6>Type:</h6>
+        <h6>Scale: {props.document?.scale}</h6>
+        <h6>Issuance Date: {props.document?.issuanceDate?.toLocaleDateString()}</h6>
+        <h6>Type: {props.document?.type}</h6>
         <h6>Connections:</h6>
-        <h6>Language:</h6>
-        <h6>Pages:</h6>
-        <h6>Coordinates:</h6>
+        <h6>Language: {props.document?.language}</h6>
+        <h6>Pages: {props.document?.pages}</h6>
+        <h6>Coordinates: {props.document?.coordinates}</h6>
       </div>
     </>
   );
