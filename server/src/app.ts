@@ -6,6 +6,7 @@ import { documentRouter } from "./router/documentRouter";
 import passportInizializer from "./passport-config";
 import passport from "passport";
 import session from "express-session";
+import { userRouter } from "./router/userRouter";
 
 const app = express();
 
@@ -34,5 +35,6 @@ app.use(passport.authenticate("session"));
 // Routes
 
 app.use("document", documentRouter);
+app.use("/users", userRouter);
 
 export default app;
