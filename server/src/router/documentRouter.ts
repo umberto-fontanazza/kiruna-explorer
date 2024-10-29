@@ -3,8 +3,15 @@ import { StatusCodes } from "http-status-codes";
 import { strict as assert } from "assert";
 import { Document } from "../model/document";
 import { DocumentNotFound } from "../error/documentError";
-import { validateBody } from "../middleware/validation";
-import { postBody, PostBody } from "../validation/documentSchema";
+import {
+  validateRequestParameters,
+  validateBody,
+} from "../middleware/validation";
+import {
+  idRequestParam,
+  postBody,
+  PostBody,
+} from "../validation/documentSchema";
 
 export const documentRouter: Router = Router();
 
@@ -20,11 +27,9 @@ documentRouter.get(
 documentRouter.get(
   "/:id",
   //TODO: authentication authorization
+  validateRequestParameters(idRequestParam),
   async (request: Request, response: Response) => {
-    const rawId: string = request.params.id;
-    assert(typeof rawId === "string");
-    assert(rawId !== "");
-    const id: number = parseInt(rawId);
+    const id = Number(request.params.id);
     let doc: Document;
     try {
       doc = await Document.get(id);
@@ -83,11 +88,9 @@ documentRouter.patch(
 documentRouter.delete(
   "/:id",
   //TODO: authentication authorization
+  validateRequestParameters(idRequestParam),
   async (request: Request, response: Response) => {
-    const rawId: string = request.params.id;
-    assert(rawId !== "");
-    const id: number = parseInt(rawId);
-    // Validation done
+    const id: number = Number(request.params.id);
     try {
       await Document.delete(id);
     } catch (error: unknown) {
