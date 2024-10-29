@@ -63,7 +63,7 @@ export class User {
     });
   }
 
-  static async get(email: string, password: string): Promise<User | false> {
+  static async login(email: string, password: string): Promise<User | false> {
     const result = await Database.query(
       `SELECT * FROM "user" WHERE email = $1`,
       [email],
@@ -87,5 +87,16 @@ export class User {
         }
       });
     });
+  }
+
+  static async getByEmail(email: string): Promise<User | undefined> {
+    const result = await Database.query(
+      `SELECT * FROM "user" WHERE email = $1`,
+      [email],
+    );
+    const userRow = result.rows[0];
+
+    if (userRow) return User.fromDatabaseRow(userRow);
+    else return undefined;
   }
 }
