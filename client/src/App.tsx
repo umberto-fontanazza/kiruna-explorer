@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import Home from "./components/Home";
+import MapComponent from "./components/Map";
 import NavHeader from "./components/NavHeader";
 import NotFound from "./components/NotFound";
 import API from "./API/API";
@@ -50,6 +51,8 @@ const App: FC = () => {
           path="/home"
           element={<Home login={loggedIn} handleLogout={handleLogout} />}
         />
+
+        <Route path="/map" element={<MapComponent apiKey={""} />} />
 
         {/* Route /* to cath all bad urls */}
         <Route path="*" element={<NotFound />} />

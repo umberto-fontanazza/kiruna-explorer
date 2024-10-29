@@ -1,3 +1,5 @@
+@import "variables";
+
 html,
 body {
   margin: 0;
@@ -11,7 +13,7 @@ body {
   height: 8vh;
   padding: 1rem 2rem;
   display: flex;
-  background-color: #4ec3ac;
+  background: $main-color;
 
   .nav-container {
     display: flex;
@@ -32,7 +34,7 @@ body {
       .nav-brand {
         font-size: 1.5rem;
         font-weight: bold;
-        color: white;
+        color: #ddd;
         display: flex;
         align-items: center; // Align brand text vertically with the logo
       }
@@ -41,9 +43,9 @@ body {
 
   .btn-logout,
   .btn-login {
-    background-color: transparent;
-    border: 2px solid white;
-    color: white;
+    background-color: $first-color;
+    border: 0.1rem solid $first-color;
+    color: #ddd;
     padding: 0.5rem 1rem;
     font-size: 1rem;
     border-radius: 1rem;
@@ -53,7 +55,9 @@ body {
       color 0.3s ease;
 
     &:hover {
-      background: #43a694;
+      background: $third-color;
+      color: $first-color;
+      border: 2px solid $first-color;
     }
   }
 }
