@@ -4,6 +4,7 @@ import { Document } from "../utils/interfaces";
 import "../styles/Home.scss";
 import NavHeader from "./NavHeader";
 import ModalAdd from "./ModalAdd";
+import MapComponent from "./Map";
 
 interface HomeProps {
   login: boolean;
@@ -42,40 +43,43 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
       <NavHeader logout={props.handleLogout} login={props.login} />
 
       <div className="body-container">
-        <table className="table-documents">
-          <thead>
-            <tr>
-              <th>Icon</th>
-              <th>Title</th>
-              <th>Info</th>
-            </tr>
-          </thead>
-          <tbody>
-            {documents.map((document) => (
-              <tr key={document.id}>
-                <td>
-                  <img
-                    className="doc-icon"
-                    src="/document-icon.png"
-                    alt="Document icon"
-                  />
-                </td>
-                <td className="doc-title">{document.title}</td>
-                <td>
-                  <button
-                    className="icon-info"
-                    onClick={() => {
-                      setSidebarOpen(true);
-                      setDocSelected(document);
-                    }}
-                  >
-                    Info
-                  </button>
-                </td>
+        {/*<MapComponent apiKey={""} />*/}
+        {
+          <table className="table-documents">
+            <thead>
+              <tr>
+                <th>Icon</th>
+                <th>Title</th>
+                <th>Info</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {documents.map((document) => (
+                <tr key={document.id}>
+                  <td>
+                    <img
+                      className="doc-icon"
+                      src="/document-icon.png"
+                      alt="Document icon"
+                    />
+                  </td>
+                  <td className="doc-title">{document.title}</td>
+                  <td>
+                    <button
+                      className="icon-info"
+                      onClick={() => {
+                        setSidebarOpen(true);
+                        setDocSelected(document);
+                      }}
+                    >
+                      Info
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        }
 
         <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
           {<Sidebar setSidebarOpen={setSidebarOpen} document={docSelected} />}
@@ -133,15 +137,30 @@ function Sidebar(props: {
         <p>{props.document?.description}</p>
         <hr className="separator" />
         <h6>
-          Stakeholders: <a>LKAB</a>
+          Stakeholders: <a>{props.document?.stakeholder}</a>
         </h6>
-        <h6>Scale: {props.document?.scale}</h6>
-        <h6>Issuance Date: {props.document?.issuanceDate?.toLocaleDateString()}</h6>
-        <h6>Type: {props.document?.type}</h6>
-        <h6>Connections:</h6>
-        <h6>Language: {props.document?.language}</h6>
-        <h6>Pages: {props.document?.pages}</h6>
-        <h6>Coordinates: {props.document?.coordinates}</h6>
+        <h6>
+          Scale: <a>{props.document?.scale}</a>
+        </h6>
+        <h6>
+          Issuance Date:{" "}
+          <a>{props.document?.issuanceDate?.toLocaleDateString()}</a>
+        </h6>
+        <h6>
+          Type: <a>{props.document?.type}</a>
+        </h6>
+        <h6>
+          Connections: <a></a>
+        </h6>
+        <h6>
+          Language: <a>{props.document?.language}</a>
+        </h6>
+        <h6>
+          Pages: <a>{props.document?.pages}</a>
+        </h6>
+        <h6>
+          Coordinates: <a>{props.document?.coordinates}</a>
+        </h6>
       </div>
     </>
   );

@@ -1,3 +1,5 @@
+@import "variables";
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -11,7 +13,7 @@
   z-index: 1000;
 
   .modal-content {
-    background: #fff;
+    background: #f3f3eb;
     padding: 2rem;
     border-radius: 16px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
@@ -22,7 +24,7 @@
     h2 {
       font-size: 1.8rem;
       font-weight: bold;
-      color: #333;
+      color: $first-color;
       margin-bottom: 1.5rem;
       text-align: center;
     }
@@ -46,7 +48,7 @@
         label {
           font-size: 1rem;
           font-weight: bold;
-          color: #333;
+          color: $first-color;
 
           a {
             font-weight: normal;
@@ -59,14 +61,14 @@
           border: 1px solid #ddd;
           border-radius: 8px;
           font-size: 1rem;
-          color: #333;
+          color: $first-color;
 
           &::placeholder {
-            color: #aaa;
+            color: rgba($color: $first-color, $alpha: 0.4);
           }
 
           &:focus {
-            border-color: #4ec3ac;
+            border-color: $second-color;
             outline: none;
           }
         }
@@ -111,18 +113,25 @@
       }
 
       .submit-button {
-        background-color: #4ec3ac;
-        color: #fff;
-        border: none;
+        background-color: $first-color;
+        padding: 1rem;
+        color: white;
+        border: 0.1rem solid $first-color;
+        cursor: pointer;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
 
         &:hover {
-          background-color: #43a694;
+          background: $third-color;
+          color: $first-color;
+          border: 0.1rem solid $first-color;
         }
       }
 
       .cancel-button {
         background-color: #ccc;
-        color: #333;
+        color: $first-color;
         border: none;
 
         &:hover {

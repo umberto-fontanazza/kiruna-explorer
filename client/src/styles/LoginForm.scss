@@ -1,3 +1,5 @@
+@import "variables";
+
 html,
 body {
   margin: 0;
@@ -27,7 +29,7 @@ body {
   .left-panel {
     width: 56vw;
     height: 100vh;
-    background-color: #4ec3ac;
+    background: $main-color;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -37,12 +39,14 @@ body {
     border-bottom-right-radius: 1rem;
 
     h1 {
+      color: #ddd;
       font-size: 5vmin;
       padding: 5vmin;
       margin-top: 5vmin;
     }
 
     p {
+      color: #ddd;
       font-size: 2.3vmin;
       padding: 5vmin;
       margin-top: 5vmin;
@@ -66,6 +70,7 @@ body {
     padding: 3vmin;
 
     h2 {
+      color: $first-color;
       font-size: 5vmin;
       margin-bottom: 5vmin;
     }
@@ -79,9 +84,9 @@ body {
     }
 
     label {
+      color: $first-color;
       font-size: 2vmin;
       margin-bottom: 1vmin;
-      color: black;
       font-weight: bold;
     }
 
@@ -101,7 +106,7 @@ body {
     }
 
     input:focus {
-      border-color: #4ec3ac;
+      border-color: $second-color;
       outline: none;
     }
 
@@ -111,40 +116,43 @@ body {
 
       a {
         font-size: 1.5vmin;
-        color: #4ec3ac;
+        color: $first-color;
         text-decoration: none;
       }
 
       :hover {
-        color: #43a694;
+        color: $second-color;
       }
     }
 
     button {
       width: 100%;
       padding: 1.5vmin;
-      background-color: #4ec3ac;
       font-size: 2vmin;
       color: white;
       border-radius: 1vmin;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      background: $main-color;
+      background-size: 200% 100%;
+      background-position: 201%;
+      transition: background-position 0.5s ease;
 
       &:hover {
-        background-color: #43a694;
+        background-position: 100%;
       }
     }
 
     .signup {
       margin-top: 2vmin;
       font-size: 1.5vmin;
+      color: $first-color;
 
       a {
-        color: #4ec3ac;
+        color: $second-color;
         text-decoration: none;
 
         &:hover {
-          color: #43a694;
+          text-decoration: underline;
         }
       }
     }
