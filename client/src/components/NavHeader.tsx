@@ -11,7 +11,14 @@ const NavHeader: FC<NavHeaderProps> = (props): JSX.Element => {
   return (
     <nav className="nav-header">
       <div className="nav-container">
-        <div className="nav-brand">Kiruna eXplorer.</div>
+        <div className="nav-left">
+          <img
+            src="/public/LOGO.png"
+            alt="Kiruna eXplorer Logo"
+            className="nav-logo"
+          ></img>
+          <div className="nav-brand">Kiruna eXplorer.</div>
+        </div>
         {props.login ? (
           <button className="btn-logout" onClick={props.logout}>
             Logout

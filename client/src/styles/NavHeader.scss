@@ -18,12 +18,25 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-  }
 
-  .nav-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: white;
+    .nav-left {
+      display: flex;
+
+      .nav-logo {
+        width: 2.5rem; // Adjust width as needed
+        height: auto;
+        margin-right: 0.5rem;
+        border-radius: 2rem;
+      }
+
+      .nav-brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: white;
+        display: flex;
+        align-items: center; // Align brand text vertically with the logo
+      }
+    }
   }
 
   .btn-logout,

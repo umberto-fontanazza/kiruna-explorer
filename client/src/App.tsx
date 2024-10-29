@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import Home from "./components/Home";
@@ -7,7 +7,7 @@ import NotFound from "./components/NotFound";
 import API from "./API/API";
 import "./styles/global.scss";
 
-function App() {
+const App: FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState("");
 
@@ -56,6 +56,6 @@ function App() {
       </Route>
     </Routes>
   );
-}
+};
 
 export default App;
