@@ -45,7 +45,7 @@ export class User {
 
         try {
           await Database.query(
-            "INSERT INTO user (email, name, surname, salt, password_hash, role) VALUES ($1, $2, $3, $4, $5, $6)",
+            `INSERT INTO "user" (email, name, surname, salt, password_hash, role) VALUES ($1, $2, $3, $4, $5, $6)`,
             [
               user.email,
               user.name,
@@ -64,9 +64,10 @@ export class User {
   }
 
   static async get(email: string, password: string): Promise<User | false> {
-    const result = await Database.query("SELECT * FROM user WHERE email = $1", [
-      email,
-    ]);
+    const result = await Database.query(
+      `SELECT * FROM "user" WHERE email = $1`,
+      [email],
+    );
     const userRow = result.rows[0];
     const user = User.fromDatabaseRow(userRow);
 
