@@ -127,7 +127,7 @@ function Sidebar(props: {
         </button>
       </div>
       <div className="content">
-        <img src="/public/icons8-under-construction-100.png"></img>
+        <img src="/icons8-under-construction-50.png"></img>
         <hr />
         <h3>{props.document?.title}</h3>
         <p>{props.document?.description}</p>
