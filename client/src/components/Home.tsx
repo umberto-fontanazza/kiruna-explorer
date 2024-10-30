@@ -3,7 +3,7 @@ import API from "../API/API";
 import { Document } from "../utils/interfaces";
 import "../styles/Home.scss";
 import NavHeader from "./NavHeader";
-import ModalAdd from "./ModalAdd";
+import ModalAdd from "./ModalForm";
 import MapComponent from "./Map";
 
 interface HomeProps {
@@ -162,9 +162,13 @@ function Sidebar(props: {
           Pages: <a>{props.document?.pages}</a>
         </h6>
         <h6>
-          Coordinates:
-          {props.document?.coordinates &&
-          props.document.coordinates.length > 0 ? (
+          Coordinates:{" "}
+          <a>
+            {props.document?.coordinates.latitude} |{" "}
+            {props.document?.coordinates.longitude}
+          </a>
+          {/*props.document?.coordinates &&
+            props.document.coordinates.length > 0 ? (
             <div>
               {props.document.coordinates.map((coord, index) => (
                 <div key={index}>
@@ -174,7 +178,7 @@ function Sidebar(props: {
             </div>
           ) : (
             ""
-          )}
+          )*/}
         </h6>
       </div>
     </>

@@ -57,7 +57,7 @@ async function getDocuments() {
       connections: "",
       language: "",
       pages: null,
-      coordinates: [{ latitude: 67.8557, longitude: 20.2255 }],
+      coordinates: { latitude: 67.8557, longitude: 20.2255 },
     },
     {
       id: 2,
@@ -71,7 +71,7 @@ async function getDocuments() {
       connections: "",
       language: "Sweden",
       pages: 3,
-      coordinates: [{ latitude: 67.855, longitude: 20.2223 }],
+      coordinates: { latitude: 67.855, longitude: 20.2223 },
     },
     {
       id: 3,
@@ -85,7 +85,7 @@ async function getDocuments() {
       connections: "",
       language: "",
       pages: null,
-      coordinates: [{ latitude: 67.8545, longitude: 20.2271 }],
+      coordinates: { latitude: 67.8545, longitude: 20.2271 },
     },
     {
       id: 4,
@@ -99,7 +99,7 @@ async function getDocuments() {
       connections: "",
       language: "",
       pages: null,
-      coordinates: [{ latitude: 67.8558, longitude: 20.2265 }],
+      coordinates: { latitude: 67.8558, longitude: 20.2265 },
     },
     {
       id: 5,
@@ -113,7 +113,7 @@ async function getDocuments() {
       connections: "",
       language: "",
       pages: null,
-      coordinates: [{ latitude: 67.856, longitude: 20.225 }],
+      coordinates: { latitude: 67.856, longitude: 20.225 },
     },
     {
       id: 6,
@@ -126,7 +126,7 @@ async function getDocuments() {
       connections: "",
       language: "",
       pages: null,
-      coordinates: [{ latitude: 67.857, longitude: 20.228 }],
+      coordinates: { latitude: 67.857, longitude: 20.228 },
     },
     {
       id: 7,
@@ -139,7 +139,7 @@ async function getDocuments() {
       connections: "",
       language: "",
       pages: null,
-      coordinates: [{ latitude: 67.858, longitude: 20.229 }],
+      coordinates: { latitude: 67.858, longitude: 20.229 },
     },
     {
       id: 8,
@@ -152,7 +152,7 @@ async function getDocuments() {
       connections: "",
       language: "",
       pages: null,
-      coordinates: [{ latitude: 67.859, longitude: 20.23 }],
+      coordinates: { latitude: 67.859, longitude: 20.23 },
     },
     {
       id: 9,
@@ -165,7 +165,7 @@ async function getDocuments() {
       connections: "",
       language: "",
       pages: null,
-      coordinates: [{ latitude: 67.86, longitude: 20.231 }],
+      coordinates: { latitude: 67.86, longitude: 20.231 },
     },
   ];
 }

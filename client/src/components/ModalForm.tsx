@@ -9,19 +9,6 @@ interface ModalAddProps {
   documents: Document[];
 }
 
-const dmsToDecimal = (
-  degrees: number,
-  minutes: number,
-  seconds: number,
-  direction: string
-): number => {
-  let decimal = degrees + minutes / 60 + seconds / 3600;
-  if (direction === "S" || direction === "W") {
-    decimal = -decimal;
-  }
-  return decimal;
-};
-
 const ModalAdd: FC<ModalAddProps> = ({
   modalOpen,
   onClose,
@@ -39,55 +26,11 @@ const ModalAdd: FC<ModalAddProps> = ({
     connections: "",
     language: "",
     pages: null,
-    coordinates: [],
-  });
-
-  const [latitude, setLatitude] = useState({
-    degrees: "",
-    minutes: "",
-    seconds: "",
-    direction: "N",
-  });
-  const [longitude, setLongitude] = useState({
-    degrees: "",
-    minutes: "",
-    seconds: "",
-    direction: "E",
+    coordinates: { latitude: null, longitude: null },
   });
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-
-    const latDegrees = parseFloat(latitude.degrees);
-    const latMinutes = parseFloat(latitude.minutes);
-    const latSeconds = parseFloat(latitude.seconds);
-    const lngDegrees = parseFloat(longitude.degrees);
-    const lngMinutes = parseFloat(longitude.minutes);
-    const lngSeconds = parseFloat(longitude.seconds);
-
-    const latDecimal = dmsToDecimal(
-      latDegrees,
-      latMinutes,
-      latSeconds,
-      latitude.direction
-    );
-    const lngDecimal = dmsToDecimal(
-      lngDegrees,
-      lngMinutes,
-      lngSeconds,
-      longitude.direction
-    );
-
-    setNewDoc((prevDoc) => ({
-      ...prevDoc,
-      coordinates: [
-        ...(prevDoc.coordinates || []),
-        { latitude: latDecimal, longitude: lngDecimal },
-      ],
-    }));
-
-    setLatitude({ degrees: "", minutes: "", seconds: "", direction: "N" });
-    setLongitude({ degrees: "", minutes: "", seconds: "", direction: "E" });
 
     onSubmit({ ...newDoc, scale: "1:" + newDoc.scale });
     setNewDoc({
@@ -101,19 +44,8 @@ const ModalAdd: FC<ModalAddProps> = ({
       connections: "",
       language: "",
       pages: null,
-      coordinates: [],
+      coordinates: { latitude: null, longitude: null },
     });
-  };
-
-  const handleDMSChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, dataset } = e.target;
-    const target = dataset.coord as "latitude" | "longitude";
-
-    if (target === "latitude") {
-      setLatitude((prev) => ({ ...prev, [name]: value }));
-    } else if (target === "longitude") {
-      setLongitude((prev) => ({ ...prev, [name]: value }));
-    }
   };
 
   if (!modalOpen) return null;
@@ -295,92 +227,51 @@ const ModalAdd: FC<ModalAddProps> = ({
                 </div>
               </div>
               <div className="form-group">
-                <label>Latitudine *</label>
+                <label>Latitude *</label>
                 <input
                   type="number"
-                  name="degrees"
-                  value={latitude.degrees}
-                  data-coord="latitude"
-                  onChange={handleDMSChange}
-                  placeholder="Gradi"
-                  required
-                />
-                <input
-                  type="number"
-                  name="minutes"
-                  value={latitude.minutes}
-                  data-coord="latitude"
-                  onChange={handleDMSChange}
-                  placeholder="Minuti"
-                  required
-                />
-                <input
-                  type="number"
-                  name="seconds"
-                  value={latitude.seconds}
-                  data-coord="latitude"
-                  onChange={handleDMSChange}
-                  placeholder="Secondi"
-                  required
-                />
-                <select
-                  name="direction"
-                  value={latitude.direction}
-                  data-coord="latitude"
+                  step="0.000001"
+                  name="latitude"
+                  value={
+                    newDoc.coordinates?.latitude !== null
+                      ? newDoc.coordinates?.latitude
+                      : ""
+                  }
                   onChange={(e) =>
-                    setLatitude((prev) => ({
+                    setNewDoc((prev) => ({
                       ...prev,
-                      direction: e.target.value,
+                      coordinates: {
+                        ...prev.coordinates,
+                        latitude: Number(e.target.value),
+                      },
                     }))
                   }
-                >
-                  <option value="N">N</option>
-                  <option value="S">S</option>
-                </select>
+                  placeholder="Es. 34.123456"
+                  required
+                />
               </div>
               <div className="form-group">
-                <label>Longitudine *</label>
+                <label>Longitude *</label>
                 <input
                   type="number"
-                  name="degrees"
-                  value={longitude.degrees}
-                  data-coord="longitude"
-                  onChange={handleDMSChange}
-                  placeholder="Gradi"
-                  required
-                />
-                <input
-                  type="number"
-                  name="minutes"
-                  value={longitude.minutes}
-                  data-coord="longitude"
-                  onChange={handleDMSChange}
-                  placeholder="Minuti"
-                  required
-                />
-                <input
-                  type="number"
-                  name="seconds"
-                  value={longitude.seconds}
-                  data-coord="longitude"
-                  onChange={handleDMSChange}
-                  placeholder="Secondi"
-                  required
-                />
-                <select
-                  name="direction"
-                  value={longitude.direction}
-                  data-coord="longitude"
-                  onChange={(e) =>
-                    setLongitude((prev) => ({
-                      ...prev,
-                      direction: e.target.value,
-                    }))
+                  name="longitude"
+                  value={
+                    newDoc.coordinates?.longitude !== null
+                      ? newDoc.coordinates?.longitude
+                      : ""
                   }
-                >
-                  <option value="E">E</option>
-                  <option value="W">W</option>
-                </select>
+                  onChange={(e) => {
+                    setNewDoc((prev) => ({
+                      ...prev,
+                      coordinates: {
+                        ...prev.coordinates,
+                        longitude: Number(e.target.value),
+                      },
+                    }));
+                  }}
+                  placeholder="-123.123456"
+                  required
+                />
               </div>
               <div className="form-group">
                 <label>Connection *</label>
@@ -423,7 +314,7 @@ const ModalAdd: FC<ModalAddProps> = ({
                       connections: "",
                       language: "",
                       pages: null,
-                      coordinates: [],
+                      coordinates: { latitude: null, longitude: null },
                     });
                     onClose();
                   }}
