@@ -6,12 +6,12 @@ TODO: write what are the mandatory parameters
 # Index
 
 1. [Base URL](#base-url)
-2. Collections   
-    2.1. [Colletion `documents`](#collection-documents)  
-    2.2. [Collection `links`](#collection-links)
-    2.3. [Collection `sessions`](#collection-sessions)
-    2.4. [Collection `users`](#collection-users)
-    
+2. Collections  
+   2.1. [Colletion `documents`](#collection-documents)  
+   2.2. [Collection `links`](#collection-links)
+   2.3. [Collection `sessions`](#collection-sessions)
+   2.4. [Collection `users`](#collection-users)
+
 <br/>
 
 # Base URL
@@ -114,13 +114,13 @@ Create a new document.
 
 ```json
 {
-    "title": "",
-    "description": "",
-    "coordinates": {
-        "latitude": 67.9, // domain [-90 deg, +90 deg]
-        "longitude": 20.22 // domain [-180 deg, +180 deg]
-    },
-    //other properties
+  "title": "",
+  "description": "",
+  "coordinates": {
+    "latitude": 67.9, // domain [-90 deg, +90 deg]
+    "longitude": 20.22 // domain [-180 deg, +180 deg]
+  }
+  //other properties
 }
 ```
 
@@ -128,8 +128,8 @@ Create a new document.
 
 ```json
 {
-    "message": "Document created successfully",
-    "id": 1
+  "message": "Document created successfully",
+  "id": 1
 }
 ```
 
@@ -153,12 +153,12 @@ Update an existing document by its unique identifier.
 
 ```json
 {
-    // "title" omitted because it was not edited
-    "description": "A new and improved descripton",
-    "coordinates": {
-        "latitude": 67.9, // domain [-90 deg, +90 deg]
-        "longitude": 20.22 // domain [-180 deg, +180 deg]
-    },
+  // "title" omitted because it was not edited
+  "description": "A new and improved descripton",
+  "coordinates": {
+    "latitude": 67.9, // domain [-90 deg, +90 deg]
+    "longitude": 20.22 // domain [-180 deg, +180 deg]
+  }
 }
 ```
 
@@ -206,14 +206,14 @@ Retrieve all links associated with a specific document. If the document has no l
 
 ```json
 [
-    {
-        "targetDocumentId": 2,
-        "linkTypes": ["DIRECT"]
-    },
-    {
-        "targetDocumentId": 4,
-        "linkTypes": ["PROJECTION", "COLLATERAL"]
-    }
+  {
+    "targetDocumentId": 2,
+    "linkTypes": ["DIRECT"]
+  },
+  {
+    "targetDocumentId": 4,
+    "linkTypes": ["PROJECTION", "COLLATERAL"]
+  }
 ]
 ```
 
@@ -237,8 +237,8 @@ Create or update a link associated with a specific document. If a link existed t
 
 ```json
 {
-    "targetDocumentId": 2,
-    "linkTypes": ["DIRECT", "UPDATE"]
+  "targetDocumentId": 2,
+  "linkTypes": ["DIRECT", "UPDATE"]
 }
 ```
 
@@ -262,7 +262,7 @@ If you want to remove just one of the `linkTypes` replace the link with `PUT /do
 
 ### Query parameters
 
- - `targetDocumentId`: id of the document at the other end of the link.
+- `targetDocumentId`: id of the document at the other end of the link.
 
 ### Success status
 
@@ -291,8 +291,8 @@ Authenticate a user and create a session.
 
 ```json
 {
-    "email": "urban.planner@gmail.com",
-    "password": "PlannerPlanner.90"
+  "email": "urban.planner@gmail.com",
+  "password": "PlannerPlanner.90"
 }
 ```
 
@@ -300,10 +300,10 @@ Authenticate a user and create a session.
 
 ```json
 {
-    "email": "urban.planner@gmail.com",
-    "name": "Luigi",
-    "surname": "Bianchi",
-    "role": "RESIDENT"
+  "email": "urban.planner@gmail.com",
+  "name": "Luigi",
+  "surname": "Bianchi",
+  "role": "RESIDENT"
 }
 ```
 
@@ -327,10 +327,10 @@ Retrieve information about the currently authenticated user.
 
 ```json
 {
-    "email": "urban.planner@gmail.com",
-    "name": "Luigi",
-    "surname": "Bianchi",
-    "role": "RESIDENT"
+  "email": "urban.planner@gmail.com",
+  "name": "Luigi",
+  "surname": "Bianchi",
+  "role": "RESIDENT"
 }
 ```
 
@@ -342,7 +342,7 @@ Retrieve information about the currently authenticated user.
 
 This API uses the following error codes:
 
-- `401 Unauthorized`: No authenticated user.
+- `401 Unauthorized`: Not authenticated.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
 ## DELETE `/sessions/current`
@@ -357,7 +357,6 @@ Log out the currently authenticated user.
 
 This API uses the following error codes:
 
-- `401 Unauthorized`: No authenticated user.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
 <br/>
@@ -374,11 +373,11 @@ Register a new user.
 
 ```json
 {
-    "email": "urban.planner@gmail.com",
-    "password": "ResidentResident.91",
-    "name": "Luigi",
-    "surname": "Bianchi",
-    "role": "RESIDENT"
+  "email": "urban.planner@gmail.com",
+  "password": "ResidentResident.91",
+  "name": "Luigi",
+  "surname": "Bianchi",
+  "role": "RESIDENT"
 }
 ```
 
@@ -386,7 +385,7 @@ Register a new user.
 
 ```json
 {
-    "message": "User created successfully",
+  "message": "User created successfully"
 }
 ```
 
