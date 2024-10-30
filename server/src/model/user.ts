@@ -39,7 +39,7 @@ export class User {
 
   static async insert(user: User, password: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      const salt = crypto.randomBytes(16).toString("hex");
+      const salt = crypto.randomBytes(16);
       crypto.scrypt(password, salt, 32, async (err, hashedPassword) => {
         if (err) return reject(err);
 
@@ -51,7 +51,7 @@ export class User {
               user.name,
               user.surname,
               salt,
-              hashedPassword.toString("hex"),
+              hashedPassword,
               user.role,
             ],
           );
@@ -62,6 +62,8 @@ export class User {
       });
     });
   }
+
+  // TODO: user not found
 
   static async login(email: string, password: string): Promise<User | false> {
     const result = await Database.query(
@@ -75,12 +77,7 @@ export class User {
       crypto.scrypt(password, userRow.salt, 32, (err, hashedPassword) => {
         if (err) return reject(err);
 
-        if (
-          crypto.timingSafeEqual(
-            Buffer.from(userRow.password, "hex"),
-            hashedPassword,
-          )
-        ) {
+        if (crypto.timingSafeEqual(userRow.password_hash, hashedPassword)) {
           resolve(user);
         } else {
           resolve(false);
