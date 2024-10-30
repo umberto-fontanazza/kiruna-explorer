@@ -68,6 +68,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
                     <button
                       className="icon-info"
                       onClick={() => {
+                        console.log(documents);
                         setSidebarOpen(true);
                         setDocSelected(document);
                       }}
@@ -98,6 +99,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
         modalOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleAddDocument}
+        documents={documents}
       />
 
       {/* <div className="diagram">
@@ -121,17 +123,18 @@ function Sidebar(props: {
           <img
             className="btn-download-img"
             src="/file-earmark-arrow-down.svg"
+            alt="Download"
           />
         </button>
         <button
           className="btn-close-sidebar"
           onClick={() => props.setSidebarOpen(false)}
         >
-          <img className="btn-close-img" src="/x.svg" />
+          <img className="btn-close-img" src="/x.svg" alt="Close" />
         </button>
       </div>
       <div className="content">
-        <img src="/icons8-under-construction-50.png"></img>
+        <img src="/icons8-under-construction-50.png" alt="Under Construction" />
         <hr />
         <h3>{props.document?.title}</h3>
         <p>{props.document?.description}</p>
@@ -150,7 +153,7 @@ function Sidebar(props: {
           Type: <a>{props.document?.type}</a>
         </h6>
         <h6>
-          Connections: <a></a>
+          Connections: <a>{props.document?.connections}</a>
         </h6>
         <h6>
           Language: <a>{props.document?.language}</a>
@@ -159,7 +162,19 @@ function Sidebar(props: {
           Pages: <a>{props.document?.pages}</a>
         </h6>
         <h6>
-          Coordinates: <a>{props.document?.coordinates}</a>
+          Coordinates:
+          {props.document?.coordinates &&
+          props.document.coordinates.length > 0 ? (
+            <div>
+              {props.document.coordinates.map((coord, index) => (
+                <div key={index}>
+                  <a>{coord.latitude}</a> | <a>{coord.longitude}</a>
+                </div>
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
         </h6>
       </div>
     </>
