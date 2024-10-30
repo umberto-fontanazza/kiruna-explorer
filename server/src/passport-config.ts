@@ -6,7 +6,8 @@ export default function passportInizializer(passport: PassportStatic) {
   passport.use(
     new Strategy({ usernameField: "email" }, async (email, password, done) => {
       const user = await User.login(email, password);
-      if (!user) return done(null, "Username and/or wrong password.");
+      if (!user)
+        return done(null, false, { message: "Username and/or wrong password" });
 
       return done(null, user);
     }),

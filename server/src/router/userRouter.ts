@@ -14,7 +14,7 @@ userRouter.post("/", async (req: Request, res: Response) => {
 
     const existingUser = await User.getByEmail(email);
     if (existingUser) {
-      throw UserError.Conflict(); // Lancia errore 409
+      throw UserError.Conflict();
     }
 
     const user = new User(email, name, surname, role);
@@ -23,11 +23,11 @@ userRouter.post("/", async (req: Request, res: Response) => {
     res
       .status(StatusCodes.CREATED)
       .json({ message: "User created successfully" });
-  } catch (error) {
-    if (error instanceof UserError) {
-      res.status(error.statusCode).json({ message: error.message });
+  } catch (err) {
+    if (err instanceof UserError) {
+      res.status(err.statusCode).json({ message: err.message });
     } else {
-      console.error(error);
+      console.error(err);
       res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .json({ message: "An unexpected error occurred on the server" });
