@@ -1,6 +1,7 @@
 import { strict as assert } from "assert";
 import crypto from "crypto";
 import { Database } from "../database";
+import { UserError } from "../error/userError";
 
 type UserDbRow = {
   email: string;
@@ -63,14 +64,16 @@ export class User {
     });
   }
 
-  // TODO: user not found
-
   static async login(email: string, password: string): Promise<User | false> {
     const result = await Database.query(
       `SELECT * FROM "user" WHERE email = $1`,
       [email],
     );
+
     const userRow = result.rows[0];
+
+    if (!userRow) return false;
+
     const user = User.fromDatabaseRow(userRow);
 
     return new Promise((resolve, reject) => {

@@ -8,15 +8,22 @@ export const sessionRouter: Router = Router();
 sessionRouter.post("/", (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate(
     "local",
-    (err: Error | null, user: User | false, info: string) => {
-      if (err) return next(err);
-      if (!user) {
-        return res.status(StatusCodes.UNAUTHORIZED).send(info);
+    (err: Error | null, user: User | false, info: { message: string }) => {
+      if (err) {
+        return next(err);
       }
-      req.login(user, (err) => {
-        if (err) return next(err);
+      if (!user) {
+        return res
+          .status(StatusCodes.UNAUTHORIZED)
+          .json({ message: info.message });
+      }
 
-        return res.status(StatusCodes.CREATED).json(req.user);
+      req.login(user, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        return res.status(StatusCodes.CREATED).json(user);
       });
     },
   )(req, res, next);
