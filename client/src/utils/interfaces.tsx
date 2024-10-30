@@ -5,11 +5,6 @@ export interface Credentials {
   password: string;
 }
 
-export interface Coordinates {
-  latitude: number;
-  longitude: number;
-}
-
 export interface Document {
   id: number | string;
   title: string;
@@ -21,5 +16,5 @@ export interface Document {
   connections: string | undefined;
   language: string | undefined;
   pages: number | null;
-  coordinates: Coordinates[] | undefined;
+  coordinates: { latitude: number | null; longitude: number | null };
 }
