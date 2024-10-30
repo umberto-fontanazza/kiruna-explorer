@@ -1,7 +1,6 @@
 import { strict as assert } from "assert";
 import crypto from "crypto";
 import { Database } from "../database";
-import { UserError } from "../error/userError";
 
 type UserDbRow = {
   email: string;
@@ -38,6 +37,13 @@ export class User {
     return new User(email, name, surname, role);
   }
 
+  /**
+   * Inserts a new user into the database with a hashed password
+   *
+   * @param {User} user - The user to be inserted
+   * @param {string} password - The user's password to be hashed and stored
+   * @throws {Error} Throws an error if the insertion fails
+   */
   static async insert(user: User, password: string): Promise<void> {
     return new Promise((resolve, reject) => {
       const salt = crypto.randomBytes(16);
@@ -64,6 +70,13 @@ export class User {
     });
   }
 
+  /**
+   * Authenticates a user by email and password
+   *
+   * @param {string} email - The email of the user
+   * @param {string} password - The user's password
+   * @returns {Promise<User | false>} A promise that resolves to the user if authentication is successful or false if credentials don't match in the database
+   */
   static async login(email: string, password: string): Promise<User | false> {
     const result = await Database.query(
       `SELECT * FROM "user" WHERE email = $1`,
@@ -89,6 +102,12 @@ export class User {
     });
   }
 
+  /**
+   * Retrieves a user by email address
+   *
+   * @param {string} email - The email address of the user
+   * @returns {Promise<User | undefined>} A promise that resolves to the user if found, or undefined if not
+   */
   static async getByEmail(email: string): Promise<User | undefined> {
     const result = await Database.query(
       `SELECT * FROM "user" WHERE email = $1`,
