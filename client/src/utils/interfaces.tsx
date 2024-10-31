@@ -5,6 +5,11 @@ export interface Credentials {
   password: string;
 }
 
+export interface Link {
+  targetDocumentId: number;
+  type: string[];
+}
+
 export interface Document {
   id: number | string;
   title: string;
@@ -13,7 +18,7 @@ export interface Document {
   scale: string | undefined;
   issuanceDate: Date | null;
   type: string | undefined;
-  connections: string | undefined;
+  connections: Link[] | undefined;
   language: string | undefined;
   pages: number | null;
   coordinates: { latitude: number | null; longitude: number | null };
