@@ -79,7 +79,8 @@ const ModalAdd: FC<ModalAddProps> = ({
                 <div className="form-group">
                   <label className="id">Document ID *</label>
                   <input
-                    type="text"
+                    type="number"
+                    id="no-spin"
                     placeholder="Enter Document ID"
                     value={newDoc.id}
                     onChange={(e) =>
@@ -234,6 +235,7 @@ const ModalAdd: FC<ModalAddProps> = ({
                   <label>Pages (optional):</label>
                   <input
                     type="number"
+                    id="no-spin"
                     value={newDoc.pages !== null ? newDoc.pages : ""}
                     onChange={(e) => {
                       setNewDoc((prev) => ({
