@@ -74,7 +74,7 @@
         }
 
         select {
-          width: 100%;
+          
           padding: 0.75rem;
           border: 1px solid #ddd;
           border-radius: 8px;
@@ -84,10 +84,12 @@
           box-sizing: border-box;
 
           &:focus {
-            border-color: #4ec3ac;
+            border-color: $second-color;
             outline: none;
           }
         }
+
+        
       }
 
       textarea {
@@ -140,4 +142,71 @@
       }
     }
   }
+}
+
+
+.coordinates {
+  display: flex;
+  gap: 1rem;
+}
+
+.latitude {
+  width: 20%;
+}
+
+.coord-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.5rem;
+
+  label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: $first-color;
+
+    a {
+      font-weight: normal;
+    }
+  }
+
+  input,
+  textarea {
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: $first-color;
+
+    &::placeholder {
+      color: rgba($color: $first-color, $alpha: 0.4);
+    }
+
+    &:focus {
+      border-color: $second-color;
+      outline: none;
+    }
+  }
+
+  select {
+          
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #333;
+    background-color: #fff;
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: $second-color;
+      outline: none;
+    }
+  }
+}
+
+#no-spin::-webkit-outer-spin-button,
+#no-spin::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
