@@ -38,6 +38,10 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
     setModalOpen(false);
   };
 
+  useEffect(() => {
+    console.log(docSelected);
+  }, [docSelected]);
+
   return (
     <>
       <NavHeader logout={props.handleLogout} login={props.login} />
@@ -83,7 +87,13 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
         }
 
         <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-          {<Sidebar setSidebarOpen={setSidebarOpen} document={docSelected} />}
+          {
+            <Sidebar
+              setSidebarOpen={setSidebarOpen}
+              document={docSelected}
+              documents={documents}
+            />
+          }
         </div>
       </div>
 
@@ -112,7 +122,11 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
 function Sidebar(props: {
   setSidebarOpen: (isOpen: boolean) => void;
   document: Document | null;
+  documents: Document[];
 }) {
+  /*const [showDropDown, setShowDropDown] = useState(false);
+  const [newConnection, setNewConnection] = useState("");*/
+
   return (
     <>
       <div className="container-btns">
@@ -139,29 +153,62 @@ function Sidebar(props: {
         <h3>{props.document?.title}</h3>
         <p>{props.document?.description}</p>
         <hr className="separator" />
-        <h6>
+        <h4>
           Stakeholders: <a>{props.document?.stakeholder}</a>
-        </h6>
-        <h6>
+        </h4>
+        <h4>
           Scale: <a>{props.document?.scale}</a>
-        </h6>
-        <h6>
+        </h4>
+        <h4>
           Issuance Date:{" "}
           <a>{props.document?.issuanceDate?.toLocaleDateString()}</a>
-        </h6>
-        <h6>
+        </h4>
+        <h4>
           Type: <a>{props.document?.type}</a>
-        </h6>
-        <h6>
-          Connections: <a>{props.document?.connections}</a>
-        </h6>
-        <h6>
+        </h4>
+        <h4>
+          Connections: <a>{props.document?.connections?.length}</a>
+        </h4>
+        {/*<div className="connection-group">
+          <h4>
+            Connections: <a>{props.document?.connections}</a>
+          </h4>
+          <button className="btn-add-connection" onClick={toggleDropDown}>
+            +
+          </button>
+          {showDropDown && (
+            <div className="drop-down">
+              <select
+                value={newConnection}
+                onChange={(e) => {
+                  setNewConnection(e.target.value);
+                }}
+              >
+                <option value="">Choose a new Connection</option>
+                {props.documents.map((doc) => (
+                  <option key={doc.id} value={doc.title}>
+                    {doc.title}
+                  </option>
+                ))}
+              </select>
+              {newConnection && (
+                <button
+                  onClick={handleConfirm}
+                  className="btn-confirm-connection"
+                >
+                  Confirm
+                </button>
+              )}
+            </div>
+          )}
+        </div>*/}
+        <h4>
           Language: <a>{props.document?.language}</a>
-        </h6>
-        <h6>
+        </h4>
+        <h4>
           Pages: <a>{props.document?.pages}</a>
-        </h6>
-        <h6>
+        </h4>
+        <h4>
           Coordinates:{" "}
           <a>
             {props.document?.coordinates.latitude} |{" "}
@@ -179,7 +226,7 @@ function Sidebar(props: {
           ) : (
             ""
           )*/}
-        </h6>
+        </h4>
       </div>
     </>
   );

@@ -119,11 +119,65 @@
       font-weight: bold;
     }
 
-    h6 {
+    h4 {
       color: $first-color;
       font-weight: normal;
+      font-size: medium;
       a {
         font-weight: bold;
+      }
+    }
+
+    .connection-group {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-direction: row;
+
+      h6 {
+        margin-right: 2%;
+      }
+
+      a {
+        font-weight: bold;
+      }
+      .btn-add-connection {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ddd;
+        background-color: $first-color;
+        padding: 0.3rem;
+        border-radius: 10vh;
+
+        &:hover {
+          background-color: $second-color;
+          color: $first-color;
+        }
+      }
+
+      .drop-down {
+        select {
+          width: 100%;
+          color: #ddd;
+          border: solid 0.2rem $first-color;
+          background-color: $first-color;
+          border-radius: 1rem;
+        }
+
+        .btn-confirm-connection {
+          width: 40%;
+          height: 40%;
+          color: #ddd;
+          border: solid 0.2rem $first-color;
+          background-color: $first-color;
+          border-radius: 1rem;
+
+          &:hover {
+            background-color: $second-color;
+            color: $first-color;
+          }
+        }
       }
     }
   }

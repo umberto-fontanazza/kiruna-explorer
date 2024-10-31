@@ -1,5 +1,5 @@
-import { FC, useState } from "react";
-import { Document } from "../utils/interfaces";
+import { FC, useEffect, useState } from "react";
+import { Document, Link } from "../utils/interfaces";
 import "../styles/ModalAdd.scss";
 
 interface ModalAddProps {
@@ -15,7 +15,7 @@ const ModalAdd: FC<ModalAddProps> = ({
   onSubmit,
   documents,
 }) => {
-  const [newDoc, setNewDoc] = useState<Document>({
+  const initialDocumentState: Document = {
     id: "",
     title: "",
     description: "",
@@ -23,30 +23,48 @@ const ModalAdd: FC<ModalAddProps> = ({
     scale: "",
     issuanceDate: null,
     type: "",
-    connections: "",
+    connections: [],
     language: "",
     pages: null,
     coordinates: { latitude: null, longitude: null },
-  });
+  };
+  const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
+  const [targetDocumentId, setTargetDocumentId] = useState<number | null>(null);
+  const [newTypeConncection, setNewTypeConnection] = useState("");
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
 
+    if (targetDocumentId && newTypeConncection) {
+      addConnection();
+    }
+
     onSubmit({ ...newDoc, scale: "1:" + newDoc.scale });
-    setNewDoc({
-      id: "",
-      title: "",
-      description: "",
-      stakeholder: "",
-      scale: "",
-      issuanceDate: null,
-      type: "",
-      connections: "",
-      language: "",
-      pages: null,
-      coordinates: { latitude: null, longitude: null },
-    });
+    setNewDoc(initialDocumentState);
   };
+
+  const addConnection = () => {
+    if (targetDocumentId && newTypeConncection) {
+      const newLink: Link = {
+        targetDocumentId: targetDocumentId,
+        type: [newTypeConncection],
+      };
+      console.log(newLink);
+      setNewDoc((prev) => ({
+        ...prev,
+        connections: [
+          ...(prev.connections || []),
+          { targetDocumentId: newLink.targetDocumentId, type: newLink.type },
+        ],
+      }));
+      setTargetDocumentId(null);
+      setNewTypeConnection("");
+    }
+  };
+
+  useEffect(() => {
+    console.log(newDoc);
+  }, [newDoc]);
 
   if (!modalOpen) return null;
 
@@ -276,23 +294,30 @@ const ModalAdd: FC<ModalAddProps> = ({
               <div className="form-group">
                 <label>Connection *</label>
                 <select
-                  value={newDoc.connections}
-                  onChange={(e) => {
-                    setNewDoc((prev) => ({
-                      ...prev,
-                      connections: e.target.value,
-                    }));
-                  }}
-                  required
+                  value={targetDocumentId ?? ""}
+                  onChange={(e) => setTargetDocumentId(Number(e.target.value))}
                 >
-                  <option value="" disabled>
-                    Select the Linked Documents
-                  </option>
+                  <option value="">Select a document to link</option>
                   {documents.map((doc) => (
-                    <option key={doc.id} value={doc.title}>
+                    <option key={doc.id} value={doc.id}>
                       {doc.title}
                     </option>
                   ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Connection Type *</label>
+                <select
+                  value={newTypeConncection}
+                  onChange={(e) => setNewTypeConnection(e.target.value)}
+                >
+                  <option value="" disabled>
+                    Select the Connection's type
+                  </option>
+                  <option value="Direct">DIRECT</option>
+                  <option value="Collateral">COLLATERAL</option>
+                  <option value="Projection">PROJECTION</option>
+                  <option value="Update">UPDATE</option>
                 </select>
               </div>
               <div className="button-group">
@@ -303,19 +328,7 @@ const ModalAdd: FC<ModalAddProps> = ({
                   className="cancel-button"
                   type="button"
                   onClick={() => {
-                    setNewDoc({
-                      id: "",
-                      title: "",
-                      description: "",
-                      stakeholder: "",
-                      scale: "",
-                      issuanceDate: null,
-                      type: "",
-                      connections: "",
-                      language: "",
-                      pages: null,
-                      coordinates: { latitude: null, longitude: null },
-                    });
+                    setNewDoc(initialDocumentState);
                     onClose();
                   }}
                 >
