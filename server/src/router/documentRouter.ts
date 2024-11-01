@@ -3,6 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import { strict as assert } from "assert";
 import { Document } from "../model/document";
 import { DocumentNotFound } from "../error/documentError";
+import { linkRouter } from "./linkRouter";
 
 export const documentRouter: Router = Router();
 
