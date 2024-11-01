@@ -7,6 +7,8 @@ import { linkRouter } from "./linkRouter";
 
 export const documentRouter: Router = Router();
 
+documentRouter.use("/:id/links", linkRouter);
+
 documentRouter.get(
   "", //TODO: authentication authorization
   async (request: Request, response: Response) => {
