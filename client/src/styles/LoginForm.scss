@@ -1,10 +1,13 @@
-html, body {
+@import "variables";
+
+html,
+body {
   margin: 0;
   padding: 0;
   height: 100%;
   width: 100%;
   overflow: hidden;
-  font-size: 1.5vmin; 
+  font-size: 1.5vmin;
 }
 
 .form {
@@ -24,9 +27,9 @@ html, body {
   }
 
   .left-panel {
-    width: 56vw; 
+    width: 56vw;
     height: 100vh;
-    background-color: #4ec3ac;
+    background: $main-color;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -34,14 +37,16 @@ html, body {
     overflow: hidden;
     border-top-right-radius: 1rem;
     border-bottom-right-radius: 1rem;
-    
+
     h1 {
-      font-size: 5vmin; 
+      color: #ddd;
+      font-size: 5vmin;
       padding: 5vmin;
       margin-top: 5vmin;
     }
 
     p {
+      color: #ddd;
       font-size: 2.3vmin;
       padding: 5vmin;
       margin-top: 5vmin;
@@ -56,7 +61,7 @@ html, body {
   }
 
   .right-panel {
-    width: 44vw; 
+    width: 44vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -65,6 +70,7 @@ html, body {
     padding: 3vmin;
 
     h2 {
+      color: $first-color;
       font-size: 5vmin;
       margin-bottom: 5vmin;
     }
@@ -78,9 +84,9 @@ html, body {
     }
 
     label {
+      color: $first-color;
       font-size: 2vmin;
       margin-bottom: 1vmin;
-      color: black;
       font-weight: bold;
     }
 
@@ -92,7 +98,7 @@ html, body {
       border-radius: 1vmin;
     }
 
-    .input-password{
+    .input-password {
       padding: 1.5vmin;
       font-size: 1.8vmin;
       border: 0.2vmin solid #ddd;
@@ -100,7 +106,7 @@ html, body {
     }
 
     input:focus {
-      border-color: #4ec3ac;
+      border-color: $second-color;
       outline: none;
     }
 
@@ -110,41 +116,43 @@ html, body {
 
       a {
         font-size: 1.5vmin;
-        color: #4ec3ac;
+        color: $first-color;
         text-decoration: none;
       }
 
       :hover {
-        color: #43a694;
+        color: $second-color;
       }
     }
 
     button {
-
       width: 100%;
       padding: 1.5vmin;
-      background-color: #4ec3ac;
       font-size: 2vmin;
       color: white;
       border-radius: 1vmin;
       cursor: pointer;
-      transition: background-color 0.3s ease;
-    }
+      background: $main-color;
+      background-size: 200% 100%;
+      background-position: 201%;
+      transition: background-position 0.5s ease;
 
-    button:hover {
-      background-color: #43a694;
+      &:hover {
+        background-position: 100%;
+      }
     }
 
     .signup {
       margin-top: 2vmin;
       font-size: 1.5vmin;
+      color: $first-color;
 
       a {
-        color: #4ec3ac;
+        color: $second-color;
         text-decoration: none;
 
-        &:hover{
-          color: #43a694;
+        &:hover {
+          text-decoration: underline;
         }
       }
     }
