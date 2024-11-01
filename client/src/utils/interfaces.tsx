@@ -4,3 +4,22 @@ export interface Credentials {
   username: string;
   password: string;
 }
+
+export interface Link {
+  targetDocumentId: number;
+  type: string[];
+}
+
+export interface Document {
+  id: number | string;
+  title: string;
+  description: string | null;
+  stakeholder: string | undefined;
+  scale: string | undefined;
+  issuanceDate: Date | null;
+  type: string | undefined;
+  connections: Link[] | undefined;
+  language: string | undefined;
+  pages: number | null;
+  coordinates: { latitude: number | null; longitude: number | null };
+}
