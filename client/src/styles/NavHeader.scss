@@ -1,39 +1,63 @@
-// src/styles/NavHeader.scss
+@import "variables";
 
-//@use "./variables" as *; // Importiamo le variabili globali
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
 
 .nav-header {
+  height: 8vh;
   padding: 1rem 2rem;
   display: flex;
-  background-color: #4ec3ac;
+  background: $main-color;
 
   .nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+
+    .nav-left {
+      display: flex;
+
+      .nav-logo {
+        width: 2.5rem; // Adjust width as needed
+        height: auto;
+        margin-right: 0.5rem;
+        border-radius: 2rem;
+      }
+
+      .nav-brand {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #ddd;
+        display: flex;
+        align-items: center; // Align brand text vertically with the logo
+      }
+    }
   }
 
-  .nav-brand {
-    color: black;
-    font-size: 1.5rem;
-    font-weight: bold;
-  }
-
-  .btn-logout {
-    background-color: transparent;
-    border: 2px solid black;
-    color: black;
+  .btn-logout,
+  .btn-login {
+    background-color: $first-color;
+    border: 0.1rem solid $first-color;
+    color: #ddd;
     padding: 0.5rem 1rem;
     font-size: 1rem;
-    border-radius: 4px;
+    border-radius: 1rem;
     cursor: pointer;
     transition:
       background-color 0.3s ease,
       color 0.3s ease;
 
     &:hover {
-      background: #456784;
+      background: $third-color;
+      color: $first-color;
+      border: 2px solid $first-color;
     }
   }
 }
