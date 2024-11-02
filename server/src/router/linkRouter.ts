@@ -10,6 +10,18 @@ import { idRequestParam } from "../validation/documentSchema";
 
 export const linkRouter: Router = Router({ mergeParams: true }); // merge params allows using doc id
 
+linkRouter.get(
+  "",
+  //TODO: authentication authorization
+  validateRequestParameters(idRequestParam),
+  async (request: Request, response: Response) => {
+    //TODO: implement search filters, query params
+    const sourceDocumentId: number = Number(request.params.id);
+    const links: Link[] = await Link.fromDocumentAll(sourceDocumentId);
+    response.status(StatusCodes.OK).send(links);
+  },
+);
+
 linkRouter.put(
   "",
   //TODO: authentication authorization
