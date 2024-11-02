@@ -3,9 +3,10 @@ import { Link } from "../model/link";
 import { StatusCodes } from "http-status-codes";
 import {
   validateBody,
+  validateQueryParameters,
   validateRequestParameters,
 } from "../middleware/validation";
-import { PutBody, putBody } from "../validation/linkSchema";
+import { targetIdQueryParam, PutBody, putBody } from "../validation/linkSchema";
 import { idRequestParam } from "../validation/documentSchema";
 
 export const linkRouter: Router = Router({ mergeParams: true }); // merge params allows using doc id
@@ -35,5 +36,20 @@ linkRouter.put(
     await link.update();
     response.status(StatusCodes.CREATED).send();
     return;
+  },
+);
+
+linkRouter.delete(
+  "",
+  //TODO: authentication authorization
+  validateRequestParameters(idRequestParam),
+  validateQueryParameters(targetIdQueryParam),
+  async (request: Request, response: Response) => {
+    const sourceId = Number(request.params.id);
+    const targetId = Number(request.query.targetId);
+    console.log("targetId: ", targetId, typeof targetId);
+    console.log("sourceId: ", sourceId, typeof sourceId);
+    await Link.delete(sourceId, targetId);
+    response.status(StatusCodes.NO_CONTENT).send();
   },
 );
