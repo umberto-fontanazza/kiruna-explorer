@@ -50,4 +50,22 @@ export class Link {
     );
     assert(result.rowCount === 1);
   }
+
+  static async delete(
+    sourceDocumentId: number,
+    targetDocumentId: number,
+  ): Promise<void> {
+    //TODO: run the two queries in the same transaction
+    const args = [sourceDocumentId, targetDocumentId];
+    const result = await Database.query(
+      "UPDATE document SET links = links - $1 WHERE id = $2",
+      args,
+    );
+    assert(result.rowCount === 1);
+    const result2 = await Database.query(
+      "UPDATE document SET links = links - $2 WHERE id = $1",
+      args,
+    );
+    assert(result2.rowCount === 1);
+  }
 }
