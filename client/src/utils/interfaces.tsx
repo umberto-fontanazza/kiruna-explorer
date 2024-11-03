@@ -14,7 +14,7 @@ export interface Document {
   id: number;
   title: string;
   description: string | undefined;
-  stakeholder: string[] | undefined;
+  stakeholder: string[];
   scale: string;
   issuanceDate: Date | null;
   type: string;

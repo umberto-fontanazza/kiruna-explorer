@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from "react";
-import { Document, Link } from "../utils/interfaces";
+import { FC, useState } from "react";
+import { Document } from "../utils/interfaces";
 import "../styles/ModalAdd.scss";
 
 interface ModalAddProps {
@@ -29,39 +29,55 @@ const ModalAdd: FC<ModalAddProps> = ({
     coordinates: { latitude: null, longitude: null },
   };
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
-  const [targetDocumentId, setTargetDocumentId] = useState<number | null>(null);
-  const [newTypeConncection, setNewTypeConnection] = useState("");
+  const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
+  const [newTypeConnection, setNewTypeConnection] = useState<string>("");
+  const [isNumericScale, setIsNumericScale] = useState<boolean>(false);
+
+  const scaleValues = ["Blueprints/Effects", "Text"];
+  const stakeholdersOptions = [
+    { value: "LKAB", label: "LKAB" },
+    { value: "Municipality", label: "Municipality" },
+    { value: "Regional Authority", label: "Regional Authority" },
+    { value: "Architecture Firms", label: "Architecture Firms" },
+    { value: "Citizens", label: "Citizens" },
+    { value: "Others", label: "Others" },
+  ];
+
+  const handleCheckboxChange = (event: {
+    target: { value: string; checked: boolean };
+  }) => {
+    const { value, checked } = event.target;
+
+    setNewDoc((prev) => {
+      const stakeholders = prev.stakeholder || [];
+      if (checked) {
+        // add option if selected
+        return { ...prev, stakeholder: [...stakeholders, value] };
+      } else {
+        // remove option if unselected
+        return {
+          ...prev,
+          stakeholder: stakeholders.filter((stake) => stake !== value),
+        };
+      }
+    });
+  };
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
 
-    if (targetDocumentId && newTypeConncection) {
-      addConnection();
-    }
-
-    onSubmit({ ...newDoc, scale: "1:" + newDoc.scale });
+    onSubmit({
+      ...newDoc,
+      scale: "1:" + newDoc.scale,
+      connections: [
+        { targetDocumentId: targetDocumentId, type: [newTypeConnection] },
+      ],
+    });
+    console.log(newDoc);
     setNewDoc(initialDocumentState);
+    setNewTypeConnection("");
+    setTargetDocumentId(-1);
   };
-
-  const addConnection = () => {
-    if (targetDocumentId && newTypeConncection) {
-      const newLink: Link = {
-        targetDocumentId: targetDocumentId,
-        type: [newTypeConncection],
-      };
-      //console.log(newLink);
-      setNewDoc((prev) => ({
-        ...prev,
-        connections: [...(prev.connections || []), newLink],
-      }));
-      setTargetDocumentId(null);
-      setNewTypeConnection("");
-    }
-  };
-
-  // useEffect(() => {
-  //   console.log(newDoc);
-  // }, [newDoc]);
 
   if (!modalOpen) return null;
 
@@ -104,48 +120,62 @@ const ModalAdd: FC<ModalAddProps> = ({
               <div className="test">
                 <div className="form-group">
                   <label>StakeHolders *</label>
-                  <select
-                    value={newDoc.stakeholder}
-                    onChange={(e) =>
-                      setNewDoc((prev) => ({
-                        ...prev,
-                        stakeholder: [
-                          ...(prev.stakeholder || []),
-                          e.target.value,
-                        ],
-                      }))
-                    }
-                    required
-                  >
-                    <option value="" disabled>
-                      Select category
-                    </option>
-                    <option value="LKAB">LKAB</option>
-                    <option value="Municipality">Municipality</option>
-                    <option value="Regional Authority">
-                      Regional Authority
-                    </option>
-                    <option value="Architecture Firms">
-                      Architecture Firms
-                    </option>
-                    <option value="Citizens">Citizens</option>
-                    <option value="Others">Others</option>
-                  </select>
+                  <div className="checkbox-group">
+                    {stakeholdersOptions.map((option) => (
+                      <label key={option.value} className="checkbox-label">
+                        <input
+                          type="checkbox"
+                          value={option.value}
+                          checked={newDoc.stakeholder.includes(option.value)}
+                          onChange={handleCheckboxChange}
+                        />
+                        {option.label}
+                      </label>
+                    ))}
+                  </div>
                 </div>
                 <div className="form-group">
                   <label>Scale *</label>
-                  <div>
-                    <span className="scale">1: </span>
-                    <input
-                      type="text"
-                      value={newDoc.scale}
-                      onChange={(e) =>
-                        setNewDoc((prev) => ({
-                          ...prev,
-                          scale: e.target.value,
-                        }))
-                      }
-                    />
+                  <div className="scale">
+                    <select
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value === "numeric") {
+                          setIsNumericScale(true);
+                          setNewDoc((prev) => ({ ...prev, scale: "" }));
+                        } else {
+                          setIsNumericScale(false);
+                          setNewDoc((prev) => ({ ...prev, scale: value }));
+                        }
+                      }}
+                    >
+                      <option value="">Select one option</option>
+                      {scaleValues.map((val) => (
+                        <option key={val} value={val}>
+                          {val}
+                        </option>
+                      ))}
+                      <option value="numeric">Rateo</option>
+                    </select>
+
+                    {isNumericScale && (
+                      <div>
+                        <span>1: </span>
+                        <input
+                          type="number"
+                          id="no-spin"
+                          value={newDoc.scale}
+                          onChange={(e) =>
+                            setNewDoc((prev) => ({
+                              ...prev,
+                              scale: e.target.value,
+                            }))
+                          }
+                          style={{ width: "60%", marginTop: "10px" }}
+                          required
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -233,6 +263,7 @@ const ModalAdd: FC<ModalAddProps> = ({
                 <label>Latitude *</label>
                 <input
                   type="number"
+                  id="no-spin"
                   step="0.000001"
                   name="latitude"
                   value={
@@ -257,6 +288,7 @@ const ModalAdd: FC<ModalAddProps> = ({
                 <label>Longitude *</label>
                 <input
                   type="number"
+                  id="no-spin"
                   name="longitude"
                   value={
                     newDoc.coordinates?.longitude !== null
@@ -293,7 +325,7 @@ const ModalAdd: FC<ModalAddProps> = ({
               <div className="form-group">
                 <label>Connection Type *</label>
                 <select
-                  value={newTypeConncection}
+                  value={newTypeConnection}
                   onChange={(e) => setNewTypeConnection(e.target.value)}
                 >
                   <option value="" disabled>
