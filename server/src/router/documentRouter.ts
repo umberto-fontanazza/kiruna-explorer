@@ -64,7 +64,7 @@ documentRouter.patch(
   validateBody(patchBody),
   async (request: Request, response: Response) => {
     const id = Number(request.params.id);
-    const { title, description } = request.body as PatchBody;
+    const { title, description, coordinates } = request.body as PatchBody;
     let document: Document;
     try {
       document = await Document.get(id);
@@ -75,6 +75,7 @@ documentRouter.patch(
     }
     document.title = title || document.title;
     document.description = description || document.description;
+    document.coordinates = coordinates || document.coordinates;
     await document.update();
     response.status(StatusCodes.NO_CONTENT).send();
     return;

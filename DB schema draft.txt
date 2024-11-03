@@ -11,7 +11,7 @@ DOCUMENT {
     id: serial,
     title: varchar(128),
     description: text,
-    position: geography(POINT),
+    coordinates: geography(POINT), // BEWARE PostGIS expects lng then lat 
     links: link[]
     attachments: int[] (foreign key in ATTACHMENT)
 }
