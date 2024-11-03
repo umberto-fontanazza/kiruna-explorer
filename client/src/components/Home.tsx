@@ -33,9 +33,10 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
     setModalOpen(true);
   };
 
-  const handleAddDocument = (newDocument: Document) => {
+  const handleAddDocument = async (newDocument: Document) => {
     setDocuments([...documents, newDocument]);
     setModalOpen(false);
+    await API.postDocument(newDocument);
   };
 
   useEffect(() => {

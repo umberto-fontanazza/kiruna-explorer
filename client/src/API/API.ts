@@ -114,15 +114,26 @@ async function getDocuments() {
   ];
 }
 
-async function postDocument(id: number, title: string, description: string) {
+async function postDocument(document: Document) {
   try {
-    const response = await fetch(baseURL + `/documents/${id}`, {
+    const response = await fetch(baseURL + `/documents/${document.id}`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ title, description }),
+      body: JSON.stringify({
+        title: document.title,
+        description: document.description,
+        stakeholder: document.stakeholder,
+        scale: document.scale,
+        issuanceDate: document.issuanceDate,
+        type: document.type,
+        connections: document.connections,
+        language: document.language,
+        pages: document.pages,
+        coordinates: document.coordinates,
+      }),
     });
     if (response.ok) {
       return true;
