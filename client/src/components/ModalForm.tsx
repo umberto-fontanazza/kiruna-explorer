@@ -16,10 +16,10 @@ const ModalAdd: FC<ModalAddProps> = ({
   documents,
 }) => {
   const initialDocumentState: Document = {
-    id: "",
+    id: -1,
     title: "",
     description: "",
-    stakeholder: "",
+    stakeholder: [],
     scale: "",
     issuanceDate: null,
     type: "",
@@ -49,22 +49,19 @@ const ModalAdd: FC<ModalAddProps> = ({
         targetDocumentId: targetDocumentId,
         type: [newTypeConncection],
       };
-      console.log(newLink);
+      //console.log(newLink);
       setNewDoc((prev) => ({
         ...prev,
-        connections: [
-          ...(prev.connections || []),
-          { targetDocumentId: newLink.targetDocumentId, type: newLink.type },
-        ],
+        connections: [...(prev.connections || []), newLink],
       }));
       setTargetDocumentId(null);
       setNewTypeConnection("");
     }
   };
 
-  useEffect(() => {
-    console.log(newDoc);
-  }, [newDoc]);
+  // useEffect(() => {
+  //   console.log(newDoc);
+  // }, [newDoc]);
 
   if (!modalOpen) return null;
 
@@ -76,23 +73,6 @@ const ModalAdd: FC<ModalAddProps> = ({
             <h2>New Document Registration</h2>
             <form onSubmit={handleFormSubmit}>
               <div className="test">
-                <div className="form-group">
-                  <label className="id">Document ID *</label>
-                  <input
-                    type="number"
-                    id="no-spin"
-                    placeholder="Enter Document ID"
-                    value={newDoc.id}
-                    onChange={(e) =>
-                      setNewDoc((prev) => ({
-                        ...prev,
-                        id: e.target.value,
-                      }))
-                    }
-                    required
-                  />
-                </div>
-
                 <div className="form-group">
                   <label className="title">Title *</label>
                   <input
@@ -129,7 +109,10 @@ const ModalAdd: FC<ModalAddProps> = ({
                     onChange={(e) =>
                       setNewDoc((prev) => ({
                         ...prev,
-                        stakeholder: e.target.value,
+                        stakeholder: [
+                          ...(prev.stakeholder || []),
+                          e.target.value,
+                        ],
                       }))
                     }
                     required
