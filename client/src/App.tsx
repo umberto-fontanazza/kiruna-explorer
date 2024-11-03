@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
+import Home from "./components/Home";
+import MapComponent from "./components/Map";
 import NavHeader from "./components/NavHeader";
 import NotFound from "./components/NotFound";
 import API from "./API/API";
-import "./styles/global.scss"
+import "./styles/global.scss";
 
-function App() {
+const App: FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [user, setUser] = useState("");
 
@@ -39,16 +41,24 @@ function App() {
         }
       >
         {/* Default redirect to /home */}
-        <Route index element={<Navigate replace to="/login" />} />
+        <Route index element={<Navigate replace to="/home" />} />
 
         {/* Route /login for the Home page with the form to perform the login */}
         <Route path="/login" element={<LoginForm login={handleLogin} />} />
+
+        {/* Route /home for the Home page with the map and diagram */}
+        <Route
+          path="/home"
+          element={<Home login={loggedIn} handleLogout={handleLogout} />}
+        />
+
+        <Route path="/map" element={<MapComponent apiKey={""} />} />
 
         {/* Route /* to cath all bad urls */}
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
   );
-}
+};
 
 export default App;
