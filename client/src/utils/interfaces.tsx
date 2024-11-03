@@ -11,14 +11,14 @@ export interface Link {
 }
 
 export interface Document {
-  id: number | string;
+  id: number;
   title: string;
-  description: string | null;
-  stakeholder: string | undefined;
-  scale: string | undefined;
+  description: string | undefined;
+  stakeholder: string[] | undefined;
+  scale: string;
   issuanceDate: Date | null;
-  type: string | undefined;
-  connections: Link[] | undefined;
+  type: string;
+  connections: Link[];
   language: string | undefined;
   pages: number | null;
   coordinates: { latitude: number | null; longitude: number | null };

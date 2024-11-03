@@ -154,7 +154,7 @@ function Sidebar(props: {
         <p>{props.document?.description}</p>
         <hr className="separator" />
         <h4>
-          Stakeholders: <a>{props.document?.stakeholder}</a>
+          Stakeholders: {props.document?.stakeholder?.map((s) => <a>{s} </a>)}
         </h4>
         <h4>
           Scale: <a>{props.document?.scale}</a>
