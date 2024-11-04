@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import { Document } from "../utils/interfaces";
 import API from "../API/API";
+import "../styles/ModalConnections.scss";
 
 interface ModalConnectionProps {
   documents: Document[];

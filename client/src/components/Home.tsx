@@ -197,9 +197,11 @@ function Sidebar(props: {
           <h4>
             Connections: <a>{props.document?.connections?.length}</a>
           </h4>
-          <button className="btn-add-button" onClick={handleAddNewConnection}>
-            +
-          </button>
+          {props.loggedIn && (
+            <button className="btn-add-button" onClick={handleAddNewConnection}>
+              +
+            </button>
+          )}
         </div>
 
         {/*<div className="connection-group">
