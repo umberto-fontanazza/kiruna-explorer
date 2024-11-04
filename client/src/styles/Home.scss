@@ -10,8 +10,45 @@
   display: inline-flex;
   justify-content: space-between;
   width: 100vw;
-  height: 64vh;
   overflow-y: auto;
+
+  /*.map {
+    width: 100%;
+    height: 92vh;
+
+    .button-overlay {
+      position: absolute;
+      z-index: 1000;
+      bottom: 0.5%;
+      left: 5%;
+
+      .doc-img {
+        transform: scale(0.7);
+        display: flex;
+      }
+
+      .add-document {
+        display: flex;
+        margin-top: 2%;
+        margin-left: 0.5%;
+        border-radius: 1rem;
+        background-color: $third-color;
+        padding: 0.5rem;
+        color: $first-color;
+        border: 0.1rem solid $first-color;
+        cursor: pointer;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+
+        &:hover {
+          background-color: #bfbfac;
+          color: $first-color;
+          border: 0.1rem solid $first-color;
+        }
+      }
+    }
+  }*/
 }
 
 .doc-title {
@@ -233,14 +270,14 @@
     border: 0.1rem solid $first-color;
   }
 }
-
 .add-document {
+  display: flex;
   margin-top: 2%;
-  margin-left: 2%;
-  border-radius: 2rem;
-  background-color: $first-color;
-  padding: 1rem;
-  color: white;
+  margin-left: 0.5%;
+  border-radius: 1rem;
+  background-color: $third-color;
+  padding: 0.5rem;
+  color: $first-color;
   border: 0.1rem solid $first-color;
   cursor: pointer;
   transition:
@@ -248,7 +285,7 @@
     color 0.3s ease;
 
   &:hover {
-    background: $third-color;
+    background-color: #bfbfac;
     color: $first-color;
     border: 0.1rem solid $first-color;
   }
