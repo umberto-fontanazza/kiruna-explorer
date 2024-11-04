@@ -19,6 +19,6 @@ app.use(cors(corsOptions));
 
 // Routes
 
-app.use("/documents", documentRouter);
+app.use("/document", documentRouter);
 
 export default app;
