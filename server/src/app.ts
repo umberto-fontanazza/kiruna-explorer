@@ -3,7 +3,7 @@ import express from "express";
 import { StatusCodes } from "http-status-codes";
 import morgan from "morgan";
 import { documentRouter } from "./router/documentRouter";
-import passportInizializer from "./passport-config";
+import passportInitializer from "./passport-config";
 import passport from "passport";
 import session from "express-session";
 import { userRouter } from "./router/userRouter";
@@ -22,7 +22,7 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-passportInizializer(passport);
+passportInitializer(passport);
 
 app.use(
   session({

@@ -2,7 +2,7 @@ import { Strategy } from "passport-local";
 import { PassportStatic } from "passport";
 import { User } from "./model/user";
 
-export default function passportInizializer(passport: PassportStatic) {
+export default function passportInitializer(passport: PassportStatic) {
   passport.use(
     new Strategy({ usernameField: "email" }, async (email, password, done) => {
       const user = await User.login(email, password);
