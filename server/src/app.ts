@@ -8,6 +8,7 @@ import passport from "passport";
 import session from "express-session";
 import { userRouter } from "./router/userRouter";
 import { sessionRouter } from "./router/sessionRouter";
+import { errorHandling } from "./middlewares";
 
 const app = express();
 
@@ -38,5 +39,8 @@ app.use(passport.authenticate("session"));
 app.use("document", documentRouter);
 app.use("/users", userRouter);
 app.use("/sessions", sessionRouter);
+
+// Error handler middleware. Do not move
+app.use(errorHandling);
 
 export default app;
