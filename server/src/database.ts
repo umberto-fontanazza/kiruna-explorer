@@ -1,8 +1,9 @@
-import { Pool, QueryResult } from "pg";
+import { Client, Pool, QueryResult } from "pg";
 import { strict as assert } from "assert";
 
 let pool: Pool | undefined;
 
+//TODO: this needs refactoring
 export class Database {
   static setup() {
     pool = new Pool({
