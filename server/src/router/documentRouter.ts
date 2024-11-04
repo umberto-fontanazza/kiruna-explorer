@@ -20,7 +20,8 @@ export const documentRouter: Router = Router();
 documentRouter.use("/:id/links", linkRouter);
 
 documentRouter.get(
-  "", //TODO: authentication authorization
+  "/",
+  //TODO: authentication authorization
   async (request: Request, response: Response) => {
     const all: Document[] = await Document.all();
     response.status(StatusCodes.OK).send([...all]);
@@ -48,7 +49,7 @@ documentRouter.get(
 );
 
 documentRouter.post(
-  "",
+  "/",
   //TODO: authentication authorization
   validateBody(postBody),
   async (request: Request, response: Response) => {
