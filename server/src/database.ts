@@ -1,4 +1,4 @@
-import { Client, Pool, QueryResult } from "pg";
+import { Pool, QueryResult } from "pg";
 import { strict as assert } from "assert";
 
 let pool: Pool | undefined;
