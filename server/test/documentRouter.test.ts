@@ -5,11 +5,16 @@ import request from "supertest";
 import { StatusCodes } from "http-status-codes";
 import { Database } from "../src/database";
 
+/**
+ * TODO: when adding AUTH a cookie needs to be created first otherwise requests will not fail with BAD_REQUEST
+ * but with UNAUTHORIZED or something similar instead
+ */
+
 afterAll(async () => {
   await Database.disconnect();
 });
 
-describe("Document CRUD with just title and description", () => {
+describe("Document CRUD success with just title and description", () => {
   let testDocumentId: number;
 
   test("POST returning the id", async () => {
@@ -26,6 +31,9 @@ describe("Document CRUD with just title and description", () => {
   test("GET the newly created document", async () => {
     const response = await request(app).get(`/documents/${testDocumentId}`);
     expect(response.status).toEqual(StatusCodes.OK);
+    expect(response.body.id).toBeDefined();
+    expect(response.body.title).toBeDefined();
+    expect(response.body.description).toBeDefined();
   });
 
   test("UPDATE the document", async () => {
@@ -42,7 +50,40 @@ describe("Document CRUD with just title and description", () => {
   });
 
   test("DELETE the document", async () => {
-    const response = await request(app).del(`/documents/${testDocumentId}`);
+    const response = await request(app).delete(`/documents/${testDocumentId}`);
     expect(response.status).toEqual(StatusCodes.NO_CONTENT);
+  });
+});
+
+describe("Document CRUD bad requests", () => {
+  test("GET with wrong ID", async () => {
+    const response = await request(app).get("/documents/-1");
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("POST without a title", async () => {
+    const response = await request(app).post("/documents/").send({
+      description: "Nice description but the title is missing",
+    });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("POST without description", async () => {
+    const response = await request(app).post("/documents/").send({
+      title: "Nice title but no desc",
+    });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("PATCH with negative id", async () => {
+    const response = await request(app).patch("/documents/-1").send({
+      description: "New shiny description",
+    });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("DELETE with id = 0", async () => {
+    const response = await request(app).delete("/documents/0");
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 });
