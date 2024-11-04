@@ -35,8 +35,6 @@ app.use(passport.authenticate("session"));
 
 // Routes
 
-app.use("document", documentRouter);
-app.use("/users", userRouter);
-app.use("/sessions", sessionRouter);
+app.use("/documents", documentRouter);
 
 export default app;
