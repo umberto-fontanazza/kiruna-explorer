@@ -9,6 +9,7 @@ import MapComponent from "./Map";
 interface HomeProps {
   login: boolean;
   handleLogout: () => void;
+  loggedIn: boolean;
 }
 
 const Home: FC<HomeProps> = (props): JSX.Element => {
@@ -48,7 +49,18 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
       <NavHeader logout={props.handleLogout} login={props.login} />
 
       <div className="body-container">
-        {/*<MapComponent apiKey={""} />*/}
+        {/*<div className="map">
+          {<MapComponent apiKey={"AIzaSyB8B_Q-ZvMqmhSvFmZhxi6U1Gv-4uzs-Qc"} />}
+          <div className="button-overlay">
+            <button className="add-document" onClick={handleAddButton}>
+              <img
+                className="doc-img"
+                src="/public/icons8-documento-50.png"
+              ></img>
+              Add new Document
+            </button>
+          </div>
+        </div>*/}
         {
           <table className="table-documents">
             <thead>
@@ -99,12 +111,17 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
       </div>
 
       {/* Button to add a new Document (Description) */}
-      <div>
-        <button className="add-document" onClick={handleAddButton}>
-          Add new Document
-        </button>
-      </div>
-
+      {props.loggedIn && (
+        <div className="button-overlay">
+          <button className="add-document" onClick={handleAddButton}>
+            <img
+              className="doc-img"
+              src="/public/icons8-documento-50.png"
+            ></img>
+            Add new Document
+          </button>
+        </div>
+      )}
       {/* Modal Add Component */}
       <ModalAdd
         modalOpen={modalOpen}
