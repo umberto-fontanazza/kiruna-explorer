@@ -171,13 +171,6 @@
       align-items: center;
       flex-direction: row;
 
-      h6 {
-        margin-right: 2%;
-      }
-
-      a {
-        font-weight: bold;
-      }
       .btn-add-connection {
         display: flex;
         justify-content: center;
@@ -190,30 +183,6 @@
         &:hover {
           background-color: $second-color;
           color: $first-color;
-        }
-      }
-
-      .drop-down {
-        select {
-          width: 100%;
-          color: #ddd;
-          border: solid 0.2rem $first-color;
-          background-color: $first-color;
-          border-radius: 1rem;
-        }
-
-        .btn-confirm-connection {
-          width: 40%;
-          height: 40%;
-          color: #ddd;
-          border: solid 0.2rem $first-color;
-          background-color: $first-color;
-          border-radius: 1rem;
-
-          &:hover {
-            background-color: $second-color;
-            color: $first-color;
-          }
         }
       }
     }

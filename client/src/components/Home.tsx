@@ -3,8 +3,9 @@ import API from "../API/API";
 import { Document } from "../utils/interfaces";
 import "../styles/Home.scss";
 import NavHeader from "./NavHeader";
-import ModalAdd from "./ModalForm";
+import ModalForm from "./ModalForm";
 import MapComponent from "./Map";
+import ModalConnection from "./ModalConnection";
 
 interface HomeProps {
   login: boolean;
@@ -105,6 +106,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
               setSidebarOpen={setSidebarOpen}
               document={docSelected}
               documents={documents}
+              loggedIn={props.loggedIn}
             />
           }
         </div>
@@ -123,7 +125,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
         </div>
       )}
       {/* Modal Add Component */}
-      <ModalAdd
+      <ModalForm
         modalOpen={modalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleAddDocument}
@@ -141,9 +143,13 @@ function Sidebar(props: {
   setSidebarOpen: (isOpen: boolean) => void;
   document: Document | null;
   documents: Document[];
+  loggedIn: boolean;
 }) {
-  /*const [showDropDown, setShowDropDown] = useState(false);
-  const [newConnection, setNewConnection] = useState("");*/
+  const [modalConnectionOpen, setModalConnectionOpen] = useState(false);
+
+  const handleAddNewConnection = () => {
+    setModalConnectionOpen(true);
+  };
 
   return (
     <>
@@ -170,7 +176,7 @@ function Sidebar(props: {
         <hr />
         <h3>{props.document?.title}</h3>
         <p>{props.document?.description}</p>
-        <hr className="separator" />
+        <hr />
         <h4>
           Stakeholders:{" "}
           {props.document?.stakeholder?.map((s, index) => (
@@ -187,9 +193,15 @@ function Sidebar(props: {
         <h4>
           Type: <a>{props.document?.type}</a>
         </h4>
-        <h4>
-          Connections: <a>{props.document?.connections?.length}</a>
-        </h4>
+        <div className="connection-group">
+          <h4>
+            Connections: <a>{props.document?.connections?.length}</a>
+          </h4>
+          <button className="btn-add-button" onClick={handleAddNewConnection}>
+            +
+          </button>
+        </div>
+
         {/*<div className="connection-group">
           <h4>
             Connections: <a>{props.document?.connections}</a>
@@ -249,6 +261,13 @@ function Sidebar(props: {
           )*/}
         </h4>
       </div>
+      {modalConnectionOpen && (
+        <ModalConnection
+          documents={props.documents}
+          document={props.document}
+          onClose={() => setModalConnectionOpen(false)}
+        ></ModalConnection>
+      )}
     </>
   );
 }
