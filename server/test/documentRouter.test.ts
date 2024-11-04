@@ -17,6 +17,8 @@ afterAll(async () => {
 describe("Document CRUD success with just title and description", () => {
   let testDocumentId: number;
 
+  console.log(process.env);
+
   test("POST returning the id", async () => {
     const response = await request(app).post("/documents/").send({
       title: "test-document",
