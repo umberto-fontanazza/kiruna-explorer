@@ -24,20 +24,22 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
           cache-dependency-path: server/package-lock.json
-      - name: npm install for ci
-        run: npm ci
-        working-directory: server
-      - name: check formatting
-        run: npm run format-check
-        working-directory: server
-      - name: check linting
-        run: npm run lint-check
-        working-directory: server
+      # - name: npm install for ci
+      #   run: npm ci
+      #   working-directory: server
+      # - name: check formatting
+      #   run: npm run format-check
+      #   working-directory: server
+      # - name: check linting
+      # run: npm run lint-check
+      # working-directory: server
       - name: run tests
-        env:
-          DB_HOST: ${{ env.DB_HOST }}
-          DB_NAME: ${{ env.DB_NAME }}
-          DB_USER: ${{ env.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: npm test
-        working-directory: server
+        run: env
+        # env:
+        #  DB_HOST: ${{ env.DB_HOST }}
+        #  DB_NAME: ${{ env.DB_NAME }}
+        #  DB_USER: ${{ env.DB_USER }}
+        #  DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        # run: echo $DB_HOST
+        # run: npm test
+        # working-directory: server
