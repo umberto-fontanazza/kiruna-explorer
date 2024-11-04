@@ -9,7 +9,7 @@ interface ModalAddProps {
   documents: Document[];
 }
 
-const ModalAdd: FC<ModalAddProps> = ({
+const ModalForm: FC<ModalAddProps> = ({
   modalOpen,
   onClose,
   onSubmit,
@@ -360,4 +360,4 @@ const ModalAdd: FC<ModalAddProps> = ({
   );
 };
 
-export default ModalAdd;
+export default ModalForm;
