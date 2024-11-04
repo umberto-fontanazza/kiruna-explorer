@@ -34,5 +34,10 @@ jobs:
         run: npm run lint-check
         working-directory: server
       - name: run tests
+        env:
+          DB_HOST: ${{ env.DB_HOST }}
+          DB_NAME: ${{ env.DB_NAME }}
+          DB_USER: ${{ env.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: npm test
         working-directory: server
