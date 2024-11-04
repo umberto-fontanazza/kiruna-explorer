@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { Document } from "../model/document";
 import { DocumentNotFound } from "../error/documentError";
+import { linkRouter } from "./linkRouter";
 import {
   validateRequestParameters,
   validateBody,
@@ -15,6 +16,8 @@ import {
 } from "../validation/documentSchema";
 
 export const documentRouter: Router = Router();
+
+documentRouter.use("/:id/links", linkRouter);
 
 documentRouter.get(
   "/",
