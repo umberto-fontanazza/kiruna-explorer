@@ -12,7 +12,7 @@ import { idRequestParam } from "../validation/documentSchema";
 export const linkRouter: Router = Router({ mergeParams: true }); // merge params allows using doc id
 
 linkRouter.get(
-  "",
+  "/",
   //TODO: authentication authorization
   validateRequestParameters(idRequestParam),
   async (request: Request, response: Response) => {
@@ -24,7 +24,7 @@ linkRouter.get(
 );
 
 linkRouter.put(
-  "",
+  "/",
   //TODO: authentication authorization
   validateRequestParameters(idRequestParam),
   validateBody(putBody),
@@ -40,7 +40,7 @@ linkRouter.put(
 );
 
 linkRouter.delete(
-  "",
+  "/",
   //TODO: authentication authorization
   validateRequestParameters(idRequestParam),
   validateQueryParameters(targetIdQueryParam),
