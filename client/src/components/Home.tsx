@@ -33,9 +33,10 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
     setModalOpen(true);
   };
 
-  const handleAddDocument = (newDocument: Document) => {
+  const handleAddDocument = async (newDocument: Document) => {
     setDocuments([...documents, newDocument]);
     setModalOpen(false);
+    await API.postDocument(newDocument);
   };
 
   useEffect(() => {
@@ -154,7 +155,10 @@ function Sidebar(props: {
         <p>{props.document?.description}</p>
         <hr className="separator" />
         <h4>
-          Stakeholders: <a>{props.document?.stakeholder}</a>
+          Stakeholders:{" "}
+          {props.document?.stakeholder?.map((s, index) => (
+            <a key={`${props.document?.id}-${index}`}>{s} </a>
+          ))}
         </h4>
         <h4>
           Scale: <a>{props.document?.scale}</a>

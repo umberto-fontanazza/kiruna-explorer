@@ -50,7 +50,7 @@ async function getDocuments() {
         "Compilation of responses “So what the people of Kiruna think?” (15)",
       description:
         "This document is a compilation of the responses to the survey 'What is your impression of Kiruna?' ...",
-      stakeholder: "",
+      stakeholder: [""],
       scale: "",
       issuanceDate: null,
       type: "",
@@ -67,7 +67,7 @@ async function getDocuments() {
       title: "Detail plan for Bolagsomradet Gruvstadspark (18)",
       description:
         "This is the first of 8 detailed plans located in the old center of Kiruna ...",
-      stakeholder: "LKAB",
+      stakeholder: ["LKAB", "Kiruna Municipality"],
       scale: "1:23",
       issuanceDate: null,
       type: "qualcosa",
@@ -83,7 +83,7 @@ async function getDocuments() {
       id: 3,
       title: "Development Plan (41)",
       description: "The development plan shapes the form of the new city ...",
-      stakeholder: "",
+      stakeholder: [""],
       scale: "",
       issuanceDate: null,
       type: "",
@@ -99,7 +99,7 @@ async function getDocuments() {
       id: 4,
       title: "Deformation forecast (45)",
       description: "The development plan shapes the form of the new city ...",
-      stakeholder: "",
+      stakeholder: [""],
       scale: "",
       issuanceDate: null,
       type: "",
@@ -114,15 +114,26 @@ async function getDocuments() {
   ];
 }
 
-async function postDocument(id: number, title: string, description: string) {
+async function postDocument(document: Document) {
   try {
-    const response = await fetch(baseURL + `/documents/${id}`, {
+    const response = await fetch(baseURL + `/documents/${document.id}`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ title, description }),
+      body: JSON.stringify({
+        title: document.title,
+        description: document.description,
+        stakeholder: document.stakeholder,
+        scale: document.scale,
+        issuanceDate: document.issuanceDate,
+        type: document.type,
+        connections: document.connections,
+        language: document.language,
+        pages: document.pages,
+        coordinates: document.coordinates,
+      }),
     });
     if (response.ok) {
       return true;
