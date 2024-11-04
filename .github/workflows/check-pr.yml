@@ -39,7 +39,7 @@ jobs:
           DB_NAME: ${{ vars.DB_NAME }}
           DB_USER: ${{ vars.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-        run: env
+        run: echo ${{ vars.DB_NAME }}
         # run: echo $DB_HOST
         # run: npm test
         # working-directory: server
