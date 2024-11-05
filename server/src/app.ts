@@ -9,7 +9,7 @@ import passport from "passport";
 import session from "express-session";
 import { userRouter } from "./router/userRouter";
 import { sessionRouter } from "./router/sessionRouter";
-import { errorHandling } from "./middlewares";
+import { errorHandling } from "./middleware/auth";
 
 dotenv.config();
 

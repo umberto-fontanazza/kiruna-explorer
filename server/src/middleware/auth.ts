@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { UserError } from "./error/userError";
+import { UserError } from "../error/userError";
 import { StatusCodes } from "http-status-codes";
-import { User, UserRole } from "./model/user";
+import { User, UserRole } from "../model/user";
 
 // Error handling
 export function errorHandling(
