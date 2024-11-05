@@ -2,7 +2,7 @@ import { strict as assert } from "assert";
 import bcrypt from "bcrypt";
 import { Database } from "../database";
 
-type UserDbRow = {
+export type UserDbRow = {
   email: string;
   name: string;
   surname: string;
@@ -10,9 +10,9 @@ type UserDbRow = {
 };
 
 export enum UserRole {
+  Developer = "developer",
   Planner = "planner",
   Resident = "resident",
-  Developer = "developer",
 }
 
 export class User {
