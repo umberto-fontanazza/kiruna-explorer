@@ -43,13 +43,13 @@ export class User {
    * @param {User} user - The user to be inserted
    * @param {string} password - The user's password to be hashed and stored
    */
-  static async insert(user: User, password: string): Promise<void> {
+  async insert(password: string): Promise<void> {
     const salt = bcrypt.genSaltSync();
     const hashedPassword = await bcrypt.hash(password, salt);
 
     await Database.query(
       `INSERT INTO "user" (email, name, surname, password_hash, role) VALUES ($1, $2, $3, $4, $5)`,
-      [user.email, user.name, user.surname, hashedPassword, user.role],
+      [this.email, this.name, this.surname, hashedPassword, this.role],
     );
   }
 
