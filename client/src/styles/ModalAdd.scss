@@ -42,7 +42,7 @@
       .form-group {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        //justify-content: space-between;
         gap: 0.5rem;
 
         label {
@@ -74,7 +74,6 @@
         }
 
         select {
-          
           padding: 0.75rem;
           border: 1px solid #ddd;
           border-radius: 8px;
@@ -88,62 +87,59 @@
             outline: none;
           }
         }
-
-        
-      }
-
-      textarea {
-        resize: vertical;
-        min-height: 80px;
       }
     }
 
-    .button-group {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+  }
 
-      .submit-button,
-      .cancel-button {
-        flex: 1;
-        padding: 0.75rem;
-        font-weight: bold;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        text-align: center;
-      }
+  .button-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
 
-      .submit-button {
-        background-color: $first-color;
-        padding: 1rem;
-        color: white;
-        border: 0.1rem solid $first-color;
-        cursor: pointer;
-        transition:
-          background-color 0.3s ease,
-          color 0.3s ease;
+    .submit-button,
+    .cancel-button {
+      flex: 1;
+      padding: 0.75rem;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-align: center;
+    }
 
-        &:hover {
-          background: $third-color;
-          color: $first-color;
-          border: 0.1rem solid $first-color;
-        }
-      }
+    .submit-button {
+      background-color: $first-color;
+      padding: 1rem;
+      color: white;
+      border: 0.1rem solid $first-color;
+      cursor: pointer;
+      transition:
+        background-color 0.3s ease,
+        color 0.3s ease;
 
-      .cancel-button {
-        background-color: #ccc;
+      &:hover {
+        background: $third-color;
         color: $first-color;
-        border: none;
+        border: 0.1rem solid $first-color;
+      }
+    }
 
-        &:hover {
-          background-color: #b3b3b3;
-        }
+    .cancel-button {
+      background-color: #ccc;
+      color: $first-color;
+      border: none;
+
+      &:hover {
+        background-color: #b3b3b3;
       }
     }
   }
 }
-
 
 .coordinates {
   display: flex;
@@ -169,44 +165,64 @@
       font-weight: normal;
     }
   }
+}
 
-  input,
-  textarea {
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    color: $first-color;
+input,
+textarea {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: $first-color;
 
-    &::placeholder {
-      color: rgba($color: $first-color, $alpha: 0.4);
-    }
-
-    &:focus {
-      border-color: $second-color;
-      outline: none;
-    }
+  &::placeholder {
+    color: rgba($color: $first-color, $alpha: 0.4);
   }
 
-  select {
-          
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 1rem;
-    color: #333;
-    background-color: #fff;
-    box-sizing: border-box;
+  &:focus {
+    border-color: $second-color;
+    outline: none;
+  }
+}
 
-    &:focus {
-      border-color: $second-color;
-      outline: none;
+.no-spin {
+  ::-webkit-outer-spin-button,
+  ::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+
+  .checkbox-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    cursor: pointer;
+
+    input[type="checkbox"] {
+      margin-right: 10px;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      accent-color: #007bff; // Colore della checkbox
+
+      &:hover {
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      }
+
+      &:checked {
+        background-color: #007bff;
+        border: 1px solid #007bff;
+      }
     }
   }
 }
 
-#no-spin::-webkit-outer-spin-button,
-#no-spin::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
+.scale {
+  align-items: center;
 }

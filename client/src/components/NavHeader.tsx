@@ -13,7 +13,7 @@ const NavHeader: FC<NavHeaderProps> = (props): JSX.Element => {
       <div className="nav-container">
         <div className="nav-left">
           <img
-            src="/public/LOGO.png"
+            src="/LOGO.png"
             alt="Kiruna eXplorer Logo"
             className="nav-logo"
           ></img>
