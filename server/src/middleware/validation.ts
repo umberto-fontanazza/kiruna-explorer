@@ -21,7 +21,7 @@ export function validateQueryParameters(
   schema: z.ZodObject<any, any>,
 ) {
   return (request: Request, response: Response, nextFunction: NextFunction) => {
-    const { success } = schema.safeParse(request.query.params);
+    const { success } = schema.safeParse(request.query);
     if (success) {
       nextFunction();
     } else {
