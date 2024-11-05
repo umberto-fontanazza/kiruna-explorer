@@ -1,5 +1,5 @@
 import { strict as assert } from "assert";
-import crypto from "crypto";
+import bcrypt from "bcrypt";
 import { Database } from "../database";
 
 type UserDbRow = {
@@ -42,32 +42,15 @@ export class User {
    *
    * @param {User} user - The user to be inserted
    * @param {string} password - The user's password to be hashed and stored
-   * @throws {Error} Throws an error if the insertion fails
    */
   static async insert(user: User, password: string): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const salt = crypto.randomBytes(16);
-      crypto.scrypt(password, salt, 32, async (err, hashedPassword) => {
-        if (err) return reject(err);
+    const salt = bcrypt.genSaltSync();
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-        try {
-          await Database.query(
-            `INSERT INTO "user" (email, name, surname, salt, password_hash, role) VALUES ($1, $2, $3, $4, $5, $6)`,
-            [
-              user.email,
-              user.name,
-              user.surname,
-              salt,
-              hashedPassword,
-              user.role,
-            ],
-          );
-          resolve();
-        } catch (err) {
-          reject(err);
-        }
-      });
-    });
+    await Database.query(
+      `INSERT INTO "user" (email, name, surname, salt, password_hash, role) VALUES ($1, $2, $3, $4, $5, $6)`,
+      [user.email, user.name, user.surname, salt, hashedPassword, user.role],
+    );
   }
 
   /**
@@ -84,22 +67,12 @@ export class User {
     );
 
     const userRow = result.rows[0];
-
     if (!userRow) return false;
 
     const user = User.fromDatabaseRow(userRow);
 
-    return new Promise((resolve, reject) => {
-      crypto.scrypt(password, userRow.salt, 32, (err, hashedPassword) => {
-        if (err) return reject(err);
-
-        if (crypto.timingSafeEqual(userRow.password_hash, hashedPassword)) {
-          resolve(user);
-        } else {
-          resolve(false);
-        }
-      });
-    });
+    const match = await bcrypt.compare(password, userRow.password_hash);
+    return match ? user : false;
   }
 
   /**
