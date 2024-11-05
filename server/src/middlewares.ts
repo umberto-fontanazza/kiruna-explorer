@@ -10,12 +10,12 @@ export function errorHandling(
   next: NextFunction,
 ) {
   if (err instanceof UserError) {
-    res.status(err.statusCode).send({ message: err.message });
+    res.status(err.statusCode).json({ message: err.message });
   } else {
     console.error(err);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send({ message: "An unexpected error occurred on the server" });
+      .json({ message: "An unexpected error occurred on the server" });
   }
   next();
 }
