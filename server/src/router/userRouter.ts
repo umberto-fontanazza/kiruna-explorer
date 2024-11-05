@@ -2,14 +2,14 @@ import { Router, Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 import { User } from "../model/user";
 import { UserError } from "../error/userError";
+import { validateBody } from "../middleware/validation";
+import { postBody } from "../validation/userSchema";
 
 export const userRouter: Router = Router();
 
-// TODO: missing validation:
-//  - all fields required
-//  - invalidid user role
 userRouter.post(
   "/",
+  validateBody(postBody),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { email, name, surname, role, password } = req.body;
