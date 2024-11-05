@@ -2,17 +2,14 @@ I need the PostGIS postgre extension to handle spatial data.
 
 type USER_ROLE = enum { PLANNER, RESIDENT, DEVELOPER }
 type LINK_TYPE = enum { DIRECT, COLLATERAL, PROJECTION, UPDATE}
-type LINK {
-    otherDocumentId: document_id (fk),
-    types: LYNK_TYPE[] // more than 1 link per document pair possible
-}
+//TODO: introduce DOCUMENT.links jsonb validation based on enum USER_ROLE
 
 DOCUMENT {
     id: serial,
     title: varchar(128),
     description: text,
     coordinates: geography(POINT), // BEWARE PostGIS expects lng then lat 
-    links: link[]
+    links: jsonb schema { targetDocumentId: link_type[]} example { '3': ["update", "collateral"], '1': ["projection"]}
     attachments: int[] (foreign key in ATTACHMENT)
 }
 
