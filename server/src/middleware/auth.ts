@@ -23,43 +23,40 @@ export function errorHandling(
 
 // Authentication middleware
 export function isLoggedIn(req: Request, res: Response, next: NextFunction) {
-  if (req.isAuthenticated()) return next();
-
-  return res
-    .status(StatusCodes.UNAUTHORIZED)
-    .json({ error: "Not authenticated" });
+  if (req.isAuthenticated()) {
+    next();
+    return;
+  }
+  res.status(StatusCodes.UNAUTHORIZED).json({ error: "Not authenticated" });
 }
 
 // Autorization middlewares
 export function isDeveloper(req: Request, res: Response, next: NextFunction) {
   const user = req.user as User;
   if (user && user.role === UserRole.Developer) {
-    return next();
+    next();
+    return;
   }
 
-  return res
-    .status(StatusCodes.FORBIDDEN)
-    .json({ error: "User is not a Developer" });
+  res.status(StatusCodes.FORBIDDEN).json({ error: "User is not a Developer" });
 }
 
 export function isPlanner(req: Request, res: Response, next: NextFunction) {
   const user = req.user as User;
   if (user && user.role === UserRole.Planner) {
-    return next();
+    next();
+    return;
   }
 
-  return res
-    .status(StatusCodes.FORBIDDEN)
-    .json({ error: "User is not a Planner" });
+  res.status(StatusCodes.FORBIDDEN).json({ error: "User is not a Planner" });
 }
 
 export function isResident(req: Request, res: Response, next: NextFunction) {
   const user = req.user as User;
   if (user && user.role === UserRole.Resident) {
-    return next();
+    next();
+    return;
   }
 
-  return res
-    .status(StatusCodes.FORBIDDEN)
-    .json({ error: "User is not a Resident" });
+  res.status(StatusCodes.FORBIDDEN).json({ error: "User is not a Resident" });
 }
