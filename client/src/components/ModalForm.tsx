@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
-import { Document } from "../utils/interfaces";
+import { Document, DocumentType, LinkType } from "../utils/interfaces";
 import "../styles/ModalAdd.scss";
+import ISO6391 from "iso-639-1";
 
 interface ModalAddProps {
   modalOpen: boolean;
@@ -22,18 +23,23 @@ const ModalForm: FC<ModalAddProps> = ({
     stakeholder: [],
     scale: "",
     issuanceDate: null,
-    type: "",
+    type: undefined,
     connections: [],
     language: "",
     pages: null,
     coordinates: { latitude: null, longitude: null },
   };
-  const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
-  const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
-  const [newTypeConnection, setNewTypeConnection] = useState<string>("");
-  const [isNumericScale, setIsNumericScale] = useState<boolean>(false);
 
   const scaleValues = ["Blueprints/Effects", "Text"];
+  const languages = ISO6391.getAllNames().sort();
+
+  const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
+  const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
+  const [newTypeConnection, setNewTypeConnection] = useState<
+    LinkType | undefined
+  >(undefined);
+  const [isNumericScale, setIsNumericScale] = useState<boolean>(false);
+
   const stakeholdersOptions = [
     { value: "LKAB", label: "LKAB" },
     { value: "Municipality", label: "Municipality" },
@@ -65,17 +71,21 @@ const ModalForm: FC<ModalAddProps> = ({
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-
+    if (isNumericScale) {
+      newDoc.scale = "1:" + newDoc.scale;
+    }
     onSubmit({
       ...newDoc,
-      scale: "1:" + newDoc.scale,
       connections: [
-        { targetDocumentId: targetDocumentId, type: [newTypeConnection] },
+        {
+          targetDocumentId: targetDocumentId,
+          type: newTypeConnection ? [newTypeConnection] : [],
+        },
       ],
     });
     console.log(newDoc);
     setNewDoc(initialDocumentState);
-    setNewTypeConnection("");
+    setNewTypeConnection(LinkType.Direct);
     setTargetDocumentId(-1);
   };
 
@@ -200,21 +210,22 @@ const ModalForm: FC<ModalAddProps> = ({
                   <select
                     value={newDoc.type}
                     onChange={(e) =>
-                      setNewDoc((prev) => ({ ...prev, type: e.target.value }))
+                      setNewDoc((prev) => ({
+                        ...prev,
+                        type: e.target.value as DocumentType,
+                      }))
                     }
                     required
                   >
-                    <option value="" disabled>
-                      Select type
-                    </option>
-                    <option value="Informative Document">
+                    <option value="">Select type</option>
+                    <option value={DocumentType.Informative}>
                       Informative Document
                     </option>
-                    <option value="Prescriptive Document">
+                    <option value={DocumentType.Prescriptive}>
                       Prescriptive Document
                     </option>
-                    <option value="Design Document">Design Document</option>
-                    <option value="Technical Document">
+                    <option value={DocumentType.Design}>Design Document</option>
+                    <option value={DocumentType.Technical}>
                       Technical Document
                     </option>
                     <option value="Material effect">Material effect</option>
@@ -238,13 +249,14 @@ const ModalForm: FC<ModalAddProps> = ({
                     <option value="" disabled>
                       Select language
                     </option>
-                    <option value="English">English</option>
-                    <option value="Italian">Italian</option>
-                    <option value="Sweden">Sweden</option>
-                    <option value="Others">Others</option>
+                    {languages.map((lang) => (
+                      <option key={lang} value={lang}>
+                        {lang}
+                      </option>
+                    ))}
                   </select>
                 </div>
-                <div className="form-group">
+                {/* <div className="form-group">
                   <label>Pages (optional):</label>
                   <input
                     type="number"
@@ -257,7 +269,7 @@ const ModalForm: FC<ModalAddProps> = ({
                       }));
                     }}
                   />
-                </div>
+                </div> */}
               </div>
               <div className="form-group">
                 <label>Latitude *</label>
@@ -314,7 +326,9 @@ const ModalForm: FC<ModalAddProps> = ({
                   value={targetDocumentId ?? ""}
                   onChange={(e) => setTargetDocumentId(Number(e.target.value))}
                 >
-                  <option value="">Select a document to link</option>
+                  <option value="" hidden selected>
+                    Select a document to link
+                  </option>
                   {documents.map((doc) => (
                     <option key={doc.id} value={doc.id}>
                       {doc.title}
@@ -322,7 +336,7 @@ const ModalForm: FC<ModalAddProps> = ({
                   ))}
                 </select>
               </div>
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label>Connection Type *</label>
                 <select
                   value={newTypeConnection}
@@ -336,7 +350,7 @@ const ModalForm: FC<ModalAddProps> = ({
                   <option value="Projection">PROJECTION</option>
                   <option value="Update">UPDATE</option>
                 </select>
-              </div>
+              </div> */}
               <div className="button-group">
                 <button className="submit-button" type="submit">
                   Add Document
