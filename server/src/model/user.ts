@@ -10,9 +10,9 @@ type UserDbRow = {
 };
 
 export enum UserRole {
-  planner,
-  resident,
-  developer,
+  Planner = "planner",
+  Resident = "resident",
+  Developer = "developer",
 }
 
 export class User {
@@ -48,8 +48,8 @@ export class User {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     await Database.query(
-      `INSERT INTO "user" (email, name, surname, salt, password_hash, role) VALUES ($1, $2, $3, $4, $5, $6)`,
-      [user.email, user.name, user.surname, salt, hashedPassword, user.role],
+      `INSERT INTO "user" (email, name, surname, password_hash, role) VALUES ($1, $2, $3, $4, $5)`,
+      [user.email, user.name, user.surname, hashedPassword, user.role],
     );
   }
 
