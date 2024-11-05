@@ -20,7 +20,7 @@ userRouter.post(
       }
 
       const user = new User(email, name, surname, role);
-      await User.insert(user, password);
+      await user.insert(password);
 
       res
         .status(StatusCodes.CREATED)
