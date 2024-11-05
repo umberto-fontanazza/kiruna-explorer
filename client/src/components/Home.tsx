@@ -77,7 +77,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
                   <td>
                     <img
                       className="doc-icon"
-                      src="/document-icon.png"
+                      src={`/document-icon-${document.type}-iconByIcons8.png`}
                       alt="Document icon"
                     />
                   </td>
@@ -172,7 +172,10 @@ function Sidebar(props: {
         </button>
       </div>
       <div className="content">
-        <img src="/icons8-under-construction-50.png" alt="Under Construction" />
+        <img
+          src={`/document-icon-${props.document?.type}-iconByIcons8.png`}
+          alt="Under Construction"
+        />
         <hr />
         <h3>{props.document?.title}</h3>
         <p>{props.document?.description}</p>
