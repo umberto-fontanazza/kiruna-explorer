@@ -39,7 +39,7 @@ app.use(passport.authenticate("session"));
 
 // Routes
 
-app.use("document", documentRouter);
+app.use("/document", documentRouter);
 app.use("/users", userRouter);
 app.use("/sessions", sessionRouter);
 

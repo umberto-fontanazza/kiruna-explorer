@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import { Credentials } from "../utils/interfaces";
 import "../styles/LoginForm.scss";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormProps {
   login: (credentials: Credentials) => void;
@@ -9,11 +10,13 @@ interface LoginFormProps {
 const LoginForm: FC<LoginFormProps> = (props): JSX.Element => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const nav = useNavigate();
 
   const handleSubmit = (event: { preventDefault: () => void }) => {
     event.preventDefault();
     const credentials = { username, password };
     props.login(credentials);
+    nav("/home");
   };
 
   return (
@@ -28,35 +31,38 @@ const LoginForm: FC<LoginFormProps> = (props): JSX.Element => {
             the story of Kiruna in Sweden, <br />
             Enjoy !
           </p>
-          <img src="/public/kiruna-bg-1920-Photoroom.png" alt="Tourist destination"></img>
+          <img
+            src="/public/kiruna-bg-1920-Photoroom.png"
+            alt="Tourist destination"
+          ></img>
         </div>
-        
+
         <div className="right-panel">
           <h2>Welcome Back!</h2>
           <form onSubmit={handleSubmit}>
-              <label htmlFor="username">Username</label>
-              <input
-                type="email"
-                id="username"
-                name="username"
-                placeholder="example@gmail.com"
-                value={username}
-                onChange={ev => setUsername(ev.target.value)}
-                required
-                className="input-username"
-              />
+            <label htmlFor="username">Username</label>
+            <input
+              type="email"
+              id="username"
+              name="username"
+              placeholder="example@gmail.com"
+              value={username}
+              onChange={(ev) => setUsername(ev.target.value)}
+              required
+              className="input-username"
+            />
 
-              <label htmlFor="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={ev => setPassword(ev.target.value)}
-                required
-                className="input-password"
-              />
+            <label htmlFor="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(ev) => setPassword(ev.target.value)}
+              required
+              className="input-password"
+            />
 
             <div className="forgot-password">
               <a href="/forgot-password">Forgot password?</a>
