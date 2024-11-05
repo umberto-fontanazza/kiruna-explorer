@@ -25,7 +25,9 @@ export function errorHandling(
 export function isLoggedIn(req: Request, res: Response, next: NextFunction) {
   if (req.isAuthenticated()) return next();
 
-  return res.status(401).json({ error: "Not authenticated" });
+  return res
+    .status(StatusCodes.UNAUTHORIZED)
+    .json({ error: "Not authenticated" });
 }
 
 // Autorization middlewares
@@ -35,7 +37,9 @@ export function isDeveloper(req: Request, res: Response, next: NextFunction) {
     return next();
   }
 
-  return res.status(403).json({ error: "User is not a Developer" });
+  return res
+    .status(StatusCodes.FORBIDDEN)
+    .json({ error: "User is not a Developer" });
 }
 
 export function isPlanner(req: Request, res: Response, next: NextFunction) {
@@ -44,7 +48,9 @@ export function isPlanner(req: Request, res: Response, next: NextFunction) {
     return next();
   }
 
-  return res.status(403).json({ error: "User is not a Planner" });
+  return res
+    .status(StatusCodes.FORBIDDEN)
+    .json({ error: "User is not a Planner" });
 }
 
 export function isResident(req: Request, res: Response, next: NextFunction) {
@@ -53,5 +59,7 @@ export function isResident(req: Request, res: Response, next: NextFunction) {
     return next();
   }
 
-  return res.status(403).json({ error: "User is not a Resident" });
+  return res
+    .status(StatusCodes.FORBIDDEN)
+    .json({ error: "User is not a Resident" });
 }
