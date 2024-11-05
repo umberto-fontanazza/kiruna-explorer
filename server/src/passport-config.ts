@@ -1,7 +1,6 @@
 import { Strategy } from "passport-local";
 import { PassportStatic } from "passport";
 import { User } from "./model/user";
-import { UserError } from "./error/userError";
 
 export default function passportInizializer(passport: PassportStatic) {
   passport.use(
