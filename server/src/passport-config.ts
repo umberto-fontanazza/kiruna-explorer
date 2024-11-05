@@ -1,6 +1,7 @@
 import { Strategy } from "passport-local";
 import { PassportStatic } from "passport";
 import { User } from "./model/user";
+import { UserError } from "./error/userError";
 
 export default function passportInizializer(passport: PassportStatic) {
   passport.use(
@@ -15,11 +16,14 @@ export default function passportInizializer(passport: PassportStatic) {
 
   // serializeUser determines which data of the user object should be stored in the session
   passport.serializeUser(function (user, done) {
+    console.log("Serialize", user);
     done(null, user);
   });
 
   // called on every access on an authenticated route
-  passport.deserializeUser(function (user: User, done) {
-    return done(null, user);
+  passport.deserializeUser(async function (user: User, done) {
+    const updatedUser = await User.getByEmail(user.email);
+    console.log("Deserialize", updatedUser);
+    return done(null, updatedUser);
   });
 }
