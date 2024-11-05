@@ -1,4 +1,5 @@
 import cors from "cors";
+import * as dotenv from "dotenv";
 import express from "express";
 import { StatusCodes } from "http-status-codes";
 import morgan from "morgan";
@@ -9,6 +10,8 @@ import session from "express-session";
 import { userRouter } from "./router/userRouter";
 import { sessionRouter } from "./router/sessionRouter";
 import { errorHandling } from "./middlewares";
+
+dotenv.config();
 
 const app = express();
 
@@ -27,7 +30,7 @@ passportInizializer(passport);
 
 app.use(
   session({
-    secret: "group15",
+    secret: process.env.SESSION_SECRET!,
     resave: false,
     saveUninitialized: false,
   }),
