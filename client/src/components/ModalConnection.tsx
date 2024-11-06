@@ -1,6 +1,5 @@
 import { FC, useState } from "react";
 import { Document, Link, LinkType } from "../utils/interfaces";
-import API from "../API/API";
 import "../styles/ModalConnections.scss";
 
 interface ModalConnectionProps {
@@ -11,6 +10,13 @@ interface ModalConnectionProps {
 }
 
 const ModalConnection: FC<ModalConnectionProps> = (props) => {
+  const notPossibleLinks = props.document?.connections.map(
+    (link) => link.targetDocumentId
+  );
+  const possibleLinks = props.documents.filter(
+    (doc) =>
+      !notPossibleLinks?.includes(doc.id) && doc.id !== props.document?.id
+  );
   const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
   const handleFormSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -40,7 +46,7 @@ const ModalConnection: FC<ModalConnectionProps> = (props) => {
                 onChange={(e) => setTargetDocumentId(Number(e.target.value))}
               >
                 <option value="">Select a document to link</option>
-                {props.documents.map((doc) => (
+                {possibleLinks.map((doc) => (
                   <option key={doc.id} value={doc.id}>
                     {doc.title}
                   </option>
