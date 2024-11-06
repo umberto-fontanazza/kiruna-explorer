@@ -7,7 +7,11 @@ import ISO6391 from "iso-639-1";
 interface ModalAddProps {
   modalOpen: boolean;
   onClose: () => void;
-  onSubmit: (newDocument: Document) => void;
+  onSubmit: (
+    newDocument: Document,
+    targetId: number,
+    linkType: LinkType
+  ) => void;
   documents: Document[];
 }
 
@@ -75,15 +79,19 @@ const ModalForm: FC<ModalAddProps> = ({
     if (isNumericScale) {
       newDoc.scale = "1:" + newDoc.scale;
     }
-    onSubmit({
-      ...newDoc,
-      connections: [
-        {
-          targetDocumentId: targetDocumentId,
-          type: newTypeConnection ? [newTypeConnection] : [],
-        },
-      ],
-    });
+    onSubmit(
+      {
+        ...newDoc,
+        connections: [
+          {
+            targetDocumentId: targetDocumentId,
+            type: newTypeConnection ? [newTypeConnection] : [],
+          },
+        ],
+      },
+      targetDocumentId,
+      newTypeConnection ? LinkType.Direct : LinkType.Collateral
+    );
     console.log(newDoc);
     setNewDoc(initialDocumentState);
     setNewTypeConnection(LinkType.Direct);
@@ -229,8 +237,10 @@ const ModalForm: FC<ModalAddProps> = ({
                     <option value={DocumentType.Technical}>
                       Technical Document
                     </option>
-                    <option value="Material effect">Material effect</option>
-                    <option value="Others">Others</option>
+                    <option value={DocumentType.Material}>
+                      Material effect
+                    </option>
+                    {/* <option value="Others">Others</option> */}
                   </select>
                 </div>
               </div>
@@ -293,13 +303,14 @@ const ModalForm: FC<ModalAddProps> = ({
                       },
                     }))
                   }
-                  placeholder="Es. 34.123456"
+                  placeholder="Es. 34.1234"
                   required
                 />
               </div>
               <div className="form-group">
                 <label>Longitude *</label>
                 <input
+                  lang="en"
                   type="number"
                   id="no-spin"
                   name="longitude"
@@ -317,7 +328,7 @@ const ModalForm: FC<ModalAddProps> = ({
                       },
                     }));
                   }}
-                  placeholder="-123.123456"
+                  placeholder="123.1234"
                   required
                 />
               </div>
@@ -374,5 +385,41 @@ const ModalForm: FC<ModalAddProps> = ({
     </>
   );
 };
+
+function LongitudeInput() {
+  const [newDoc, setNewDoc] = useState({ coordinates: { longitude: "" } });
+
+  const handleLongitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Sostituisci le virgole con i punti per evitare errori
+    const inputValue = e.target.value.replace(",", ".");
+
+    // Verifica che sia un valore valido per la longitudine (numero o vuoto)
+    if (/^-?\d*\.?\d*$/.test(inputValue) || inputValue === "") {
+      setNewDoc((prev) => ({
+        ...prev,
+        coordinates: {
+          ...prev.coordinates,
+          longitude: inputValue, // Salva come stringa temporaneamente per supportare la digitazione
+        },
+      }));
+    }
+  };
+
+  return (
+    <div>
+      <label>Longitude *</label>
+      <input
+        lang="en"
+        type="text" // Cambia a "text" per controllo completo dell'input
+        id="no-spin"
+        name="longitude"
+        value={newDoc.coordinates.longitude}
+        onChange={handleLongitudeChange}
+        placeholder="123.1234"
+        required
+      />
+    </div>
+  );
+}
 
 export default ModalForm;
