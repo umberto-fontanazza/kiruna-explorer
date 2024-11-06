@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import API from "../API/API";
-import { Document } from "../utils/interfaces";
+import { Document, Link } from "../utils/interfaces";
 import "../styles/Home.scss";
 import NavHeader from "./NavHeader";
 import ModalForm from "./ModalForm";
@@ -34,7 +34,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
     setModalOpen(true);
   };
 
-  const handleAddDocument = async (newDocument: Document) => {
+  const handleAddNewDocument = async (newDocument: Document) => {
     setDocuments([...documents, newDocument]);
     setModalOpen(false);
     await API.postDocument(newDocument);
@@ -114,35 +114,59 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
               document={docSelected}
               documents={documents}
               loggedIn={props.login}
+              setDocuments={setDocuments}
+              setDocument={setDocSelected}
             />
           }
         </div>
       </div>
-      {/* Modal Add Component */}
       <ModalForm
         modalOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSubmit={handleAddDocument}
+        onSubmit={handleAddNewDocument}
         documents={documents}
       />
-
-      {/* <div className="diagram">
-                Diagram part
-            </div> */}
     </>
   );
 };
 
 function Sidebar(props: {
   setSidebarOpen: (isOpen: boolean) => void;
+  setDocuments: (docs: Document[]) => void;
+  setDocument: (doc: Document) => void;
   document: Document | null;
   documents: Document[];
   loggedIn: boolean;
 }) {
   const [modalConnectionOpen, setModalConnectionOpen] = useState(false);
 
-  const handleAddNewConnection = () => {
+  const handleModalOpenConnection = () => {
     setModalConnectionOpen(true);
+  };
+
+  const handleAddNewConnection = async (newLink: Link) => {
+    if (props.document?.id) {
+      /*await API.putLink(
+        newLink.targetDocumentId,
+        newLink.type,
+        props.document?.id
+      );*/
+
+      const updateDocument = {
+        ...props.document,
+        connections: [...props.document.connections, newLink],
+      };
+
+      props.setDocument(updateDocument);
+
+      const updatedDocuments = props.documents.map((doc) =>
+        doc.id === updateDocument.id ? updateDocument : doc
+      );
+
+      props.setDocuments(updatedDocuments);
+    } else {
+      console.error("No document is selected, so the link cannot be added.");
+    }
   };
 
   const convertToDMS = (decimal: number | null): string => {
@@ -206,44 +230,15 @@ function Sidebar(props: {
             Connections: <a>{props.document?.connections?.length}</a>
           </h4>
           {props.loggedIn && (
-            <button className="btn-add-button" onClick={handleAddNewConnection}>
+            <button
+              className="btn-add-button"
+              onClick={handleModalOpenConnection}
+            >
               +
             </button>
           )}
         </div>
-        {/*<div className="connection-group">
-          <h4>
-            Connections: <a>{props.document?.connections}</a>
-          </h4>
-          <button className="btn-add-connection" onClick={toggleDropDown}>
-            +
-          </button>
-          {showDropDown && (
-            <div className="drop-down">
-              <select
-                value={newConnection}
-                onChange={(e) => {
-                  setNewConnection(e.target.value);
-                }}
-              >
-                <option value="">Choose a new Connection</option>
-                {props.documents.map((doc) => (
-                  <option key={doc.id} value={doc.title}>
-                    {doc.title}
-                  </option>
-                ))}
-              </select>
-              {newConnection && (
-                <button
-                  onClick={handleConfirm}
-                  className="btn-confirm-connection"
-                >
-                  Confirm
-                </button>
-              )}
-            </div>
-          )}
-        </div>*/}
+
         <h4>
           Language: <a>{props.document?.language}</a>
         </h4>
@@ -256,18 +251,6 @@ function Sidebar(props: {
             {convertToDMS(props.document?.coordinates.latitude ?? null)} |{" "}
             {convertToDMS(props.document?.coordinates.longitude ?? null)}
           </a>
-          {/*props.document?.coordinates &&
-            props.document.coordinates.length > 0 ? (
-            <div>
-              {props.document.coordinates.map((coord, index) => (
-                <div key={index}>
-                  <a>{coord.latitude}</a> | <a>{coord.longitude}</a>
-                </div>
-              ))}
-            </div>
-          ) : (
-            ""
-          )*/}
         </h4>
       </div>
       {modalConnectionOpen && (
@@ -275,6 +258,7 @@ function Sidebar(props: {
           documents={props.documents}
           document={props.document}
           onClose={() => setModalConnectionOpen(false)}
+          onSubmit={handleAddNewConnection}
         ></ModalConnection>
       )}
     </>
