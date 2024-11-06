@@ -10,7 +10,6 @@ import ModalConnection from "./ModalConnection";
 interface HomeProps {
   login: boolean;
   handleLogout: () => void;
-  loggedIn: boolean;
 }
 
 const Home: FC<HomeProps> = (props): JSX.Element => {
@@ -59,15 +58,17 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
               setDocSelected={setDocSelected}
             />
           }
-          <div className="button-overlay">
-            <button className="add-document" onClick={handleAddButton}>
-              <img
-                className="doc-img"
-                src="/public/icons8-documento-50.png"
-              ></img>
-              Add new Document
-            </button>
-          </div>
+          {props.login && (
+            <div className="button-overlay">
+              <button className="add-document" onClick={handleAddButton}>
+                <img
+                  className="doc-img"
+                  src="/public/icons8-documento-50.png"
+                ></img>
+                Add new Document
+              </button>
+            </div>
+          )}
         </div>
         {
           // <table className="table-documents">
@@ -113,24 +114,11 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
               setSidebarOpen={setSidebarOpen}
               document={docSelected}
               documents={documents}
-              loggedIn={props.loggedIn}
+              loggedIn={props.login}
             />
           }
         </div>
       </div>
-
-      {/* Button to add a new Document (Description) */}
-      {props.loggedIn && (
-        <div className="button-overlay">
-          <button className="add-document" onClick={handleAddButton}>
-            <img
-              className="doc-img"
-              src="/public/icons8-documento-50.png"
-            ></img>
-            Add new Document
-          </button>
-        </div>
-      )}
       {/* Modal Add Component */}
       <ModalForm
         modalOpen={modalOpen}

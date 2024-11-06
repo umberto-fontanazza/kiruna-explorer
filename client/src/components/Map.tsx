@@ -1,12 +1,7 @@
-import GoogleMapReact from "google-map-react";
-import {
-  GoogleMap,
-  Marker,
-  useJsApiLoader,
-  OverlayView,
-} from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
 import { FC, useState } from "react";
 import { Document } from "../utils/interfaces";
+import "../styles/Map.scss";
 
 interface MapComponentProps {
   apiKey: string;
@@ -29,11 +24,30 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     height: "100%",
   };
 
+  const mapOptions = {
+    mapTypeId: "satellite", // Imposta la mappa in modalità satellitare
+    disableDefaultUI: true, // Disattiva i controlli standard
+    minZoom: 12, // Imposta il livello di zoom minimo
+    maxZoom: 20,
+    styles: [
+      {
+        featureType: "all",
+        elementType: "labels",
+        stylers: [{ visibility: "off" }], // Rimuove tutte le etichette
+      },
+    ],
+  };
+
   // Centro della mappa su Kiruna, Svezia
 
   return isLoaded ? (
     <>
-      <GoogleMap mapContainerStyle={containerStyle} zoom={10} center={center}>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        zoom={10}
+        options={mapOptions}
+        center={center}
+      >
         {props.documents.map(
           (doc) =>
             doc.coordinates.latitude !== null &&
@@ -60,6 +74,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               //   }}
               // />
               <OverlayView
+                key={doc.id}
                 position={{
                   lat: doc.coordinates.latitude!,
                   lng: doc.coordinates.longitude!,
@@ -67,16 +82,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                 mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
               >
                 <div
-                  style={{
-                    border: "2px solid blue", // Aggiungi bordo con stile
-                    borderRadius: "50%",
-                    width: "50px",
-                    height: "50px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "white",
-                  }}
+                  className="map-icon-documents"
                   onClick={() => {
                     props.setSidebarOpen(true);
                     props.setDocSelected(doc);
@@ -89,7 +95,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                   <img
                     src={`/document-icon-${doc.type}-iconByIcons8.png`}
                     alt="Custom Marker"
-                    style={{ width: "30px", height: "30px" }}
+                    style={{ width: "4vh", height: "4vh" }}
                   />
                 </div>
               </OverlayView>
