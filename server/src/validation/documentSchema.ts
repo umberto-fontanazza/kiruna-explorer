@@ -17,7 +17,7 @@ export const postBody = z
   .object({
     title: z.string().min(1),
     description: z.string().min(1),
-    coordinates: coordinates.optional(),
+    coordinates: coordinates,
   })
   .strict();
 

@@ -14,13 +14,13 @@ export class Document {
   id: number;
   title: string;
   description: string;
-  coordinates?: Coordinates;
+  coordinates: Coordinates;
 
   constructor(
     id: number,
     title: string,
     description: string,
-    coordinates?: Coordinates,
+    coordinates: Coordinates,
   ) {
     this.id = id;
     this.title = title;
@@ -42,20 +42,24 @@ export class Document {
     const result = await Database.query(sql, [
       this.title,
       this.description,
-      this.coordinates?.longitude, // BEWARE ORDERING: https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples-in-gis-services#:~:text=PostGIS%20expects%20lng/lat.
-      this.coordinates?.latitude,
+      this.coordinates.longitude, // BEWARE ORDERING: https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples-in-gis-services#:~:text=PostGIS%20expects%20lng/lat.
+      this.coordinates.latitude,
       this.id,
     ]);
     if (result.rowCount != 1) throw new Error("Failed db update");
   }
 
-  static async insert(title: string, description: string): Promise<Document> {
+  static async insert(
+    title: string,
+    description: string,
+    coordinates: Coordinates,
+  ): Promise<Document> {
     const result = await Database.query(
-      "INSERT INTO document(title, description) VALUES($1, $2) RETURNING id;",
-      [title, description],
+      "INSERT INTO document(title, description, coordinates) VALUES($1, $2, ST_Point($3, $4)::geography) RETURNING id;",
+      [title, description, coordinates.longitude, coordinates.latitude],
     );
     const documentId: number = result.rows[0].id;
-    return new Document(documentId, title, description);
+    return new Document(documentId, title, description, coordinates);
   }
 
   static async delete(id: number): Promise<void> {

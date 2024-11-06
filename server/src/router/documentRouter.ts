@@ -54,8 +54,12 @@ documentRouter.post(
   validateBody(postBody),
   async (request: Request, response: Response) => {
     const body: PostBody = request.body;
-    const { title, description } = body;
-    const insertedDocument = await Document.insert(title, description);
+    const { title, description, coordinates } = body;
+    const insertedDocument = await Document.insert(
+      title,
+      description,
+      coordinates,
+    );
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
     return;
   },
