@@ -23,6 +23,13 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     height: "100%",
   };
 
+  const bounds = {
+    north: 67.9,
+    south: 67.8,
+    east: 20.4,
+    west: 20.0,
+  };
+
   const mapOptions = {
     mapTypeId: "satellite",
     //mapTypeControl: true,
@@ -37,6 +44,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         stylers: [{ visibility: "off" }],
       },
     ],
+    restriction: {
+      latLngBounds: bounds, // Restrict map movement within bounds
+      strictBounds: false, // Allow panning outside the bounds, but snap back when released
+    },
   };
 
   // Centro della mappa su Kiruna, Svezia
