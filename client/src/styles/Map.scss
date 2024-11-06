@@ -1,0 +1,17 @@
+@use "variables";
+
+.map-icon-documents {
+  border: 2px solid variables.$first-color;
+  border-radius: 50%;
+  width: 8vh;
+  height: 8vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: variables.$third-color;
+  cursor: pointer;
+
+  &:hover {
+    background-color: variables.$second-color;
+  }
+}

@@ -1,4 +1,4 @@
-@import "variables";
+@use "variables";
 
 html,
 body {
@@ -29,7 +29,7 @@ body {
   .left-panel {
     width: 56vw;
     height: 100vh;
-    background: $main-color;
+    background: variables.$main-color;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -41,7 +41,7 @@ body {
     h1 {
       color: #ddd;
       padding: 4%;
-      margin-top: 10%;
+      margin-top: 12%;
     }
 
     p {
@@ -69,7 +69,7 @@ body {
     padding: 3vmin;
 
     h2 {
-      color: $first-color;
+      color: variables.$first-color;
       font-size: 5vmin;
       margin-bottom: 5vmin;
     }
@@ -83,7 +83,7 @@ body {
     }
 
     label {
-      color: $first-color;
+      color: variables.$first-color;
       font-size: 2vmin;
       margin-bottom: 1vmin;
       font-weight: bold;
@@ -105,7 +105,7 @@ body {
     }
 
     input:focus {
-      border-color: $second-color;
+      border-color: variables.$second-color;
       outline: none;
     }
 
@@ -115,12 +115,12 @@ body {
 
       a {
         font-size: 1.5vmin;
-        color: $first-color;
+        color: variables.$first-color;
         text-decoration: none;
       }
 
       :hover {
-        color: $second-color;
+        color: variables.$second-color;
       }
     }
 
@@ -131,7 +131,7 @@ body {
       color: white;
       border-radius: 1vmin;
       cursor: pointer;
-      background: $main-color;
+      background: variables.$main-color;
       background-size: 200% 100%;
       background-position: 201%;
       transition: background-position 0.5s ease;
@@ -144,10 +144,10 @@ body {
     .signup {
       margin-top: 2vmin;
       font-size: 1.5vmin;
-      color: $first-color;
+      color: variables.$first-color;
 
       a {
-        color: $second-color;
+        color: variables.$second-color;
         text-decoration: none;
 
         &:hover {
