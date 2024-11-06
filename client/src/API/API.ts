@@ -102,7 +102,7 @@ async function getDocuments() {
       stakeholder: [""],
       scale: "",
       issuanceDate: null,
-      type: DocumentType.Technical,
+      type: DocumentType.Informative,
       connections: [
         { targetDocumentId: 3, type: [LinkType.Direct] },
         { targetDocumentId: 5, type: [LinkType.Direct] },

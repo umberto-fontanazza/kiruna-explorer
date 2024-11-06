@@ -51,7 +51,14 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
 
       <div className="body-container">
         <div className="map">
-          {<MapComponent />}
+          {
+            <MapComponent
+              apiKey="AIzaSyB8B_Q-ZvMqmhSvFmZhxi6U1Gv-4uzs-Qc"
+              documents={documents}
+              setSidebarOpen={setSidebarOpen}
+              setDocSelected={setDocSelected}
+            />
+          }
           <div className="button-overlay">
             <button className="add-document" onClick={handleAddButton}>
               <img
