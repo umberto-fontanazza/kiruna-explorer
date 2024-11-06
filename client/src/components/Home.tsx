@@ -50,8 +50,8 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
       <NavHeader logout={props.handleLogout} login={props.login} />
 
       <div className="body-container">
-        {/*<div className="map">
-          {<MapComponent apiKey={"AIzaSyB8B_Q-ZvMqmhSvFmZhxi6U1Gv-4uzs-Qc"} />}
+        <div className="map">
+          {<MapComponent />}
           <div className="button-overlay">
             <button className="add-document" onClick={handleAddButton}>
               <img
@@ -61,43 +61,43 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
               Add new Document
             </button>
           </div>
-        </div>*/}
+        </div>
         {
-          <table className="table-documents">
-            <thead>
-              <tr>
-                <th>Icon</th>
-                <th>Title</th>
-                <th>Info</th>
-              </tr>
-            </thead>
-            <tbody>
-              {documents.map((document) => (
-                <tr key={document.id}>
-                  <td>
-                    <img
-                      className="doc-icon"
-                      src={`/document-icon-${document.type}-iconByIcons8.png`}
-                      alt="Document icon"
-                    />
-                  </td>
-                  <td className="doc-title">{document.title}</td>
-                  <td>
-                    <button
-                      className="icon-info"
-                      onClick={() => {
-                        console.log(documents);
-                        setSidebarOpen(true);
-                        setDocSelected(document);
-                      }}
-                    >
-                      Info
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          // <table className="table-documents">
+          //   <thead>
+          //     <tr>
+          //       <th>Icon</th>
+          //       <th>Title</th>
+          //       <th>Info</th>
+          //     </tr>
+          //   </thead>
+          //   <tbody>
+          //     {documents.map((document) => (
+          //       <tr key={document.id}>
+          //         <td>
+          //           <img
+          //             className="doc-icon"
+          //             src={`/document-icon-${document.type}-iconByIcons8.png`}
+          //             alt="Document icon"
+          //           />
+          //         </td>
+          //         <td className="doc-title">{document.title}</td>
+          //         <td>
+          //           <button
+          //             className="icon-info"
+          //             onClick={() => {
+          //               console.log(documents);
+          //               setSidebarOpen(true);
+          //               setDocSelected(document);
+          //             }}
+          //           >
+          //             Info
+          //           </button>
+          //         </td>
+          //       </tr>
+          //     ))}
+          //   </tbody>
+          // </table>
         }
 
         <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
