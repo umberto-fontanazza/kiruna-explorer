@@ -8,7 +8,7 @@ DOCUMENT {
     id: serial,
     title: varchar(128),
     description: text,
-    position: geography(POINT),
+    coordinates: geography(POINT), // BEWARE PostGIS expects lng then lat 
     links: jsonb schema { targetDocumentId: link_type[]} example { '3': ["update", "collateral"], '1': ["projection"]}
     attachments: int[] (foreign key in ATTACHMENT)
 }
