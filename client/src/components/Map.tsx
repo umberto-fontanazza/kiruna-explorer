@@ -4,7 +4,6 @@ import { Document } from "../utils/interfaces";
 import "../styles/Map.scss";
 
 interface MapComponentProps {
-  apiKey: string;
   documents: Document[];
   setSidebarOpen: (value: boolean) => void;
   setDocSelected: (value: Document | null) => void;
@@ -16,7 +15,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
-    googleMapsApiKey: props.apiKey,
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
   });
 
   const containerStyle = {
@@ -25,15 +24,17 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   };
 
   const mapOptions = {
-    mapTypeId: "satellite", // Imposta la mappa in modalità satellitare
-    disableDefaultUI: true, // Disattiva i controlli standard
-    minZoom: 12, // Imposta il livello di zoom minimo
+    mapTypeId: "satellite",
+    //mapTypeControl: true,
+    disableDefaultUI: true,
+
+    minZoom: 12,
     maxZoom: 20,
     styles: [
       {
         featureType: "all",
         elementType: "labels",
-        stylers: [{ visibility: "off" }], // Rimuove tutte le etichette
+        stylers: [{ visibility: "off" }],
       },
     ],
   };
@@ -88,7 +89,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                     props.setDocSelected(doc);
                     setCenter({
                       lat: doc.coordinates.latitude!,
-                      lng: doc.coordinates.longitude! + 0.0011,
+                      lng: doc.coordinates.longitude! + 0.0019,
                     });
                   }}
                 >

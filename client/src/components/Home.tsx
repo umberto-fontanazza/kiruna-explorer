@@ -52,7 +52,6 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
         <div className="map">
           {
             <MapComponent
-              apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
               documents={documents}
               setSidebarOpen={setSidebarOpen}
               setDocSelected={setDocSelected}
@@ -160,7 +159,7 @@ function Sidebar(props: {
   return (
     <>
       <div className="container-btns">
-        <button
+        {/* <button
           className="btn-download-sidebar"
           onClick={() => props.setSidebarOpen(false)}
         >
@@ -169,7 +168,7 @@ function Sidebar(props: {
             src="/file-earmark-arrow-down.svg"
             alt="Download"
           />
-        </button>
+        </button> */}
         <button
           className="btn-close-sidebar"
           onClick={() => props.setSidebarOpen(false)}
