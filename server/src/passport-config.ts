@@ -15,12 +15,17 @@ export default function passportInitializer(passport: PassportStatic) {
 
   // serializeUser determines which data of the user object should be stored in the session
   passport.serializeUser(function (user, done) {
-    done(null, user);
+    done(null, (user as User).email);
   });
 
   // called on every access on an authenticated route
-  passport.deserializeUser(async function (user: User, done) {
-    const updatedUser = await User.getByEmail(user.email);
+  passport.deserializeUser(async function (email: string, done) {
+    let updatedUser;
+    try {
+      updatedUser = await User.getByEmail(email);
+    } catch (e) {
+      done(e);
+    }
     return done(null, updatedUser);
   });
 }
