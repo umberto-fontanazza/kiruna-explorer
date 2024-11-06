@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import API from "../API/API";
-import { Document, Link } from "../utils/interfaces";
+import { Document, Link, LinkType } from "../utils/interfaces";
 import "../styles/Home.scss";
 import NavHeader from "./NavHeader";
 import ModalForm from "./ModalForm";
@@ -34,10 +34,17 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
     setModalOpen(true);
   };
 
-  const handleAddNewDocument = async (newDocument: Document) => {
-    setDocuments([...documents, newDocument]);
+  const handleAddNewDocument = async (
+    newDocument: Document,
+    targetId: number,
+    linkType: LinkType
+  ) => {
     setModalOpen(false);
-    await API.postDocument(newDocument);
+    const id = await API.postDocument(newDocument);
+    await API.putLink(targetId, [linkType], id);
+    console.log(id);
+    const updatedDocument = { ...newDocument, id: id };
+    setDocuments([...documents, updatedDocument]);
   };
 
   useEffect(() => {

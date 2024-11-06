@@ -1,5 +1,5 @@
 import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { Document } from "../utils/interfaces";
 import "../styles/Map.scss";
 
