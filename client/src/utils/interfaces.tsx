@@ -7,7 +7,7 @@ export interface Credentials {
 
 export interface Link {
   targetDocumentId: number;
-  type: string[];
+  type: LinkType[];
 }
 
 export interface Document {
@@ -17,9 +17,25 @@ export interface Document {
   stakeholder: string[];
   scale: string;
   issuanceDate: Date | null;
-  type: string;
+  type: DocumentType | undefined;
   connections: Link[];
   language: string | undefined;
   pages: number | null;
   coordinates: { latitude: number | null; longitude: number | null };
+}
+
+export enum LinkType {
+  Direct = "DIRECT",
+  Collateral = "COLLATERAL",
+  Projection = "PROJECTION",
+  Update = "UPDATE",
+}
+
+export enum DocumentType {
+  Informative = "Informative",
+  Prescriptive = "Prescriptive",
+  Design = "Design",
+  Technical = "Technical",
+  Material = "Material",
+  Others = "Others",
 }
