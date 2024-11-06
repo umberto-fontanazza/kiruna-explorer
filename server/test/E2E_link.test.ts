@@ -38,13 +38,13 @@ describe("Link Router", () => {
   });
 
   it("should retrieve all the links associated with a specific document", async () => {
-    const response = await request(app).get(`/documents/${testDocAID}/link`);
+    const response = await request(app).get(`/documents/${testDocAID}/links`);
     expect(response.status).toBe(200);
     expect(response.body).toBeInstanceOf(Object);
   });
 
   it("should create or update a link associated with a specific document", async () => {
-    const response = await request(app).put(`/documents/${testDocAID}/link`).send({
+    const response = await request(app).put(`/documents/${testDocAID}/links`).send({
       targetDocumentId: testDocAID,
       linkTypes: ["Direct"],
     });
