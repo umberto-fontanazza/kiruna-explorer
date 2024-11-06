@@ -47,8 +47,6 @@ linkRouter.delete(
   async (request: Request, response: Response) => {
     const sourceId = Number(request.params.id);
     const targetId = Number(request.query.targetId);
-    console.log("targetId: ", targetId, typeof targetId);
-    console.log("sourceId: ", sourceId, typeof sourceId);
     await Link.delete(sourceId, targetId);
     response.status(StatusCodes.NO_CONTENT).send();
   },
