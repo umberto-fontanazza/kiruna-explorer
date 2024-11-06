@@ -69,6 +69,44 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
             </div>
           )}
         </div>
+        {
+          // <table className="table-documents">
+          //   <thead>
+          //     <tr>
+          //       <th>Icon</th>
+          //       <th>Title</th>
+          //       <th>Info</th>
+          //     </tr>
+          //   </thead>
+          //   <tbody>
+          //     {documents.map((document) => (
+          //       <tr key={document.id}>
+          //         <td>
+          //           <img
+          //             className="doc-icon"
+          //             src={`/document-icon-${document.type}-iconByIcons8.png`}
+          //             alt="Document icon"
+          //           />
+          //         </td>
+          //         <td className="doc-title">{document.title}</td>
+          //         <td>
+          //           <button
+          //             className="icon-info"
+          //             onClick={() => {
+          //               console.log(documents);
+          //               setSidebarOpen(true);
+          //               setDocSelected(document);
+          //             }}
+          //           >
+          //             Info
+          //           </button>
+          //         </td>
+          //       </tr>
+          //     ))}
+          //   </tbody>
+          // </table>
+        }
+
         <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
           {
             <Sidebar

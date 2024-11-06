@@ -49,7 +49,6 @@ const App: FC = () => {
           path="/home"
           element={<Home login={loggedIn} handleLogout={handleLogout} />}
         />
-
         {/* Route /* to cath all bad urls */}
         <Route path="*" element={<NotFound />} />
       </Route>
