@@ -60,7 +60,7 @@ async function getDocuments() {
       ],
       language: "",
       pages: null,
-      coordinates: { latitude: 67.8557, longitude: 20.2255 },
+      coordinates: { latitude: 67.8557, longitude: 20.2235 },
     },
     {
       id: 2,
