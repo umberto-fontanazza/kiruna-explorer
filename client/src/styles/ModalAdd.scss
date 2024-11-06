@@ -1,4 +1,4 @@
-@import "variables";
+@use "variables";
 
 .modal-overlay {
   position: fixed;
@@ -24,7 +24,7 @@
     h2 {
       font-size: 1.8rem;
       font-weight: bold;
-      color: $first-color;
+      color: variables.$first-color;
       margin-bottom: 1.5rem;
       text-align: center;
     }
@@ -48,7 +48,7 @@
         label {
           font-size: 1rem;
           font-weight: bold;
-          color: $first-color;
+          color: variables.$first-color;
 
           a {
             font-weight: normal;
@@ -61,14 +61,14 @@
           border: 1px solid #ddd;
           border-radius: 8px;
           font-size: 1rem;
-          color: $first-color;
+          color: variables.$first-color;
 
           &::placeholder {
-            color: rgba($color: $first-color, $alpha: 0.4);
+            color: rgba($color: variables.$first-color, $alpha: 0.4);
           }
 
           &:focus {
-            border-color: $second-color;
+            border-color: variables.$second-color;
             outline: none;
           }
         }
@@ -83,7 +83,7 @@
           box-sizing: border-box;
 
           &:focus {
-            border-color: $second-color;
+            border-color: variables.$second-color;
             outline: none;
           }
         }
@@ -113,25 +113,25 @@
     }
 
     .submit-button {
-      background-color: $first-color;
+      background-color: variables.$first-color;
       padding: 1rem;
       color: white;
-      border: 0.1rem solid $first-color;
+      border: 0.1rem solid variables.$first-color;
       cursor: pointer;
       transition:
         background-color 0.3s ease,
         color 0.3s ease;
 
       &:hover {
-        background: $third-color;
-        color: $first-color;
-        border: 0.1rem solid $first-color;
+        background: variables.$third-color;
+        color: variables.$first-color;
+        border: 0.1rem solid variables.$first-color;
       }
     }
 
     .cancel-button {
       background-color: #ccc;
-      color: $first-color;
+      color: variables.$first-color;
       border: none;
 
       &:hover {
@@ -159,7 +159,7 @@
   label {
     font-size: 1rem;
     font-weight: bold;
-    color: $first-color;
+    color: variables.$first-color;
 
     a {
       font-weight: normal;
@@ -173,14 +173,14 @@ textarea {
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 1rem;
-  color: $first-color;
+  color: variables.$first-color;
 
   &::placeholder {
-    color: rgba($color: $first-color, $alpha: 0.4);
+    color: rgba($color: variables.$first-color, variables.$alpha: 0.4);
   }
 
   &:focus {
-    border-color: $second-color;
+    border-color: variables.$second-color;
     outline: none;
   }
 }
