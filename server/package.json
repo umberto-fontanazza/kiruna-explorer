@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon ./src/index.ts",
-    "test": "jest",
+    "test": "cross-env NODE_ENV=test jest",
     "build": "npx tsc --project tsconfig.build.json",
     "lint": "npx eslint . --max-warnings 0 --report-unused-disable-directives",
     "lint-check": "npx eslint . --max-warnings 0",
@@ -30,6 +30,7 @@
     "jest": "^29.7.0",
     "nodemon": "^3.1.7",
     "prettier": "3.3.3",
+    "supertest": "^7.0.0",
     "ts-jest": "^29.2.5",
     "ts-node": "^10.9.2",
     "supertest": "^7.0.0",
@@ -39,6 +40,7 @@
   "dependencies": {
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "express-session": "^1.18.1",
