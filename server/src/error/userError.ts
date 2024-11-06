@@ -15,4 +15,8 @@ export class UserError extends Error {
   static Conflict(message = "User already existing") {
     return new UserError(message, StatusCodes.CONFLICT);
   }
+
+  static WrongCredentials(message = "Username and/or wrong password") {
+    return new UserError(message, StatusCodes.UNAUTHORIZED);
+  }
 }

@@ -22,7 +22,6 @@ USER {
     email: varchar(255),
     name: varchar(64),
     surname: varchar(64),
-    salt: bytea,
-    password_hash: bytea,
+    password_hash: varchar(60),
     role: USER_ROLE
 }

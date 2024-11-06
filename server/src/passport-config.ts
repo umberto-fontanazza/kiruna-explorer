@@ -2,7 +2,7 @@ import { Strategy } from "passport-local";
 import { PassportStatic } from "passport";
 import { User } from "./model/user";
 
-export default function passportInizializer(passport: PassportStatic) {
+export default function passportInitializer(passport: PassportStatic) {
   passport.use(
     new Strategy({ usernameField: "email" }, async (email, password, done) => {
       const user = await User.login(email, password);
@@ -19,7 +19,8 @@ export default function passportInizializer(passport: PassportStatic) {
   });
 
   // called on every access on an authenticated route
-  passport.deserializeUser(function (user: User, done) {
-    return done(null, user);
+  passport.deserializeUser(async function (user: User, done) {
+    const updatedUser = await User.getByEmail(user.email);
+    return done(null, updatedUser);
   });
 }
