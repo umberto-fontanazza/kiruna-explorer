@@ -40,5 +40,6 @@ jobs:
           DB_USER: ${{ vars.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_TEST_NAME: ${{ vars.DB_TEST_NAME }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET}}
         run: npm test
         working-directory: server
