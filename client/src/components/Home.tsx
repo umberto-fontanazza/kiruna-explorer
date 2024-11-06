@@ -126,6 +126,7 @@ function Sidebar(props: {
       );
 
       props.setDocuments(updatedDocuments);
+      setModalConnectionOpen(false);
     } else {
       console.error("No document is selected, so the link cannot be added.");
     }
