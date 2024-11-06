@@ -47,16 +47,8 @@ const App: FC = () => {
         {/* Route /home for the Home page with the map and diagram */}
         <Route
           path="/home"
-          element={
-            <Home
-              login={loggedIn}
-              handleLogout={handleLogout}
-              loggedIn={loggedIn}
-            />
-          }
+          element={<Home login={loggedIn} handleLogout={handleLogout} />}
         />
-
-        <Route path="/map" element={<MapComponent apiKey={""} />} />
 
         {/* Route /* to cath all bad urls */}
         <Route path="*" element={<NotFound />} />
