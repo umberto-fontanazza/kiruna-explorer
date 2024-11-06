@@ -1,4 +1,4 @@
-@import "variables";
+@use "variables";
 
 .body-container {
   display: inline-flex;
@@ -34,19 +34,19 @@
       cursor: pointer;
       transition: fill 0.3s ease;
       border-radius: 0.5rem;
-      background-color: $first-color;
+      background-color: variables.$first-color;
       padding: 0.5rem;
       color: white;
-      border: 0.1rem solid $first-color;
+      border: 0.1rem solid variables.$first-color;
       cursor: pointer;
       transition:
         background-color 0.3s ease,
         color 0.3s ease;
 
       &:hover {
-        background: $third-color;
-        color: $first-color;
-        border: 0.1rem solid $first-color;
+        background: variables.$third-color;
+        color: variables.$first-color;
+        border: 0.1rem solid variables.$first-color;
       }
     }
   }
@@ -71,10 +71,10 @@
         margin-top: 2%;
         margin-left: 0.5%;
         border-radius: 1rem;
-        background-color: $third-color;
+        background-color: variables.$third-color;
         padding: 0.5rem;
-        color: $first-color;
-        border: 0.1rem solid $first-color;
+        color: variables.$first-color;
+        border: 0.1rem solid variables.$first-color;
         cursor: pointer;
         transition:
           background-color 0.3s ease,
@@ -82,8 +82,8 @@
 
         &:hover {
           background-color: #bfbfac;
-          color: $first-color;
-          border: 0.1rem solid $first-color;
+          color: variables.$first-color;
+          border: 0.1rem solid variables.$first-color;
         }
       }
     }
@@ -131,7 +131,7 @@
         transition: background-color 0.3s;
 
         &:hover {
-          background-color: $third-color;
+          background-color: variables.$third-color;
         }
 
         .btn-download-img {
@@ -149,7 +149,7 @@
         transition: background-color 0.3s;
 
         &:hover {
-          background-color: $third-color;
+          background-color: variables.$third-color;
         }
 
         .btn-close-img {
@@ -172,20 +172,20 @@
       max-height: 80vh;
 
       p {
-        color: $first-color;
+        color: variables.$first-color;
         margin-bottom: 10px;
         font-size: 0.9rem;
       }
 
       h2,
       h3 {
-        color: $first-color;
+        color: variables.$first-color;
         font-size: 1.5rem;
         font-weight: bold;
       }
 
       h4 {
-        color: $first-color;
+        color: variables.$first-color;
         font-weight: normal;
         font-size: medium;
         a {
@@ -204,7 +204,7 @@
           justify-content: center;
           align-items: center;
           color: #ddd;
-          background-color: $first-color;
+          background-color: variables.$first-color;
           padding: 0.7rem;
           border-radius: 50%;
           width: 1.5rem;
@@ -213,8 +213,8 @@
           margin-bottom: 2%;
 
           &:hover {
-            background-color: $second-color;
-            color: $first-color;
+            background-color: variables.$second-color;
+            color: variables.$first-color;
           }
         }
       }
@@ -232,10 +232,10 @@
   margin-top: 2%;
   margin-left: 0.5%;
   border-radius: 1rem;
-  background-color: $third-color;
+  background-color: variables.$third-color;
   padding: 0.5rem;
-  color: $first-color;
-  border: 0.1rem solid $first-color;
+  color: variables.$first-color;
+  border: 0.1rem solid variables.$first-color;
   cursor: pointer;
   transition:
     background-color 0.3s ease,
@@ -243,7 +243,7 @@
 
   &:hover {
     background-color: #bfbfac;
-    color: $first-color;
-    border: 0.1rem solid $first-color;
+    color: variables.$first-color;
+    border: 0.1rem solid variables.$first-color;
   }
 }
