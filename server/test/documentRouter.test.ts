@@ -87,3 +87,51 @@ describe("Document CRUD bad requests", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 });
+
+describe("Testing with coordinates", () => {
+  const testDoc = {
+    title: "Coordinates test",
+    description: "This one will be tested with coordinates",
+  };
+  const wrongCoordinates = {
+    latitude: 120,
+    longitude: 40,
+  };
+  const missingLat = {
+    longitude: 60,
+  };
+  const coordinates = {
+    latitude: 45,
+    longitude: 30,
+  };
+  let testDocId: number;
+
+  test("POST with coordinates wrong", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .send({ ...testDoc, wrongCoordinates });
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+  });
+
+  test("POST with incomplete coordinates", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .send({ ...testDoc, missingLat });
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+  });
+
+  test("POST with coordinates success", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .send({ ...testDoc, coordinates });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    testDocId = response.body.id;
+  });
+
+  test("DELETE with coordinates success", async () => {
+    const response = await request(app).del(`/documents/${testDocId}`);
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+});
