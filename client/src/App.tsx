@@ -14,8 +14,7 @@ const App: FC = () => {
 
   const handleLogin = async (credentials: unknown) => {
     try {
-      console.log("Ho chiamato il login");
-      const user = await API.login(credentials);
+      //const user = await API.login(credentials); // de-comment when API is attached with backend
       setLoggedIn(true);
       setUser(user);
     } catch (error) {
@@ -24,7 +23,6 @@ const App: FC = () => {
   };
 
   const handleLogout = async () => {
-    console.log("Ho chiamato il logout");
     await API.logout();
     setLoggedIn(false);
     setUser("");
@@ -51,9 +49,6 @@ const App: FC = () => {
           path="/home"
           element={<Home login={loggedIn} handleLogout={handleLogout} />}
         />
-
-        <Route path="/map" element={<MapComponent apiKey={""} />} />
-
         {/* Route /* to cath all bad urls */}
         <Route path="*" element={<NotFound />} />
       </Route>

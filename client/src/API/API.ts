@@ -1,4 +1,4 @@
-import { Document } from "../utils/interfaces";
+import { Document, DocumentType, LinkType } from "../utils/interfaces";
 
 const baseURL = "http://localhost:5173";
 
@@ -53,14 +53,14 @@ async function getDocuments() {
       stakeholder: [""],
       scale: "",
       issuanceDate: null,
-      type: "",
+      type: DocumentType.Informative,
       connections: [
-        { targetDocumentId: 3, type: ["Direct"] },
-        { targetDocumentId: 5, type: ["Indirect"] },
+        { targetDocumentId: 3, type: [LinkType.Direct] },
+        { targetDocumentId: 5, type: [LinkType.Collateral] },
       ],
       language: "",
       pages: null,
-      coordinates: { latitude: 67.8557, longitude: 20.2255 },
+      coordinates: { latitude: 67.8557, longitude: 20.2235 },
     },
     {
       id: 2,
@@ -70,10 +70,10 @@ async function getDocuments() {
       stakeholder: ["LKAB", "Kiruna Municipality"],
       scale: "1:23",
       issuanceDate: null,
-      type: "qualcosa",
+      type: DocumentType.Prescriptive,
       connections: [
-        { targetDocumentId: 3, type: ["Direct"] },
-        { targetDocumentId: 5, type: ["Indirect"] },
+        { targetDocumentId: 3, type: [LinkType.Direct] },
+        { targetDocumentId: 5, type: [LinkType.Direct] },
       ],
       language: "Sweden",
       pages: 3,
@@ -86,10 +86,10 @@ async function getDocuments() {
       stakeholder: [""],
       scale: "",
       issuanceDate: null,
-      type: "",
+      type: DocumentType.Design,
       connections: [
-        { targetDocumentId: 3, type: ["Direct"] },
-        { targetDocumentId: 5, type: ["Indirect"] },
+        { targetDocumentId: 3, type: [LinkType.Direct] },
+        { targetDocumentId: 5, type: [LinkType.Collateral] },
       ],
       language: "",
       pages: null,
@@ -102,14 +102,30 @@ async function getDocuments() {
       stakeholder: [""],
       scale: "",
       issuanceDate: null,
-      type: "",
+      type: DocumentType.Informative,
       connections: [
-        { targetDocumentId: 3, type: ["Direct"] },
-        { targetDocumentId: 5, type: ["Indirect"] },
+        { targetDocumentId: 3, type: [LinkType.Direct] },
+        { targetDocumentId: 5, type: [LinkType.Direct] },
       ],
       language: "",
       pages: null,
       coordinates: { latitude: 67.8558, longitude: 20.2265 },
+    },
+    {
+      id: 5,
+      title: "Bla bla bla",
+      description: "Other bla bla bla",
+      stakeholder: ["LKAB", "Kiruna Municipality"],
+      scale: "",
+      issuanceDate: null,
+      type: DocumentType.Material,
+      connections: [
+        { targetDocumentId: 3, type: [LinkType.Direct] },
+        { targetDocumentId: 5, type: [LinkType.Collateral] },
+      ],
+      language: "",
+      pages: null,
+      coordinates: { latitude: 67.8557, longitude: 20.2255 },
     },
   ];
 }
@@ -190,7 +206,11 @@ async function getLinks(id: number) {
   }
 }
 
-async function putLink(targetDocumentId: number, linkType: string, id: number) {
+async function putLink(
+  targetDocumentId: number,
+  linkType: LinkType[],
+  id: number
+) {
   try {
     const response = await fetch(baseURL + `/${id}/links`, {
       method: "PUT",
