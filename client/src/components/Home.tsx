@@ -211,7 +211,6 @@ function Sidebar(props: {
             </button>
           )}
         </div>
-
         {/*<div className="connection-group">
           <h4>
             Connections: <a>{props.document?.connections}</a>
