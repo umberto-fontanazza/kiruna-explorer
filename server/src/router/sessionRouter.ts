@@ -2,32 +2,39 @@ import { Router, Request, Response, NextFunction } from "express";
 import passport from "passport";
 import { StatusCodes } from "http-status-codes";
 import { User } from "../model/user";
+import { validateBody } from "../middleware/validation";
+import { postBody } from "../validation/sessionSchema";
 
 export const sessionRouter: Router = Router();
 
-sessionRouter.post("/", (req: Request, res: Response, next: NextFunction) => {
-  passport.authenticate(
-    "local",
-    (err: Error | null, user: User | false, info: { message: string }) => {
-      if (err) {
-        return next(err);
-      }
-      if (!user) {
-        return res
-          .status(StatusCodes.UNAUTHORIZED)
-          .json({ message: info.message });
-      }
-
-      req.login(user, (err) => {
+sessionRouter.post(
+  "/",
+  validateBody(postBody),
+  (req: Request, res: Response, next: NextFunction) => {
+    passport.authenticate(
+      "local",
+      (err: Error | null, user: User | false, info: { message: string }) => {
         if (err) {
-          return next(err);
+          next(err);
+          return;
+        }
+        if (!user) {
+          res.status(StatusCodes.UNAUTHORIZED).json({ message: info.message });
+          return;
         }
 
-        return res.status(StatusCodes.CREATED).json(user);
-      });
-    },
-  )(req, res, next);
-});
+        req.login(user, (err) => {
+          if (err) {
+            next(err);
+            return;
+          }
+          res.status(StatusCodes.CREATED).json(user);
+          return;
+        });
+      },
+    )(req, res, next);
+  },
+);
 
 sessionRouter.get("/current", (req: Request, res: Response) => {
   try {
