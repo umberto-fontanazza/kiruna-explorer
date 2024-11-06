@@ -52,7 +52,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
         <div className="map">
           {
             <MapComponent
-              apiKey="AIzaSyB8B_Q-ZvMqmhSvFmZhxi6U1Gv-4uzs-Qc"
+              apiKey={import.meta.env.VITE_GOOGLE_MAPS_API_KEY}
               documents={documents}
               setSidebarOpen={setSidebarOpen}
               setDocSelected={setDocSelected}
@@ -144,6 +144,17 @@ function Sidebar(props: {
 
   const handleAddNewConnection = () => {
     setModalConnectionOpen(true);
+  };
+
+  const convertToDMS = (decimal: number | null): string => {
+    if (decimal === null) return "";
+
+    const degrees = Math.floor(decimal);
+    const minutesDecimal = Math.abs((decimal - degrees) * 60);
+    const minutes = Math.floor(minutesDecimal);
+    const seconds = Math.round((minutesDecimal - minutes) * 60 * 1000) / 1000; // Precisione a tre cifre per i secondi
+
+    return `${degrees}° ${minutes}' ${seconds}"`;
   };
 
   return (
@@ -244,8 +255,8 @@ function Sidebar(props: {
         <h4>
           Coordinates:{" "}
           <a>
-            {props.document?.coordinates.latitude} |{" "}
-            {props.document?.coordinates.longitude}
+            {convertToDMS(props.document?.coordinates.latitude ?? null)} |{" "}
+            {convertToDMS(props.document?.coordinates.longitude ?? null)}
           </a>
           {/*props.document?.coordinates &&
             props.document.coordinates.length > 0 ? (
