@@ -206,7 +206,11 @@ async function getLinks(id: number) {
   }
 }
 
-async function putLink(targetDocumentId: number, linkType: string, id: number) {
+async function putLink(
+  targetDocumentId: number,
+  linkType: LinkType[],
+  id: number
+) {
   try {
     const response = await fetch(baseURL + `/${id}/links`, {
       method: "PUT",

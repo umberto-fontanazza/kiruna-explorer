@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Document } from "../utils/interfaces";
+import { Document, Link, LinkType } from "../utils/interfaces";
 import API from "../API/API";
 import "../styles/ModalConnections.scss";
 
@@ -7,6 +7,7 @@ interface ModalConnectionProps {
   documents: Document[];
   document: Document | null;
   onClose: () => void;
+  onSubmit: (newLink: Link) => void;
 }
 
 const ModalConnection: FC<ModalConnectionProps> = (props) => {
@@ -18,9 +19,12 @@ const ModalConnection: FC<ModalConnectionProps> = (props) => {
       console.error("Document is null, cannot create a connection.");
       return;
     }
-    await API.putLink(targetDocumentId, "Direct", props.document?.id);
-    //TODO: perform the attachment of the new Connection in the frontend part in order to see instantly the change of the connections number. In addition, do we want to put also the connection type?
-    //Also the SCSS has to be set up.
+    const newLink: Link = {
+      targetDocumentId: targetDocumentId,
+      type: [LinkType.Direct],
+    };
+
+    props.onSubmit(newLink);
   };
 
   return (
