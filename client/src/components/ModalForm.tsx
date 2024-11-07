@@ -355,21 +355,23 @@ const ModalForm: FC<ModalAddProps> = ({
                   ))}
                 </select>
               </div>
-              {/* <div className="form-group">
+              <div className="form-group">
                 <label>Connection Type *</label>
                 <select
                   value={newTypeConnection}
-                  onChange={(e) => setNewTypeConnection(e.target.value)}
+                  onChange={(e) =>
+                    setNewTypeConnection(e.target.value as LinkType)
+                  }
                 >
                   <option value="" disabled>
                     Select the Connection's type
                   </option>
-                  <option value="Direct">DIRECT</option>
-                  <option value="Collateral">COLLATERAL</option>
-                  <option value="Projection">PROJECTION</option>
-                  <option value="Update">UPDATE</option>
+                  <option value="DIRECT">Direct</option>
+                  <option value="COLLATERAL">Collateral</option>
+                  <option value="PROJECTION">Projection</option>
+                  <option value="UPDATE">Update</option>
                 </select>
-              </div> */}
+              </div>
               <div className="button-group">
                 <button className="submit-button" type="submit">
                   Add Document
