@@ -10,7 +10,15 @@ What lessons did you learn (both positive and negative) in this sprint?
 2. Reviews are useful only if the reviewer has context and domain specific expertise
 
 Which improvement goals set in the previous retrospective were you able to achieve?
+1. Introduce a commit or PR good practices checklist - ✓
+2. Add less dependencies - ✓
+3. Less learning tasks - ✓
+4. Choose tecnologies that we are comfortable with - ✓
+5. Starting from API draft - ~ partially because it needed edits
 
 Which ones you were not able to achieve? Why?
 
-One thing you are proud of as a Team!!
+One thing you are proud of as a Team
+1. Our authentication module
+2. Perfect linting
+3. Frontend team picked up quickly new stuff
