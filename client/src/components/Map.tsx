@@ -1,26 +1,139 @@
-import React from "react";
-import GoogleMapReact from "google-map-react";
+import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
+import { FC, useEffect, useState } from "react";
+import { Document } from "../utils/interfaces";
+import "../styles/Map.scss";
 
 interface MapComponentProps {
-  apiKey: string;
+  documents: Document[];
+  setSidebarOpen: (value: boolean) => void;
+  setDocSelected: (value: Document | null) => void;
 }
 
-const MapComponent: React.FC<MapComponentProps> = ({ apiKey }) => {
-  // Centro della mappa su Kiruna, Svezia
+const MapComponent: FC<MapComponentProps> = (props) => {
   const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
+  const [center, setCenter] = useState(kirunaCoords);
 
-  return (
-    <div style={{ height: "500px", width: "100%" }}>
-      <GoogleMapReact
-        bootstrapURLKeys={{ key: apiKey }}
-        defaultCenter={kirunaCoords}
-        defaultZoom={12} // Imposta il livello di zoom. 12 è un buon livello per la visualizzazione dall'alto
-        options={{
-          mapTypeId: "satellite", // Modalità satellite
-        }}
-      />
-    </div>
+  const { isLoaded } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+  });
+
+  const containerStyle = {
+    width: "100vw",
+    height: "100%",
+  };
+
+  const bounds = {
+    north: 67.9,
+    south: 67.8,
+    east: 20.4,
+    west: 20.0,
+  };
+
+  const mapOptions = {
+    mapTypeId: "satellite",
+    //mapTypeControl: true,
+    disableDefaultUI: true,
+
+    minZoom: 12,
+    maxZoom: 20,
+    styles: [
+      {
+        featureType: "all",
+        elementType: "labels",
+        stylers: [{ visibility: "off" }],
+      },
+    ],
+    restriction: {
+      latLngBounds: bounds, // Restrict map movement within bounds
+      strictBounds: false, // Allow panning outside the bounds, but snap back when released
+    },
+  };
+
+  // Centro della mappa su Kiruna, Svezia
+
+  return isLoaded ? (
+    <>
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        zoom={10}
+        options={mapOptions}
+        center={center}
+      >
+        {props.documents.map(
+          (doc) =>
+            doc.coordinates.latitude !== null &&
+            doc.coordinates.longitude !== null && (
+              // <Marker
+              //   key={doc.id}
+              //   position={{
+              //     lat: doc.coordinates.latitude!,
+              //     lng: doc.coordinates.longitude!,
+              //   }}
+              //   icon={{
+              //     url: `/document-icon-${doc.type}-iconByIcons8.png`, // Replace with the path to your custom image
+              //     //scaledSize: new window.google.maps.Size(50, 50), // Adjust the size as needed
+              //     origin: new window.google.maps.Point(0, 0),
+              //     anchor: new window.google.maps.Point(25, 25), // Adjusts the anchor point based on size
+              //   }}
+              //   onClick={() => {
+              //     props.setSidebarOpen(true);
+              //     props.setDocSelected(doc);
+              //     setCenter({
+              //       lat: doc.coordinates.latitude!,
+              //       lng: doc.coordinates.longitude! + 0.0011,
+              //     });
+              //   }}
+              // />
+              <OverlayView
+                key={doc.id}
+                position={{
+                  lat: doc.coordinates.latitude!,
+                  lng: doc.coordinates.longitude!,
+                }}
+                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+              >
+                <div
+                  className="map-icon-documents"
+                  onClick={() => {
+                    props.setSidebarOpen(true);
+                    props.setDocSelected(doc);
+                    setCenter({
+                      lat: doc.coordinates.latitude!,
+                      lng: doc.coordinates.longitude! + 0.0019,
+                    });
+                  }}
+                >
+                  <img
+                    src={`/document-icon-${doc.type}-iconByIcons8.png`}
+                    alt="Custom Marker"
+                    style={{ width: "4vh", height: "4vh" }}
+                  />
+                </div>
+              </OverlayView>
+            )
+        )}
+      </GoogleMap>
+    </>
+  ) : (
+    <></>
   );
 };
+
+//function MapComponent() {
+// const [map, setMap] = React.useState(null);
+
+// const onLoad = React.useCallback(function callback(map) {
+//   // This is just an example of getting and using the map instance!!! don't just blindly copy!
+//   const bounds = new window.google.maps.LatLngBounds(center)
+//   map.fitBounds(bounds)
+
+//   setMap(map)
+// }, [])
+
+// const onUnmount = React.useCallback(function callback(map) {
+//   setMap(null)
+// }, [])
+//}
 
 export default MapComponent;

@@ -34,11 +34,6 @@
       flex-direction: column;
       gap: 1rem;
 
-      .test {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-      }
       .form-group {
         display: flex;
         flex-direction: column;
@@ -52,24 +47,6 @@
 
           a {
             font-weight: normal;
-          }
-        }
-
-        input,
-        textarea {
-          padding: 0.75rem;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          font-size: 1rem;
-          color: variables.$first-color;
-
-          &::placeholder {
-            color: rgba($color: variables.$first-color, $alpha: 0.4);
-          }
-
-          &:focus {
-            border-color: variables.$second-color;
-            outline: none;
           }
         }
 
@@ -88,11 +65,6 @@
           }
         }
       }
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 80px;
     }
   }
 
@@ -139,90 +111,4 @@
       }
     }
   }
-}
-
-.coordinates {
-  display: flex;
-  gap: 1rem;
-}
-
-.latitude {
-  width: 20%;
-}
-
-.coord-group {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 0.5rem;
-
-  label {
-    font-size: 1rem;
-    font-weight: bold;
-    color: variables.$first-color;
-
-    a {
-      font-weight: normal;
-    }
-  }
-}
-
-input,
-textarea {
-  padding: 0.75rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 1rem;
-  color: variables.$first-color;
-
-  &::placeholder {
-    color: rgba($color: variables.$first-color, variables.$alpha: 0.4);
-  }
-
-  &:focus {
-    border-color: variables.$second-color;
-    outline: none;
-  }
-}
-
-.no-spin {
-  ::-webkit-outer-spin-button,
-  ::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
-}
-
-.checkbox-group {
-  display: flex;
-  flex-direction: column;
-  margin-top: 10px;
-
-  .checkbox-label {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-    cursor: pointer;
-
-    input[type="checkbox"] {
-      margin-right: 10px;
-      width: 20px;
-      height: 20px;
-      cursor: pointer;
-      accent-color: #007bff;
-
-      &:hover {
-        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-      }
-
-      &:checked {
-        background-color: #007bff;
-        border: 1px solid #007bff;
-      }
-    }
-  }
-}
-
-.scale {
-  align-items: center;
 }

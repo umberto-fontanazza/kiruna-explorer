@@ -10,6 +10,8 @@ export const putBody = z.object({
 export type DeleteBody = z.infer<typeof deleteBody>;
 export const deleteBody = z.object({});
 
-export const targetIdQueryParam = z.object({
-  targetId: z.coerce.number().min(1),
-});
+export const targetIdQueryParam = z
+  .object({
+    targetId: z.coerce.number().min(1),
+  })
+  .strict();

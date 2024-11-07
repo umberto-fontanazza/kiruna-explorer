@@ -1,15 +1,21 @@
 import { FC, useState } from "react";
-import { Document } from "../utils/interfaces";
+
+import { Document, DocumentType, LinkType } from "../utils/interfaces";
 import "../styles/ModalAdd.scss";
+import ISO6391 from "iso-639-1";
 
 interface ModalAddProps {
   modalOpen: boolean;
   onClose: () => void;
-  onSubmit: (newDocument: Document) => void;
+  onSubmit: (
+    newDocument: Document,
+    targetId: number,
+    linkType: LinkType
+  ) => void;
   documents: Document[];
 }
 
-const ModalAdd: FC<ModalAddProps> = ({
+const ModalForm: FC<ModalAddProps> = ({
   modalOpen,
   onClose,
   onSubmit,
@@ -22,18 +28,23 @@ const ModalAdd: FC<ModalAddProps> = ({
     stakeholder: [],
     scale: "",
     issuanceDate: null,
-    type: "",
+    type: undefined,
     connections: [],
     language: "",
     pages: null,
     coordinates: { latitude: null, longitude: null },
   };
-  const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
-  const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
-  const [newTypeConnection, setNewTypeConnection] = useState<string>("");
-  const [isNumericScale, setIsNumericScale] = useState<boolean>(false);
 
   const scaleValues = ["Blueprints/Effects", "Text"];
+  const languages = ISO6391.getAllNames().sort();
+
+  const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
+  const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
+  const [newTypeConnection, setNewTypeConnection] = useState<
+    LinkType | undefined
+  >(undefined);
+  const [isNumericScale, setIsNumericScale] = useState<boolean>(false);
+
   const stakeholdersOptions = [
     { value: "LKAB", label: "LKAB" },
     { value: "Municipality", label: "Municipality" },
@@ -65,17 +76,25 @@ const ModalAdd: FC<ModalAddProps> = ({
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-
-    onSubmit({
-      ...newDoc,
-      scale: "1:" + newDoc.scale,
-      connections: [
-        { targetDocumentId: targetDocumentId, type: [newTypeConnection] },
-      ],
-    });
+    if (isNumericScale) {
+      newDoc.scale = "1:" + newDoc.scale;
+    }
+    onSubmit(
+      {
+        ...newDoc,
+        connections: [
+          {
+            targetDocumentId: targetDocumentId,
+            type: newTypeConnection ? [newTypeConnection] : [],
+          },
+        ],
+      },
+      targetDocumentId,
+      newTypeConnection ? LinkType.Direct : LinkType.Collateral
+    );
     console.log(newDoc);
     setNewDoc(initialDocumentState);
-    setNewTypeConnection("");
+    setNewTypeConnection(LinkType.Direct);
     setTargetDocumentId(-1);
   };
 
@@ -200,25 +219,28 @@ const ModalAdd: FC<ModalAddProps> = ({
                   <select
                     value={newDoc.type}
                     onChange={(e) =>
-                      setNewDoc((prev) => ({ ...prev, type: e.target.value }))
+                      setNewDoc((prev) => ({
+                        ...prev,
+                        type: e.target.value as DocumentType,
+                      }))
                     }
                     required
                   >
-                    <option value="" disabled>
-                      Select type
-                    </option>
-                    <option value="Informative Document">
+                    <option value="">Select type</option>
+                    <option value={DocumentType.Informative}>
                       Informative Document
                     </option>
-                    <option value="Prescriptive Document">
+                    <option value={DocumentType.Prescriptive}>
                       Prescriptive Document
                     </option>
-                    <option value="Design Document">Design Document</option>
-                    <option value="Technical Document">
+                    <option value={DocumentType.Design}>Design Document</option>
+                    <option value={DocumentType.Technical}>
                       Technical Document
                     </option>
-                    <option value="Material effect">Material effect</option>
-                    <option value="Others">Others</option>
+                    <option value={DocumentType.Material}>
+                      Material effect
+                    </option>
+                    {/* <option value="Others">Others</option> */}
                   </select>
                 </div>
               </div>
@@ -238,13 +260,14 @@ const ModalAdd: FC<ModalAddProps> = ({
                     <option value="" disabled>
                       Select language
                     </option>
-                    <option value="English">English</option>
-                    <option value="Italian">Italian</option>
-                    <option value="Sweden">Sweden</option>
-                    <option value="Others">Others</option>
+                    {languages.map((lang) => (
+                      <option key={lang} value={lang}>
+                        {lang}
+                      </option>
+                    ))}
                   </select>
                 </div>
-                <div className="form-group">
+                {/* <div className="form-group">
                   <label>Pages (optional):</label>
                   <input
                     type="number"
@@ -257,7 +280,7 @@ const ModalAdd: FC<ModalAddProps> = ({
                       }));
                     }}
                   />
-                </div>
+                </div> */}
               </div>
               <div className="form-group">
                 <label>Latitude *</label>
@@ -280,13 +303,14 @@ const ModalAdd: FC<ModalAddProps> = ({
                       },
                     }))
                   }
-                  placeholder="Es. 34.123456"
+                  placeholder="Es. 34.1234"
                   required
                 />
               </div>
               <div className="form-group">
                 <label>Longitude *</label>
                 <input
+                  lang="en"
                   type="number"
                   id="no-spin"
                   name="longitude"
@@ -304,7 +328,7 @@ const ModalAdd: FC<ModalAddProps> = ({
                       },
                     }));
                   }}
-                  placeholder="-123.123456"
+                  placeholder="123.1234"
                   required
                 />
               </div>
@@ -314,7 +338,9 @@ const ModalAdd: FC<ModalAddProps> = ({
                   value={targetDocumentId ?? ""}
                   onChange={(e) => setTargetDocumentId(Number(e.target.value))}
                 >
-                  <option value="">Select a document to link</option>
+                  <option value="" hidden selected>
+                    Select a document to link
+                  </option>
                   {documents.map((doc) => (
                     <option key={doc.id} value={doc.id}>
                       {doc.title}
@@ -322,7 +348,7 @@ const ModalAdd: FC<ModalAddProps> = ({
                   ))}
                 </select>
               </div>
-              <div className="form-group">
+              {/* <div className="form-group">
                 <label>Connection Type *</label>
                 <select
                   value={newTypeConnection}
@@ -336,7 +362,7 @@ const ModalAdd: FC<ModalAddProps> = ({
                   <option value="Projection">PROJECTION</option>
                   <option value="Update">UPDATE</option>
                 </select>
-              </div>
+              </div> */}
               <div className="button-group">
                 <button className="submit-button" type="submit">
                   Add Document
@@ -360,4 +386,40 @@ const ModalAdd: FC<ModalAddProps> = ({
   );
 };
 
-export default ModalAdd;
+function LongitudeInput() {
+  const [newDoc, setNewDoc] = useState({ coordinates: { longitude: "" } });
+
+  const handleLongitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Sostituisci le virgole con i punti per evitare errori
+    const inputValue = e.target.value.replace(",", ".");
+
+    // Verifica che sia un valore valido per la longitudine (numero o vuoto)
+    if (/^-?\d*\.?\d*$/.test(inputValue) || inputValue === "") {
+      setNewDoc((prev) => ({
+        ...prev,
+        coordinates: {
+          ...prev.coordinates,
+          longitude: inputValue, // Salva come stringa temporaneamente per supportare la digitazione
+        },
+      }));
+    }
+  };
+
+  return (
+    <div>
+      <label>Longitude *</label>
+      <input
+        lang="en"
+        type="text" // Cambia a "text" per controllo completo dell'input
+        id="no-spin"
+        name="longitude"
+        value={newDoc.coordinates.longitude}
+        onChange={handleLongitudeChange}
+        placeholder="123.1234"
+        required
+      />
+    </div>
+  );
+}
+
+export default ModalForm;

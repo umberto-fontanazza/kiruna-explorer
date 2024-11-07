@@ -54,8 +54,12 @@ documentRouter.post(
   validateBody(postBody),
   async (request: Request, response: Response) => {
     const body: PostBody = request.body;
-    const { title, description } = body;
-    const insertedDocument = await Document.insert(title, description);
+    const { title, description, coordinates } = body;
+    const insertedDocument = await Document.insert(
+      title,
+      description,
+      coordinates,
+    );
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
     return;
   },
@@ -68,7 +72,7 @@ documentRouter.patch(
   validateBody(patchBody),
   async (request: Request, response: Response) => {
     const id = Number(request.params.id);
-    const { title, description } = request.body as PatchBody;
+    const { title, description, coordinates } = request.body as PatchBody;
     let document: Document;
     try {
       document = await Document.get(id);
@@ -79,6 +83,7 @@ documentRouter.patch(
     }
     document.title = title || document.title;
     document.description = description || document.description;
+    document.coordinates = coordinates || document.coordinates;
     await document.update();
     response.status(StatusCodes.NO_CONTENT).send();
     return;
