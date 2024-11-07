@@ -47,10 +47,6 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
     setDocuments([...documents, updatedDocument]);
   };
 
-  useEffect(() => {
-    console.log(docSelected);
-  }, [docSelected]);
-
   return (
     <>
       <NavHeader logout={props.handleLogout} login={props.login} />

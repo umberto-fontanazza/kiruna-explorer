@@ -34,16 +34,16 @@ const logout = async () => {
 /*************************   DOCUMENTS   *****************************/
 
 async function getDocuments() {
-  // try{
-  //   const response = await fetch(baseURL + "/documents");
-  //   if(response.ok){
-  //     const documents = await response.json();
-  //     return documents;
-  //   }
-  // }catch(err){
-  //   console.error(err);
-  // }
-
+  try {
+    const response = await fetch(baseURL + "/documents");
+    if (response.ok) {
+      const documents = await response.json();
+      return documents;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+  /*
   return [
     {
       id: 1,
@@ -168,7 +168,7 @@ async function getDocuments() {
       pages: 43,
       coordinates: { latitude: 67.84, longitude: 20.28 },
     },
-  ];
+  ];*/
 }
 
 async function postDocument(document: Document): Promise<number> {

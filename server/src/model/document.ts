@@ -52,7 +52,7 @@ export class Document {
 
   async update(): Promise<void> {
     const sql =
-      "UPDATE document SET title = $1, description = $2, coordinates = ST_Point($3, $4)::geography, type = $5 WHERE id = $56";
+      "UPDATE document SET title = $1, description = $2, coordinates = ST_Point($3, $4)::geography, type = $5 WHERE id = $6";
     const result = await Database.query(sql, [
       this.title,
       this.description,
@@ -88,7 +88,11 @@ export class Document {
   }
 
   static async all(): Promise<Document[]> {
-    const result = await Database.query("SELECT * FROM document");
+    const result = await Database.query(
+      `SELECT *, json_build_object('latitude', ST_Y(coordinates::geometry), 
+      'longitude', ST_X(coordinates::geometry)) AS coordinates
+      FROM document;`,
+    );
     return result.rows.map((row) => Document.fromDatabaseRow(row));
   }
 

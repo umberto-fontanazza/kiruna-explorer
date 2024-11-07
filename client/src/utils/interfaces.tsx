@@ -32,10 +32,10 @@ export enum LinkType {
 }
 
 export enum DocumentType {
-  Informative = "Informative",
-  Prescriptive = "Prescriptive",
-  Design = "Design",
-  Technical = "Technical",
-  Material = "Material",
-  Others = "Others",
+  Informative = "INFORMATIVE",
+  Prescriptive = "PRESCRIPTIVE",
+  Design = "DESIGN",
+  Technical = "TECHNICAL",
+  Material = "MATERIAL",
+  Others = "OTHERS",
 }
