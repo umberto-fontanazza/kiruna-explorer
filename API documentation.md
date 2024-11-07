@@ -46,6 +46,7 @@ TODO: filters
             "latitude": 67.9, // domain [-90 deg, +90 deg]
             "longitude": 20.22 // domain [-180 deg, +180 deg]
         },
+        "type": "INFORMATIVE",
         "links": [
             {
                 "targetDocumentId": 2,
@@ -84,6 +85,7 @@ Retrieve a specific document by its unique identifier.
         "latitude": 67.9, // domain [-90 deg, +90 deg]
         "longitude": 20.22 // domain [-180 deg, +180 deg]
     },
+    "type": "INFORMATIVE",
     "links": [
         {
             "targetDocumentId": 2,
@@ -119,7 +121,8 @@ Create a new document.
   "coordinates": {
     "latitude": 67.9, // domain [-90 deg, +90 deg]
     "longitude": 20.22 // domain [-180 deg, +180 deg]
-  }
+  },
+  "type": "INFORMATIVE"
   //other properties
 }
 ```
@@ -158,7 +161,8 @@ Update an existing document by its unique identifier.
   "coordinates": {
     "latitude": 67.9, // domain [-90 deg, +90 deg]
     "longitude": 20.22 // domain [-180 deg, +180 deg]
-  }
+  },
+  "type": "DESIGN"
 }
 ```
 
