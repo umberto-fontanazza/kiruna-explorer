@@ -70,15 +70,30 @@ sections:
 
 ## ASSESSMENT
 
-- What caused your errors in estimation (if any)?
-  
-- What lessons did you learn (both positive and negative) in this sprint?
-  
-- Which improvement goals set in the previous retrospective were you able to achieve? 
+What caused your errors in estimation (if any)?
+1. Documents fields were added mid sprint (story 1 was only title + description).
+2. Lacking knowledge of libraries.
+3. Inexperience with branch management and PR submission process.
+4. API keys being pushed and .env management.
+5. Google maps API speed up the work on the front end much more than expected.
+6. The tests were done first with a full mockup and then we had to modified all the tests.
 
-- Which ones you were not able to achieve? Why?
-  
-- Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
- 
-- One thing you are proud of as a Team!!
+What lessons did you learn (both positive and negative) in this sprint?
+1. Frontend and backend need to be integrated ASAP and often.
+2. Reviews are useful only if the reviewer has context and domain specific expertise.
+3. It is easier and simpler to test when the task is fully completed than from a document.
+
+Which improvement goals set in the previous retrospective were you able to achieve?
+1. Introduce a commit or PR good practices checklist - ✓
+2. Add less dependencies - ✓
+3. Less learning tasks - ✓
+4. Choose tecnologies that we are comfortable with - ✓
+5. Starting from API draft - ~ partially because it needed edits
+
+Which ones you were not able to achieve? Why?
+
+One thing you are proud of as a Team
+1. Our authentication module.
+2. Perfect linting.
+3. Frontend team picked up quickly new stuff.
   
