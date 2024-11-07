@@ -3,22 +3,33 @@ import { Document, DocumentType, LinkType } from "../utils/interfaces";
 
 const baseURL = "http://localhost:3000";
 
-async function login(credentials: unknown) {
+async function getUser() {
+  const response = await fetch(baseURL + "/sessions/current", {
+    credentials: "include",
+  });
+
+  const user = await response.json();
+  if (response.ok) {
+    return user;
+  } else {
+    throw user;
+  }
+}
+
+async function login(email: string, password: string) {
   const response = await fetch(baseURL + "/sessions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    body: JSON.stringify(credentials),
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
   });
-  if (response.ok) {
-    const user = await response.json();
-    return user;
-  } else {
-    const err = await response.text();
-    throw err;
-  }
+
+  return response;
 }
 
 const logout = async () => {
@@ -294,6 +305,7 @@ async function deleteLink(
 }
 
 const API = {
+  getUser,
   login,
   logout,
   getDocuments,

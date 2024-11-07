@@ -1,22 +1,40 @@
-import { FC, useState } from "react";
-import { Credentials } from "../utils/interfaces";
+import { FC, useEffect, useState } from "react";
+import { LoginErrors, User } from "../utils/interfaces";
 import "../styles/LoginForm.scss";
 import { useNavigate } from "react-router-dom";
+import API from "../API/API";
+import { Form } from "react-bootstrap";
 
 interface LoginFormProps {
-  login: (credentials: Credentials) => void;
+  setUser: (user: User) => void;
+  loggedIn: boolean;
+  setLoggedIn: (bool: boolean) => void;
 }
 
 const LoginForm: FC<LoginFormProps> = (props): JSX.Element => {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState<LoginErrors>({});
+
   const nav = useNavigate();
 
-  const handleSubmit = (event: { preventDefault: () => void }) => {
+  useEffect(() => {
+    if (props.loggedIn) nav("/home");
+  });
+
+  const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    const credentials = { username, password };
-    props.login(credentials);
-    nav("/home");
+    const response = await API.login(email, password);
+
+    if (response.status === 201) {
+      const user = await response.json();
+      props.setUser(user);
+      props.setLoggedIn(true);
+      nav("/home");
+    } else if (response.status === 401) {
+      setErrors({ login: "Email and/or password wrong" });
+    }
+    console.log(errors);
   };
 
   return (
@@ -25,11 +43,15 @@ const LoginForm: FC<LoginFormProps> = (props): JSX.Element => {
         <div className="left-panel">
           <h1>Kiruna eXplorer.</h1>
           <p>
-            Welcome in the Kiruna eXplorer, <br />
-            I don't know what to write here, <br />
-            But I think we will show you <br />
-            the story of Kiruna in Sweden, <br />
-            Enjoy !
+            Welcome to the Kiruna eXplorer,
+            <br />
+            Where tales of the Arctic come alive.
+            <br />
+            Embark on a journey through Kiruna’s history,
+            <br />
+            A place where Sweden's heart and heritage thrive.
+            <br />
+            Enjoy your adventure!
           </p>
           <img
             src="/public/kiruna-bg-1920-Photoroom.png"
@@ -39,21 +61,22 @@ const LoginForm: FC<LoginFormProps> = (props): JSX.Element => {
 
         <div className="right-panel">
           <h2>Welcome Back!</h2>
-          <form onSubmit={handleSubmit}>
-            <label htmlFor="username">Username</label>
-            <input
+          <Form onSubmit={handleSubmit}>
+            <Form.Label htmlFor="email">Email</Form.Label>
+            <Form.Control
               type="email"
-              id="username"
-              name="username"
+              id="email"
+              name="email"
               placeholder="example@gmail.com"
-              value={username}
-              onChange={(ev) => setUsername(ev.target.value)}
+              value={email}
+              onChange={(ev) => setEmail(ev.target.value)}
               required
-              className="input-username"
+              className="input-email"
+              isInvalid={errors.login ? true : false}
             />
 
-            <label htmlFor="password">Password</label>
-            <input
+            <Form.Label htmlFor="password">Password</Form.Label>
+            <Form.Control
               type="password"
               id="password"
               name="password"
@@ -62,13 +85,16 @@ const LoginForm: FC<LoginFormProps> = (props): JSX.Element => {
               onChange={(ev) => setPassword(ev.target.value)}
               required
               className="input-password"
+              isInvalid={errors.login ? true : false}
             />
+
+            <p className="m-0 text-danger text-center">{errors.login}</p>
 
             <div className="forgot-password">
               <a href="/forgot-password">Forgot password?</a>
             </div>
             <button type="submit">Login</button>
-          </form>
+          </Form>
 
           <div className="signup">
             Doesn’t have an account? <a href="/signup">Sign up for free</a>
