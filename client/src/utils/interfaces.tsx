@@ -11,6 +11,7 @@ export enum UserRole {
   Developer = "DEVELOPER",
   Planner = "PLANNER",
   Resident = "RESIDENT",
+  Visitor = "VISITOR",
 }
 
 export interface LoginErrors {

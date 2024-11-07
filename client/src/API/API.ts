@@ -1,4 +1,4 @@
-import { Document, DocumentType, LinkType } from "../utils/interfaces";
+import { Document, LinkType } from "../utils/interfaces";
 //import { strict as assert } from "assert";
 
 const baseURL = "http://localhost:3000";

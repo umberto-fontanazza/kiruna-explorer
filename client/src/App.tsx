@@ -2,16 +2,19 @@ import { FC, useEffect, useState } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import LoginForm from "./components/LoginForm";
 import Home from "./components/Home";
-import MapComponent from "./components/Map";
-import NavHeader from "./components/NavHeader";
 import NotFound from "./components/NotFound";
 import API from "./API/API";
 import "./styles/global.scss";
-import { User } from "./utils/interfaces";
+import { User, UserRole } from "./utils/interfaces";
 
 const App: FC = () => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState<User>({
+    email: "",
+    name: "",
+    surname: "",
+    role: UserRole.Visitor,
+  });
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -29,7 +32,7 @@ const App: FC = () => {
   const handleLogout = async () => {
     await API.logout();
     setLoggedIn(false);
-    setUser("");
+    setUser({});
   };
 
   return (
@@ -60,7 +63,9 @@ const App: FC = () => {
         {/* Route /home for the Home page with the map and diagram */}
         <Route
           path="/home"
-          element={<Home loggedIn={loggedIn} handleLogout={handleLogout} />}
+          element={
+            <Home loggedIn={loggedIn} user={user} handleLogout={handleLogout} />
+          }
         />
         {/* Route /* to cath all bad urls */}
         <Route path="*" element={<NotFound />} />

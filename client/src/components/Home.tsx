@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from "react";
 import API from "../API/API";
-import { Document, Link, LinkType } from "../utils/interfaces";
+import { Document, Link, LinkType, User } from "../utils/interfaces";
 import "../styles/Home.scss";
 import NavHeader from "./NavHeader";
 import ModalForm from "./ModalForm";
@@ -8,7 +8,8 @@ import MapComponent from "./Map";
 import ModalConnection from "./ModalConnection";
 
 interface HomeProps {
-  login: boolean;
+  loggedIn: boolean;
+  user: User;
   handleLogout: () => void;
 }
 
@@ -49,7 +50,11 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
 
   return (
     <>
-      <NavHeader logout={props.handleLogout} login={props.login} />
+      <NavHeader
+        logout={props.handleLogout}
+        loggedIn={props.loggedIn}
+        user={props.user}
+      />
 
       <div className="body-container">
         <div className="map">
@@ -60,7 +65,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
               setDocSelected={setDocSelected}
             />
           }
-          {props.login && (
+          {props.loggedIn && (
             <div className="button-overlay">
               <button className="add-document" onClick={handleAddButton}>
                 <img
@@ -116,7 +121,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
               setSidebarOpen={setSidebarOpen}
               document={docSelected}
               documents={documents}
-              loggedIn={props.login}
+              loggedIn={props.loggedIn}
               setDocuments={setDocuments}
               setDocument={setDocSelected}
             />
