@@ -8,6 +8,7 @@ export function validateBody(
 ) {
   return (request: Request, response: Response, nextFunction: NextFunction) => {
     const { success } = schema.safeParse(request.body);
+    console.log(schema.safeParse(request.body).error);
     if (success) {
       nextFunction();
     } else {

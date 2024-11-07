@@ -32,7 +32,12 @@ const App: FC = () => {
   const handleLogout = async () => {
     await API.logout();
     setLoggedIn(false);
-    setUser({});
+    setUser({
+      email: "",
+      name: "",
+      surname: "",
+      role: UserRole.Visitor,
+    });
   };
 
   return (

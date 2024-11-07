@@ -41,8 +41,8 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
     linkType: LinkType
   ) => {
     setModalOpen(false);
-    const id = await API.postDocument(newDocument);
-    await API.putLink(targetId, [linkType], id);
+    const id = await API.addDocument(newDocument);
+    //await API.putLink(targetId, [linkType], id);
     console.log(id);
     const updatedDocument = { ...newDocument, id: id };
     setDocuments([...documents, updatedDocument]);

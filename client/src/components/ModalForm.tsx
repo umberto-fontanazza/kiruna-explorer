@@ -35,7 +35,10 @@ const ModalForm: FC<ModalAddProps> = ({
     coordinates: { latitude: null, longitude: null },
   };
 
-  const scaleValues = ["Blueprints/Effects", "Text"];
+  const scaleValues = [
+    { value: "BLUEPRINTS/EFFECT", label: "Blueprints/Effects" },
+    { value: "TEXT", label: "Text" },
+  ];
   const languages = ISO6391.getAllNames().sort();
 
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
@@ -47,11 +50,11 @@ const ModalForm: FC<ModalAddProps> = ({
 
   const stakeholdersOptions = [
     { value: "LKAB", label: "LKAB" },
-    { value: "Municipality", label: "Municipality" },
-    { value: "Regional Authority", label: "Regional Authority" },
-    { value: "Architecture Firms", label: "Architecture Firms" },
-    { value: "Citizens", label: "Citizens" },
-    { value: "Others", label: "Others" },
+    { value: "MUNICIPALITY", label: "Municipality" },
+    { value: "REGIONAL AUTHORITY", label: "Regional Authority" },
+    { value: "ARCHITECTURE FIRMS", label: "Architecture Firms" },
+    { value: "CITIZENS", label: "Citizens" },
+    { value: "OTHERS", label: "Others" },
   ];
 
   const handleCheckboxChange = (event: {
@@ -137,7 +140,8 @@ const ModalForm: FC<ModalAddProps> = ({
                 />
               </div>
               <div className="test">
-                <div className="form-group">
+                {/*
+              <div className="form-group">
                   <label>StakeHolders *</label>
                   <div className="checkbox-group">
                     {stakeholdersOptions.map((option) => (
@@ -153,6 +157,7 @@ const ModalForm: FC<ModalAddProps> = ({
                     ))}
                   </div>
                 </div>
+              */}
                 <div className="form-group">
                   <label>Scale *</label>
                   <div className="scale">
@@ -169,9 +174,9 @@ const ModalForm: FC<ModalAddProps> = ({
                       }}
                     >
                       <option value="">Select one option</option>
-                      {scaleValues.map((val) => (
-                        <option key={val} value={val}>
-                          {val}
+                      {scaleValues.map((scale) => (
+                        <option key={scale.value} value={scale.value}>
+                          {scale.label}
                         </option>
                       ))}
                       <option value="numeric">Rateo</option>
@@ -199,6 +204,7 @@ const ModalForm: FC<ModalAddProps> = ({
                 </div>
               </div>
               <div className="test">
+                {/* 
                 <div className="form-group">
                   <label>Issuance Date *</label>
                   <input
@@ -214,6 +220,7 @@ const ModalForm: FC<ModalAddProps> = ({
                     }
                   />
                 </div>
+              */}
                 <div className="form-group">
                   <label>Type *</label>
                   <select
@@ -385,41 +392,5 @@ const ModalForm: FC<ModalAddProps> = ({
     </>
   );
 };
-
-function LongitudeInput() {
-  const [newDoc, setNewDoc] = useState({ coordinates: { longitude: "" } });
-
-  const handleLongitudeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Sostituisci le virgole con i punti per evitare errori
-    const inputValue = e.target.value.replace(",", ".");
-
-    // Verifica che sia un valore valido per la longitudine (numero o vuoto)
-    if (/^-?\d*\.?\d*$/.test(inputValue) || inputValue === "") {
-      setNewDoc((prev) => ({
-        ...prev,
-        coordinates: {
-          ...prev.coordinates,
-          longitude: inputValue, // Salva come stringa temporaneamente per supportare la digitazione
-        },
-      }));
-    }
-  };
-
-  return (
-    <div>
-      <label>Longitude *</label>
-      <input
-        lang="en"
-        type="text" // Cambia a "text" per controllo completo dell'input
-        id="no-spin"
-        name="longitude"
-        value={newDoc.coordinates.longitude}
-        onChange={handleLongitudeChange}
-        placeholder="123.1234"
-        required
-      />
-    </div>
-  );
-}
 
 export default ModalForm;

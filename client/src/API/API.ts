@@ -182,7 +182,7 @@ async function getDocuments() {
   ];*/
 }
 
-async function postDocument(document: Document): Promise<number> {
+async function addDocument(document: Document): Promise<number> {
   const response = await fetch(baseURL + `/documents`, {
     method: "POST",
     credentials: "include",
@@ -193,11 +193,11 @@ async function postDocument(document: Document): Promise<number> {
       title: document.title,
       description: document.description,
       // stakeholder: document.stakeholder,
-      // scale: document.scale,
+      scale: document.scale,
       // issuanceDate: document.issuanceDate,
-      // type: document.type,
+      type: document.type,
       // connections: document.connections,
-      // language: document.language,
+      language: document.language,
       // pages: document.pages,
       coordinates: document.coordinates,
     }),
@@ -213,7 +213,7 @@ async function postDocument(document: Document): Promise<number> {
   }
 }
 
-async function patchDocument(id: number, title: string, coordinates: string) {
+async function updateDocument(id: number, title: string, coordinates: string) {
   // other fields?
   try {
     const response = await fetch(baseURL + `/documents/${id}`, {
@@ -309,8 +309,8 @@ const API = {
   login,
   logout,
   getDocuments,
-  postDocument,
-  patchDocument,
+  addDocument,
+  updateDocument,
   deleteDocument,
   getLinks,
   putLink,
