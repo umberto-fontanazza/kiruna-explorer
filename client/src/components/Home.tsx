@@ -1,11 +1,11 @@
 import { FC, useEffect, useState } from "react";
 import API from "../API/API";
-import { Document, Link, LinkType, User } from "../utils/interfaces";
+import { Document, LinkType, User } from "../utils/interfaces";
 import "../styles/Home.scss";
 import NavHeader from "./NavHeader";
-import ModalForm from "./ModalForm";
+import ModalForm from "./ModalAddDocument";
 import MapComponent from "./Map";
-import ModalConnection from "./ModalConnection";
+import Sidebar from "./Sidebar";
 
 interface HomeProps {
   loggedIn: boolean;
@@ -14,11 +14,16 @@ interface HomeProps {
 }
 
 const Home: FC<HomeProps> = (props): JSX.Element => {
+  // State to hold list of documents
   const [documents, setDocuments] = useState<Document[]>([]);
+  // State to control sidebar visibility
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
+  // State for selected document
   const [docSelected, setDocSelected] = useState<Document | null>(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  // State to control modal for adding documents
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
+  // Fetch documents on component mount
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
@@ -31,10 +36,12 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
     fetchDocuments();
   }, []);
 
+  // Handle Add Document button click to open modal
   const handleAddButton = async () => {
     setModalOpen(true);
   };
 
+  // Handle form submission for new document
   const handleAddNewDocument = async (
     newDocument: Document,
     targetId: number,
@@ -50,6 +57,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
 
   return (
     <>
+      {/* Navigation Header */}
       <NavHeader
         logout={props.handleLogout}
         loggedIn={props.loggedIn}
@@ -57,6 +65,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
       />
 
       <div className="body-container">
+        {/* Map Component with overlay button for adding documents */}
         <div className="map">
           {
             <MapComponent
@@ -77,6 +86,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
             </div>
           )}
         </div>
+        {/* Table to see the list of all documents */}
         {
           // <table className="table-documents">
           //   <thead>
@@ -115,6 +125,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
           // </table>
         }
 
+        {/* Sidebar to show document details */}
         <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
           {
             <Sidebar
@@ -128,6 +139,8 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
           }
         </div>
       </div>
+
+      {/* Modal for adding a new document */}
       <ModalForm
         modalOpen={modalOpen}
         onClose={() => setModalOpen(false)}
@@ -137,141 +150,5 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
     </>
   );
 };
-
-function Sidebar(props: {
-  setSidebarOpen: (isOpen: boolean) => void;
-  setDocuments: (docs: Document[]) => void;
-  setDocument: (doc: Document) => void;
-  document: Document | null;
-  documents: Document[];
-  loggedIn: boolean;
-}) {
-  const [modalConnectionOpen, setModalConnectionOpen] = useState(false);
-
-  const handleModalOpenConnection = () => {
-    setModalConnectionOpen(true);
-  };
-
-  const handleAddNewConnection = async (newLink: Link) => {
-    if (props.document?.id) {
-      /*await API.putLink(
-        newLink.targetDocumentId,
-        newLink.type,
-        props.document?.id
-      );*/
-
-      const updateDocument = {
-        ...props.document,
-        connections: [...props.document.connections, newLink],
-      };
-
-      props.setDocument(updateDocument);
-
-      const updatedDocuments = props.documents.map((doc) =>
-        doc.id === updateDocument.id ? updateDocument : doc
-      );
-
-      props.setDocuments(updatedDocuments);
-      setModalConnectionOpen(false);
-    } else {
-      console.error("No document is selected, so the link cannot be added.");
-    }
-  };
-
-  const convertToDMS = (decimal: number | null): string => {
-    if (decimal === null) return "";
-
-    const degrees = Math.floor(decimal);
-    const minutesDecimal = Math.abs((decimal - degrees) * 60);
-    const minutes = Math.floor(minutesDecimal);
-    const seconds = Math.round((minutesDecimal - minutes) * 60 * 1000) / 1000; // Precisione a tre cifre per i secondi
-
-    return `${degrees}° ${minutes}' ${seconds}"`;
-  };
-
-  return (
-    <>
-      <div className="container-btns">
-        {/* <button
-          className="btn-download-sidebar"
-          onClick={() => props.setSidebarOpen(false)}
-        >
-          <img
-            className="btn-download-img"
-            src="/file-earmark-arrow-down.svg"
-            alt="Download"
-          />
-        </button> */}
-        <button
-          className="btn-close-sidebar"
-          onClick={() => props.setSidebarOpen(false)}
-        >
-          <img className="btn-close-img" src="/x.svg" alt="Close" />
-        </button>
-      </div>
-      <div className="content">
-        <img
-          src={`/document-icon-${props.document?.type}-iconByIcons8.png`}
-          alt="Under Construction"
-        />
-        <hr />
-        <h3>{props.document?.title}</h3>
-        <p>{props.document?.description}</p>
-        <hr />
-        <h4>
-          Stakeholders:{" "}
-          {props.document?.stakeholder?.map((s, index) => (
-            <a key={`${props.document?.id}-${index}`}>{s} </a>
-          ))}
-        </h4>
-        <h4>
-          Scale: <a>{props.document?.scale}</a>
-        </h4>
-        <h4>
-          Issuance Date:{" "}
-          <a>{props.document?.issuanceDate?.toLocaleDateString()}</a>
-        </h4>
-        <h4>
-          Type: <a>{props.document?.type}</a>
-        </h4>
-        <div className="connection-group">
-          <h4>
-            Connections: <a>{props.document?.connections?.length}</a>
-          </h4>
-          {props.loggedIn && (
-            <button
-              className="btn-add-button"
-              onClick={handleModalOpenConnection}
-            >
-              +
-            </button>
-          )}
-        </div>
-
-        <h4>
-          Language: <a>{props.document?.language}</a>
-        </h4>
-        <h4>
-          Pages: <a>{props.document?.pages}</a>
-        </h4>
-        <h4>
-          Coordinates:{" "}
-          <a>
-            {convertToDMS(props.document?.coordinates.latitude ?? null)} |{" "}
-            {convertToDMS(props.document?.coordinates.longitude ?? null)}
-          </a>
-        </h4>
-      </div>
-      {modalConnectionOpen && (
-        <ModalConnection
-          documents={props.documents}
-          document={props.document}
-          onClose={() => setModalConnectionOpen(false)}
-          onSubmit={handleAddNewConnection}
-        ></ModalConnection>
-      )}
-    </>
-  );
-}
 
 export default Home;

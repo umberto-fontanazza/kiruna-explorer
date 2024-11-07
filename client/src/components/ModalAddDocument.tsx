@@ -1,6 +1,11 @@
 import { FC, useState } from "react";
 
-import { Document, DocumentType, LinkType } from "../utils/interfaces";
+import {
+  Document,
+  DocumentType,
+  LinkType,
+  StakeHolders,
+} from "../utils/interfaces";
 import "../styles/ModalAdd.scss";
 import ISO6391 from "iso-639-1";
 
@@ -21,11 +26,12 @@ const ModalForm: FC<ModalAddProps> = ({
   onSubmit,
   documents,
 }) => {
+  // Initial State for new document
   const initialDocumentState: Document = {
     id: -1,
     title: "",
     description: "",
-    stakeholder: [],
+    stakeholders: [],
     scale: "",
     issuanceDate: null,
     type: undefined,
@@ -35,11 +41,24 @@ const ModalForm: FC<ModalAddProps> = ({
     coordinates: { latitude: null, longitude: null },
   };
 
+  ////// OPTIONS AND DATA ///////
+
   const scaleValues = [
     { value: "BLUEPRINTS/EFFECT", label: "Blueprints/Effects" },
     { value: "TEXT", label: "Text" },
   ];
   const languages = ISO6391.getAllNames().sort();
+
+  const stakeholdersOptions = [
+    { value: StakeHolders.LKAB, label: "LKAB" },
+    { value: StakeHolders.KirunaCommon, label: "Municipality" },
+    { value: StakeHolders.Regional_authority, label: "Regional Authority" },
+    { value: StakeHolders.Architecture_Firms, label: "Architecture Firms" },
+    { value: StakeHolders.Citizens, label: "Citizens" },
+    { value: StakeHolders.Others, label: "Others" },
+  ];
+
+  ////// COMPONENT STATE /////
 
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
   const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
@@ -48,35 +67,52 @@ const ModalForm: FC<ModalAddProps> = ({
   >(undefined);
   const [isNumericScale, setIsNumericScale] = useState<boolean>(false);
 
-  const stakeholdersOptions = [
-    { value: "LKAB", label: "LKAB" },
-    { value: "MUNICIPALITY", label: "Municipality" },
-    { value: "REGIONAL AUTHORITY", label: "Regional Authority" },
-    { value: "ARCHITECTURE FIRMS", label: "Architecture Firms" },
-    { value: "CITIZENS", label: "Citizens" },
-    { value: "OTHERS", label: "Others" },
-  ];
+  /////// FILE ATTACHMENT CODE ///////
 
+  /*const [files, setFiles] = useState<File[]>([]);
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = e.target.files ? Array.from(e.target.files) : [];
+    setFiles(selectedFiles);
+  };
+
+  const handleFileDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const droppedFiles = Array.from(e.dataTransfer.files);
+    setFiles(droppedFiles);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };*/
+
+  // Handle Checkbox Change
   const handleCheckboxChange = (event: {
     target: { value: string; checked: boolean };
   }) => {
     const { value, checked } = event.target;
 
     setNewDoc((prev) => {
-      const stakeholders = prev.stakeholder || [];
+      const stakeholders = prev.stakeholders || [];
       if (checked) {
         // add option if selected
-        return { ...prev, stakeholder: [...stakeholders, value] };
+        return {
+          ...prev,
+          stakeholders: [...stakeholders, value as StakeHolders],
+        };
       } else {
         // remove option if unselected
         return {
           ...prev,
-          stakeholder: stakeholders.filter((stake) => stake !== value),
+          stakeholders: stakeholders.filter(
+            (stake) => stake !== (value as StakeHolders)
+          ),
         };
       }
     });
   };
 
+  // Handle Form Submission
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
     if (isNumericScale) {
@@ -95,12 +131,17 @@ const ModalForm: FC<ModalAddProps> = ({
       targetDocumentId,
       newTypeConnection ? LinkType.Direct : LinkType.Collateral
     );
-    console.log(newDoc);
+    resetForm();
+  };
+
+  // Reset Form
+  const resetForm = () => {
     setNewDoc(initialDocumentState);
     setNewTypeConnection(LinkType.Direct);
     setTargetDocumentId(-1);
   };
 
+  // Return early if modal is closed
   if (!modalOpen) return null;
 
   return (
@@ -111,6 +152,7 @@ const ModalForm: FC<ModalAddProps> = ({
             <h2>New Document Registration</h2>
             <form onSubmit={handleFormSubmit}>
               <div className="test">
+                {/* Title Input */}
                 <div className="form-group">
                   <label className="title">Title *</label>
                   <input
@@ -124,103 +166,8 @@ const ModalForm: FC<ModalAddProps> = ({
                     className="input-title"
                   />
                 </div>
-              </div>
-              <div className="form-group">
-                <label>Description *</label>
-                <textarea
-                  value={newDoc.description || ""}
-                  placeholder="Enter Document Description"
-                  onChange={(e) =>
-                    setNewDoc((prev) => ({
-                      ...prev,
-                      description: e.target.value,
-                    }))
-                  }
-                  required
-                />
-              </div>
-              <div className="test">
-                {/*
-              <div className="form-group">
-                  <label>StakeHolders *</label>
-                  <div className="checkbox-group">
-                    {stakeholdersOptions.map((option) => (
-                      <label key={option.value} className="checkbox-label">
-                        <input
-                          type="checkbox"
-                          value={option.value}
-                          checked={newDoc.stakeholder.includes(option.value)}
-                          onChange={handleCheckboxChange}
-                        />
-                        {option.label}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              */}
-                <div className="form-group">
-                  <label>Scale *</label>
-                  <div className="scale">
-                    <select
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === "numeric") {
-                          setIsNumericScale(true);
-                          setNewDoc((prev) => ({ ...prev, scale: "" }));
-                        } else {
-                          setIsNumericScale(false);
-                          setNewDoc((prev) => ({ ...prev, scale: value }));
-                        }
-                      }}
-                    >
-                      <option value="">Select one option</option>
-                      {scaleValues.map((scale) => (
-                        <option key={scale.value} value={scale.value}>
-                          {scale.label}
-                        </option>
-                      ))}
-                      <option value="numeric">Rateo</option>
-                    </select>
 
-                    {isNumericScale && (
-                      <div>
-                        <span>1: </span>
-                        <input
-                          type="number"
-                          id="no-spin"
-                          value={newDoc.scale}
-                          onChange={(e) =>
-                            setNewDoc((prev) => ({
-                              ...prev,
-                              scale: e.target.value,
-                            }))
-                          }
-                          style={{ width: "60%", marginTop: "10px" }}
-                          required
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="test">
-                {/* 
-                <div className="form-group">
-                  <label>Issuance Date *</label>
-                  <input
-                    type="date"
-                    value={
-                      newDoc.issuanceDate?.toISOString().split("T")[0] || ""
-                    }
-                    onChange={(e) =>
-                      setNewDoc((prev) => ({
-                        ...prev,
-                        issuanceDate: new Date(e.target.value),
-                      }))
-                    }
-                  />
-                </div>
-              */}
+                {/* Document Type */}
                 <div className="form-group">
                   <label>Type *</label>
                   <select
@@ -251,7 +198,93 @@ const ModalForm: FC<ModalAddProps> = ({
                   </select>
                 </div>
               </div>
+
+              {/* Description */}
+              <div className="form-group">
+                <label>Description *</label>
+                <textarea
+                  value={newDoc.description || ""}
+                  placeholder="Enter Document Description"
+                  onChange={(e) =>
+                    setNewDoc((prev) => ({
+                      ...prev,
+                      description: e.target.value,
+                    }))
+                  }
+                  required
+                />
+              </div>
               <div className="test">
+                {/* Scale Selection */}
+                <div className="test">
+                  <div className="form-group">
+                    <label>Scale *</label>
+                    <div className="scale">
+                      <select
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          if (value === "numeric") {
+                            setIsNumericScale(true);
+                            setNewDoc((prev) => ({ ...prev, scale: "" }));
+                          } else {
+                            setIsNumericScale(false);
+                            setNewDoc((prev) => ({ ...prev, scale: value }));
+                          }
+                        }}
+                      >
+                        <option value="">Select one option</option>
+                        {scaleValues.map((scale) => (
+                          <option key={scale.value} value={scale.value}>
+                            {scale.label}
+                          </option>
+                        ))}
+                        <option value="numeric">Rateo</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Numeric Scale Input */}
+                  <div className="form-group">
+                    {isNumericScale && (
+                      <div>
+                        <span>1: </span>
+                        <input
+                          type="number"
+                          id="no-spin"
+                          value={newDoc.scale}
+                          onChange={(e) =>
+                            setNewDoc((prev) => ({
+                              ...prev,
+                              scale: e.target.value,
+                            }))
+                          }
+                          style={{ width: "60%", marginTop: "13.5%" }}
+                          required
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <div className="test">
+                {/* Issuance Date */}
+                <div className="form-group">
+                  <label>Issuance Date *</label>
+                  <input
+                    type="date"
+                    value={
+                      newDoc.issuanceDate?.toISOString().split("T")[0] || ""
+                    }
+                    onChange={(e) =>
+                      setNewDoc((prev) => ({
+                        ...prev,
+                        issuanceDate: new Date(e.target.value),
+                      }))
+                    }
+                  />
+                </div>
+
+                {/* Language Selection */}
                 <div className="form-group">
                   <label>Language *</label>
                   <select
@@ -274,7 +307,27 @@ const ModalForm: FC<ModalAddProps> = ({
                     ))}
                   </select>
                 </div>
-                {/* <div className="form-group">
+              </div>
+
+              {/* Stakeholders */}
+              <div className="form-group">
+                <label>StakeHolders *</label>
+                <div className="checkbox-group">
+                  {stakeholdersOptions.map((option) => (
+                    <label key={option.value} className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        value={option.value}
+                        checked={newDoc.stakeholders.includes(option.value)}
+                        onChange={handleCheckboxChange}
+                      />
+                      {option.label}
+                    </label>
+                  ))}
+                </div>
+              </div>
+              {/* DO NOT ELIMINATE THIS CODE COMMENTED */}
+              {/* <div className="form-group">
                   <label>Pages (optional):</label>
                   <input
                     type="number"
@@ -288,7 +341,50 @@ const ModalForm: FC<ModalAddProps> = ({
                     }}
                   />
                 </div> */}
-              </div>
+              {/*<div className="form-group">
+                <div
+                  className="file-upload-area"
+                  onDrop={handleFileDrop}
+                  onDragOver={handleDragOver}
+                  style={{
+                    border: "2px dashed #ccc",
+                    padding: "20px",
+                    borderRadius: "5px",
+                    textAlign: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <p>Drag and drop files here, or</p>
+                  <label htmlFor="file-upload" className="file-upload-label">
+                    <strong>browse</strong>
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    multiple
+                    accept=".pdf,.doc,.docx,.png,.jpg"
+                    onChange={handleFileSelect}
+                    style={{ display: "none" }}
+                  />
+                </div>
+                
+                {files.length > 0 && (
+                  <div className="uploaded-files-list">
+                    <h4>Files to Upload:</h4>
+                    <ul>
+                      {files.map((file, index) => (
+                        <li key={index}>
+                          {file.name} ({(file.size / 1024).toFixed(2)} KB)
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>*/}
+
+              {/* Coordinates */}
+
+              {/* Latitude */}
               <div className="form-group">
                 <label>Latitude *</label>
                 <input
@@ -314,6 +410,8 @@ const ModalForm: FC<ModalAddProps> = ({
                   required
                 />
               </div>
+
+              {/* Longitude */}
               <div className="form-group">
                 <label>Longitude *</label>
                 <input
@@ -339,6 +437,10 @@ const ModalForm: FC<ModalAddProps> = ({
                   required
                 />
               </div>
+
+              {/* Connections */}
+
+              {/* Target Document ID */}
               <div className="form-group">
                 <label>Connection *</label>
                 <select
@@ -355,6 +457,8 @@ const ModalForm: FC<ModalAddProps> = ({
                   ))}
                 </select>
               </div>
+
+              {/* Connection Type */}
               <div className="form-group">
                 <label>Connection Type *</label>
                 <select
@@ -372,6 +476,8 @@ const ModalForm: FC<ModalAddProps> = ({
                   <option value="UPDATE">Update</option>
                 </select>
               </div>
+
+              {/* Form Buttons */}
               <div className="button-group">
                 <button className="submit-button" type="submit">
                   Add Document
