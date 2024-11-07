@@ -4,6 +4,7 @@ import app from "../src/app";
 import request from "supertest";
 import { StatusCodes } from "http-status-codes";
 import { Database } from "../src/database";
+import { DocumentType, Scale } from "../src/model/document";
 
 /**
  * TODO: when adding AUTH a cookie needs to be created first otherwise requests will not fail with BAD_REQUEST
@@ -13,47 +14,6 @@ import { Database } from "../src/database";
 afterAll(async () => {
   await Database.disconnect();
 });
-
-// describe("Document CRUD success with just title and description", () => {
-//   let testDocumentId: number;
-
-//   test("POST returning the id", async () => {
-//     const response = await request(app).post("/documents/").send({
-//       title: "test-document",
-//       description: "Simple test description",
-//     });
-//     expect(response.status).toEqual(StatusCodes.CREATED);
-//     expect(response.body.id).toBeDefined();
-//     expect(typeof response.body.id).toEqual("number");
-//     testDocumentId = response.body.id;
-//   });
-
-//   test("GET the newly created document", async () => {
-//     const response = await request(app).get(`/documents/${testDocumentId}`);
-//     expect(response.status).toEqual(StatusCodes.OK);
-//     expect(response.body.id).toBeDefined();
-//     expect(response.body.title).toBeDefined();
-//     expect(response.body.description).toBeDefined();
-//   });
-
-//   test("UPDATE the document", async () => {
-//     const updateDescription = "New updated test description";
-//     const response = await request(app)
-//       .patch(`/documents/${testDocumentId}`)
-//       .send({
-//         description: updateDescription,
-//       });
-//     expect(response.status).toEqual(StatusCodes.NO_CONTENT);
-//     const response2 = await request(app).get(`/documents/${testDocumentId}`);
-//     expect(response2.body.description).toBeDefined();
-//     expect(response2.body.description).toStrictEqual(updateDescription);
-//   });
-
-//   test("DELETE the document", async () => {
-//     const response = await request(app).delete(`/documents/${testDocumentId}`);
-//     expect(response.status).toEqual(StatusCodes.NO_CONTENT);
-//   });
-// });
 
 describe("Document CRUD bad requests", () => {
   test("GET with wrong ID", async () => {
@@ -92,6 +52,9 @@ describe("Testing with coordinates", () => {
   const testDoc = {
     title: "Coordinates test",
     description: "This one will be tested with coordinates",
+    scale: Scale.BlueprintsOrEffect,
+    type: DocumentType.Informative,
+    language: "English",
   };
   const wrongCoordinates = {
     latitude: 120,
