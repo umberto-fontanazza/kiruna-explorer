@@ -38,8 +38,8 @@ sections:
 
 > story `#0` is for technical tasks, leave out story points (not applicable in this case)
 
-- Hours per task average estimate: 19h 15m
-- Hours per task average actual: 19h 40m
+- Hours per task average estimate: 2h 2m
+- Hours per task average actual: 2h 5m
 - Standard deviation (estimate and actual):0.38362949	0.548457257
 - Total estimation error ratio: sum of total hours spent / sum of total hours effort - 1
 
