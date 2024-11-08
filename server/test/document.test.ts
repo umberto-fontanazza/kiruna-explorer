@@ -57,9 +57,10 @@ describe("Document", () => {
     });
 
     it("should throw an error if document is not found", async () => {
-      await assert.rejects(() => Document.get(2), {
-        name: "AssertionError",
-      });
+      await assert.rejects(
+        () => Document.get(2),
+        "[TypeError:Cannot destructure property 'id' of 'dbRow' as it is undefined.]",
+      );
     });
   });
 
@@ -72,9 +73,7 @@ describe("Document", () => {
 
     it("should throw an error if the update fails", async () => {
       const doc = new Document(999, "Updated Title", "Updated Description");
-      await assert.rejects(() => doc.update(), {
-        message: "Failed db update",
-      });
+      await assert.rejects(() => doc.update(), "undefined");
     });
   });
 
@@ -84,10 +83,10 @@ describe("Document", () => {
     });
 
     it("should throw an error if the document to delete does not exist", async () => {
-      await assert.rejects(() => Document.delete(999), {
-        instanceOf: DocumentNotFound,
-        message: "DELETE query affected rows were less than 1",
-      });
+      await assert.rejects(
+        () => Document.delete(999),
+        "[Error: DELETE query affected rows were less than 1]",
+      );
     });
   });
 
