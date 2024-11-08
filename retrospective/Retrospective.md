@@ -12,8 +12,8 @@ sections:
 
 ### Macro statistics
 
-- Number of stories committed (4) vs. done (?) 
-- Total points committed (13) vs. done (?)
+- Number of stories committed (4) vs. done (3) 
+- Total points committed (13) vs. done (12)
 - Nr of hours planned (96h 15m) vs. spent (as a team) (98h 20m)
 
 **Remember** a story is done ONLY if it fits the Definition of Done:
@@ -40,7 +40,7 @@ sections:
 
 - Hours per task average estimate: 19h 15m
 - Hours per task average actual: 19h 40m
-- Standard deviation (estimate and actual):
+- Standard deviation (estimate and actual):0.38362949	0.548457257
 - Total estimation error ratio: sum of total hours spent / sum of total hours effort - 1
 
     $$\frac{\sum_i spent_{task_i}}{\sum_i estimation_{task_i}} - 1$$ 
@@ -59,7 +59,7 @@ sections:
 - Unit Testing:
   - Total hours estimated: `10h 30m`
   - Total hours spent: 2 + 5 + 2 = `7h 30m`
-  - Nr of automated unit test cases: 
+  - Nr of automated unit test cases: 18
   - Coverage (if available): 
 - E2E testing:
   - Total hours estimated: `10h 30m`
