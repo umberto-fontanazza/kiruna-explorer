@@ -1,7 +1,5 @@
 # Kiruna eXplorer API Documentation
 
-TODO: pick date library see https://github.com/iamkun/dayjs/issues/934
-
 # Index
 
 1. [Base URL](#base-url)
@@ -50,14 +48,16 @@ TODO: filters
         "title": "Kiruna plan",
         "description": "Document of Kiruna plan",
         "type": "INFORMATIVE",
-        "scale": "RATEO",
-        "scaleValue": 8000,
+        "scale": {
+          "type": "RATEO",
+          "rateo": 8000
+        },
         "stakeholders": ["LKAB", "Kiruna kommun"],
         "coordinates": {
           "latitude": 67.85624725739333,
           "longitude": 20.23857657264496
         },
-        "issuanceDate": "2024-11-08T11:55:20",
+        "issuanceDate": "2024-11-08T19:55:00+01:00",
         "links": [
             {
                 "targetDocumentId": 2,
@@ -93,14 +93,16 @@ Retrieve a specific document by its unique identifier.
     "title": "Kiruna plan",
     "description": "Document of Kiruna plan",
     "type": "INFORMATIVE",
-    "scale": "RATEO",
-    "scaleValue": 8000,
+    "scale": {
+      "type": "RATEO",
+      "rateo": 8000
+    },
     "stakeholders": ["LKAB", "Kiruna kommun"],
     "coordinates": {
       "latitude": 67.85624725739333,
       "longitude": 20.23857657264496
     },
-    "issuanceDate": "2024/10/23",
+    "issuanceDate": "2024-11-08T19:55:00+01:00",
     "links": [
         {
             "targetDocumentId": 2,
@@ -134,8 +136,9 @@ Create a new document.
 | `title`                 | The title of the document                                                          | `string`            | Yes                            |
 | `description`           | A brief description of the document                                                | `string`            | Yes                            |
 | `type`                  | Type of the document                                                               | `string`            | Yes                            |
-| `scale`                 | Relation between the real object and its size on a map                             | `string`            | Yes                            |
-| `scaleValue`            | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000) | `number`            | Yes if `scale` is "RATEO"      |
+| `scale`                 | Relation between the real object and its size on a map                             | `object`            | Yes                            |
+| `scale.type`            | Type of the scale                                                                  | `string`            | Yes                            |
+| `scale.rateo`           | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000) | `number`            | Yes if `scale` is "RATEO"      |
 | `stakeholders`          | Array of stakeholders involved with the document                                   | `array` of `string` | No                             |
 | `coordinates`           | Object containing geographical data                                                | `object`            | No                             |
 | `coordinates.latitude`  | Value in the range [-90, +90] degrees                                              | `number`            | Yes if `longitude` is provided |
@@ -149,14 +152,16 @@ Create a new document.
   "title": "Kiruna plan",
   "description": "Document of Kiruna plan",
   "type": "INFORMATIVE",
-  "scale": "RATEO",
-  "scaleValue": 8000,
+  "scale": {
+    "type": "RATEO",
+    "rateo": 8000
+  },
   "stakeholders": ["LKAB", "Kiruna kommun"],
   "coordinates": {
     "latitude": 67.85624725739333,
     "longitude": 20.23857657264496
   },
-  "issuanceDate": "2024/10/23"
+  "issuanceDate": "2024-11-08T19:55:00+01:00"
 }
 ```
 
