@@ -38,24 +38,32 @@ TODO: filters
 
 ```json
 [
-    {
-        "id": 1,
-        "title": "",
-        "description": "",
-        "coordinates": {
-            "latitude": 67.9, // domain [-90 deg, +90 deg]
-            "longitude": 20.22 // domain [-180 deg, +180 deg]
-        },
-        "type": "INFORMATIVE",
-        "links": [
-            {
-                "targetDocumentId": 2,
-                "linkTypes": ["DIRECT", "UPDATE"]
-            },
-            ...
-        ]
+  {
+    "id": 1,
+    "title": "",
+    "description": "",
+    "scale": {
+      "type": "RATEO",
+      "rateo": 500 // This field is present only when scale.type === "RATEO"
     },
-    ...
+    "type": "INFORMATIVE",
+
+    // OPTIONAL fields below
+    "stakeholders": ["STAKEHOLDER1", "STAKEHOLDER2"],
+    "issuanceDate": "serialized date object", //TODO: pick date library see https://github.com/iamkun/dayjs/issues/934
+    "coordinates": {
+      "latitude": 67.9, // domain [-90 deg, +90 deg]
+        "longitude": 20.22 // domain [-180 deg, +180 deg]
+    },
+    "links": [
+      {
+        "targetDocumentId": 2,
+            "linkTypes": ["DIRECT", "UPDATE"]
+        },
+        ...
+    ]
+  },
+  ...
 ]
 ```
 
@@ -78,21 +86,28 @@ Retrieve a specific document by its unique identifier.
 
 ```json
 {
-    "id": 1,
-    "title": "",
-    "description": "",
-    "coordinates": {
-        "latitude": 67.9, // domain [-90 deg, +90 deg]
-        "longitude": 20.22 // domain [-180 deg, +180 deg]
+  "id": 1,
+  "title": "",
+  "description": "",
+  "scale": {
+    "type": "TEXT"
+  },
+  "type": "INFORMATIVE",
+
+  // Optional fields below
+  "stakeholders": ["STAKEHOLDER1", "STAKEHOLDER2"],
+  "issuanceDate": "serialized date object", //TODO: pick date library see https://github.com/iamkun/dayjs/issues/934
+  "coordinates": {
+    "latitude": 67.9, // domain [-90 deg, +90 deg]
+    "longitude": 20.22 // domain [-180 deg, +180 deg]
+  },
+  "links": [
+    {
+        "targetDocumentId": 2,
+        "linkTypes": ["DIRECT", "UPDATE"]
     },
-    "type": "INFORMATIVE",
-    "links": [
-        {
-            "targetDocumentId": 2,
-            "linkTypes": ["DIRECT", "UPDATE"]
-        },
-        ...
-    ]
+    ...
+  ]
 }
 ```
 
@@ -118,12 +133,18 @@ Create a new document.
 {
   "title": "",
   "description": "",
+  "scale": {
+    "type": "TEXT"
+  },
+  "type": "INFORMATIVE",
+
+  // Optional fields below
+  "stakeholders": ["STAKEHOLDER1", "STAKEHOLDER2"],
+  "issuanceDate": "serialized date object", //TODO: pick date library see https://github.com/iamkun/dayjs/issues/934
   "coordinates": {
     "latitude": 67.9, // domain [-90 deg, +90 deg]
     "longitude": 20.22 // domain [-180 deg, +180 deg]
-  },
-  "type": "INFORMATIVE"
-  //other properties
+  }
 }
 ```
 
@@ -131,7 +152,6 @@ Create a new document.
 
 ```json
 {
-  "message": "Document created successfully",
   "id": 1
 }
 ```
@@ -150,19 +170,24 @@ This API uses the following error codes:
 
 ## PATCH `/documents/{id}`
 
-Update an existing document by its unique identifier.
+Update an existing document by its unique identifier. All fields are optional
 
 ### Request body
 
 ```json
 {
-  // "title" omitted because it was not edited
-  "description": "A new and improved descripton",
+  "title": "Updated title",
+  "description": "New and updated description",
+  "scale": {
+    "type": "TEXT"
+  },
+  "type": "DESIGN",
+  "stakeholders": ["STAKEHOLDER1", "STAKEHOLDER2"],
+  "issuanceDate": "serialized date object", //TODO: pick date library see https://github.com/iamkun/dayjs/issues/934
   "coordinates": {
     "latitude": 67.9, // domain [-90 deg, +90 deg]
     "longitude": 20.22 // domain [-180 deg, +180 deg]
-  },
-  "type": "DESIGN"
+  }
 }
 ```
 
