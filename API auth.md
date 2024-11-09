@@ -1,8 +1,8 @@
 | Route                       | Urban planner | Developer | Resident | Visitor |
 | --------------------------- | ------------: | --------: | -------: | ------: |
 | GET /documents              |            ✅ |        ✅ |       ✅ |      ✅ |
-| GET /document/:id           |            ✅ |        ✅ |       ✅ |      ✅ |
-| POST /documnets             |            ✅ |        ❌ |       ❌ |      ❌ |
+| GET /documents/:id          |            ✅ |        ✅ |       ✅ |      ✅ |
+| POST /documents             |            ✅ |        ❌ |       ❌ |      ❌ |
 | PATCH /documents/:id        |            ✅ |        ❌ |       ❌ |      ❌ |
 | DELETE /documents/:id       |            ✅ |        ❌ |       ❌ |      ❌ |
 | GET /documents/:id/links    |            ✅ |        ✅ |       ✅ |      ✅ |
