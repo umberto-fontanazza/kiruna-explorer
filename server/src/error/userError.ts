@@ -16,7 +16,7 @@ export class UserError extends Error {
     return new UserError(message, StatusCodes.CONFLICT);
   }
 
-  static WrongCredentials(message = "Username and/or wrong password") {
+  static WrongCredentials(message = "Email and/or wrong password") {
     return new UserError(message, StatusCodes.UNAUTHORIZED);
   }
 }

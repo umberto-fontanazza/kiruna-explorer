@@ -4,6 +4,7 @@ import app from "../src/app";
 import request from "supertest";
 import { StatusCodes } from "http-status-codes";
 import { Database } from "../src/database";
+import { DocumentType, Scale } from "../src/model/document";
 
 /**
  * TODO: when adding AUTH a cookie needs to be created first otherwise requests will not fail with BAD_REQUEST
@@ -92,6 +93,9 @@ describe("Testing with coordinates", () => {
   const testDoc = {
     title: "Coordinates test",
     description: "This one will be tested with coordinates",
+    scale: Scale.Text,
+    type: DocumentType.Informative,
+    language: "italian",
   };
   const wrongCoordinates = {
     latitude: 120,

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { DocumentType, Scale } from "../model/document";
 
 export type Coordinates = z.infer<typeof coordinates>;
 const coordinates = z
@@ -18,6 +19,9 @@ export const postBody = z
     title: z.string().min(1),
     description: z.string().min(1),
     coordinates: coordinates,
+    scale: z.nativeEnum(Scale),
+    type: z.nativeEnum(DocumentType),
+    language: z.string(),
   })
   .strict();
 
@@ -27,5 +31,6 @@ export const patchBody = z
     title: z.string().min(1).optional(),
     description: z.string().min(1).optional(),
     coordinates: coordinates.optional(),
+    type: z.nativeEnum(DocumentType).optional(),
   })
   .strict();

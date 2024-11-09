@@ -12,6 +12,8 @@ interface ModalConnectionProps {
 
 const ModalConnection: FC<ModalConnectionProps> = (props) => {
   const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
+  const [linkType, setLinkType] = useState<LinkType>();
+
   const handleFormSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
 
@@ -45,6 +47,21 @@ const ModalConnection: FC<ModalConnectionProps> = (props) => {
                     {doc.title}
                   </option>
                 ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Connection Type *</label>
+              <select
+                value={linkType}
+                onChange={(e) => setLinkType(e.target.value as LinkType)}
+              >
+                <option value="" disabled>
+                  Select the Connection's type
+                </option>
+                <option value="DIRECT">Direct</option>
+                <option value="COLLATERAL">Collateral</option>
+                <option value="PROJECTION">Projection</option>
+                <option value="UPDATE">Update</option>
               </select>
             </div>
             <div className="button-group">
