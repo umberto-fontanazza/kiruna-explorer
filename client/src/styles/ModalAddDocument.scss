@@ -1,0 +1,168 @@
+@use "variables";
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  .modal-content {
+    background: #f3f3eb;
+    border-radius: 16px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+    max-width: 60% !important;
+    max-height: 100vh !important;
+    overflow-y: auto;
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: variables.$first-color;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .close-button {
+      background-color: variables.$first-color;
+      color: white;
+      border: 0.1rem solid variables.$first-color;
+      position: absolute;
+      left: 94%;
+      border-radius: 100%;
+      width: 5%;
+      height: 5%;
+
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background: variables.$third-color;
+        color: variables.$first-color;
+      }
+
+      .btn-close-img {
+        height: 28px;
+      }
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        label {
+          font-size: 1rem;
+          font-weight: bold;
+          color: variables.$first-color;
+        }
+
+        input,
+        textarea {
+          padding: 0.75rem;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          font-size: 1rem;
+          color: variables.$first-color;
+
+          &::placeholder {
+            color: rgba($color: variables.$first-color, $alpha: 0.4);
+          }
+
+          &:focus {
+            border-color: variables.$second-color;
+            outline: none;
+          }
+        }
+
+        select {
+          padding: 0.75rem;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          font-size: 1rem;
+          color: #333;
+          background-color: #fff;
+
+          &:focus {
+            border-color: variables.$second-color;
+            outline: none;
+          }
+        }
+
+        .checkbox-group {
+          display: flex;
+          flex-wrap: wrap;
+
+          .checkbox-label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+            width: calc(33.33% - 1rem);
+
+            input[type="checkbox"] {
+              margin-right: 10px;
+              width: 20px;
+              height: 20px;
+              accent-color: #007bff;
+            }
+          }
+        }
+      }
+
+      .line {
+        display: flex;
+        gap: 1rem;
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          width: 100%;
+        }
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+
+        .submit-button,
+        .cancel-button {
+          flex: 1;
+          padding: 0.75rem;
+          font-weight: bold;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          text-align: center;
+        }
+
+        .submit-button {
+          background-color: variables.$first-color;
+          color: white;
+          border: 0.1rem solid variables.$first-color;
+
+          &:hover {
+            background: variables.$third-color;
+            color: variables.$first-color;
+          }
+        }
+      }
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+  }
+}

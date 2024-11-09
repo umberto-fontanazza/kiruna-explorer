@@ -35,24 +35,29 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   };
 
   // Map options to control appearance and restrictions
-  const mapOptions = {
-    mapTypeId: "satellite",
-    //mapTypeControl: true,
-    disableDefaultUI: true,
-    minZoom: 12,
-    maxZoom: 20,
-    styles: [
-      {
-        featureType: "all",
-        elementType: "labels",
-        stylers: [{ visibility: "off" }],
-      },
-    ],
-    restriction: {
-      latLngBounds: bounds,
-      strictBounds: false,
-    },
-  };
+  const mapOptions = isLoaded
+    ? {
+        mapTypeId: "satellite",
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+          mapTypeIds: ["satellite", "roadmap", "hybrid", "terrain"],
+        },
+        minZoom: 12,
+        maxZoom: 20,
+        styles: [
+          {
+            featureType: "all",
+            elementType: "labels",
+            stylers: [{ visibility: "off" }],
+          },
+        ],
+        restriction: {
+          latLngBounds: bounds,
+          strictBounds: false,
+        },
+      }
+    : {};
 
   // Render map only when API is loaded
   return isLoaded ? (

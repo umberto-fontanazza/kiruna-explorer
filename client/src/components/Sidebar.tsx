@@ -48,18 +48,6 @@ const Sidebar: FC<SidebarProps> = (props) => {
     }
   };
 
-  // Utility function to convert coordinates to DMS format
-  const convertToDMS = (decimal: number | null): string => {
-    if (decimal === null) return "";
-
-    const degrees = Math.floor(decimal);
-    const minutesDecimal = Math.abs((decimal - degrees) * 60);
-    const minutes = Math.floor(minutesDecimal);
-    const seconds = Math.round((minutesDecimal - minutes) * 60 * 1000) / 1000; // Precisione a tre cifre per i secondi
-
-    return `${degrees}° ${minutes}' ${seconds}"`;
-  };
-
   return (
     <>
       <div className="container-btns">
@@ -74,6 +62,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
               alt="Download"
             />
           </button> */}
+
         {/* Close sidebar button */}
         <button
           className="btn-close-sidebar"
@@ -82,6 +71,8 @@ const Sidebar: FC<SidebarProps> = (props) => {
           <img className="btn-close-img" src="/x.svg" alt="Close" />
         </button>
       </div>
+
+      {/* Sidebar Content */}
       <div className="content">
         <img
           src={`/document-icon-${props.document?.type}-iconByIcons8.png`}
@@ -126,13 +117,6 @@ const Sidebar: FC<SidebarProps> = (props) => {
         </h4>
         <h4>
           Pages: <a>{props.document?.pages}</a>
-        </h4>
-        <h4>
-          Coordinates:{" "}
-          <a>
-            {convertToDMS(props.document?.coordinates.latitude ?? null)} |{" "}
-            {convertToDMS(props.document?.coordinates.longitude ?? null)}
-          </a>
         </h4>
       </div>
       {/* Modal for adding new connections */}
