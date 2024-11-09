@@ -1,0 +1,117 @@
+@use "variables";
+
+.sidebar {
+  right: -30%;
+  width: 30%;
+  height: 100vh;
+  background: linear-gradient(38deg, #183d5d, #d9a65f);
+  position: fixed;
+  overflow-x: hidden;
+  transition: right 0.5s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1vh;
+
+  &.open {
+    right: 0;
+  }
+
+  img {
+    transform: scale(0.7);
+  }
+
+  hr {
+    width: 90%;
+    margin: 1vh 0;
+  }
+
+  .container-btns {
+    display: flex;
+    width: 90%;
+    justify-content: flex-end;
+    gap: 0.5vw;
+
+    .btn-download-sidebar,
+    .btn-close-sidebar {
+      padding: 3px 3px;
+      background-color: inherit;
+      border: none;
+      border-radius: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      .btn-download-img,
+      .btn-close-img {
+        height: 3.5vh;
+      }
+
+      &:hover {
+        background-color: variables.$third-color;
+      }
+    }
+  }
+
+  .content {
+    width: 90%;
+    margin-top: 1vh;
+    padding: 1vh 1vw;
+    background-color: #f3f3eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+    font-size: 1rem;
+    line-height: 1.5;
+    overflow-y: auto;
+    max-height: 80vh;
+
+    p,
+    h2,
+    h3,
+    h4 {
+      color: variables.$first-color;
+    }
+
+    p {
+      font-size: 0.9rem;
+      margin-bottom: 1vh;
+    }
+
+    h2,
+    h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    h4 {
+      font-weight: normal;
+      font-size: 1rem;
+    }
+
+    a {
+      font-weight: bold;
+    }
+
+    .connection-group {
+      display: flex;
+      align-items: center;
+
+      .btn-add-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ddd;
+        background-color: variables.$first-color;
+        border-radius: 50%;
+        width: 2vw;
+        height: 2vw;
+        margin-left: 2vw;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: variables.$second-color;
+        }
+      }
+    }
+  }
+}
