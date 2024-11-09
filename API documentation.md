@@ -1,15 +1,14 @@
 # Kiruna eXplorer API Documentation
 
-TODO: example of json request and responses
-TODO: write what are the mandatory parameters
+TODO: pick date library see https://github.com/iamkun/dayjs/issues/934
 
 # Index
 
 1. [Base URL](#base-url)
 2. Collections  
-   2.1. [Colletion `documents`](#collection-documents)  
-   2.2. [Collection `links`](#collection-links)
-   2.3. [Collection `sessions`](#collection-sessions)
+   2.1. [Collection `documents`](#collection-documents)  
+   2.2. [Collection `links`](#collection-links)  
+   2.3. [Collection `sessions`](#collection-sessions)  
    2.4. [Collection `users`](#collection-users)
 
 <br/>
@@ -18,13 +17,21 @@ TODO: write what are the mandatory parameters
 
 The base URL for all API requests is:
 
-`http://localhost:3000/kiruna-eXplorer`
+`http://localhost:3000`
 
 <br/>
 
 # Collection `documents`
 
 A collection of documents representing key nodes in the relocation process of Kiruna. Each document corresponds to agreements, conflicts, consultations, material effects, or other documents that directly influence the project. Documents are categorized by type, including informative, prescriptive, and original resources, and are connected through a network of direct and collateral consequences, projections, and updates.
+
+### Supported requests
+
+- [GET `/documents`](#get-documents)
+- [GET `/documents/{id}`](#get-documentsid)
+- [POST `/documents`](#post-documents)
+- [PATCH `/documents/{id}`](#patch-documentsid)
+- [DELETE `/documents/{id}`](#delete-documentsid)
 
 ## GET `/documents`
 
@@ -34,36 +41,32 @@ Retrieve all documents.
 
 TODO: filters
 
-## Response body
+### Response body
 
 ```json
 [
-  {
-    "id": 1,
-    "title": "",
-    "description": "",
-    "scale": {
-      "type": "RATEO",
-      "rateo": 500 // This field is present only when scale.type === "RATEO"
-    },
-    "type": "INFORMATIVE",
-
-    // OPTIONAL fields below
-    "stakeholders": ["STAKEHOLDER1", "STAKEHOLDER2"],
-    "issuanceDate": "serialized date object", //TODO: pick date library see https://github.com/iamkun/dayjs/issues/934
-    "coordinates": {
-      "latitude": 67.9, // domain [-90 deg, +90 deg]
-        "longitude": 20.22 // domain [-180 deg, +180 deg]
-    },
-    "links": [
-      {
-        "targetDocumentId": 2,
-            "linkTypes": ["DIRECT", "UPDATE"]
+    {
+        "id": 1,
+        "title": "Kiruna plan",
+        "description": "Document of Kiruna plan",
+        "type": "INFORMATIVE",
+        "scale": "RATEO",
+        "scaleValue": 8000,
+        "stakeholders": ["LKAB", "Kiruna kommun"],
+        "coordinates": {
+          "latitude": 67.85624725739333,
+          "longitude": 20.23857657264496
         },
-        ...
-    ]
-  },
-  ...
+        "issuanceDate": "2024-11-08T11:55:20",
+        "links": [
+            {
+                "targetDocumentId": 2,
+                "linkTypes": ["DIRECT", "UPDATE"]
+            },
+            ...
+        ]
+    },
+    ...
 ]
 ```
 
@@ -86,28 +89,25 @@ Retrieve a specific document by its unique identifier.
 
 ```json
 {
-  "id": 1,
-  "title": "",
-  "description": "",
-  "scale": {
-    "type": "TEXT"
-  },
-  "type": "INFORMATIVE",
-
-  // Optional fields below
-  "stakeholders": ["STAKEHOLDER1", "STAKEHOLDER2"],
-  "issuanceDate": "serialized date object", //TODO: pick date library see https://github.com/iamkun/dayjs/issues/934
-  "coordinates": {
-    "latitude": 67.9, // domain [-90 deg, +90 deg]
-    "longitude": 20.22 // domain [-180 deg, +180 deg]
-  },
-  "links": [
-    {
-        "targetDocumentId": 2,
-        "linkTypes": ["DIRECT", "UPDATE"]
+    "id": 1,
+    "title": "Kiruna plan",
+    "description": "Document of Kiruna plan",
+    "type": "INFORMATIVE",
+    "scale": "RATEO",
+    "scaleValue": 8000,
+    "stakeholders": ["LKAB", "Kiruna kommun"],
+    "coordinates": {
+      "latitude": 67.85624725739333,
+      "longitude": 20.23857657264496
     },
-    ...
-  ]
+    "issuanceDate": "2024/10/23",
+    "links": [
+        {
+            "targetDocumentId": 2,
+            "linkTypes": ["DIRECT", "UPDATE"]
+        },
+        ...
+    ]
 }
 ```
 
@@ -127,24 +127,36 @@ This API can return the following error codes:
 
 Create a new document.
 
+### Request parameters
+
+| **Parameter**           | **Description**                                                                    | **Type**            | **Required**                   |
+| ----------------------- | ---------------------------------------------------------------------------------- | ------------------- | ------------------------------ |
+| `title`                 | The title of the document                                                          | `string`            | Yes                            |
+| `description`           | A brief description of the document                                                | `string`            | Yes                            |
+| `type`                  | Type of the document                                                               | `string`            | Yes                            |
+| `scale`                 | Relation between the real object and its size on a map                             | `string`            | Yes                            |
+| `scaleValue`            | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000) | `number`            | Yes if `scale` is "RATEO"      |
+| `stakeholders`          | Array of stakeholders involved with the document                                   | `array` of `string` | No                             |
+| `coordinates`           | Object containing geographical data                                                | `object`            | No                             |
+| `coordinates.latitude`  | Value in the range [-90, +90] degrees                                              | `number`            | Yes if `longitude` is provided |
+| `coordinates.longitude` | Value in the range [-180, +180] degrees                                            | `number`            | Yes if `latitude` is provided  |
+| `issuanceDate`          | Issuance date of the document                                                      | `string`            | No                             |
+
 ### Request body
 
 ```json
 {
-  "title": "",
-  "description": "",
-  "scale": {
-    "type": "TEXT"
-  },
+  "title": "Kiruna plan",
+  "description": "Document of Kiruna plan",
   "type": "INFORMATIVE",
-
-  // Optional fields below
-  "stakeholders": ["STAKEHOLDER1", "STAKEHOLDER2"],
-  "issuanceDate": "serialized date object", //TODO: pick date library see https://github.com/iamkun/dayjs/issues/934
+  "scale": "RATEO",
+  "scaleValue": 8000,
+  "stakeholders": ["LKAB", "Kiruna kommun"],
   "coordinates": {
-    "latitude": 67.9, // domain [-90 deg, +90 deg]
-    "longitude": 20.22 // domain [-180 deg, +180 deg]
-  }
+    "latitude": 67.85624725739333,
+    "longitude": 20.23857657264496
+  },
+  "issuanceDate": "2024/10/23"
 }
 ```
 
@@ -170,24 +182,18 @@ This API uses the following error codes:
 
 ## PATCH `/documents/{id}`
 
-Update an existing document by its unique identifier. All fields are optional
+Update an existing document by its unique identifier.
+
+### Parameters
+
+All parameters of [`POST /documents`](#post-documents) are accepted but they are all optional. Also relations between `scale` - `scaleValue` and `coordinates` - `latitude` - `longitude` remain the same.
 
 ### Request body
 
 ```json
 {
-  "title": "Updated title",
-  "description": "New and updated description",
-  "scale": {
-    "type": "TEXT"
-  },
-  "type": "DESIGN",
-  "stakeholders": ["STAKEHOLDER1", "STAKEHOLDER2"],
-  "issuanceDate": "serialized date object", //TODO: pick date library see https://github.com/iamkun/dayjs/issues/934
-  "coordinates": {
-    "latitude": 67.9, // domain [-90 deg, +90 deg]
-    "longitude": 20.22 // domain [-180 deg, +180 deg]
-  }
+  "description": "A new and improved description",
+  "type": "DESIGN"
 }
 ```
 
@@ -226,6 +232,12 @@ This API uses the following error codes:
 
 A collection of links representing relationships between documents, serving as a sub-collection within the `documents` collection.
 Each pair of documents (nodes) is associated with at most one link. One link may be characterized by more than one association type.
+
+### Supported requests
+
+- [GET `/documents/{id}/links`](#get-documentsidlinks)
+- [PUT `/documents/{id}/links`](#put-documentsidlinks)
+- [DELETE `/documents/{id}/links`](#delete-documentsidlinks)
 
 ## GET `/documents/{id}/links`
 
@@ -312,6 +324,12 @@ This API uses the following error codes:
 
 Handles user session management.
 
+### Supported requests
+
+- [POST `/sessions`](#post-sessions)
+- [GET `/sessions/current`](#get-sessionscurrent)
+- [DELETE `/sessions/current`](#delete-sessionscurrent)
+
 ## POST `/sessions`
 
 Authenticate a user and create a session.
@@ -348,7 +366,7 @@ This API uses the following error codes:
 - `401 Unauthorized`: Incorrect credentials.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
-## GET `/sessions/current/`
+## GET `/sessions/current`
 
 Retrieve information about the currently authenticated user.
 
@@ -393,6 +411,10 @@ This API uses the following error codes:
 # Collection `users`
 
 A collection describing the variety of users interacting with the Kiruna eXplorer system.
+
+### Supported requests
+
+- [POST `/users`](#post-users)
 
 ## POST `/users`
 
