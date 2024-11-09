@@ -9,6 +9,8 @@ import {
 import "../styles/ModalAddDocument.scss";
 import ISO6391 from "iso-639-1";
 
+//TODO: Fix color of the form
+
 interface ModalAddProps {
   modalOpen: boolean;
   onClose: () => void;

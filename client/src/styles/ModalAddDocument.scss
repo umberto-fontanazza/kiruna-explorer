@@ -29,21 +29,20 @@
     }
 
     .close-button {
+      background-color: variables.$first-color;
+      color: white;
+      border: 0.1rem solid variables.$first-color;
       position: absolute;
       left: 94%;
-      background-color: variables.$first-color;
-      border: none;
       border-radius: 100%;
       width: 5%;
       height: 5%;
-      color: variables.$third-color;
 
       cursor: pointer;
       transition: background-color 0.3s;
 
       &:hover {
-        background-color: variables.$second-color;
-        border: solid variables.$first-color;
+        background: variables.$third-color;
         color: variables.$first-color;
       }
 
@@ -156,15 +155,6 @@
           &:hover {
             background: variables.$third-color;
             color: variables.$first-color;
-          }
-        }
-
-        .cancel-button {
-          background-color: #ccc;
-          color: variables.$first-color;
-
-          &:hover {
-            background-color: #b3b3b3;
           }
         }
       }
