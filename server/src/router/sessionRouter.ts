@@ -4,11 +4,13 @@ import { StatusCodes } from "http-status-codes";
 import { User } from "../model/user";
 import { validateBody } from "../middleware/validation";
 import { postBody } from "../validation/sessionSchema";
+import { isLoggedIn, isNotLoggedIn } from "../middleware/auth";
 
 export const sessionRouter: Router = Router();
 
 sessionRouter.post(
   "/",
+  isNotLoggedIn,
   validateBody(postBody),
   (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate(
@@ -36,7 +38,7 @@ sessionRouter.post(
   },
 );
 
-sessionRouter.get("/current", (req: Request, res: Response) => {
+sessionRouter.get("/current", isLoggedIn, (req: Request, res: Response) => {
   try {
     if (req.isAuthenticated()) {
       res.json(req.user);
@@ -51,7 +53,7 @@ sessionRouter.get("/current", (req: Request, res: Response) => {
   }
 });
 
-sessionRouter.delete("/current", (req: Request, res: Response) => {
+sessionRouter.delete("/current", isLoggedIn, (req: Request, res: Response) => {
   req.logout((err) => {
     if (err) {
       console.error(err);
