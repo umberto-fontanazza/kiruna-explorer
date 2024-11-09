@@ -1,5 +1,5 @@
 import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
 import { Document } from "../utils/interfaces";
 import "../styles/Map.scss";
 
@@ -10,19 +10,23 @@ interface MapComponentProps {
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
+  // Coordinates for Kiruna, Sweden
   const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
   const [center, setCenter] = useState(kirunaCoords);
 
+  // Load Google Maps API with API key from environment variables
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
   });
 
+  // Styling for the map container
   const containerStyle = {
     width: "100vw",
     height: "100%",
   };
 
+  // Map boundaries around Kiruna
   const bounds = {
     north: 67.9,
     south: 67.8,
@@ -30,11 +34,11 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     west: 20.0,
   };
 
+  // Map options to control appearance and restrictions
   const mapOptions = {
     mapTypeId: "satellite",
     //mapTypeControl: true,
     disableDefaultUI: true,
-
     minZoom: 12,
     maxZoom: 20,
     styles: [
@@ -45,13 +49,12 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       },
     ],
     restriction: {
-      latLngBounds: bounds, // Restrict map movement within bounds
-      strictBounds: false, // Allow panning outside the bounds, but snap back when released
+      latLngBounds: bounds,
+      strictBounds: false,
     },
   };
 
-  // Centro della mappa su Kiruna, Svezia
-
+  // Render map only when API is loaded
   return isLoaded ? (
     <>
       <GoogleMap
@@ -60,31 +63,11 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         options={mapOptions}
         center={center}
       >
+        {/* Render an overlay or marker for each document with valid coordinates */}
         {props.documents.map(
           (doc) =>
             doc.coordinates.latitude !== null &&
             doc.coordinates.longitude !== null && (
-              // <Marker
-              //   key={doc.id}
-              //   position={{
-              //     lat: doc.coordinates.latitude!,
-              //     lng: doc.coordinates.longitude!,
-              //   }}
-              //   icon={{
-              //     url: `/document-icon-${doc.type}-iconByIcons8.png`, // Replace with the path to your custom image
-              //     //scaledSize: new window.google.maps.Size(50, 50), // Adjust the size as needed
-              //     origin: new window.google.maps.Point(0, 0),
-              //     anchor: new window.google.maps.Point(25, 25), // Adjusts the anchor point based on size
-              //   }}
-              //   onClick={() => {
-              //     props.setSidebarOpen(true);
-              //     props.setDocSelected(doc);
-              //     setCenter({
-              //       lat: doc.coordinates.latitude!,
-              //       lng: doc.coordinates.longitude! + 0.0011,
-              //     });
-              //   }}
-              // />
               <OverlayView
                 key={doc.id}
                 position={{
@@ -93,6 +76,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                 }}
                 mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
               >
+                {/* Custom icon with click handler to open sidebar and recenter map */}
                 <div
                   className="map-icon-documents"
                   onClick={() => {
@@ -119,21 +103,5 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     <></>
   );
 };
-
-//function MapComponent() {
-// const [map, setMap] = React.useState(null);
-
-// const onLoad = React.useCallback(function callback(map) {
-//   // This is just an example of getting and using the map instance!!! don't just blindly copy!
-//   const bounds = new window.google.maps.LatLngBounds(center)
-//   map.fitBounds(bounds)
-
-//   setMap(map)
-// }, [])
-
-// const onUnmount = React.useCallback(function callback(map) {
-//   setMap(null)
-// }, [])
-//}
 
 export default MapComponent;

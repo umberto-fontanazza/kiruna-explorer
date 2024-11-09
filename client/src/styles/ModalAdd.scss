@@ -176,7 +176,7 @@ textarea {
   color: variables.$first-color;
 
   &::placeholder {
-    color: rgba($color: variables.$first-color, variables.$alpha: 0.4);
+    color: variables.$first-color;
   }
 
   &:focus {
@@ -195,14 +195,16 @@ textarea {
 
 .checkbox-group {
   display: flex;
-  flex-direction: column;
-  margin-top: 10px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 1rem;
 
   .checkbox-label {
     display: flex;
     align-items: center;
     margin-bottom: 8px;
     cursor: pointer;
+    width: calc(33.33% - 1rem);
 
     input[type="checkbox"] {
       margin-right: 10px;

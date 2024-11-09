@@ -27,7 +27,7 @@ export interface Document {
   id: number;
   title: string;
   description: string | undefined;
-  stakeholder: string[];
+  stakeholders: StakeHolders[];
   scale: string;
   issuanceDate: Date | null;
   type: DocumentType | undefined;
@@ -51,4 +51,13 @@ export enum DocumentType {
   Technical = "TECHNICAL",
   Material = "MATERIAL",
   Others = "OTHERS",
+}
+
+export enum StakeHolders {
+  LKAB = "LKAB",
+  KirunaCommon = "Kiruna Kommun",
+  Regional_authority = "Regional Authority",
+  Architecture_Firms = "Architectures Firms",
+  Citizens = "Citizens",
+  Others = "Others",
 }
