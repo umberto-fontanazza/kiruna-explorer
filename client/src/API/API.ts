@@ -1,24 +1,35 @@
-import { Document, DocumentType, LinkType } from "../utils/interfaces";
+import { Document, LinkType } from "../utils/interfaces";
 //import { strict as assert } from "assert";
 
 const baseURL = "http://localhost:3000";
 
-async function login(credentials: unknown) {
+async function getUser() {
+  const response = await fetch(baseURL + "/sessions/current", {
+    credentials: "include",
+  });
+
+  const user = await response.json();
+  if (response.ok) {
+    return user;
+  } else {
+    throw user;
+  }
+}
+
+async function login(email: string, password: string) {
   const response = await fetch(baseURL + "/sessions", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    body: JSON.stringify(credentials),
+    body: JSON.stringify({
+      email: email,
+      password: password,
+    }),
   });
-  if (response.ok) {
-    const user = await response.json();
-    return user;
-  } else {
-    const err = await response.text();
-    throw err;
-  }
+
+  return response;
 }
 
 const logout = async () => {
@@ -34,16 +45,16 @@ const logout = async () => {
 /*************************   DOCUMENTS   *****************************/
 
 async function getDocuments() {
-  // try{
-  //   const response = await fetch(baseURL + "/documents");
-  //   if(response.ok){
-  //     const documents = await response.json();
-  //     return documents;
-  //   }
-  // }catch(err){
-  //   console.error(err);
-  // }
-
+  try {
+    const response = await fetch(baseURL + "/documents");
+    if (response.ok) {
+      const documents = await response.json();
+      return documents;
+    }
+  } catch (err) {
+    console.error(err);
+  }
+  /*
   return [
     {
       id: 1,
@@ -168,10 +179,10 @@ async function getDocuments() {
       pages: 43,
       coordinates: { latitude: 67.84, longitude: 20.28 },
     },
-  ];
+  ];*/
 }
 
-async function postDocument(document: Document): Promise<number> {
+async function addDocument(document: Document): Promise<number> {
   const response = await fetch(baseURL + `/documents`, {
     method: "POST",
     credentials: "include",
@@ -182,11 +193,11 @@ async function postDocument(document: Document): Promise<number> {
       title: document.title,
       description: document.description,
       // stakeholder: document.stakeholder,
-      // scale: document.scale,
+      scale: document.scale,
       // issuanceDate: document.issuanceDate,
-      // type: document.type,
+      type: document.type,
       // connections: document.connections,
-      // language: document.language,
+      language: document.language,
       // pages: document.pages,
       coordinates: document.coordinates,
     }),
@@ -202,7 +213,7 @@ async function postDocument(document: Document): Promise<number> {
   }
 }
 
-async function patchDocument(id: number, title: string, coordinates: string) {
+async function updateDocument(id: number, title: string, coordinates: string) {
   // other fields?
   try {
     const response = await fetch(baseURL + `/documents/${id}`, {
@@ -294,11 +305,12 @@ async function deleteLink(
 }
 
 const API = {
+  getUser,
   login,
   logout,
   getDocuments,
-  postDocument,
-  patchDocument,
+  addDocument,
+  updateDocument,
   deleteDocument,
   getLinks,
   putLink,

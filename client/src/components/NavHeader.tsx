@@ -1,9 +1,11 @@
 import { FC } from "react";
 import "../styles/NavHeader.scss"; // Importiamo il file SCSS personalizzato
 import { useNavigate } from "react-router-dom";
+import { User } from "../utils/interfaces";
 interface NavHeaderProps {
   logout: () => void;
-  login: boolean;
+  loggedIn: boolean;
+  user: User;
 }
 
 const NavHeader: FC<NavHeaderProps> = (props): JSX.Element => {
@@ -19,10 +21,13 @@ const NavHeader: FC<NavHeaderProps> = (props): JSX.Element => {
           ></img>
           <div className="nav-brand">Kiruna eXplorer.</div>
         </div>
-        {props.login ? (
-          <button className="btn-logout" onClick={props.logout}>
-            Logout
-          </button>
+        {props.loggedIn ? (
+          <div className="d-flex align-items-center gap-3">
+            <h4 className="m-0 text-white">Ciao {props.user.name}</h4>
+            <button className="btn-logout" onClick={props.logout}>
+              Logout
+            </button>
+          </div>
         ) : (
           <button className="btn-login" onClick={() => nav("/login")}>
             Login

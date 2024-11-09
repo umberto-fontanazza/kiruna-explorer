@@ -1,8 +1,21 @@
 // File in which we define the common interfaces in shared files
 
-export interface Credentials {
-  username: string;
-  password: string;
+export interface User {
+  email: string;
+  name: string;
+  surname: string;
+  role: UserRole;
+}
+
+export enum UserRole {
+  Developer = "DEVELOPER",
+  Planner = "PLANNER",
+  Resident = "RESIDENT",
+  Visitor = "VISITOR",
+}
+
+export interface LoginErrors {
+  login?: string;
 }
 
 export interface Link {
@@ -32,10 +45,10 @@ export enum LinkType {
 }
 
 export enum DocumentType {
-  Informative = "Informative",
-  Prescriptive = "Prescriptive",
-  Design = "Design",
-  Technical = "Technical",
-  Material = "Material",
-  Others = "Others",
+  Informative = "INFORMATIVE",
+  Prescriptive = "PRESCRIPTIVE",
+  Design = "DESIGN",
+  Technical = "TECHNICAL",
+  Material = "MATERIAL",
+  Others = "OTHERS",
 }
