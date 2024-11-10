@@ -11,7 +11,7 @@ export async function loginAsPlanner(): Promise<string> {
     password: "plannerPassword",
     name: "Urbano",
     surname: "Planno",
-    role: "PLANNER",
+    role: "urban_planner",
   });
   response = await request(app).post("/sessions").send({
     email: "testurban.planner@gmail.com",

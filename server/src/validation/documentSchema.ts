@@ -21,7 +21,6 @@ export const postBody = z
     coordinates: coordinates,
     scale: z.nativeEnum(Scale),
     type: z.nativeEnum(DocumentType),
-    language: z.string(),
   })
   .strict();
 

@@ -2,10 +2,10 @@ import { Database } from "../database";
 import { strict as assert } from "assert";
 
 export enum LinkType {
-  Direct = "DIRECT",
-  Collateral = "COLLATERAL",
-  Projection = "PROJECTION",
-  Update = "UPDATE",
+  Direct = "direct",
+  Collateral = "collateral",
+  Projection = "projection",
+  Update = "update",
 }
 
 export class Link {

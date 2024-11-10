@@ -67,9 +67,8 @@ describe("Testing with coordinates", () => {
   const testDoc = {
     title: "Coordinates test",
     description: "This one will be tested with coordinates",
-    scale: Scale.BlueprintsOrEffect,
+    scale: Scale.BlueprintsEffects,
     type: DocumentType.Informative,
-    language: "English",
   };
   const wrongCoordinates = {
     latitude: 120,

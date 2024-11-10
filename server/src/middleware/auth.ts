@@ -57,7 +57,7 @@ export function isDeveloper(req: Request, res: Response, next: NextFunction) {
 
 export function isPlanner(req: Request, res: Response, next: NextFunction) {
   const user = req.user as User;
-  if (user && user.role === UserRole.Planner) {
+  if (user && user.role === UserRole.UrbanPlanner) {
     next();
     return;
   }
