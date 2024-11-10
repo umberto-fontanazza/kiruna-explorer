@@ -14,12 +14,10 @@ type DocumentDbRow = {
 };
 
 export enum Stakeholder {
-  LKAB = "LKAB",
-  Municipality = "MUNICIPALITY",
-  RegionalAuthority = "REGIONAL AUTHORITY",
-  ArchitectureFirms = "ARCHITECTURE FIRMS",
-  Citizens = "CITIZENS",
-  Others = "OTHERS",
+  KirunaKommun = "kiruna_kommun",
+  Lkab = "lkab",
+  Residents = "residents",
+  WhiteArkitekter = "white_arkitekter",
 }
 
 // TODO: temp scale. RATEO is now a string

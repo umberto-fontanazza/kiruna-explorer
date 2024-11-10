@@ -52,7 +52,7 @@ TODO: filters
           "type": "RATEO",
           "rateo": 8000
         },
-        "stakeholders": ["LKAB", "Kiruna kommun"],
+        "stakeholders": ["lkab", "kiruna_kommun"],
         "coordinates": {
           "latitude": 67.85624725739333,
           "longitude": 20.23857657264496
@@ -97,7 +97,7 @@ Retrieve a specific document by its unique identifier.
       "type": "RATEO",
       "rateo": 8000
     },
-    "stakeholders": ["LKAB", "Kiruna kommun"],
+    "stakeholders": ["lkab", "kiruna_kommun"],
     "coordinates": {
       "latitude": 67.85624725739333,
       "longitude": 20.23857657264496
@@ -156,7 +156,7 @@ Create a new document.
     "type": "RATEO",
     "rateo": 8000
   },
-  "stakeholders": ["LKAB", "Kiruna kommun"],
+  "stakeholders": ["lkab", "kiruna_kommun"],
   "coordinates": {
     "latitude": 67.85624725739333,
     "longitude": 20.23857657264496

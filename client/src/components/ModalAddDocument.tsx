@@ -4,7 +4,7 @@ import {
   Document,
   DocumentType,
   LinkType,
-  StakeHolders,
+  Stakeholder,
 } from "../utils/interfaces";
 import "../styles/ModalAddDocument.scss";
 import ISO6391 from "iso-639-1";
@@ -52,12 +52,10 @@ const ModalForm: FC<ModalAddProps> = ({
   const languages = ISO6391.getAllNames().sort();
 
   const stakeholdersOptions = [
-    { value: StakeHolders.LKAB, label: "LKAB" },
-    { value: StakeHolders.KirunaCommon, label: "Municipality" },
-    { value: StakeHolders.Regional_authority, label: "Regional Authority" },
-    { value: StakeHolders.Architecture_Firms, label: "Architecture Firms" },
-    { value: StakeHolders.Citizens, label: "Citizens" },
-    { value: StakeHolders.Others, label: "Others" },
+    { value: Stakeholder.Lkab, label: "LKAB" },
+    { value: Stakeholder.KirunaKommun, label: "Kiruna kommun" },
+    { value: Stakeholder.Residents, label: "Residents" },
+    { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
   ];
 
   ////// COMPONENT STATE /////
@@ -100,14 +98,14 @@ const ModalForm: FC<ModalAddProps> = ({
         // add option if selected
         return {
           ...prev,
-          stakeholders: [...stakeholders, value as StakeHolders],
+          stakeholders: [...stakeholders, value as Stakeholder],
         };
       } else {
         // remove option if unselected
         return {
           ...prev,
           stakeholders: stakeholders.filter(
-            (stake) => stake !== (value as StakeHolders)
+            (stake) => stake !== (value as Stakeholder)
           ),
         };
       }
@@ -322,7 +320,7 @@ const ModalForm: FC<ModalAddProps> = ({
 
               {/* Stakeholders */}
               <div className="form-group">
-                <label>StakeHolders *</label>
+                <label>Stakeholders *</label>
                 <div className="checkbox-group">
                   {stakeholdersOptions.map((option) => (
                     <label key={option.value} className="checkbox-label">
