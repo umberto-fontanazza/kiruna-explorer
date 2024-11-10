@@ -482,10 +482,10 @@ const ModalForm: FC<ModalAddProps> = ({
                   <option value="" disabled>
                     Select the Connection's type
                   </option>
-                  <option value="DIRECT">Direct</option>
-                  <option value="COLLATERAL">Collateral</option>
-                  <option value="PROJECTION">Projection</option>
-                  <option value="UPDATE">Update</option>
+                  <option value="direct">Direct</option>
+                  <option value="collateral">Collateral</option>
+                  <option value="projection">Projection</option>
+                  <option value="update">Update</option>
                 </select>
               </div>*/}
 

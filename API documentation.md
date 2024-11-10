@@ -61,7 +61,7 @@ TODO: filters
         "links": [
             {
                 "targetDocumentId": 2,
-                "linkTypes": ["DIRECT", "UPDATE"]
+                "linkTypes": ["direct", "update"]
             },
             ...
         ]
@@ -106,7 +106,7 @@ Retrieve a specific document by its unique identifier.
     "links": [
         {
             "targetDocumentId": 2,
-            "linkTypes": ["DIRECT", "UPDATE"]
+            "linkTypes": ["direct", "update"]
         },
         ...
     ]
@@ -254,11 +254,11 @@ Retrieve all links associated with a specific document. If the document has no l
 [
   {
     "targetDocumentId": 2,
-    "linkTypes": ["DIRECT"]
+    "linkTypes": ["direct"]
   },
   {
     "targetDocumentId": 4,
-    "linkTypes": ["PROJECTION", "COLLATERAL"]
+    "linkTypes": ["projection", "collateral"]
   }
 ]
 ```
@@ -284,7 +284,7 @@ Create or update a link associated with a specific document. If a link existed t
 ```json
 {
   "targetDocumentId": 2,
-  "linkTypes": ["DIRECT", "UPDATE"]
+  "linkTypes": ["direct", "update"]
 }
 ```
 

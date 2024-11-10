@@ -38,10 +38,10 @@ export interface Document {
 }
 
 export enum LinkType {
-  Direct = "DIRECT",
-  Collateral = "COLLATERAL",
-  Projection = "PROJECTION",
-  Update = "UPDATE",
+  Direct = "direct",
+  Collateral = "collateral",
+  Projection = "projection",
+  Update = "update",
 }
 
 export enum DocumentType {
