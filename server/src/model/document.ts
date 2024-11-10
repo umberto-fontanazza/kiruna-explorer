@@ -14,7 +14,7 @@ type DocumentDbRow = {
   scale_ratio: number;
   stakeholders: Stakeholder[];
   coordinates: Coordinates;
-  issuanceDate: Dayjs;
+  issuanceDate: Date;
 };
 
 export enum Stakeholder {
@@ -78,6 +78,7 @@ export class Document {
     assert(typeof description === "string");
     assert(typeof type === "string");
     assert(typeof scale_type === "string");
+    assert(!issuanceDate || issuanceDate instanceof Date);
 
     const scale: Scale = Scale.fromDatabaseRow({
       scale_type,
@@ -92,7 +93,7 @@ export class Document {
       scale,
       stakeholders || undefined,
       coordinates || undefined,
-      issuanceDate || undefined,
+      dayjs(issuanceDate) || undefined,
     );
   }
 
@@ -111,7 +112,7 @@ export class Document {
       this.stakeholders || null,
       this.coordinates?.longitude || null, // BEWARE ORDERING: https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples-in-gis-services#:~:text=PostGIS%20expects%20lng/lat.
       this.coordinates?.latitude || null,
-      this.issuanceDate || null,
+      this.issuanceDate?.toDate() || null,
       this.id,
     ]);
     if (result.rowCount != 1) throw new Error("Failed db update");
@@ -138,7 +139,7 @@ export class Document {
         stakeholders || null,
         coordinates?.longitude || null,
         coordinates?.latitude || null,
-        issuance_date || null,
+        issuance_date?.toDate() || null,
       ],
     );
     const documentId: number = result.rows[0].id;

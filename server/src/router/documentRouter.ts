@@ -16,7 +16,10 @@ import {
 } from "../validation/documentSchema";
 import { Scale } from "../model/scale";
 import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { isLoggedIn, isPlanner } from "../middleware/auth";
+
+dayjs.extend(customParseFormat);
 
 export const documentRouter: Router = Router();
 
@@ -59,19 +62,16 @@ documentRouter.post(
       scale,
       stakeholders,
       coordinates,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       issuanceDate,
     } = request.body as PostBody;
-    const parsedScale = new Scale(scale.type, scale.ratio);
-    const parsedIssuanceDate = dayjs(); //TODO: put the actual date
     const insertedDocument = await Document.insert(
       title,
       description,
       type,
-      parsedScale,
+      new Scale(scale.type, scale.ratio),
       stakeholders,
       coordinates,
-      parsedIssuanceDate,
+      issuanceDate ? dayjs(issuanceDate, "YYYY-MM-DD", true) : undefined,
     );
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
     return;
@@ -93,7 +93,6 @@ documentRouter.patch(
       scale,
       stakeholders,
       coordinates,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       issuanceDate,
     } = request.body as PatchBody;
     let document: Document;
@@ -114,7 +113,9 @@ documentRouter.patch(
     document.scale = (parsedScale! as Scale) || document.scale;
     document.stakeholders = stakeholders || document.stakeholders;
     document.coordinates = coordinates || document.coordinates;
-    document.issuanceDate = dayjs() || document.issuanceDate; // TODO: use actual
+    document.issuanceDate = issuanceDate
+      ? dayjs(issuanceDate, "YYYY-MM-DD", true)
+      : document.issuanceDate;
     await document.update();
     response.status(StatusCodes.NO_CONTENT).send();
     return;

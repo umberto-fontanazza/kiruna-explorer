@@ -29,7 +29,7 @@ export const postBody = z
     scale,
     stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
     coordinates: coordinates.optional(),
-    issuanceDate: z.coerce.date().optional(), //TODO:
+    issuanceDate: z.string().date().optional(),
   })
   .strict();
 
@@ -42,6 +42,6 @@ export const patchBody = z
     scale: scale.optional(),
     stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
     coordinates: coordinates.optional(),
-    issuanceDate: z.coerce.date().optional(), //TODO:
+    issuanceDate: z.string().date().optional(),
   })
   .strict();
