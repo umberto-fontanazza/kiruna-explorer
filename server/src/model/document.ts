@@ -20,11 +20,10 @@ export enum Stakeholder {
   WhiteArkitekter = "white_arkitekter",
 }
 
-// TODO: temp scale. RATEO is now a string
 export enum Scale {
-  BlueprintsOrEffect = "BLUEPRINTS/EFFECT",
-  Text = "TEXT",
-  Rateo = "RATEO",
+  BlueprintsEffects = "blueprints/effects",
+  Ratio = "ratio",
+  Text = "text",
 }
 
 export enum DocumentType {

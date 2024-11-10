@@ -49,8 +49,8 @@ TODO: filters
         "description": "Document of Kiruna plan",
         "type": "informative",
         "scale": {
-          "type": "RATEO",
-          "rateo": 8000
+          "type": "ratio",
+          "ratio": 8000
         },
         "stakeholders": ["lkab", "kiruna_kommun"],
         "coordinates": {
@@ -94,8 +94,8 @@ Retrieve a specific document by its unique identifier.
     "description": "Document of Kiruna plan",
     "type": "informative",
     "scale": {
-      "type": "RATEO",
-      "rateo": 8000
+      "type": "ratio",
+      "ratio": 8000
     },
     "stakeholders": ["lkab", "kiruna_kommun"],
     "coordinates": {
@@ -138,7 +138,7 @@ Create a new document.
 | `type`                  | Type of the document                                                               | `string`            | Yes                            |
 | `scale`                 | Relation between the real object and its size on a map                             | `object`            | Yes                            |
 | `scale.type`            | Type of the scale                                                                  | `string`            | Yes                            |
-| `scale.rateo`           | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000) | `number`            | Yes if `scale` is "RATEO"      |
+| `scale.ratio`           | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000) | `number`            | Yes if `scale` is "ratio"      |
 | `stakeholders`          | Array of stakeholders involved with the document                                   | `array` of `string` | No                             |
 | `coordinates`           | Object containing geographical data                                                | `object`            | No                             |
 | `coordinates.latitude`  | Value in the range [-90, +90] degrees                                              | `number`            | Yes if `longitude` is provided |
@@ -153,8 +153,8 @@ Create a new document.
   "description": "Document of Kiruna plan",
   "type": "informative",
   "scale": {
-    "type": "RATEO",
-    "rateo": 8000
+    "type": "ratio",
+    "ratio": 8000
   },
   "stakeholders": ["lkab", "kiruna_kommun"],
   "coordinates": {

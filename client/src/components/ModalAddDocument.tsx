@@ -46,8 +46,8 @@ const ModalForm: FC<ModalAddProps> = ({
   ////// OPTIONS AND DATA ///////
 
   const scaleValues = [
-    { value: "BLUEPRINTS/EFFECT", label: "Blueprints/Effects" },
-    { value: "TEXT", label: "Text" },
+    { value: "blueprints/effects", label: "Blueprints/Effects" },
+    { value: "text", label: "Text" },
   ];
   const languages = ISO6391.getAllNames().sort();
 
@@ -212,7 +212,7 @@ const ModalForm: FC<ModalAddProps> = ({
                         {scale.label}
                       </option>
                     ))}
-                    <option value="numeric">Rateo</option>
+                    <option value="numeric">Ratio</option>
                   </select>
                 </div>
 
