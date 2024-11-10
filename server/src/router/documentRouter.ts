@@ -25,14 +25,27 @@ export const documentRouter: Router = Router();
 
 documentRouter.use("/:id/links", linkRouter);
 
-documentRouter.get("/", async (request: Request, response: Response) => {
-  const all: Document[] = await Document.all();
-  response.status(StatusCodes.OK).send([...all]);
-  return;
-});
+documentRouter.get(
+  "/",
+  // TODO: the retrieved documents needs to be turned into the
+  // respective response body representation.
+  // document.issueDate is a Dayjs obj and by default is JSON.stringified
+  // to an ISO date (we want UTC YYYY-MM-DD instead), also it needs to be enriched
+  // with links (or the API needs to change)
+  async (request: Request, response: Response) => {
+    const all: Document[] = await Document.all();
+    response.status(StatusCodes.OK).send([...all]);
+    return;
+  },
+);
 
 documentRouter.get(
   "/:id",
+  // TODO: the retrieved documents needs to be turned into the
+  // respective response body representation.
+  // document.issueDate is a Dayjs obj and by default is JSON.stringified
+  // to an ISO date (we want UTC YYYY-MM-DD instead), also it needs to be enriched
+  // with links (or the API needs to change)
   validateRequestParameters(idRequestParam),
   async (request: Request, response: Response) => {
     const id = Number(request.params.id);
