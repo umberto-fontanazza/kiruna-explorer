@@ -16,24 +16,20 @@ import {
 } from "../validation/documentSchema";
 import { Scale } from "../model/scale";
 import dayjs from "dayjs";
+import { isLoggedIn, isPlanner } from "../middleware/auth";
 
 export const documentRouter: Router = Router();
 
 documentRouter.use("/:id/links", linkRouter);
 
-documentRouter.get(
-  "/",
-  //TODO: authentication authorization
-  async (request: Request, response: Response) => {
-    const all: Document[] = await Document.all();
-    response.status(StatusCodes.OK).send([...all]);
-    return;
-  },
-);
+documentRouter.get("/", async (request: Request, response: Response) => {
+  const all: Document[] = await Document.all();
+  response.status(StatusCodes.OK).send([...all]);
+  return;
+});
 
 documentRouter.get(
   "/:id",
-  //TODO: authentication authorization
   validateRequestParameters(idRequestParam),
   async (request: Request, response: Response) => {
     const id = Number(request.params.id);
@@ -52,7 +48,8 @@ documentRouter.get(
 
 documentRouter.post(
   "/",
-  //TODO: authentication authorization
+  isLoggedIn,
+  isPlanner,
   validateBody(postBody),
   async (request: Request, response: Response) => {
     const {
@@ -83,7 +80,8 @@ documentRouter.post(
 
 documentRouter.patch(
   "/:id",
-  //TODO: authentication authorization
+  isLoggedIn,
+  isPlanner,
   validateRequestParameters(idRequestParam),
   validateBody(patchBody),
   async (request: Request, response: Response) => {
@@ -125,7 +123,8 @@ documentRouter.patch(
 
 documentRouter.delete(
   "/:id",
-  //TODO: authentication authorization
+  isLoggedIn,
+  isPlanner,
   validateRequestParameters(idRequestParam),
   async (request: Request, response: Response) => {
     const id: number = Number(request.params.id);

@@ -4,11 +4,13 @@ import { User } from "../model/user";
 import { UserError } from "../error/userError";
 import { validateBody } from "../middleware/validation";
 import { postBody } from "../validation/userSchema";
+import { isNotLoggedIn } from "../middleware/auth";
 
 export const userRouter: Router = Router();
 
 userRouter.post(
   "/",
+  isNotLoggedIn,
   validateBody(postBody),
   async (req: Request, res: Response, next: NextFunction) => {
     try {

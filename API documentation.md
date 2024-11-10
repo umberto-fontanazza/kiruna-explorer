@@ -47,12 +47,12 @@ TODO: filters
         "id": 1,
         "title": "Kiruna plan",
         "description": "Document of Kiruna plan",
-        "type": "INFORMATIVE",
+        "type": "informative",
         "scale": {
-          "type": "RATEO",
-          "rateo": 8000
+          "type": "ratio",
+          "ratio": 8000
         },
-        "stakeholders": ["LKAB", "Kiruna kommun"],
+        "stakeholders": ["lkab", "kiruna_kommun"],
         "coordinates": {
           "latitude": 67.85624725739333,
           "longitude": 20.23857657264496
@@ -61,7 +61,7 @@ TODO: filters
         "links": [
             {
                 "targetDocumentId": 2,
-                "linkTypes": ["DIRECT", "UPDATE"]
+                "linkTypes": ["direct", "update"]
             },
             ...
         ]
@@ -92,12 +92,12 @@ Retrieve a specific document by its unique identifier.
     "id": 1,
     "title": "Kiruna plan",
     "description": "Document of Kiruna plan",
-    "type": "INFORMATIVE",
+    "type": "informative",
     "scale": {
-      "type": "RATEO",
-      "rateo": 8000
+      "type": "ratio",
+      "ratio": 8000
     },
-    "stakeholders": ["LKAB", "Kiruna kommun"],
+    "stakeholders": ["lkab", "kiruna_kommun"],
     "coordinates": {
       "latitude": 67.85624725739333,
       "longitude": 20.23857657264496
@@ -106,7 +106,7 @@ Retrieve a specific document by its unique identifier.
     "links": [
         {
             "targetDocumentId": 2,
-            "linkTypes": ["DIRECT", "UPDATE"]
+            "linkTypes": ["direct", "update"]
         },
         ...
     ]
@@ -138,7 +138,7 @@ Create a new document.
 | `type`                  | Type of the document                                                               | `string`            | Yes                            |
 | `scale`                 | Relation between the real object and its size on a map                             | `object`            | Yes                            |
 | `scale.type`            | Type of the scale                                                                  | `string`            | Yes                            |
-| `scale.rateo`           | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000) | `number`            | Yes if `scale` is "RATEO"      |
+| `scale.ratio`           | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000) | `number`            | Yes if `scale` is "ratio"      |
 | `stakeholders`          | Array of stakeholders involved with the document                                   | `array` of `string` | No                             |
 | `coordinates`           | Object containing geographical data                                                | `object`            | No                             |
 | `coordinates.latitude`  | Value in the range [-90, +90] degrees                                              | `number`            | Yes if `longitude` is provided |
@@ -151,12 +151,12 @@ Create a new document.
 {
   "title": "Kiruna plan",
   "description": "Document of Kiruna plan",
-  "type": "INFORMATIVE",
+  "type": "informative",
   "scale": {
-    "type": "RATEO",
-    "rateo": 8000
+    "type": "ratio",
+    "ratio": 8000
   },
-  "stakeholders": ["LKAB", "Kiruna kommun"],
+  "stakeholders": ["lkab", "kiruna_kommun"],
   "coordinates": {
     "latitude": 67.85624725739333,
     "longitude": 20.23857657264496
@@ -198,7 +198,7 @@ All parameters of [`POST /documents`](#post-documents) are accepted but they are
 ```json
 {
   "description": "A new and improved description",
-  "type": "DESIGN"
+  "type": "design"
 }
 ```
 
@@ -254,11 +254,11 @@ Retrieve all links associated with a specific document. If the document has no l
 [
   {
     "targetDocumentId": 2,
-    "linkTypes": ["DIRECT"]
+    "linkTypes": ["direct"]
   },
   {
     "targetDocumentId": 4,
-    "linkTypes": ["PROJECTION", "COLLATERAL"]
+    "linkTypes": ["projection", "collateral"]
   }
 ]
 ```
@@ -284,7 +284,7 @@ Create or update a link associated with a specific document. If a link existed t
 ```json
 {
   "targetDocumentId": 2,
-  "linkTypes": ["DIRECT", "UPDATE"]
+  "linkTypes": ["direct", "update"]
 }
 ```
 
@@ -355,7 +355,7 @@ Authenticate a user and create a session.
   "email": "urban.planner@gmail.com",
   "name": "Luigi",
   "surname": "Bianchi",
-  "role": "RESIDENT"
+  "role": "urban_planner"
 }
 ```
 
@@ -382,7 +382,7 @@ Retrieve information about the currently authenticated user.
   "email": "urban.planner@gmail.com",
   "name": "Luigi",
   "surname": "Bianchi",
-  "role": "RESIDENT"
+  "role": "urban_planner"
 }
 ```
 
@@ -409,6 +409,7 @@ Log out the currently authenticated user.
 
 This API uses the following error codes:
 
+- `401 Unauthorized`: Not authenticated.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
 <br/>
@@ -431,9 +432,9 @@ Register a new user.
 {
   "email": "urban.planner@gmail.com",
   "password": "ResidentResident.91",
-  "name": "Luigi",
-  "surname": "Bianchi",
-  "role": "RESIDENT"
+  "name": "Mario",
+  "surname": "Mario",
+  "role": "resident"
 }
 ```
 

@@ -18,21 +18,18 @@ type DocumentDbRow = {
 };
 
 export enum Stakeholder {
-  LKAB = "LKAB",
-  Municipality = "MUNICIPALITY",
-  RegionalAuthority = "REGIONAL AUTHORITY",
-  ArchitectureFirms = "ARCHITECTURE FIRMS",
-  Citizens = "CITIZENS",
-  Others = "OTHERS",
+  KirunaKommun = "kiruna_kommun",
+  Lkab = "lkab",
+  Residents = "residents",
+  WhiteArkitekter = "white_arkitekter",
 }
 
 export enum DocumentType {
-  Informative = "INFORMATIVE",
-  Prescriptive = "PRESCRIPTIVE",
-  Design = "DESIGN",
-  Technical = "TECHNICAL",
-  Material = "MATERIAL",
-  Others = "OTHERS",
+  Design = "design",
+  Informative = "informative",
+  MaterialEffect = "material_effect",
+  Prescriptive = "prescriptive",
+  Technical = "technical",
 }
 
 export class Document {
