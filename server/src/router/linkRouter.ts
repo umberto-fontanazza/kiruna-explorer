@@ -8,12 +8,12 @@ import {
 } from "../middleware/validation";
 import { targetIdQueryParam, PutBody, putBody } from "../validation/linkSchema";
 import { idRequestParam } from "../validation/documentSchema";
+import { isLoggedIn, isPlanner } from "../middleware/auth";
 
 export const linkRouter: Router = Router({ mergeParams: true }); // merge params allows using doc id
 
 linkRouter.get(
   "/",
-  //TODO: authentication authorization
   validateRequestParameters(idRequestParam),
   async (request: Request, response: Response) => {
     //TODO: implement search filters, query params
@@ -25,7 +25,8 @@ linkRouter.get(
 
 linkRouter.put(
   "/",
-  //TODO: authentication authorization
+  isLoggedIn,
+  isPlanner,
   validateRequestParameters(idRequestParam),
   validateBody(putBody),
   async (request: Request, response: Response) => {
@@ -41,7 +42,8 @@ linkRouter.put(
 
 linkRouter.delete(
   "/",
-  //TODO: authentication authorization
+  isLoggedIn,
+  isPlanner,
   validateRequestParameters(idRequestParam),
   validateQueryParameters(targetIdQueryParam),
   async (request: Request, response: Response) => {
