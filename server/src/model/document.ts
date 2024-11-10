@@ -10,7 +10,6 @@ type DocumentDbRow = {
   coordinates: Coordinates;
   scale: Scale;
   type: DocumentType;
-  language: string;
 };
 
 export enum Stakeholder {
@@ -41,7 +40,6 @@ export class Document {
   coordinates: Coordinates;
   scale: Scale;
   type: DocumentType;
-  language: string;
 
   constructor(
     id: number,
@@ -50,7 +48,6 @@ export class Document {
     coordinates: Coordinates,
     scale: Scale,
     type: DocumentType,
-    language: string,
   ) {
     this.id = id;
     this.title = title;
@@ -58,29 +55,18 @@ export class Document {
     this.coordinates = coordinates;
     this.scale = scale;
     this.type = type;
-    this.language = language;
   }
 
   private static fromDatabaseRow(dbRow: DocumentDbRow): Document {
-    const { id, title, description, coordinates, scale, type, language } =
-      dbRow;
+    const { id, title, description, coordinates, scale, type } = dbRow;
     assert(typeof id === "number");
     assert(typeof title === "string");
     assert(typeof description === "string");
     assert(typeof scale === "string");
     assert(typeof type === "string");
-    assert(typeof language === "string");
     // TODO: array asserts are missing
 
-    return new Document(
-      id,
-      title,
-      description,
-      coordinates,
-      scale,
-      type,
-      language,
-    );
+    return new Document(id, title, description, coordinates, scale, type);
   }
 
   async update(): Promise<void> {
@@ -103,10 +89,9 @@ export class Document {
     coordinates: Coordinates,
     scale: Scale,
     type: DocumentType,
-    language: string,
   ): Promise<Document> {
     const result = await Database.query(
-      "INSERT INTO document(title, description, coordinates, scale, type, language) VALUES($1, $2, ST_Point($3, $4)::geography, $5, $6, $7) RETURNING id;",
+      "INSERT INTO document(title, description, coordinates, scale, type) VALUES($1, $2, ST_Point($3, $4)::geography, $5, $6) RETURNING id;",
       [
         title,
         description,
@@ -114,7 +99,6 @@ export class Document {
         coordinates.latitude,
         scale,
         type,
-        language,
       ],
     );
     const documentId: number = result.rows[0].id;
@@ -125,7 +109,6 @@ export class Document {
       coordinates,
       scale,
       type,
-      language,
     );
   }
 

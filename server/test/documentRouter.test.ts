@@ -69,7 +69,6 @@ describe("Testing with coordinates", () => {
     description: "This one will be tested with coordinates",
     scale: Scale.BlueprintsEffects,
     type: DocumentType.Informative,
-    language: "English",
   };
   const wrongCoordinates = {
     latitude: 120,
