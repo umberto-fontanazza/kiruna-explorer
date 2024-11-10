@@ -310,7 +310,7 @@ const ModalForm: FC<ModalAddProps> = ({
                     <option value={DocumentType.Technical}>
                       Technical Document
                     </option>
-                    <option value={DocumentType.Material}>
+                    <option value={DocumentType.MaterialEffect}>
                       Material effect
                     </option>
                     {/* <option value="Others">Others</option> */}

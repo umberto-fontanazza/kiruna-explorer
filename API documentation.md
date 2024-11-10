@@ -47,7 +47,7 @@ TODO: filters
         "id": 1,
         "title": "Kiruna plan",
         "description": "Document of Kiruna plan",
-        "type": "INFORMATIVE",
+        "type": "informative",
         "scale": {
           "type": "RATEO",
           "rateo": 8000
@@ -92,7 +92,7 @@ Retrieve a specific document by its unique identifier.
     "id": 1,
     "title": "Kiruna plan",
     "description": "Document of Kiruna plan",
-    "type": "INFORMATIVE",
+    "type": "informative",
     "scale": {
       "type": "RATEO",
       "rateo": 8000
@@ -151,7 +151,7 @@ Create a new document.
 {
   "title": "Kiruna plan",
   "description": "Document of Kiruna plan",
-  "type": "INFORMATIVE",
+  "type": "informative",
   "scale": {
     "type": "RATEO",
     "rateo": 8000
@@ -198,7 +198,7 @@ All parameters of [`POST /documents`](#post-documents) are accepted but they are
 ```json
 {
   "description": "A new and improved description",
-  "type": "DESIGN"
+  "type": "design"
 }
 ```
 

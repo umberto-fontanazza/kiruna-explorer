@@ -45,12 +45,11 @@ export enum LinkType {
 }
 
 export enum DocumentType {
-  Informative = "INFORMATIVE",
-  Prescriptive = "PRESCRIPTIVE",
-  Design = "DESIGN",
-  Technical = "TECHNICAL",
-  Material = "MATERIAL",
-  Others = "OTHERS",
+  Design = "design",
+  Informative = "informative",
+  MaterialEffect = "material_effect",
+  Prescriptive = "prescriptive",
+  Technical = "technical",
 }
 
 export enum Stakeholder {
