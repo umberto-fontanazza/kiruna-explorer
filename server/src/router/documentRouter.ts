@@ -14,6 +14,8 @@ import {
   postBody,
   PostBody,
 } from "../validation/documentSchema";
+import { Scale } from "../model/scale";
+import dayjs from "dayjs";
 
 export const documentRouter: Router = Router();
 
@@ -53,15 +55,26 @@ documentRouter.post(
   //TODO: authentication authorization
   validateBody(postBody),
   async (request: Request, response: Response) => {
-    const body: PostBody = request.body;
-    const { title, description, coordinates, scale, type, language } = body;
+    const {
+      title,
+      description,
+      type,
+      scale,
+      stakeholders,
+      coordinates,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      issuanceDate,
+    } = request.body as PostBody;
+    const parsedScale = new Scale(scale.type, scale.ratio);
+    const parsedIssuanceDate = dayjs(); //TODO: put the actual date
     const insertedDocument = await Document.insert(
       title,
       description,
-      coordinates,
-      scale,
       type,
-      language,
+      parsedScale,
+      stakeholders,
+      coordinates,
+      parsedIssuanceDate,
     );
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
     return;
@@ -75,7 +88,16 @@ documentRouter.patch(
   validateBody(patchBody),
   async (request: Request, response: Response) => {
     const id = Number(request.params.id);
-    const { title, description, coordinates, type } = request.body as PatchBody;
+    const {
+      title,
+      description,
+      type,
+      scale,
+      stakeholders,
+      coordinates,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      issuanceDate,
+    } = request.body as PatchBody;
     let document: Document;
     try {
       document = await Document.get(id);
@@ -84,10 +106,17 @@ documentRouter.patch(
       response.status(StatusCodes.NOT_FOUND).send();
       return;
     }
+    let parsedScale: Scale;
+    if (scale) {
+      parsedScale = new Scale(scale.type, scale.ratio);
+    }
     document.title = title || document.title;
     document.description = description || document.description;
-    document.coordinates = coordinates || document.coordinates;
     document.type = type || document.type;
+    document.scale = (parsedScale! as Scale) || document.scale;
+    document.stakeholders = stakeholders || document.stakeholders;
+    document.coordinates = coordinates || document.coordinates;
+    document.issuanceDate = dayjs() || document.issuanceDate; // TODO: use actual
     await document.update();
     response.status(StatusCodes.NO_CONTENT).send();
     return;
