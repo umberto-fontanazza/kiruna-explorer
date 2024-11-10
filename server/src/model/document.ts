@@ -74,14 +74,15 @@ export class Document {
       coordinates,
       issuanceDate,
     } = dbRow;
+    assert(typeof title === "string");
+    assert(typeof description === "string");
+    assert(typeof type === "string");
+    assert(typeof scale_type === "string");
+
     const scale: Scale = Scale.fromDatabaseRow({
       scale_type,
       scale_ratio,
     } as ScaleRow);
-    assert(typeof title === "string");
-    assert(typeof description === "string");
-    assert(typeof scale === "string");
-    assert(typeof type === "string");
 
     return new Document(
       id,
@@ -89,9 +90,9 @@ export class Document {
       description,
       type,
       scale,
-      stakeholders,
-      coordinates.latitude && coordinates.longitude ? coordinates : undefined,
-      issuanceDate,
+      stakeholders || undefined,
+      coordinates || undefined,
+      issuanceDate || undefined,
     );
   }
 
@@ -135,8 +136,8 @@ export class Document {
         scaleRow.scale_type,
         scaleRow.scale_ratio || null,
         stakeholders || null,
-        coordinates || null,
-        coordinates || null,
+        coordinates?.longitude || null,
+        coordinates?.latitude || null,
         issuance_date || null,
       ],
     );
@@ -175,8 +176,10 @@ export class Document {
       FROM document WHERE id = $1`,
       [id],
     );
+    if (result.rowCount != 1) {
+      throw new DocumentNotFound();
+    }
     const documentRow = result.rows[0];
-
     return Document.fromDatabaseRow(documentRow);
   }
 }

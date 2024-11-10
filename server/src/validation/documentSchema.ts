@@ -27,9 +27,9 @@ export const postBody = z
     description: z.string().min(1),
     type: z.nativeEnum(DocumentType),
     scale,
-    stakeholders: z.array(z.nativeEnum(Stakeholder)),
-    coordinates: coordinates,
-    issuanceDate: z.coerce.date(), //TODO:
+    stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
+    coordinates: coordinates.optional(),
+    issuanceDate: z.coerce.date().optional(), //TODO:
   })
   .strict();
 
