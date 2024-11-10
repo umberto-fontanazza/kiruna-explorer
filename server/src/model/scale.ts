@@ -4,7 +4,7 @@ export type ScaleRow = {
 };
 
 export enum ScaleType {
-  BlueprintsOrEffect = "blueprints/effect",
+  BlueprintsOrEffect = "blueprints/effects",
   Text = "text",
   Ratio = "ratio",
 }
