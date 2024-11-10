@@ -409,6 +409,7 @@ Log out the currently authenticated user.
 
 This API uses the following error codes:
 
+- `401 Unauthorized`: Not authenticated.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
 <br/>
