@@ -3,7 +3,7 @@ import { Database } from "../database";
 import { DocumentNotFound } from "../error/documentError";
 import { Coordinates } from "../validation/documentSchema";
 import { Scale, ScaleType, ScaleRow } from "./scale";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 
 type DocumentDbRow = {
   id: number;
