@@ -8,10 +8,10 @@ export interface User {
 }
 
 export enum UserRole {
-  Developer = "DEVELOPER",
-  Planner = "PLANNER",
-  Resident = "RESIDENT",
-  Visitor = "VISITOR",
+  Developer = "developer",
+  Planner = "planner",
+  Resident = "resident",
+  Visitor = "visitor",
 }
 
 export interface LoginErrors {

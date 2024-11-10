@@ -10,9 +10,9 @@ export type UserDbRow = {
 };
 
 export enum UserRole {
-  Developer = "DEVELOPER",
-  Planner = "PLANNER",
-  Resident = "RESIDENT",
+  Developer = "developer",
+  UrbanPlanner = "urban_planner",
+  Resident = "resident",
 }
 
 export class User {

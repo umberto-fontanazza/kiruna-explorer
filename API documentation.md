@@ -355,7 +355,7 @@ Authenticate a user and create a session.
   "email": "urban.planner@gmail.com",
   "name": "Luigi",
   "surname": "Bianchi",
-  "role": "RESIDENT"
+  "role": "urban_planner"
 }
 ```
 
@@ -382,7 +382,7 @@ Retrieve information about the currently authenticated user.
   "email": "urban.planner@gmail.com",
   "name": "Luigi",
   "surname": "Bianchi",
-  "role": "RESIDENT"
+  "role": "urban_planner"
 }
 ```
 
@@ -431,9 +431,9 @@ Register a new user.
 {
   "email": "urban.planner@gmail.com",
   "password": "ResidentResident.91",
-  "name": "Luigi",
-  "surname": "Bianchi",
-  "role": "RESIDENT"
+  "name": "Mario",
+  "surname": "Mario",
+  "role": "resident"
 }
 ```
 
