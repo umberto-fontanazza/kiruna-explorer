@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import { Document, Link } from "../utils/interfaces";
 import ModalAddConnection from "../components/ModalAddConnection";
+import "../styles/Sidebar.scss";
 
 interface SidebarProps {
   document: Document | null;
@@ -68,14 +69,14 @@ const Sidebar: FC<SidebarProps> = (props) => {
           className="btn-close-sidebar"
           onClick={() => props.setSidebarOpen(false)}
         >
-          <img className="btn-close-img" src="/x.svg" alt="Close" />
+          <img className="btn-close-img" src="x.svg" alt="Close" />
         </button>
       </div>
 
       {/* Sidebar Content */}
       <div className="content">
         <img
-          src={`/document-icon-${props.document?.type}-iconByIcons8.png`}
+          src={`/document-${props.document?.type}-icon.png`}
           alt="Under Construction"
         />
         <hr />
