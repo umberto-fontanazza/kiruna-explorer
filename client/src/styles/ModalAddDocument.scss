@@ -1,4 +1,4 @@
-@use "variables";
+@use "Color";
 
 .modal-overlay {
   position: fixed;
@@ -23,15 +23,15 @@
     h2 {
       font-size: 1.8rem;
       font-weight: bold;
-      color: variables.$first-color;
+      color: Color.$first-color;
       margin-bottom: 2vh;
       text-align: center;
     }
 
     .close-button {
-      background-color: variables.$first-color;
+      background-color: Color.$first-color;
       color: white;
-      border: 0.1rem solid variables.$first-color;
+      border: 0.1rem solid Color.$first-color;
       position: absolute;
       top: 2%;
       right: 2%;
@@ -42,8 +42,8 @@
       transition: background-color 0.3s;
 
       &:hover {
-        background: variables.$third-color;
-        color: variables.$first-color;
+        background: Color.$third-color;
+        color: Color.$first-color;
       }
 
       .btn-close-img {
@@ -64,7 +64,7 @@
         label {
           font-size: 1rem;
           font-weight: bold;
-          color: variables.$first-color;
+          color: Color.$first-color;
         }
 
         input,
@@ -73,10 +73,10 @@
           border: 1px solid #ddd;
           border-radius: 8px;
           font-size: 1rem;
-          color: variables.$first-color;
+          color: Color.$first-color;
 
           &:focus {
-            border-color: variables.$second-color;
+            border-color: Color.$second-color;
             outline: none;
           }
         }
@@ -90,7 +90,7 @@
           background-color: #fff;
 
           &:focus {
-            border-color: variables.$second-color;
+            border-color: Color.$second-color;
             outline: none;
           }
         }
@@ -110,7 +110,7 @@
               margin-right: 1rem;
               width: 1rem;
               height: 1rem;
-              accent-color: variables.$first-color;
+              accent-color: Color.$first-color;
             }
           }
         }
@@ -145,13 +145,13 @@
         }
 
         .submit-button {
-          background-color: variables.$first-color;
+          background-color: Color.$first-color;
           color: white;
-          border: 0.1rem solid variables.$first-color;
+          border: 0.1rem solid Color.$first-color;
 
           &:hover {
-            background: variables.$third-color;
-            color: variables.$first-color;
+            background: Color.$third-color;
+            color: Color.$first-color;
           }
         }
       }

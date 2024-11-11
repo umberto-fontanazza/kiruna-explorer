@@ -1,4 +1,4 @@
-@use "variables";
+@use "Color";
 
 .body-container {
   display: flex;
@@ -15,7 +15,7 @@
     td {
       padding: 1vh 1vw;
       text-align: left;
-      border-bottom: 1px solid #ddd;
+      border-bottom: 1px solid Color.$third-color;
     }
 
     .doc-title {
@@ -30,18 +30,16 @@
 
     .icon-info {
       cursor: pointer;
-      background-color: variables.$first-color;
-      border: 0.1rem solid variables.$first-color;
+      background-color: Color.$first-color;
+      border: 0.1rem solid Color.$first-color;
       border-radius: 0.5rem;
       padding: 0.5vh 0.5vw;
-      color: #fff;
-      transition:
-        background-color 0.3s ease,
-        color 0.3s ease;
+      color: Color.$third-color;
+      transition: 300ms ease;
 
       &:hover {
-        background: variables.$third-color;
-        color: variables.$first-color;
+        background: Color.$third-color;
+        color: Color.$first-color;
       }
     }
   }
@@ -66,13 +64,13 @@
       }
 
       border-radius: 1rem;
-      border: 2px solid variables.$first-color;
-      background-color: variables.$third-color;
-      color: variables.$first-color;
+      border: 2px solid Color.$first-color;
+      background-color: Color.$third-color;
+      color: Color.$first-color;
       transition: 300ms ease;
 
       &:hover {
-        color: variables.$first-color;
+        color: Color.$first-color;
         background-color: #bfbfac;
       }
     }
