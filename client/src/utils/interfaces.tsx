@@ -1,5 +1,7 @@
 // File in which we define the common interfaces in shared files
 
+import dayjs, { Dayjs } from "dayjs";
+
 export interface User {
   email: string;
   name: string;
@@ -29,7 +31,7 @@ export interface Document {
   description: string | undefined;
   stakeholders: Stakeholder[];
   scale: string;
-  issuanceDate: Date | null;
+  issuanceDate: Dayjs | null;
   type: DocumentType | undefined;
   connections: Link[];
   language: string | undefined;

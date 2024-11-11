@@ -21,7 +21,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
   // State for selected document
   const [docSelected, setDocSelected] = useState<Document | null>(null);
   // State to control modal for adding documents
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(true);
 
   // Fetch documents on component mount
   useEffect(() => {
@@ -29,6 +29,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
       try {
         const documents: Document[] = await API.getDocuments();
         setDocuments(documents);
+        console.log(documents);
       } catch (err) {
         console.error(err);
       }

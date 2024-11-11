@@ -8,6 +8,7 @@ import {
 } from "../utils/interfaces";
 import "../styles/ModalAddDocument.scss";
 import ISO6391 from "iso-639-1";
+import dayjs from "dayjs";
 
 //TODO: Fix color of the form
 
@@ -60,7 +61,7 @@ const ModalForm: FC<ModalAddProps> = ({
 
   ////// COMPONENT STATE /////
 
-  const [page, setPage] = useState<number>(1);
+  const [page, setPage] = useState<number>(2);
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
   const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
   const [newTypeConnection, setNewTypeConnection] = useState<
@@ -159,7 +160,7 @@ const ModalForm: FC<ModalAddProps> = ({
                   onClose();
                 }}
               >
-                X
+                <img src="/x.svg" alt="Close" />
               </button>
               <form onSubmit={handleFormSubmit}>
                 {/* Title Input */}
@@ -258,7 +259,7 @@ const ModalForm: FC<ModalAddProps> = ({
                       onChange={(e) =>
                         setNewDoc((prev) => ({
                           ...prev,
-                          issuanceDate: new Date(e.target.value),
+                          issuanceDate: dayjs(e.target.value),
                         }))
                       }
                     />
@@ -314,7 +315,7 @@ const ModalForm: FC<ModalAddProps> = ({
                       <option value={DocumentType.Technical}>
                         Technical Document
                       </option>
-                      <option value={DocumentType.Material}>
+                      <option value={DocumentType.MaterialEffect}>
                         Material effect
                       </option>
                       {/* <option value="Others">Others</option> */}
@@ -507,31 +508,35 @@ const ModalForm: FC<ModalAddProps> = ({
     return (
       <>
         {
-          <div className="modal-overlay">
-            <div className="modal-content">
+          <div className="modal-overlay-2">
+            <div className="modal-content-2">
               <h2>New Document Registration</h2>
               <button
-                className="close-button"
+                className="close-button-2"
                 onClick={() => {
                   setNewDoc(initialDocumentState);
                   onClose();
                 }}
               >
-                X
+                <img src="/x.svg" alt="Close" />
               </button>
 
               {/* Body */}
+              <form>
+                <SearchBar suggestions={documents} />
 
-              <SearchBar suggestions={documents} />
-
-              <div className="button-group">
-                <button className="submit-button" onClick={() => setPage(1)}>
-                  Back
-                </button>
-                <button className="submit-button" type="submit">
-                  Add Document
-                </button>
-              </div>
+                <div className="button-group-2">
+                  <button
+                    className="cancel-button-2"
+                    onClick={() => setPage(1)}
+                  >
+                    Back
+                  </button>
+                  <button className="submit-button-2" type="submit">
+                    Add Document
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         }
@@ -570,12 +575,12 @@ function SearchBar(props: { suggestions: Document[] }) {
   return (
     <div
       className="search-container"
-      style={{ position: "relative", width: "300px" }}
+      style={{ position: "relative", width: "50%" }}
     >
       <input
         type="text"
         className="search-input"
-        placeholder="Cerca..."
+        placeholder="Search for a document"
         value={query}
         onChange={handleChange}
         onFocus={() => setShowSuggestions(true)}
@@ -584,8 +589,8 @@ function SearchBar(props: { suggestions: Document[] }) {
           width: "100%",
           padding: "10px",
           fontSize: "16px",
-          boxSizing: "border-box",
-          border: "1px solid #ddd",
+          //boxSizing: "border-box",
+          //border: "1px solid #ddd",
         }}
       />
 
@@ -598,14 +603,14 @@ function SearchBar(props: { suggestions: Document[] }) {
             top: "100%",
             left: "0",
             right: "0",
-            //border: "1px solid #ddd",
-            //backgroundColor: "#fff",
+            border: "1px solid #ddd",
+            backgroundColor: "green",
             zIndex: "1000",
             maxHeight: "150px",
             overflowY: "auto",
           }}
         >
-          {filteredSuggestions.map((suggestion, index) => (
+          {filteredSuggestions.slice(0, 5).map((suggestion, index) => (
             <div
               key={index}
               onClick={() => selectSuggestion(suggestion.title)}
