@@ -13,7 +13,7 @@ body {
   height: 8vh;
   padding: 1rem 2rem;
   display: flex;
-  background: Color.$main-color;
+  background: Color.$main;
 
   .nav-container {
     display: flex;
@@ -47,26 +47,26 @@ body {
       .username {
         display: flex;
         align-items: center;
-        background-color: Color.$first-color;
-        border: 0.1rem solid Color.$first-color;
+        background-color: Color.$first;
+        border: 0.1rem solid Color.$first;
         border-radius: 1rem;
         padding: 0 2ch;
       }
 
       button {
         padding: 0.5rem 1rem;
-        background-color: Color.$first-color;
+        background-color: Color.$first;
         color: #ddd;
         font-size: 1rem;
-        border: 2px solid Color.$first-color;
+        border: 2px solid Color.$first;
         border-radius: 1rem;
         cursor: pointer;
         transition: 0.3s ease;
 
         &:hover {
-          background: Color.$third-color;
-          color: Color.$first-color;
-          border-color: Color.$first-color;
+          background: Color.$third;
+          color: Color.$first;
+          border-color: Color.$first;
           transform: scale(1.05);
         }
       }

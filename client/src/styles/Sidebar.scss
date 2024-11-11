@@ -47,7 +47,7 @@
       }
 
       &:hover {
-        background-color: Color.$third-color;
+        background-color: Color.$third;
       }
     }
   }
@@ -69,7 +69,7 @@
     h2,
     h3,
     h4 {
-      color: Color.$first-color;
+      color: Color.$first;
     }
 
     p {
@@ -101,7 +101,7 @@
         justify-content: center;
         align-items: center;
         color: #ddd;
-        background-color: Color.$first-color;
+        background-color: Color.$first;
         border-radius: 50%;
         width: 2vw;
         height: 2vw;
@@ -109,7 +109,7 @@
         transition: background-color 0.3s ease;
 
         &:hover {
-          background-color: Color.$second-color;
+          background-color: Color.$second;
         }
       }
     }
