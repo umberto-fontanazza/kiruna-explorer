@@ -2,33 +2,23 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { User, UserRole } from "../model/user";
 
-export function isLoggedIn(
-  request: Request,
-  response: Response,
-  next: NextFunction,
-) {
-  if (request.isAuthenticated()) {
-    next();
-    return;
-  }
-  response
-    .status(StatusCodes.UNAUTHORIZED)
-    .json({ error: "Not authenticated" });
-}
+const isLoggedBuilder =
+  (inOrOut: "in" | "out" = "in") =>
+  (request: Request, response: Response, next: NextFunction) => {
+    const checkPass =
+      (request.isAuthenticated() && inOrOut === "in") ||
+      (!request.isAuthenticated && inOrOut === "out");
+    if (checkPass) {
+      next();
+      return;
+    }
+    response.status(StatusCodes.UNAUTHORIZED).json({
+      error: `User is ${inOrOut === "in" ? "not" : "already"} logged in.`,
+    });
+  };
 
-export function isLoggedOut(
-  request: Request,
-  response: Response,
-  next: NextFunction,
-) {
-  if (!request.isAuthenticated()) {
-    next();
-    return;
-  }
-  response
-    .status(StatusCodes.UNAUTHORIZED)
-    .json({ error: "Already logged in" });
-}
+export const isLoggedIn = isLoggedBuilder();
+export const isLoggedOut = isLoggedBuilder("out");
 
 const roleCheckBuilder =
   (role: UserRole) =>
