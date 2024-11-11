@@ -44,33 +44,19 @@ export function isNotLoggedIn(
     .json({ error: "Already logged in" });
 }
 
-// Autorization middlewares
-export function isDeveloper(req: Request, res: Response, next: NextFunction) {
-  const user = req.user as User;
-  if (user && user.role === UserRole.Developer) {
-    next();
-    return;
-  }
+const roleCheckBuilder =
+  (role: UserRole) =>
+  (request: Request, response: Response, next: NextFunction) => {
+    const user = request.user as User;
+    if (user && user.role === role) {
+      next();
+      return;
+    }
+    response
+      .status(StatusCodes.FORBIDDEN)
+      .json({ error: `User is not a ${role}` });
+  };
 
-  res.status(StatusCodes.FORBIDDEN).json({ error: "User is not a Developer" });
-}
-
-export function isPlanner(req: Request, res: Response, next: NextFunction) {
-  const user = req.user as User;
-  if (user && user.role === UserRole.UrbanPlanner) {
-    next();
-    return;
-  }
-
-  res.status(StatusCodes.FORBIDDEN).json({ error: "User is not a Planner" });
-}
-
-export function isResident(req: Request, res: Response, next: NextFunction) {
-  const user = req.user as User;
-  if (user && user.role === UserRole.Resident) {
-    next();
-    return;
-  }
-
-  res.status(StatusCodes.FORBIDDEN).json({ error: "User is not a Resident" });
-}
+export const isDeveloper = roleCheckBuilder(UserRole.Developer);
+export const isResident = roleCheckBuilder(UserRole.Resident);
+export const isPlanner = roleCheckBuilder(UserRole.UrbanPlanner);
