@@ -51,35 +51,29 @@
     height: 92vh;
     position: relative;
 
-    .button-overlay {
+    button.add-document {
       position: absolute;
-      z-index: 1000;
-      bottom: 1vh;
+      bottom: 3vh;
       left: 5vw;
 
+      display: flex;
+      align-items: center;
+      padding: 0.5rem 1ch;
+      column-gap: 1ch;
+
       .doc-img {
-        transform: scale(0.7);
-        display: flex;
+        width: 2.5em;
       }
 
-      .add-document {
-        display: flex;
-        margin-top: 1vh;
-        margin-left: 0.5vw;
-        border-radius: 1rem;
-        background-color: variables.$third-color;
-        padding: 0.5vh 0.5vw;
-        color: variables.$first-color;
-        border: 0.1rem solid variables.$first-color;
-        cursor: pointer;
-        transition:
-          background-color 0.3s ease,
-          color 0.3s ease;
+      border-radius: 1rem;
+      border: 2px solid variables.$first-color;
+      background-color: variables.$third-color;
+      color: variables.$first-color;
+      transition: 300ms ease;
 
-        &:hover {
-          background-color: #bfbfac;
-          color: variables.$first-color;
-        }
+      &:hover {
+        color: variables.$first-color;
+        background-color: #bfbfac;
       }
     }
   }
