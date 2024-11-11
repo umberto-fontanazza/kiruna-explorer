@@ -76,7 +76,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
       {/* Sidebar Content */}
       <div className="content">
         <img
-          src={`/document-icon-${props.document?.type}-iconByIcons8.png`}
+          src={`/document-${props.document?.type}-icon.png`}
           alt="Under Construction"
         />
         <hr />

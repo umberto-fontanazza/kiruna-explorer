@@ -76,7 +76,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
           }
           {props.loggedIn && (
             <button className="add-document" onClick={handleAddButton}>
-              <img className="doc-img" src="/icons8-documento-50.png"></img>
+              <img className="doc-img" src="/add-document-icon.png"></img>
               Add new Document
             </button>
           )}
@@ -97,7 +97,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
           //         <td>
           //           <img
           //             className="doc-icon"
-          //             src={`/document-icon-${document.type}-iconByIcons8.png`}
+          //             src={`/document-${document.type}-icon.png`}
           //             alt="Document icon"
           //           />
           //         </td>

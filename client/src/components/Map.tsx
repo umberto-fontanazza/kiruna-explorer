@@ -94,7 +94,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                   }}
                 >
                   <img
-                    src={`/document-icon-${doc.type}-iconByIcons8.png`}
+                    src={`/document-${doc.type}-icon.png`}
                     alt="Custom Marker"
                     style={{ width: "4vh", height: "4vh" }}
                   />

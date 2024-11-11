@@ -4,7 +4,8 @@ import app from "../src/app";
 import request from "supertest";
 import { StatusCodes } from "http-status-codes";
 import { Database } from "../src/database";
-import { DocumentType, Scale } from "../src/model/document";
+import { DocumentType } from "../src/model/document";
+import { ScaleType } from "../src/model/scale";
 import { loginAsPlanner } from "./utils";
 
 let plannerCookie: string;
@@ -67,8 +68,8 @@ describe("Testing with coordinates", () => {
   const testDoc = {
     title: "Coordinates test",
     description: "This one will be tested with coordinates",
-    scale: Scale.BlueprintsEffects,
     type: DocumentType.Informative,
+    scale: { type: ScaleType.BlueprintsOrEffect },
   };
   const wrongCoordinates = {
     latitude: 120,

@@ -53,10 +53,7 @@ const LoginForm: FC<LoginFormProps> = (props): JSX.Element => {
             <br />
             Enjoy your adventure!
           </p>
-          <img
-            src="/kiruna-bg-1920-Photoroom.png"
-            alt="Tourist destination"
-          ></img>
+          <img src="/kiruna-background.png" alt="Tourist destination"></img>
         </div>
 
         <div className="right-panel">
