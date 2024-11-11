@@ -7,11 +7,13 @@ const isLoggedBuilder =
   (request: Request, response: Response, next: NextFunction) => {
     const checkPass =
       (request.isAuthenticated() && inOrOut === "in") ||
-      (!request.isAuthenticated && inOrOut === "out");
+      (!request.isAuthenticated() && inOrOut === "out");
     if (checkPass) {
+      console.log("Check passed");
       next();
       return;
     }
+    console.log("Check failed");
     response.status(StatusCodes.UNAUTHORIZED).json({
       error: `User is ${inOrOut === "in" ? "not" : "already"} logged in.`,
     });
