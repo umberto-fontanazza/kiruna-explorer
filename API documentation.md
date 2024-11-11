@@ -57,7 +57,7 @@ TODO: filters
           "latitude": 67.85624725739333,
           "longitude": 20.23857657264496
         },
-        "issuanceDate": "2024-11-08T19:55:00+01:00",
+        "issuanceDate": "2024-11-08",
         "links": [
             {
                 "targetDocumentId": 2,
@@ -102,7 +102,7 @@ Retrieve a specific document by its unique identifier.
       "latitude": 67.85624725739333,
       "longitude": 20.23857657264496
     },
-    "issuanceDate": "2024-11-08T19:55:00+01:00",
+    "issuanceDate": "2024-11-08",
     "links": [
         {
             "targetDocumentId": 2,
@@ -143,7 +143,7 @@ Create a new document.
 | `coordinates`           | Object containing geographical data                                                | `object`            | No                             |
 | `coordinates.latitude`  | Value in the range [-90, +90] degrees                                              | `number`            | Yes if `longitude` is provided |
 | `coordinates.longitude` | Value in the range [-180, +180] degrees                                            | `number`            | Yes if `latitude` is provided  |
-| `issuanceDate`          | Issuance date of the document                                                      | `string`            | No                             |
+| `issuanceDate`          | UTC date (format: `YYYY-MM-DD`)                                                    | `string`            | No                             |
 
 ### Request body
 
@@ -161,7 +161,7 @@ Create a new document.
     "latitude": 67.85624725739333,
     "longitude": 20.23857657264496
   },
-  "issuanceDate": "2024-11-08T19:55:00+01:00"
+  "issuanceDate": "2024-11-08"
 }
 ```
 
