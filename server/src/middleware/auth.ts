@@ -16,7 +16,7 @@ export function isLoggedIn(
     .json({ error: "Not authenticated" });
 }
 
-export function isNotLoggedIn(
+export function isLoggedOut(
   request: Request,
   response: Response,
   next: NextFunction,
