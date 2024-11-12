@@ -13,18 +13,19 @@
   z-index: 1000;
 
   .modal-content {
-    background: #f3f3eb;
     border-radius: 16px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
-    max-width: 60% !important;
-    max-height: 100vh !important;
+    width: 50vw;
+    max-width: 80vw !important;
+    max-height: 100vh;
     overflow-y: auto;
+    background: #e8e3d1 !important;
 
     h2 {
-      font-size: 1.8rem;
-      font-weight: bold;
+      font-family: "SwedenSansBold";
+      font-size: 3rem !important;
       color: variables.$first-color;
-      margin-bottom: 2vh;
+      margin-bottom: 2rem;
       text-align: center;
     }
 
@@ -33,21 +34,23 @@
       color: white;
       border: 0.1rem solid variables.$first-color;
       position: absolute;
-      top: 2%;
-      right: 2%;
+      top: 8%;
+      left: 72%;
       border-radius: 50%;
       width: 2vw;
       height: 2vw;
       cursor: pointer;
       transition: background-color 0.3s;
+      justify-content: center;
+      align-items: center;
+      display: flex;
 
       &:hover {
-        background: variables.$third-color;
-        color: variables.$first-color;
+        background: variables.$first-color-hover;
       }
 
-      .btn-close-img {
-        height: 1.5vh;
+      img {
+        transform: scale(0.2);
       }
     }
 
@@ -60,15 +63,18 @@
         display: flex;
         flex-direction: column;
         width: 100%;
+        margin-bottom: 1rem;
 
         label {
-          font-size: 1rem;
+          font-family: "SwedenSansBold", sans-serif;
+          font-size: 1.3rem !important;
           font-weight: bold;
           color: variables.$first-color;
         }
 
         input,
         textarea {
+          font-family: "SwedenSans", sans-serif;
           padding: 1vh;
           border: 1px solid #ddd;
           border-radius: 8px;
@@ -76,12 +82,14 @@
           color: variables.$first-color;
 
           &:focus {
-            border-color: variables.$second-color;
+            border-color: variables.$first-color;
             outline: none;
           }
         }
 
         select {
+          font-family: "SwedenSans", sans-serif;
+          color: variables.$first-color !important;
           padding: 1vh;
           border: 1px solid #ddd;
           border-radius: 8px;
@@ -90,7 +98,7 @@
           background-color: #fff;
 
           &:focus {
-            border-color: variables.$second-color;
+            border-color: variables.$first-color !important;
             outline: none;
           }
         }
@@ -100,11 +108,13 @@
           flex-wrap: wrap;
 
           .checkbox-label {
+            font-family: "SwedenSans", sans-serif;
             display: flex;
             align-items: center;
             margin-bottom: 8px;
             cursor: pointer;
             width: calc(33.33% - 1rem);
+            font-size: 1.4rem !important;
 
             input[type="checkbox"] {
               margin-right: 1rem;
@@ -150,8 +160,8 @@
           border: 0.1rem solid variables.$first-color;
 
           &:hover {
-            background: variables.$third-color;
-            color: variables.$first-color;
+            background: variables.$first-color-hover;
+            color: white;
           }
         }
       }
@@ -306,4 +316,62 @@
       }
     }
   }
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  color: variables.$first-color;
+  font-family: "SwedenSans", sans-serif;
+}
+
+.step .circle {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #ddd;
+  color: #555;
+  font-weight: bold;
+}
+
+.step.active .circle {
+  background-color: variables.$first-color;
+  color: white;
+}
+
+.step.completed .circle {
+  background-color: variables.$first-color;
+  color: white;
+}
+
+.step .label {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.step .line {
+  position: absolute;
+  top: 15px;
+  left: 35px;
+  right: -35px;
+  height: 2px;
+  background-color: #ddd;
+  z-index: -1;
+}
+
+.step.active + .line,
+.step.completed + .line {
+  background-color: variables.$first-color;
 }

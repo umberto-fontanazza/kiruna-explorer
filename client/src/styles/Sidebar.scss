@@ -4,7 +4,7 @@
   right: -30%;
   width: 30%;
   height: 100vh;
-  background: linear-gradient(38deg, #183d5d, #d9a65f);
+  background: variables.$sidebar-background;
   position: fixed;
   overflow-x: hidden;
   transition: right 0.5s;
@@ -18,7 +18,8 @@
   }
 
   img {
-    transform: scale(0.7);
+    height: 6vh;
+    transform: scale(0.9);
   }
 
   hr {
@@ -30,24 +31,28 @@
     display: flex;
     width: 90%;
     justify-content: flex-end;
+    align-items: center;
     gap: 0.5vw;
 
     .btn-download-sidebar,
     .btn-close-sidebar {
+      display: flex;
+      justify-content: center;
       padding: 3px 3px;
       background-color: inherit;
-      border: none;
+      border: 0.1rem solid white;
       border-radius: 100%;
       cursor: pointer;
       transition: background-color 0.3s;
 
       .btn-download-img,
       .btn-close-img {
-        height: 3.5vh;
+        height: 3vh;
+        transform: scale(0.9);
       }
 
       &:hover {
-        background-color: variables.$third-color;
+        background-color: variables.$first-color-hover;
       }
     }
   }
@@ -56,11 +61,10 @@
     width: 90%;
     margin-top: 1vh;
     padding: 1vh 1vw;
-    background-color: #f3f3eb;
+    background-color: white;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     color: #333;
-    font-size: 1rem;
     line-height: 1.5;
     overflow-y: auto;
     max-height: 80vh;
@@ -73,23 +77,24 @@
     }
 
     p {
-      font-size: 0.9rem;
+      font-size: 1.1rem;
       margin-bottom: 1vh;
     }
 
     h2,
     h3 {
-      font-size: 1.5rem;
+      font-family: "SwedenSansBold", sans-serif;
+      font-size: 2rem;
       font-weight: bold;
     }
 
     h4 {
       font-weight: normal;
-      font-size: 1rem;
-    }
-
-    a {
-      font-weight: bold;
+      font-size: 1.3rem;
+      a {
+        font-family: "SwedenSansBold", sans-serif;
+        font-weight: bold;
+      }
     }
 
     .connection-group {
@@ -110,6 +115,33 @@
 
         &:hover {
           background-color: variables.$second-color;
+        }
+      }
+
+      .see-links {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 30%;
+        padding: 3px 3px;
+        background-color: inherit;
+        border: 0.2rem solid variables.$first-color;
+        border-radius: 100%;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &:hover {
+          background-color: variables.$first-color;
+          color: white;
+        }
+
+        .dark {
+          color: variables.$first-color;
+
+          &:hover {
+            color: white;
+            border: 0.2rem variables.$first-color;
+          }
         }
       }
     }

@@ -14,11 +14,11 @@ const NavHeader: FC<NavHeaderProps> = (props): JSX.Element => {
     <nav className="nav-header">
       <div className="nav-container">
         <div className="nav-left">
-          <img
+          {/*<img
             src="/LOGO.png"
             alt="Kiruna eXplorer Logo"
             className="nav-logo"
-          ></img>
+          ></img>*/}
           <div className="nav-brand">Kiruna eXplorer.</div>
         </div>
         {props.loggedIn ? (

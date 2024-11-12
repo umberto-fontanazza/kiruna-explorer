@@ -160,8 +160,11 @@ const ModalForm: FC<ModalAddProps> = ({
                   onClose();
                 }}
               >
-                <img src="/x.svg" alt="Close" />
+                <img src="/x.png" alt="Close" />
               </button>
+
+              <ProgressBar currentPage={page} />
+
               <form onSubmit={handleFormSubmit}>
                 {/* Title Input */}
                 <div className="form-group">
@@ -521,6 +524,8 @@ const ModalForm: FC<ModalAddProps> = ({
                 <img src="/x.svg" alt="Close" />
               </button>
 
+              <ProgressBar currentPage={page} />
+
               {/* Body */}
               <form>
                 <SearchBar suggestions={documents} />
@@ -543,6 +548,31 @@ const ModalForm: FC<ModalAddProps> = ({
       </>
     );
   }
+};
+
+const ProgressBar = (props: { currentPage: number }) => {
+  const steps = [
+    { label: "Mandatory Information", number: 1 },
+    { label: "Add Links", number: 2 },
+    { label: "Add attachments", number: 3 },
+    { label: "Recap", number: 4 },
+  ];
+  return (
+    <div className="progress-bar">
+      {steps.map((step, index) => (
+        <div
+          key={index}
+          className={`step ${props.currentPage >= step.number ? "active" : ""} ${
+            props.currentPage > step.number ? "completed" : ""
+          }`}
+        >
+          <div className="circle">{step.number}</div>
+          <span className="label">{step.label}</span>
+          {index < steps.length - 1 && <div className="line"></div>}
+        </div>
+      ))}
+    </div>
+  );
 };
 
 function SearchBar(props: { suggestions: Document[] }) {
