@@ -29,6 +29,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
       try {
         const documents: Document[] = await API.getDocuments();
         setDocuments(documents);
+        console.log(documents);
       } catch (err) {
         console.error(err);
       }
