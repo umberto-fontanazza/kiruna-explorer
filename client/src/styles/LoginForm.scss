@@ -30,7 +30,7 @@ body {
     width: 66vw;
     height: 100vh;
     display: flex;
-    background: variables.$first-color;
+    background: Color.$first;
     flex-direction: column;
     justify-content: center;
     color: white;
@@ -119,7 +119,7 @@ body {
     }
 
     input:focus {
-      border-color: variables.$first-color;
+      border-color: Color.$first;
       outline: none;
     }
 
@@ -146,13 +146,13 @@ body {
       color: white;
       border-radius: 1vmin;
       cursor: pointer;
-      background: variables.$first-color;
+      background: Color.$first;
       background-size: 200% 100%;
       background-position: 201%;
       transition: background-position 0.5s ease;
 
       &:hover {
-        background-color: variables.$first-color-hover;
+        background-color: Color.$first-hover;
       }
     }
 
@@ -162,7 +162,7 @@ body {
       color: Color.$first;
 
       a {
-        color: variables.$first-color;
+        color: Color.$first;
         text-decoration: none;
 
         &:hover {

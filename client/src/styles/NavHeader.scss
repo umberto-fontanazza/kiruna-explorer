@@ -13,7 +13,7 @@ body {
   height: 8vh;
   padding: 1rem 2rem;
   display: flex;
-  background: variables.$first-color;
+  background: Color.$first;
 
   .nav-container {
     display: flex;
@@ -49,8 +49,8 @@ body {
 
       .username {
         display: flex;
-        background-color: variables.$first-color;
-        border: 0.1rem solid variables.$first-color;
+        background-color: Color.$first;
+        border: 0.1rem solid Color.$first;
         border-radius: 1rem;
 
         h4 {
@@ -62,33 +62,8 @@ body {
         }
       }
 
-      .button-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-
-        button {
-          background-color: variables.$first-color;
-          border: 0.1rem solid white;
-          color: white;
-          padding: 0.7rem 1.3rem;
-          font-size: 1.2rem;
-          border-radius: 1rem;
-          cursor: pointer;
-          transition:
-            background-color 0.3s ease,
-            color 0.3s ease;
-
-          &:hover {
-            background-color: white;
-            color: variables.$first-color;
-            border: 0.1rem solid variables.$first-color;
-          }
-        }
-      }
-
-      .btn-login {
-        background-color: variables.$first-color;
+      button {
+        background-color: Color.$first;
         border: 0.1rem solid white;
         color: white;
         padding: 0.7rem 1.3rem;
@@ -101,8 +76,27 @@ body {
 
         &:hover {
           background-color: white;
-          color: variables.$first-color;
-          border: 0.1rem solid variables.$first-color;
+          color: Color.$first;
+          border: 0.1rem solid Color.$first;
+        }
+      }
+
+      .logged-in {
+        background-color: Color.$first;
+        border: 0.1rem solid white;
+        color: white;
+        padding: 0.7rem 1.3rem;
+        font-size: 1.2rem;
+        border-radius: 1rem;
+        cursor: pointer;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+
+        &:hover {
+          background-color: white;
+          color: Color.$first;
+          border: 0.1rem solid Color.$first;
         }
       }
     }

@@ -4,7 +4,7 @@
   right: -30%;
   width: 30%;
   height: 100vh;
-  background: variables.$sidebar-background;
+  background: Color.$sidebar-background;
   position: fixed;
   overflow-x: hidden;
   transition: right 0.5s;
@@ -52,7 +52,7 @@
       }
 
       &:hover {
-        background-color: variables.$first-color-hover;
+        background-color: Color.$first-hover;
       }
     }
   }
@@ -125,22 +125,22 @@
         margin-left: 30%;
         padding: 3px 3px;
         background-color: inherit;
-        border: 0.2rem solid variables.$first-color;
+        border: 0.2rem solid Color.$first;
         border-radius: 100%;
         cursor: pointer;
         transition: background-color 0.3s;
 
         &:hover {
-          background-color: variables.$first-color;
+          background-color: Color.$first;
           color: white;
         }
 
         .dark {
-          color: variables.$first-color;
+          color: Color.$first;
 
           &:hover {
             color: white;
-            border: 0.2rem variables.$first-color;
+            border: 0.2rem Color.$first;
           }
         }
       }

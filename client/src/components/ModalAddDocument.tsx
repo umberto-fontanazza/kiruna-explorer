@@ -224,8 +224,8 @@ const ModalForm: FC<ModalAddProps> = ({
                   {/* Numeric Scale Input */}
                   <div className="form-group">
                     {isNumericScale && (
-                      <div>
-                        <span>1: </span>
+                      <div className="ratio-group">
+                        <span className="ratio">1: </span>
                         <input
                           type="number"
                           id="no-spin"

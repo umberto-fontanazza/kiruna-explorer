@@ -49,9 +49,9 @@
     height: 92vh;
     position: relative;
 
-    button.add-document {
+    .button-overlay {
       position: absolute;
-      bottom: 3vh;
+      bottom: 1vh;
       left: 5vw;
       display: flex;
       justify-content: center;
@@ -64,9 +64,9 @@
         align-items: center;
         border-radius: 1rem;
         padding: 0;
-        background-color: variables.$third-color;
-        color: variables.$first-color;
-        border: 0.1rem solid variables.$first-color;
+        background-color: Color.$third;
+        color: Color.$first;
+        border: 0.1rem solid Color.$first;
         cursor: pointer;
         transition:
           background-color 0.3s ease,
@@ -74,7 +74,7 @@
 
         &:hover {
           background-color: #bfbfac;
-          color: variables.$first-color;
+          color: Color.$first;
         }
 
         .doc-img {
