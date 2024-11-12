@@ -3,6 +3,7 @@ import { FC, SetStateAction, useState } from "react";
 import {
   Document,
   DocumentType,
+  Link,
   LinkType,
   Stakeholder,
 } from "../utils/interfaces";
@@ -68,6 +69,7 @@ const ModalForm: FC<ModalAddProps> = ({
     LinkType | undefined
   >(undefined);
   const [isNumericScale, setIsNumericScale] = useState<boolean>(false);
+  const [tableLinks, setTableLinks] = useState<Link[]>([]);
 
   /////// FILE ATTACHMENT CODE ///////
 
@@ -531,7 +533,7 @@ const ModalForm: FC<ModalAddProps> = ({
         {
           <div className="modal-overlay-2">
             <div className="modal-content-2">
-              <h2>New Document Registration</h2>
+              <h2>Add Links</h2>
               <button
                 className="close-button-2"
                 onClick={() => {
@@ -543,8 +545,18 @@ const ModalForm: FC<ModalAddProps> = ({
               </button>
 
               {/* Body */}
+
+              <LinksTable
+                tableLinks={tableLinks}
+                setTableLinks={setTableLinks}
+                documents={documents}
+              />
+
               <form>
-                <SearchBar suggestions={documents} />
+                <SearchBar
+                  documents={documents}
+                  setTableLinks={setTableLinks}
+                />
 
                 <div className="button-group-2">
                   <button
@@ -566,31 +578,55 @@ const ModalForm: FC<ModalAddProps> = ({
   }
 };
 
-function SearchBar(props: { suggestions: Document[] }) {
+function SearchBar(props: {
+  documents: Document[];
+  setTableLinks: React.Dispatch<React.SetStateAction<Link[]>>;
+}) {
   // Stato per gestire l'input e i suggerimenti filtrati
   const [query, setQuery] = useState("");
+  const [selectedDocument, setSelectedDocument] = useState<Document>();
+  const [type, setType] = useState(LinkType.Direct);
   const [filteredSuggestions, setFilteredSuggestions] = useState<Document[]>(
     []
   );
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   // Funzione per aggiornare l'input e i suggerimenti filtrati
-  const handleChange = (e: { target: { value: any } }) => {
+  const handleChange = (e: { target: { value: string } }) => {
     const userInput = e.target.value;
     setQuery(userInput);
 
     // Filtra le opzioni in base all'input
-    const filtered = props.suggestions.filter((suggestion) =>
-      suggestion.title.toLowerCase().includes(userInput.toLowerCase())
+    const filtered = props.documents.filter((document) =>
+      document.title.toLowerCase().includes(userInput.toLowerCase())
     );
     setFilteredSuggestions(filtered);
     setShowSuggestions(true);
   };
 
   // Funzione per selezionare un suggerimento
-  const selectSuggestion = (suggestion: SetStateAction<string>) => {
-    setQuery(suggestion);
+  const selectSuggestion = async (suggestion: Document) => {
+    console.log(suggestion);
+    setQuery(suggestion.title);
+    await setSelectedDocument(suggestion);
+    console.log(selectedDocument);
     setShowSuggestions(false);
+  };
+
+  interface HandleAddLinkEvent {
+    preventDefault: () => void;
+  }
+
+  const handleAddLink = (e: HandleAddLinkEvent) => {
+    e.preventDefault();
+    if (selectedDocument?.id !== undefined) {
+      props.setTableLinks((prev: Link[]) => {
+        return [
+          ...prev,
+          { targetDocumentId: selectedDocument.id - 1, type: [type] },
+        ];
+      });
+    }
   };
 
   return (
@@ -634,7 +670,7 @@ function SearchBar(props: { suggestions: Document[] }) {
           {filteredSuggestions.slice(0, 5).map((suggestion, index) => (
             <div
               key={index}
-              onClick={() => selectSuggestion(suggestion.title)}
+              onClick={() => selectSuggestion(suggestion)}
               className="suggestion-item"
               style={{
                 padding: "10px",
@@ -647,7 +683,81 @@ function SearchBar(props: { suggestions: Document[] }) {
           ))}
         </div>
       )}
+      <select
+        onChange={(e) => {
+          setType(e.target.value as LinkType);
+        }}
+      >
+        <option value={LinkType.Direct}>Direct</option>
+        <option value={LinkType.Collateral}>Collateral</option>
+        <option value={LinkType.Projection}>Projection</option>
+        <option value={LinkType.Update}>Update</option>
+      </select>
+      <button onClick={(e) => handleAddLink(e)}>Add Link</button>
     </div>
+  );
+}
+
+// interface LinksTableProps {
+//   tableLinks: Link[];
+//   setTableLinks: SetStateAction<Link[]>;
+//   documents: Document[];
+// }
+
+function LinksTable(props: {
+  tableLinks: Link[];
+  setTableLinks: (arg0: (prev: Link[]) => Link[]) => void;
+  documents: Document[];
+}) {
+  const handleRemove = (e: React.MouseEvent<HTMLButtonElement>, link: Link) => {
+    e.preventDefault();
+    props.setTableLinks((prev: Link[]) => {
+      return prev.filter((l) => l !== link);
+    });
+  };
+
+  return (
+    <table className="links-table">
+      <thead>
+        <tr>
+          <th>Icon</th>
+          <th>Title</th>
+          <th>Link Type</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {props.tableLinks.map((link, index) => (
+          <tr key={index}>
+            <td>
+              <img
+                className="doc-icon"
+                src={`/document-${props.documents[link.targetDocumentId].type}-icon.png`}
+                alt="Document icon"
+              />
+            </td>
+            <td className="doc-title">
+              {props.documents[link.targetDocumentId].title}
+            </td>
+            <td>
+              {link.type.map((type) => (
+                <span key={type} className="link-type">
+                  {type}
+                </span>
+              ))}
+            </td>
+            <td>
+              <button
+                className="remove-link"
+                onClick={(e) => handleRemove(e, link)}
+              >
+                Remove
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 
