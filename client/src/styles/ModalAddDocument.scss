@@ -1,4 +1,4 @@
-@use "variables";
+@use "Color";
 
 .modal-overlay {
   position: fixed;
@@ -23,143 +23,132 @@
     h2 {
       font-size: 1.8rem;
       font-weight: bold;
-      color: variables.$first-color;
+      color: Color.$first;
       margin-bottom: 2vh;
       text-align: center;
     }
 
-    .close-button {
-      background-color: variables.$first-color;
-      color: white;
-      border: 0.1rem solid variables.$first-color;
+    button.close {
+      background-color: Color.$first;
+      color: Color.$third;
+      border: 2px solid Color.$first;
+      border-radius: 50%;
       position: absolute;
       top: 2%;
       right: 2%;
-      border-radius: 50%;
       width: 2vw;
       height: 2vw;
-      cursor: pointer;
       transition: background-color 0.3s;
 
       &:hover {
-        background: variables.$third-color;
-        color: variables.$first-color;
-      }
-
-      .btn-close-img {
-        height: 1.5vh;
+        background: Color.$third;
+        color: Color.$first;
       }
     }
+  }
 
-    form {
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+
+    .form-group {
+      width: 100%;
       display: flex;
       flex-direction: column;
-      gap: 1vh;
+
+      label {
+        font-size: 1rem;
+        font-weight: bold;
+        color: Color.$first;
+      }
+
+      input,
+      textarea {
+        padding: 0.8vh 1ch;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: Color.$first;
+      }
+
+      select {
+        padding: 1vh;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #333;
+        background-color: #fff;
+      }
+
+      :focus {
+        border-color: Color.$second;
+        outline: none;
+      }
+
+      .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        --columns-count: 2;
+
+        .checkbox-label {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8px;
+          cursor: pointer;
+          width: calc(100% / var(--columns-count, 2) - 0.5rem);
+
+          input[type="checkbox"] {
+            margin-right: 1rem;
+            width: 1rem;
+            height: 1rem;
+            accent-color: Color.$first;
+          }
+        }
+      }
+    }
+
+    .line {
+      display: flex;
+      gap: 1rem;
 
       .form-group {
-        display: flex;
-        flex-direction: column;
+        gap: 0.5rem;
         width: 100%;
-
-        label {
-          font-size: 1rem;
-          font-weight: bold;
-          color: variables.$first-color;
-        }
-
-        input,
-        textarea {
-          padding: 1vh;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          font-size: 1rem;
-          color: variables.$first-color;
-
-          &:focus {
-            border-color: variables.$second-color;
-            outline: none;
-          }
-        }
-
-        select {
-          padding: 1vh;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          font-size: 1rem;
-          color: #333;
-          background-color: #fff;
-
-          &:focus {
-            border-color: variables.$second-color;
-            outline: none;
-          }
-        }
-
-        .checkbox-group {
-          display: flex;
-          flex-wrap: wrap;
-
-          .checkbox-label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-            cursor: pointer;
-            width: calc(33.33% - 1rem);
-
-            input[type="checkbox"] {
-              margin-right: 1rem;
-              width: 1rem;
-              height: 1rem;
-              accent-color: variables.$first-color;
-            }
-          }
-        }
-      }
-
-      .line {
-        display: flex;
-        gap: 1rem;
-
-        .form-group {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          width: 100%;
-        }
-      }
-
-      .button-group {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-
-        .submit-button,
-        .cancel-button {
-          flex: 1;
-          padding: 0.75rem;
-          font-weight: bold;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-          text-align: center;
-        }
-
-        .submit-button {
-          background-color: variables.$first-color;
-          color: white;
-          border: 0.1rem solid variables.$first-color;
-
-          &:hover {
-            background: variables.$third-color;
-            color: variables.$first-color;
-          }
-        }
       }
     }
 
-    textarea {
-      resize: vertical;
-      min-height: 8vh;
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+
+      .submit-button,
+      .cancel-button {
+        flex: 1;
+        padding: 0.75rem;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-align: center;
+      }
+
+      .submit-button {
+        background-color: Color.$first;
+        color: white;
+        border: 0.1rem solid Color.$first;
+
+        &:hover {
+          background: Color.$third;
+          color: Color.$first;
+        }
+      }
     }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 8vh;
   }
 }

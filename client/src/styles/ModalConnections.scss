@@ -1,4 +1,4 @@
-@use "variables";
+@use "Color";
 
 .modal-overlay {
   position: fixed;
@@ -24,7 +24,7 @@
     h2 {
       font-size: 1.8rem;
       font-weight: bold;
-      color: variables.$first-color;
+      color: Color.$first;
       margin-bottom: 1.5rem;
       text-align: center;
     }
@@ -43,7 +43,7 @@
         label {
           font-size: 1rem;
           font-weight: bold;
-          color: variables.$first-color;
+          color: Color.$first;
 
           a {
             font-weight: normal;
@@ -60,7 +60,7 @@
           box-sizing: border-box;
 
           &:focus {
-            border-color: variables.$second-color;
+            border-color: Color.$second;
             outline: none;
           }
         }
@@ -85,25 +85,25 @@
     }
 
     .submit-button {
-      background-color: variables.$first-color;
+      background-color: Color.$first;
       padding: 1rem;
       color: white;
-      border: 0.1rem solid variables.$first-color;
+      border: 0.1rem solid Color.$first;
       cursor: pointer;
       transition:
         background-color 0.3s ease,
         color 0.3s ease;
 
       &:hover {
-        background: variables.$third-color;
-        color: variables.$first-color;
-        border: 0.1rem solid variables.$first-color;
+        background: Color.$third;
+        color: Color.$first;
+        border: 0.1rem solid Color.$first;
       }
     }
 
     .cancel-button {
       background-color: #ccc;
-      color: variables.$first-color;
+      color: Color.$first;
       border: none;
 
       &:hover {

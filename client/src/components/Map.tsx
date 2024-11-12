@@ -69,7 +69,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         center={center}
       >
         {/* Render an overlay or marker for each document with valid coordinates */}
-        {props.documents.map(
+        {props.documents?.map(
           (doc) =>
             doc.coordinates.latitude !== null &&
             doc.coordinates.longitude !== null && (

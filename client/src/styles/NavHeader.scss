@@ -1,4 +1,4 @@
-@use "variables";
+@use "Color";
 
 html,
 body {
@@ -13,13 +13,14 @@ body {
   height: 8vh;
   padding: 1rem 2rem;
   display: flex;
-  background: variables.$main-color;
+  background: Color.$main;
 
   .nav-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    color: #ddd;
 
     .nav-left {
       display: flex;
@@ -34,74 +35,40 @@ body {
       .nav-brand {
         font-size: 1.5rem;
         font-weight: bold;
-        color: #ddd;
         display: flex;
         align-items: center;
       }
     }
 
-    .nav-loggedIn {
+    .nav-right {
       display: flex;
-      align-items: center;
-      gap: 1rem;
+      column-gap: 1rem;
 
       .username {
         display: flex;
-        background-color: variables.$first-color;
-        border: 0.1rem solid variables.$first-color;
-        border-radius: 1rem;
-
-        h4 {
-          color: #ddd;
-          padding: 0.5rem 1rem;
-          font-size: 1rem;
-          font-weight: bold;
-          margin-top: 6%;
-        }
-      }
-
-      .button-container {
-        display: flex;
-        justify-content: center;
         align-items: center;
-
-        button {
-          background-color: variables.$first-color;
-          border: 0.1rem solid variables.$first-color;
-          color: #ddd;
-          padding: 0.5rem 1rem;
-          font-size: 1rem;
-          border-radius: 1rem;
-          cursor: pointer;
-          transition:
-            background-color 0.3s ease,
-            color 0.3s ease;
-
-          &:hover {
-            background: variables.$third-color;
-            color: variables.$first-color;
-            border: 2px solid variables.$first-color;
-          }
-        }
+        background-color: Color.$first;
+        border: 0.1rem solid Color.$first;
+        border-radius: 1rem;
+        padding: 0 2ch;
       }
-    }
 
-    .btn-login {
-      background-color: variables.$first-color;
-      border: 0.1rem solid variables.$first-color;
-      color: #ddd;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      border-radius: 1rem;
-      cursor: pointer;
-      transition:
-        background-color 0.3s ease,
-        color 0.3s ease;
+      button {
+        padding: 0.5rem 1rem;
+        background-color: Color.$first;
+        color: #ddd;
+        font-size: 1rem;
+        border: 2px solid Color.$first;
+        border-radius: 1rem;
+        cursor: pointer;
+        transition: 0.3s ease;
 
-      &:hover {
-        background: variables.$third-color;
-        color: variables.$first-color;
-        border: 2px solid variables.$first-color;
+        &:hover {
+          background: Color.$third;
+          color: Color.$first;
+          border-color: Color.$first;
+          transform: scale(1.05);
+        }
       }
     }
   }

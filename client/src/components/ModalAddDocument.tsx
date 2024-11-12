@@ -145,125 +145,120 @@ const ModalForm: FC<ModalAddProps> = ({
   if (!modalOpen) return null;
 
   return (
-    <>
-      {
-        <div className="modal-overlay">
-          <div className="modal-content">
-            <h2>New Document Registration</h2>
-            <button
-              className="close-button"
-              onClick={() => {
-                setNewDoc(initialDocumentState);
-                onClose();
+    <div className="modal-overlay">
+      <form className="modal-content" onSubmit={handleFormSubmit}>
+        <h2>New Document Registration</h2>
+        <button
+          className="close"
+          onClick={() => {
+            setNewDoc(initialDocumentState);
+            onClose();
+          }}
+        >
+          X
+        </button>
+        {/* Title Input */}
+        <div className="form-group">
+          <label className="title">Title *</label>
+          <input
+            type="text"
+            placeholder="Enter Document Title"
+            value={newDoc.title}
+            onChange={(e) =>
+              setNewDoc((prev) => ({ ...prev, title: e.target.value }))
+            }
+            required
+            className="input-title"
+          />
+        </div>
+
+        {/* Description */}
+        <div className="form-group">
+          <label>Description *</label>
+          <textarea
+            value={newDoc.description || ""}
+            placeholder="Enter Document Description"
+            onChange={(e) =>
+              setNewDoc((prev) => ({
+                ...prev,
+                description: e.target.value,
+              }))
+            }
+            required
+          />
+        </div>
+        {/* Scale Selection */}
+        <div className="line">
+          <div className="form-group">
+            <label>Scale *</label>
+            <select
+              onChange={(e) => {
+                const value = e.target.value;
+                if (value === "numeric") {
+                  setIsNumericScale(true);
+                  setNewDoc((prev) => ({ ...prev, scale: "" }));
+                } else {
+                  setIsNumericScale(false);
+                  setNewDoc((prev) => ({ ...prev, scale: value }));
+                }
               }}
             >
-              X
-            </button>
-            <form onSubmit={handleFormSubmit}>
-              {/* Title Input */}
-              <div className="form-group">
-                <label className="title">Title *</label>
-                <input
-                  type="text"
-                  placeholder="Enter Document Title"
-                  value={newDoc.title}
-                  onChange={(e) =>
-                    setNewDoc((prev) => ({ ...prev, title: e.target.value }))
-                  }
-                  required
-                  className="input-title"
-                />
-              </div>
+              <option value="">Select one option</option>
+              {scaleValues.map((scale) => (
+                <option key={scale.value} value={scale.value}>
+                  {scale.label}
+                </option>
+              ))}
+              <option value="numeric">Ratio</option>
+            </select>
+          </div>
 
-              {/* Description */}
-              <div className="form-group">
-                <label>Description *</label>
-                <textarea
-                  value={newDoc.description || ""}
-                  placeholder="Enter Document Description"
+          {/* Numeric Scale Input */}
+          <div className="form-group">
+            {isNumericScale && (
+              <div>
+                <span>1: </span>
+                <input
+                  type="number"
+                  id="no-spin"
+                  value={newDoc.scale}
                   onChange={(e) =>
                     setNewDoc((prev) => ({
                       ...prev,
-                      description: e.target.value,
+                      scale: e.target.value,
                     }))
                   }
+                  style={{
+                    width: "95%",
+                    marginTop: "7.5%",
+                    padding: "0.7rem",
+                    borderRadius: "8px",
+                    fontSize: "1rem",
+                  }}
                   required
                 />
               </div>
-              {/* Scale Selection */}
-              <div className="line">
-                <div className="form-group">
-                  <label>Scale *</label>
-                  <select
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      if (value === "numeric") {
-                        setIsNumericScale(true);
-                        setNewDoc((prev) => ({ ...prev, scale: "" }));
-                      } else {
-                        setIsNumericScale(false);
-                        setNewDoc((prev) => ({ ...prev, scale: value }));
-                      }
-                    }}
-                  >
-                    <option value="">Select one option</option>
-                    {scaleValues.map((scale) => (
-                      <option key={scale.value} value={scale.value}>
-                        {scale.label}
-                      </option>
-                    ))}
-                    <option value="numeric">Ratio</option>
-                  </select>
-                </div>
+            )}
+          </div>
+        </div>
+        <div className="line">
+          {/* Issuance Date */}
+          <div className="form-group">
+            <label>Issuance Date *</label>
+            <input
+              type="date"
+              value={newDoc.issuanceDate?.toISOString().split("T")[0] || ""}
+              onChange={(e) =>
+                setNewDoc((prev) => ({
+                  ...prev,
+                  issuanceDate: new Date(e.target.value),
+                }))
+              }
+            />
+          </div>
 
-                {/* Numeric Scale Input */}
-                <div className="form-group">
-                  {isNumericScale && (
-                    <div>
-                      <span>1: </span>
-                      <input
-                        type="number"
-                        id="no-spin"
-                        value={newDoc.scale}
-                        onChange={(e) =>
-                          setNewDoc((prev) => ({
-                            ...prev,
-                            scale: e.target.value,
-                          }))
-                        }
-                        style={{
-                          width: "95%",
-                          marginTop: "7.5%",
-                          padding: "0.7rem",
-                          borderRadius: "8px",
-                          fontSize: "1rem",
-                        }}
-                        required
-                      />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="line">
-                {/* Issuance Date */}
-                <div className="form-group">
-                  <label>Issuance Date *</label>
-                  <input
-                    type="date"
-                    value={
-                      newDoc.issuanceDate?.toISOString().split("T")[0] || ""
-                    }
-                    onChange={(e) =>
-                      setNewDoc((prev) => ({
-                        ...prev,
-                        issuanceDate: new Date(e.target.value),
-                      }))
-                    }
-                  />
-                </div>
-
-                {/* Language Selection */}
-                {/*<div className="form-group">
+          {/* Language Selection */}
+          {/*<div className="form-group">
                   <label>Language *</label>
                   <select
                     value={newDoc.language}
@@ -286,57 +281,55 @@ const ModalForm: FC<ModalAddProps> = ({
                   </select>
                 </div>*/}
 
-                {/* Document Type */}
-                <div className="form-group">
-                  <label>Type *</label>
-                  <select
-                    value={newDoc.type}
-                    onChange={(e) =>
-                      setNewDoc((prev) => ({
-                        ...prev,
-                        type: e.target.value as DocumentType,
-                      }))
-                    }
-                    required
-                  >
-                    <option value="">Select type</option>
-                    <option value={DocumentType.Informative}>
-                      Informative Document
-                    </option>
-                    <option value={DocumentType.Prescriptive}>
-                      Prescriptive Document
-                    </option>
-                    <option value={DocumentType.Design}>Design Document</option>
-                    <option value={DocumentType.Technical}>
-                      Technical Document
-                    </option>
-                    <option value={DocumentType.MaterialEffect}>
-                      Material effect
-                    </option>
-                    {/* <option value="Others">Others</option> */}
-                  </select>
-                </div>
-              </div>
+          {/* Document Type */}
+          <div className="form-group">
+            <label>Type *</label>
+            <select
+              value={newDoc.type}
+              onChange={(e) =>
+                setNewDoc((prev) => ({
+                  ...prev,
+                  type: e.target.value as DocumentType,
+                }))
+              }
+              required
+            >
+              <option value="">Select type</option>
+              <option value={DocumentType.Informative}>
+                Informative Document
+              </option>
+              <option value={DocumentType.Prescriptive}>
+                Prescriptive Document
+              </option>
+              <option value={DocumentType.Design}>Design Document</option>
+              <option value={DocumentType.Technical}>Technical Document</option>
+              <option value={DocumentType.MaterialEffect}>
+                Material effect
+              </option>
+              {/* <option value="Others">Others</option> */}
+            </select>
+          </div>
+        </div>
 
-              {/* Stakeholders */}
-              <div className="form-group">
-                <label>Stakeholders *</label>
-                <div className="checkbox-group">
-                  {stakeholdersOptions.map((option) => (
-                    <label key={option.value} className="checkbox-label">
-                      <input
-                        type="checkbox"
-                        value={option.value}
-                        checked={newDoc.stakeholders.includes(option.value)}
-                        onChange={handleCheckboxChange}
-                      />
-                      {option.label}
-                    </label>
-                  ))}
-                </div>
-              </div>
-              {/* DO NOT ELIMINATE THIS CODE COMMENTED */}
-              {/* <div className="form-group">
+        {/* Stakeholders */}
+        <div className="form-group">
+          <label>Stakeholders *</label>
+          <div className="checkbox-group stakeholders">
+            {stakeholdersOptions.map((option) => (
+              <label key={option.value} className="checkbox-label">
+                <input
+                  type="checkbox"
+                  value={option.value}
+                  checked={newDoc.stakeholders.includes(option.value)}
+                  onChange={handleCheckboxChange}
+                />
+                {option.label}
+              </label>
+            ))}
+          </div>
+        </div>
+        {/* DO NOT ELIMINATE THIS CODE COMMENTED */}
+        {/* <div className="form-group">
                   <label>Pages (optional):</label>
                   <input
                     type="number"
@@ -350,7 +343,7 @@ const ModalForm: FC<ModalAddProps> = ({
                     }}
                   />
                 </div> */}
-              {/*<div className="form-group">
+        {/*<div className="form-group">
                 <div
                   className="file-upload-area"
                   onDrop={handleFileDrop}
@@ -391,67 +384,71 @@ const ModalForm: FC<ModalAddProps> = ({
                 )}
               </div>*/}
 
-              {/* Coordinates */}
-              <div className="line">
-                {/* Latitude */}
-                <div className="form-group">
-                  <label>Latitude *</label>
-                  <input
-                    type="number"
-                    id="no-spin"
-                    step="0.000001"
-                    name="latitude"
-                    value={
-                      newDoc.coordinates?.latitude !== null
-                        ? newDoc.coordinates?.latitude
-                        : ""
-                    }
-                    onChange={(e) =>
-                      setNewDoc((prev) => ({
-                        ...prev,
-                        coordinates: {
-                          ...prev.coordinates,
-                          latitude: Number(e.target.value),
-                        },
-                      }))
-                    }
-                    placeholder="Es. 34.1234"
-                    required
-                  />
-                </div>
+        {/* Coordinates */}
+        <div className="line">
+          {/* Latitude */}
+          <div className="form-group">
+            <label>Latitude *</label>
+            <input
+              type="number"
+              id="no-spin"
+              step="0.000001"
+              name="latitude"
+              min="-90"
+              max="90"
+              value={
+                newDoc.coordinates?.latitude !== null
+                  ? newDoc.coordinates?.latitude
+                  : ""
+              }
+              onChange={(e) =>
+                setNewDoc((prev) => ({
+                  ...prev,
+                  coordinates: {
+                    ...prev.coordinates,
+                    latitude: Number(e.target.value),
+                  },
+                }))
+              }
+              placeholder="Es. 34.1234"
+              required
+            />
+          </div>
 
-                {/* Longitude */}
-                <div className="form-group">
-                  <label>Longitude *</label>
-                  <input
-                    lang="en"
-                    type="number"
-                    id="no-spin"
-                    name="longitude"
-                    value={
-                      newDoc.coordinates?.longitude !== null
-                        ? newDoc.coordinates?.longitude
-                        : ""
-                    }
-                    onChange={(e) => {
-                      setNewDoc((prev) => ({
-                        ...prev,
-                        coordinates: {
-                          ...prev.coordinates,
-                          longitude: Number(e.target.value),
-                        },
-                      }));
-                    }}
-                    placeholder="Es. 123.1234"
-                    required
-                  />
-                </div>
-              </div>
+          {/* Longitude */}
+          <div className="form-group">
+            <label>Longitude *</label>
+            <input
+              lang="en"
+              type="number"
+              id="no-spin"
+              name="longitude"
+              min="-180"
+              max="180"
+              value={
+                newDoc.coordinates?.longitude !== null
+                  ? newDoc.coordinates?.longitude
+                  : ""
+              }
+              onChange={(e) => {
+                setNewDoc((prev) => ({
+                  ...prev,
+                  coordinates: {
+                    ...prev.coordinates,
+                    longitude: Number(e.target.value),
+                  },
+                }));
+              }}
+              placeholder="Es. 123.1234"
+              required
+            />
+          </div>
+        </div>
 
-              {/* Connections */}
+        {/* Connections */}
 
-              {/* Target Document ID */}
-              {/*<div className="form-group">
+        {/* Target Document ID */}
+        {/*<div className="form-group">
                 <label>Connection *</label>
                 <select
                   value={targetDocumentId ?? ""}
@@ -468,8 +465,8 @@ const ModalForm: FC<ModalAddProps> = ({
                 </select>
               </div>*/}
 
-              {/* Connection Type */}
-              {/*<div className="form-group">
+        {/* Connection Type */}
+        {/*<div className="form-group">
                 <label>Connection Type *</label>
                 <select
                   value={newTypeConnection}
@@ -487,17 +484,14 @@ const ModalForm: FC<ModalAddProps> = ({
                 </select>
               </div>*/}
 
-              {/* Form Buttons */}
-              <div className="button-group">
-                <button className="submit-button" type="submit">
-                  Add Document
-                </button>
-              </div>
-            </form>
-          </div>
+        {/* Form Buttons */}
+        <div className="button-group">
+          <button className="submit-button" type="submit">
+            Add Document
+          </button>
         </div>
-      }
-    </>
+      </form>
+    </div>
   );
 };
 
