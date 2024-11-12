@@ -21,7 +21,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
   // State for selected document
   const [docSelected, setDocSelected] = useState<Document | null>(null);
   // State to control modal for adding documents
-  const [modalOpen, setModalOpen] = useState<boolean>(true);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   // Fetch documents on component mount
   useEffect(() => {

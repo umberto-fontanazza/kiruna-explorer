@@ -61,7 +61,7 @@ const ModalForm: FC<ModalAddProps> = ({
 
   ////// COMPONENT STATE /////
 
-  const [page, setPage] = useState<number>(2);
+  const [page, setPage] = useState<number>(1);
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
   const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
   const [newTypeConnection, setNewTypeConnection] = useState<
