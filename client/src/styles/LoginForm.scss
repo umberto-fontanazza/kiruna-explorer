@@ -16,7 +16,7 @@ body {
   height: 100vh;
   width: 100vw;
   display: flex;
-  background-color: Color.$third;
+  background-color: #f7f7f7;
   max-height: fit-content;
 
   .login-container {
@@ -33,13 +33,13 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    color: Color.$third;
+    color: white;
     overflow: hidden;
     border-top-right-radius: 1rem;
     border-bottom-right-radius: 1rem;
 
     h1 {
-      color: Color.$third;
+      color: #ddd;
       padding: 4%;
       margin-top: 12%;
     }

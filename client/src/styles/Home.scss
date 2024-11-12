@@ -15,7 +15,7 @@
     td {
       padding: 1vh 1vw;
       text-align: left;
-      border-bottom: 1px solid Color.$third;
+      border-bottom: 1px solid #ddd;
     }
 
     .doc-title {
@@ -34,7 +34,7 @@
       border: 0.1rem solid Color.$first;
       border-radius: 0.5rem;
       padding: 0.5vh 0.5vw;
-      color: Color.$third;
+      color: white;
       transition: 300ms ease;
 
       &:hover {
