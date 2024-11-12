@@ -1,5 +1,4 @@
-// src/styles/global.scss (o base.scss, a tua scelta)
-@use "variables";
+@use "Color";
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
 @font-face {
@@ -33,7 +32,6 @@
   box-sizing: border-box;
 }
 
-// Applica il font in tutto il documento
 html,
 body {
   font-family: "SwedenSans", sans-serif;
@@ -50,11 +48,11 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: variables.$main-color;
+  background: Color.$main;
   border-radius: 10px;
   border: 3px solid #f0f4f8;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: variables.$dark-main-color;
+  background: Color.$dark-main;
 }

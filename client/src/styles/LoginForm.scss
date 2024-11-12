@@ -1,4 +1,4 @@
-@use "variables";
+@use "Color";
 
 html,
 body {
@@ -73,7 +73,7 @@ body {
     font-family: "SwedenSansBold", sans-serif;
 
     h2 {
-      color: variables.$first-color;
+      color: Color.$first;
       font-size: 5vmin;
       margin-bottom: 5vmin;
     }
@@ -87,7 +87,7 @@ body {
     }
 
     label {
-      color: variables.$first-color;
+      color: Color.$first;
       font-size: 2vmin;
       margin-bottom: 1vmin;
       font-weight: bold;
@@ -130,7 +130,7 @@ body {
 
       a {
         font-size: 1.5vmin;
-        color: variables.$first-color;
+        color: Color.$first;
         text-decoration: none;
       }
 
@@ -159,7 +159,7 @@ body {
     .signup {
       margin-top: 2vmin;
       font-size: 1.5vmin;
-      color: variables.$first-color;
+      color: Color.$first;
 
       a {
         color: variables.$first-color;

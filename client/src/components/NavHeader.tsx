@@ -8,8 +8,16 @@ interface NavHeaderProps {
   user: User;
 }
 
-const NavHeader: FC<NavHeaderProps> = (props): JSX.Element => {
-  const nav = useNavigate();
+const NavHeader: FC<NavHeaderProps> = ({
+  logout,
+  loggedIn,
+  user,
+}: NavHeaderProps): JSX.Element => {
+  const navigate = useNavigate();
+  const login = () => {
+    navigate("/login");
+  };
+
   return (
     <nav className="nav-header">
       <div className="nav-container">
@@ -21,22 +29,12 @@ const NavHeader: FC<NavHeaderProps> = (props): JSX.Element => {
           ></img>*/}
           <div className="nav-brand">Kiruna eXplorer.</div>
         </div>
-        {props.loggedIn ? (
-          <>
-            <div className="nav-loggedIn">
-              <div className="username">
-                <h4>Hi {props.user.name}!</h4>
-              </div>
-              <div className="button-container">
-                <button onClick={props.logout}>Logout</button>
-              </div>
-            </div>
-          </>
-        ) : (
-          <button className="btn-login" onClick={() => nav("/login")}>
-            Login
+        <div className={`nav-right ${loggedIn ? "logged-in" : ""}`}>
+          {loggedIn ? <span className="username">Hi {user.name}!</span> : null}
+          <button onClick={loggedIn ? logout : login}>
+            {loggedIn ? "Logout" : "Login"}
           </button>
-        )}
+        </div>
       </div>
     </nav>
   );

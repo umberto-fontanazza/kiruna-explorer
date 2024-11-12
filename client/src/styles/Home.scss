@@ -1,4 +1,4 @@
-@use "variables";
+@use "Color";
 
 .body-container {
   display: flex;
@@ -30,18 +30,16 @@
 
     .icon-info {
       cursor: pointer;
-      background-color: variables.$first-color;
-      border: 0.1rem solid variables.$first-color;
+      background-color: Color.$first;
+      border: 0.1rem solid Color.$first;
       border-radius: 0.5rem;
       padding: 0.5vh 0.5vw;
-      color: #fff;
-      transition:
-        background-color 0.3s ease,
-        color 0.3s ease;
+      color: white;
+      transition: 300ms ease;
 
       &:hover {
-        background: variables.$third-color;
-        color: variables.$first-color;
+        background: Color.$third;
+        color: Color.$first;
       }
     }
   }
@@ -51,10 +49,9 @@
     height: 92vh;
     position: relative;
 
-    .button-overlay {
+    button.add-document {
       position: absolute;
-      z-index: 1000;
-      bottom: 1vh;
+      bottom: 3vh;
       left: 5vw;
       display: flex;
       justify-content: center;

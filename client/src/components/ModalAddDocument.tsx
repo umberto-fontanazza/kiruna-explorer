@@ -145,13 +145,12 @@ const ModalForm: FC<ModalAddProps> = ({
 
   // Return early if modal is closed
   if (!modalOpen) return null;
-
   if (page === 1) {
     return (
       <>
         {
           <div className="modal-overlay">
-            <div className="modal-content">
+            <form className="modal-content" onSubmit={handleFormSubmit}>
               <h2>New Document Registration</h2>
               <button
                 className="close-button"
@@ -218,7 +217,7 @@ const ModalForm: FC<ModalAddProps> = ({
                           {scale.label}
                         </option>
                       ))}
-                      <option value="numeric">Rateo</option>
+                      <option value="numeric">Ratio</option>
                     </select>
                   </div>
 
@@ -328,8 +327,8 @@ const ModalForm: FC<ModalAddProps> = ({
 
                 {/* Stakeholders */}
                 <div className="form-group">
-                  <label>StakeHolders *</label>
-                  <div className="checkbox-group">
+                  <label>Stakeholders *</label>
+                  <div className="checkbox-group stakeholders">
                     {stakeholdersOptions.map((option) => (
                       <label key={option.value} className="checkbox-label">
                         <input
@@ -345,59 +344,59 @@ const ModalForm: FC<ModalAddProps> = ({
                 </div>
                 {/* DO NOT ELIMINATE THIS CODE COMMENTED */}
                 {/* <div className="form-group">
-                    <label>Pages (optional):</label>
-                    <input
-                      type="number"
-                      id="no-spin"
-                      value={newDoc.pages !== null ? newDoc.pages : ""}
-                      onChange={(e) => {
-                        setNewDoc((prev) => ({
-                          ...prev,
-                          pages: e.target.value ? Number(e.target.value) : null,
-                        }));
-                      }}
-                    />
-                  </div> */}
-                {/*<div className="form-group">
-                  <div
-                    className="file-upload-area"
-                    onDrop={handleFileDrop}
-                    onDragOver={handleDragOver}
-                    style={{
-                      border: "2px dashed #ccc",
-                      padding: "20px",
-                      borderRadius: "5px",
-                      textAlign: "center",
-                      cursor: "pointer",
+                  <label>Pages (optional):</label>
+                  <input
+                    type="number"
+                    id="no-spin"
+                    value={newDoc.pages !== null ? newDoc.pages : ""}
+                    onChange={(e) => {
+                      setNewDoc((prev) => ({
+                        ...prev,
+                        pages: e.target.value ? Number(e.target.value) : null,
+                      }));
                     }}
-                  >
-                    <p>Drag and drop files here, or</p>
-                    <label htmlFor="file-upload" className="file-upload-label">
-                      <strong>browse</strong>
-                    </label>
-                    <input
-                      id="file-upload"
-                      type="file"
-                      multiple
-                      accept=".pdf,.doc,.docx,.png,.jpg"
-                      onChange={handleFileSelect}
-                      style={{ display: "none" }}
-                    />
+                  />
+                </div> */}
+                {/*<div className="form-group">
+                <div
+                  className="file-upload-area"
+                  onDrop={handleFileDrop}
+                  onDragOver={handleDragOver}
+                  style={{
+                    border: "2px dashed #ccc",
+                    padding: "20px",
+                    borderRadius: "5px",
+                    textAlign: "center",
+                    cursor: "pointer",
+                  }}
+                >
+                  <p>Drag and drop files here, or</p>
+                  <label htmlFor="file-upload" className="file-upload-label">
+                    <strong>browse</strong>
+                  </label>
+                  <input
+                    id="file-upload"
+                    type="file"
+                    multiple
+                    accept=".pdf,.doc,.docx,.png,.jpg"
+                    onChange={handleFileSelect}
+                    style={{ display: "none" }}
+                  />
+                </div>
+                
+                {files.length > 0 && (
+                  <div className="uploaded-files-list">
+                    <h4>Files to Upload:</h4>
+                    <ul>
+                      {files.map((file, index) => (
+                        <li key={index}>
+                          {file.name} ({(file.size / 1024).toFixed(2)} KB)
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  
-                  {files.length > 0 && (
-                    <div className="uploaded-files-list">
-                      <h4>Files to Upload:</h4>
-                      <ul>
-                        {files.map((file, index) => (
-                          <li key={index}>
-                            {file.name} ({(file.size / 1024).toFixed(2)} KB)
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>*/}
+                )}
+              </div>*/}
 
                 {/* Coordinates */}
                 <div className="line">
@@ -409,6 +408,8 @@ const ModalForm: FC<ModalAddProps> = ({
                       id="no-spin"
                       step="0.000001"
                       name="latitude"
+                      min="-90"
+                      max="90"
                       value={
                         newDoc.coordinates?.latitude !== null
                           ? newDoc.coordinates?.latitude
@@ -436,6 +437,8 @@ const ModalForm: FC<ModalAddProps> = ({
                       type="number"
                       id="no-spin"
                       name="longitude"
+                      min="-180"
+                      max="180"
                       value={
                         newDoc.coordinates?.longitude !== null
                           ? newDoc.coordinates?.longitude
@@ -494,6 +497,24 @@ const ModalForm: FC<ModalAddProps> = ({
                     <option value="UPDATE">Update</option>
                   </select>
                 </div>*/}
+                {/* Connection Type */}
+                {/*<div className="form-group">
+                <label>Connection Type *</label>
+                <select
+                  value={newTypeConnection}
+                  onChange={(e) =>
+                    setNewTypeConnection(e.target.value as LinkType)
+                  }
+                >
+                  <option value="" disabled>
+                    Select the Connection's type
+                  </option>
+                  <option value="direct">Direct</option>
+                  <option value="collateral">Collateral</option>
+                  <option value="projection">Projection</option>
+                  <option value="update">Update</option>
+                </select>
+              </div>*/}
 
                 {/* Form Buttons */}
                 <div className="button-group">
@@ -502,7 +523,7 @@ const ModalForm: FC<ModalAddProps> = ({
                   </button>
                 </div>
               </form>
-            </div>
+            </form>
           </div>
         }
       </>
