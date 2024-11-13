@@ -20,3 +20,20 @@
     height: 4vh;
   }
 }
+
+.map-types {
+  position: absolute;
+  top: 2%;
+  left: 1.7%;
+  z-index: 1;
+
+  select {
+    padding: 15%;
+    border-radius: 1rem;
+    border: 0.2rem solid Color.$first;
+    background-color: Color.$third;
+    color: Color.$first;
+    font-family: "SwedenSansBold", sans-serif;
+    font-size: 1.3rem;
+  }
+}
