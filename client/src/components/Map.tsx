@@ -133,7 +133,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       />
     </>
   ) : (
-    <div>Caricamento...</div>
+    <div>Loading...</div>
   );
 };
 
