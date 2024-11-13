@@ -72,10 +72,16 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
             />
           }
           {props.loggedIn && (
-            <button className="add-document" onClick={handleAddButton}>
-              <img className="doc-img" src="/add-document-icon.png"></img>
-              Add new Document
-            </button>
+            <div className="button-overlay">
+              <button className="add-document" onClick={handleAddButton}>
+                <img
+                  className="doc-img"
+                  src="/add-document-icon.png"
+                  alt="Add document icon"
+                ></img>
+                <h4>Add new Document</h4>
+              </button>
+            </div>
           )}
         </div>
         {/* Table to see the list of all documents */}

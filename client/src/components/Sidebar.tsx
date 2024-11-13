@@ -2,6 +2,8 @@ import { FC, useState } from "react";
 import { Document, Link } from "../utils/interfaces";
 import ModalAddConnection from "../components/ModalAddConnection";
 import "../styles/Sidebar.scss";
+import "@material/web/iconbutton/filled-tonal-icon-button.js";
+import "@material/web/icon/_icon.scss";
 import dayjs from "dayjs";
 
 interface SidebarProps {
@@ -70,7 +72,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
           className="btn-close-sidebar"
           onClick={() => props.setSidebarOpen(false)}
         >
-          <img className="btn-close-img" src="x.svg" alt="Close" />
+          <img className="btn-close-img" src="x.png" alt="Close" />
         </button>
       </div>
 
@@ -102,15 +104,16 @@ const Sidebar: FC<SidebarProps> = (props) => {
         </h4>
         <div className="connection-group">
           <h4>
-            Connections: <a>{props.document?.connections?.length}</a>
+            Links: <a>{props.document?.connections?.length}</a>
           </h4>
           {props.loggedIn && (
-            <button
-              className="btn-add-button"
-              onClick={handleModalOpenConnection}
-            >
-              +
-            </button>
+            <div>
+              <button className="see-links" onClick={handleModalOpenConnection}>
+                <span className="material-symbols-outlined dark">
+                  visibility
+                </span>
+              </button>
+            </div>
           )}
         </div>
 

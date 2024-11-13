@@ -22,15 +22,14 @@ const NavHeader: FC<NavHeaderProps> = ({
     <nav className="nav-header">
       <div className="nav-container">
         <div className="nav-left">
-          <img
-            src="/LOGO.png"
-            alt="Kiruna eXplorer Logo"
-            className="nav-logo"
-          ></img>
           <div className="nav-brand">Kiruna eXplorer.</div>
         </div>
         <div className={`nav-right ${loggedIn ? "logged-in" : ""}`}>
-          {loggedIn ? <span className="username">Hi {user.name}!</span> : null}
+          {loggedIn ? (
+            <span className="username">
+              <h4>Hi {user.name}!</h4>
+            </span>
+          ) : null}
           <button onClick={loggedIn ? logout : login}>
             {loggedIn ? "Logout" : "Login"}
           </button>

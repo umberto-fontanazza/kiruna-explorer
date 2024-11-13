@@ -27,26 +27,27 @@ body {
   }
 
   .left-panel {
-    width: 56vw;
+    width: 66vw;
     height: 100vh;
-    background: Color.$main;
     display: flex;
+    background: Color.$first;
     flex-direction: column;
     justify-content: center;
     color: white;
     overflow: hidden;
-    border-top-right-radius: 1rem;
-    border-bottom-right-radius: 1rem;
 
     h1 {
       color: #ddd;
       padding: 4%;
       margin-top: 12%;
+      font-size: 7vmin;
+      font-family: "SwedenSansBold", sans-serif;
     }
 
     p {
-      color: Color.$third;
-      font-size: 2.3vmin;
+      font-family: "SwedenSans", sans-serif;
+      color: #ddd;
+      font-size: 2vmin;
       padding: 4%;
       margin-top: 5vmin;
     }
@@ -67,6 +68,9 @@ body {
     justify-content: center;
     align-items: center;
     padding: 3vmin;
+    z-index: 1;
+    background-color: white;
+    font-family: "SwedenSansBold", sans-serif;
 
     h2 {
       color: Color.$first;
@@ -115,12 +119,13 @@ body {
     }
 
     input:focus {
-      border-color: Color.$second;
+      border-color: Color.$first;
       outline: none;
     }
 
     .forgot-password {
       text-align: right;
+      margin-top: 1vmin;
       margin-bottom: 5vmin;
 
       a {
@@ -130,7 +135,7 @@ body {
       }
 
       :hover {
-        color: Color.$second;
+        text-decoration: underline;
       }
     }
 
@@ -141,13 +146,13 @@ body {
       color: white;
       border-radius: 1vmin;
       cursor: pointer;
-      background: Color.$main;
+      background: Color.$first;
       background-size: 200% 100%;
       background-position: 201%;
       transition: background-position 0.5s ease;
 
       &:hover {
-        background-position: 100%;
+        background-color: Color.$first-hover;
       }
     }
 
@@ -157,7 +162,7 @@ body {
       color: Color.$first;
 
       a {
-        color: Color.$second;
+        color: Color.$first;
         text-decoration: none;
 
         &:hover {

@@ -1,6 +1,28 @@
 @use "Color";
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
 
+@font-face {
+  font-family: "SwedenSansBold";
+  src:
+    url("../assets/fonts/SwedenSansBold.woff2") format("woff2"),
+    /* Modern Browsers */ url("../assets/fonts/SwedenSansBold.otf")
+      format("opentype");
+  font-style: normal;
+  font-weight: bold;
+  text-rendering: optimizeLegibility;
+}
+
+@font-face {
+  font-family: "SwedenSans";
+  src:
+    url("../assets/fonts/SwedenSansRegular.woff2") format("woff2"),
+    /* Modern Browsers */ url("../assets/fonts/SwedenSansRegular.otf")
+      format("opentype");
+  font-style: normal;
+  font-weight: bold;
+  text-rendering: optimizeLegibility;
+}
+
 // Reset base
 *,
 *::before,
@@ -12,13 +34,7 @@
 
 html,
 body {
-  font-family: "Poppins", sans-serif;
-  font-size: 16px;
-  line-height: 1.5;
-  background-color: Color.$third;
-  color: #333;
-  width: 100%;
-  height: 100%;
+  font-family: "SwedenSans", sans-serif;
 }
 
 ::-webkit-scrollbar {
