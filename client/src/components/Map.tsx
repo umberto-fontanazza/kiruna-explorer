@@ -7,6 +7,8 @@ import "../styles/Map.scss";
 
 interface MapComponentProps {
   documents: Document[];
+  documentSelected: Document | null;
+  visualLinks: boolean;
   setSidebarOpen: (value: boolean) => void;
   setDocSelected: (value: Document | null) => void;
 }
@@ -17,6 +19,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
+  const [markers, setMarkers] = useState<
+    google.maps.marker.AdvancedMarkerElement[]
+  >([]);
 
   // Load Google Maps API with API key from environment variables
   const { isLoaded } = useJsApiLoader({
@@ -67,44 +72,70 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   useEffect(() => {
     if (isLoaded && map) {
-      const markers: google.maps.marker.AdvancedMarkerElement[] = [];
+      // Function to create a Marker
+      const createMarker = (
+        doc: Document,
+        markerClass: string
+      ): google.maps.marker.AdvancedMarkerElement => {
+        const markerContent = document.createElement("div");
+        markerContent.className = `map-icon-documents ${markerClass}`;
+        markerContent.innerHTML = `<img class="doc-img" src="/document-${doc.type}-icon.png" alt="Custom Marker" />`;
+
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          map,
+          position: {
+            lat: doc.coordinates.latitude!,
+            lng: doc.coordinates.longitude!,
+          },
+          content: markerContent,
+          title: doc.title,
+        });
+
+        marker.addListener("click", () => {
+          props.setSidebarOpen(true);
+          props.setDocSelected(doc);
+          setCenter({
+            lat: doc.coordinates.latitude!,
+            lng: doc.coordinates.longitude! + 0.0019,
+          });
+        });
+
+        return marker;
+      };
 
       props.documents.map((doc) => {
         if (
           doc.coordinates.latitude !== null &&
           doc.coordinates.longitude !== null
         ) {
-          const markerContent = document.createElement("div");
-          markerContent.className = "map-icon-documents";
-          markerContent.innerHTML = `<img class="doc-img" src="/document-${doc.type}-icon.png" alt="Custom Marker" />`;
-          const marker = new google.maps.marker.AdvancedMarkerElement({
-            map,
-            position: {
-              lat: doc.coordinates.latitude!,
-              lng: doc.coordinates.longitude!,
-            },
-            content: markerContent,
-            title: doc.title,
-          });
-
-          marker.addListener("click", () => {
-            props.setSidebarOpen(true);
-            props.setDocSelected(doc);
-            setCenter({
-              lat: doc.coordinates.latitude!,
-              lng: doc.coordinates.longitude! + 0.0019,
+          if (props.visualLinks) {
+            if (doc.id === props.documentSelected?.id) {
+              const marker = createMarker(doc, "not-visual");
+              markers.push(marker);
+            }
+            props.documentSelected?.connections.forEach((link) => {
+              if (doc.id === link.targetDocumentId) {
+                const marker = createMarker(doc, "visual");
+                markers.push(marker);
+              }
             });
-          });
-
-          markers.push(marker);
+          } else {
+            // Se `visualLinks` è disattivo, crea un marker senza connessioni
+            const marker = createMarker(doc, "not-visual");
+            markers.push(marker);
+          }
         }
       });
+
+      setMarkers(markers);
 
       return () => {
         markers.forEach((marker) => (marker.map = null));
       };
     }
-  }, [isLoaded, map, props, props.documents]);
+  }, [isLoaded, map, markers, props]);
+
+  useEffect(() => {}, [props.visualLinks]);
 
   // Render map only when API is loaded
   return isLoaded ? (

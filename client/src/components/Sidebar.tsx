@@ -10,6 +10,8 @@ interface SidebarProps {
   document: Document | null;
   documents: Document[];
   loggedIn: boolean;
+  visualLinks: boolean;
+  setVisualLinks: (visual: boolean) => void;
   setSidebarOpen: (isOpen: boolean) => void;
   setDocument: (doc: Document) => void;
   setDocuments: (docs: Document[]) => void;
@@ -18,11 +20,6 @@ interface SidebarProps {
 const Sidebar: FC<SidebarProps> = (props) => {
   // State for controlling the modal for adding connections
   const [modalConnectionOpen, setModalConnectionOpen] = useState(false);
-
-  // Function to open modal for adding connections
-  const handleModalOpenConnection = () => {
-    setModalConnectionOpen(true);
-  };
 
   // Handle adding a new connection link
   const handleAddNewConnection = async (newLink: Link) => {
@@ -108,8 +105,17 @@ const Sidebar: FC<SidebarProps> = (props) => {
           </h4>
           {props.loggedIn && (
             <div>
-              <button className="see-links" onClick={handleModalOpenConnection}>
-                <span className="material-symbols-outlined dark">
+              <button
+                className={`see-links ${props.visualLinks ? "fill" : "no-fill"}`}
+                onClick={() =>
+                  props.visualLinks
+                    ? props.setVisualLinks(false)
+                    : props.setVisualLinks(true)
+                }
+              >
+                <span
+                  className={`material-symbols-outlined dark ${props.visualLinks ? "fill" : "no-fill"}`}
+                >
                   visibility
                 </span>
               </button>

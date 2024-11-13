@@ -8,8 +8,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: Color.$third;
+
   cursor: pointer;
+
+  &.not-visual {
+    background-color: Color.$third;
+  }
+
+  &.visual {
+    background-color: Color.$second;
+  }
 
   &:hover {
     background-color: Color.$second;

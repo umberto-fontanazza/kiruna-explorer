@@ -130,17 +130,33 @@
         cursor: pointer;
         transition: background-color 0.3s;
 
-        &:hover {
+        &.fill {
           background-color: Color.$first;
-          color: white;
+
+          &:hover {
+            background-color: Color.$first-hover;
+            border-color: Color.$first-hover;
+          }
+        }
+
+        &.no-fill {
+          &:hover {
+            background-color: Color.$first;
+          }
         }
 
         .dark {
           color: Color.$first;
 
-          &:hover {
+          &.fill {
             color: white;
-            border: 0.2rem Color.$first;
+          }
+
+          &.no-fill {
+            &:hover {
+              color: white;
+              border: 0.2rem Color.$first;
+            }
           }
         }
       }
