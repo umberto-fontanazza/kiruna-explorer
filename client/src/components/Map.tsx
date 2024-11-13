@@ -1,4 +1,4 @@
-import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { FC, useEffect, useState } from "react";
 import { Document } from "../utils/interfaces";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
