@@ -7,7 +7,6 @@ import { StatusCodes } from "http-status-codes";
 import { DocumentType, Stakeholder } from "../src/model/document";
 import { ScaleType } from "../src/model/scale";
 import { loginAsPlanner, loginAsResident } from "./utils";
-import { Cookie } from "express-session";
 
 // End to end testing, User story 1 and User story 3.
 let plannerCookie: string;
