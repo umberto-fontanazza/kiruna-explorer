@@ -1,11 +1,13 @@
 # Tests:
+
 ## US 1. As an Urban Planner I want to add a new document description:
-    
-### Fields 
-- title: string *
-- description: string *
-- type: DocumentType *
-- scale_type: ScaleType/scale_ratio: number *
+
+### Fields
+
+- title: string \*
+- description: string \*
+- type: DocumentType \*
+- scale_type: ScaleType/scale_ratio: number \*
 - stakeholders: Stakeholder[]
 - issuanceDate: Date (Some documents do not have it)
 - coordinates: Coordinates (Will be modified with other user stories)
@@ -13,8 +15,9 @@
 - Pages (Will be modified with User Story 7)
 
 ### Cases:
+
 1. Adding a document without being Urban Planner. DONE (UNAUTHORIZED)
-2. Adding a document being Urban Planner, with all the fields filled in.  DONE (CREATED)
+2. Adding a document being Urban Planner, with all the fields filled in. DONE (CREATED)
 3. Adding a document being Urban Planner, with all the mandatory fields filled. DONE (CREATED)
 4. Add a document being Urban Planner, without filling out a required field. DONE (BAD_REQUEST)
 5. Add a document being Urban Planner, without filling several mandatory fields. DONE (BAD_REQUEST)
@@ -36,15 +39,19 @@
 
 ## US 2. As an Urban Planner I want to link documents to each other So that I can study their relationships
 
-## US 3. As an Urban Planner I want to georeference a document (possibly at insertion time) So that I can study its relationship to the territory 
+## US 3. As an Urban Planner I want to georeference a document (possibly at insertion time) So that I can study its relationship to the territory
+
 ### Cases:
+
 1. Georeference a document and not be an Urban Planner. DONE (UNAUTHORIZED)
 2. Georeference a document being an Urban Planner, filling in the information correctly. DONE (CREATED)
 3. Georeferencing a document being an Urban planner, filling the information incorrectly. DONE (BAD_REQUEST)
 4. Georeference a document being an Urban planner, with missing information. DONE (BAD_REQUEST)
 
-## US 4. As a resident/visitor/urban planner I want to view the documents on the map So that I can see to which position or area they relate 
+## US 4. As a resident/visitor/urban planner I want to view the documents on the map So that I can see to which position or area they relate
+
 #### Cases:
+
 1. View all documents as a Visitor. DONE (OK)
 2. View all documents as a Urban Planner. DONE (OK)
 3. View all documents as a Resident. DONE (OK)
