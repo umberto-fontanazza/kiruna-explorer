@@ -22,11 +22,6 @@ const NavHeader: FC<NavHeaderProps> = ({
     <nav className="nav-header">
       <div className="nav-container">
         <div className="nav-left">
-          {/*<img
-            src="/LOGO.png"
-            alt="Kiruna eXplorer Logo"
-            className="nav-logo"
-          ></img>*/}
           <div className="nav-brand">Kiruna eXplorer.</div>
         </div>
         <div className={`nav-right ${loggedIn ? "logged-in" : ""}`}>

@@ -95,13 +95,11 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                     });
                   }}
                 >
-                  {
-                    <img
-                      src={`/document-${doc.type}-icon.png`}
-                      alt="Custom Marker"
-                      style={{ width: "4vh", height: "4vh" }}
-                    />
-                  }
+                  <img
+                    className="doc-img"
+                    src={`/document-${doc.type}-icon.png`}
+                    alt="Custom Marker"
+                  />
                 </div>
               </OverlayView>
             )
