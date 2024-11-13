@@ -545,31 +545,38 @@ const ModalForm: FC<ModalAddProps> = ({
               </button>
 
               {/* Body */}
-
-              <LinksTable
-                tableLinks={tableLinks}
-                setTableLinks={setTableLinks}
-                documents={documents}
-              />
-
-              <form>
-                <SearchBar
-                  documents={documents}
-                  setTableLinks={setTableLinks}
-                />
-
-                <div className="button-group-2">
-                  <button
-                    className="cancel-button-2"
-                    onClick={() => setPage(1)}
-                  >
-                    Back
-                  </button>
-                  <button className="submit-button-2" type="submit">
-                    Add Document
-                  </button>
+              <body>
+                <div className="links-table-container">
+                  {tableLinks.length != 0 ? (
+                    <LinksTable
+                      tableLinks={tableLinks}
+                      setTableLinks={setTableLinks}
+                      documents={documents}
+                    />
+                  ) : null}
                 </div>
-              </form>
+
+                <div className="bottom-group">
+                  <form>
+                    <SearchBar
+                      documents={documents}
+                      setTableLinks={setTableLinks}
+                    />
+                  </form>
+
+                  <div className="button-group-2">
+                    <button
+                      className="cancel-button-2"
+                      onClick={() => setPage(1)}
+                    >
+                      Back
+                    </button>
+                    <button className="submit-button-2" type="submit">
+                      Add Document
+                    </button>
+                  </div>
+                </div>
+              </body>
             </div>
           </div>
         }
@@ -630,10 +637,7 @@ function SearchBar(props: {
   };
 
   return (
-    <div
-      className="search-container"
-      style={{ position: "relative", width: "50%" }}
-    >
+    <>
       <input
         type="text"
         className="search-input"
@@ -643,7 +647,7 @@ function SearchBar(props: {
         onFocus={() => setShowSuggestions(true)}
         onBlur={() => setTimeout(() => setShowSuggestions(false), 200)} // Ritardo per permettere il click
         style={{
-          width: "100%",
+          width: "80%",
           padding: "10px",
           fontSize: "16px",
           //boxSizing: "border-box",
@@ -653,29 +657,12 @@ function SearchBar(props: {
 
       {/* Mostra i suggerimenti solo se sono presenti e se è attivo showSuggestions */}
       {showSuggestions && filteredSuggestions.length > 0 && (
-        <div
-          className="form-group"
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: "0",
-            right: "0",
-            border: "1px solid #ddd",
-            backgroundColor: "green",
-            zIndex: "1000",
-            maxHeight: "150px",
-            overflowY: "auto",
-          }}
-        >
+        <div className="form-group">
           {filteredSuggestions.slice(0, 5).map((suggestion, index) => (
             <div
               key={index}
               onClick={() => selectSuggestion(suggestion)}
               className="suggestion-item"
-              style={{
-                padding: "10px",
-                cursor: "pointer",
-              }}
               onMouseDown={(e) => e.preventDefault()} // Previene la perdita di focus
             >
               {suggestion.title}
@@ -693,8 +680,10 @@ function SearchBar(props: {
         <option value={LinkType.Projection}>Projection</option>
         <option value={LinkType.Update}>Update</option>
       </select>
-      <button onClick={(e) => handleAddLink(e)}>Add Link</button>
-    </div>
+      <button onClick={(e) => handleAddLink(e)}>
+        <span>Add Link</span>
+      </button>
+    </>
   );
 }
 

@@ -172,6 +172,10 @@
     width: 60% !important;
     height: 90vh !important;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2vh;
 
     h2 {
       font-size: 1.8rem;
@@ -186,8 +190,8 @@
       color: white;
       border: 0.1rem solid Color.$first;
       position: absolute;
-      top: 2%;
-      right: 2%;
+      top: 6%;
+      right: 21%;
       border-radius: 50%;
       width: 2vw;
       height: 2vw;
@@ -203,93 +207,130 @@
         height: 1.5vh;
       }
     }
-
-    form {
+    body {
       display: flex;
       flex-direction: column;
-      gap: 1vh;
+      justify-content: space-between;
+      background-color: transparent;
+      align-items: center;
+      width: 90%;
+      .links-table-container {
+        top: 30%;
+        width: 100%;
+        table {
+          width: 100%;
+          border-collapse: collapse;
 
-      .search-container {
-        display: flex;
-        align-items: center;
+          th,
+          td {
+            border: 1px solid #ddd;
+            padding: 0.3rem;
+            text-align: center;
+          }
+
+          th {
+            background-color: Color.$first;
+            color: white;
+          }
+
+          tr:nth-child(even) {
+            background-color: #f2f2f2;
+          }
+
+          tr:hover {
+            background-color: #f1f1f1;
+          }
+
+          img {
+            transform: scale(0.5);
+          }
+          .remove-link {
+            cursor: pointer;
+            border-radius: 8px;
+            padding: 0.1rem;
+          }
+        }
       }
 
-      .form-group {
+      .bottom-group {
+        width: 100%;
         display: flex;
         flex-direction: column;
-        width: 100%;
+        align-items: center;
+        gap: 1.5rem;
+        form {
+          width: 80%;
+          display: inline-flex;
+          justify-content: space-between;
+          gap: 1rem;
+          position: relative;
+          align-items: center;
 
-        label {
-          font-size: 1rem;
-          font-weight: bold;
-          color: Color.$first;
-        }
+          button,
+          select,
+          input {
+            border-radius: 8px;
+            padding: 10px;
+            z-index: 1000;
+          }
 
-        input,
-        textarea {
-          padding: 1vh;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          font-size: 1rem;
-          color: Color.$first;
+          .form-group {
+            position: absolute;
+            bottom: 85%;
+            left: 0;
+            right: 0;
+            border: 1px solid #ddd;
+            background-color: white;
+            z-index: 999;
+            max-height: 700%;
+            overflow-y: auto;
+            width: 60.5%;
+            padding-bottom: 1%;
+            .suggestion-item {
+              padding: 6px;
+              cursor: pointer;
 
-          &:focus {
-            border-color: Color.$second;
-            outline: none;
+              &:hover {
+                background-color: Color.$third;
+              }
+            }
+          }
+
+          button {
+            width: 20%;
           }
         }
 
-        select {
-          padding: 1vh;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          font-size: 1rem;
-          color: #333;
-          background-color: #fff;
-
-          &:focus {
-            border-color: Color.$second;
-            outline: none;
-          }
-        }
-      }
-
-      .line {
-        display: flex;
-        gap: 1rem;
-
-        .form-group-2 {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
+        .button-group-2 {
+          position: static;
+          bottom: 5%;
           width: 100%;
-        }
-      }
+          bottom: 0;
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          gap: 1rem;
 
-      .button-group-2 {
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
+          .submit-button-2,
+          .cancel-button-2 {
+            flex: 1;
+            padding: 0.75rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+          }
 
-        .submit-button-2,
-        .cancel-button-2 {
-          flex: 1;
-          padding: 0.75rem;
-          font-weight: bold;
-          border-radius: 8px;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-          text-align: center;
-        }
+          .submit-button-2 {
+            background-color: Color.$first;
+            color: white;
+            border: 0.1rem solid Color.$first;
 
-        .submit-button-2 {
-          background-color: Color.$first;
-          color: white;
-          border: 0.1rem solid Color.$first;
-
-          &:hover {
-            background: Color.$third;
-            color: Color.$first;
+            &:hover {
+              background: Color.$third;
+              color: Color.$first;
+            }
           }
         }
       }
