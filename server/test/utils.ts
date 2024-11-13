@@ -20,3 +20,19 @@ export async function loginAsPlanner(): Promise<string> {
   const sessionCookie: string = response.header["set-cookie"][0];
   return sessionCookie;
 }
+
+export async function loginAsResident(): Promise<string> {
+  let response = await request(app).post("/users").send({
+    email: "testresident@gmail.com",
+    password: "residentPassword",
+    name: "Residente",
+    surname: "resident",
+    role: "resident",
+  });
+  response = await request(app).post("/sessions").send({
+    email: "testresident@gmail.com",
+    password: "residentPassword",
+  });
+  const sessionCookie: string = response.header["set-cookie"][0];
+  return sessionCookie;
+}
