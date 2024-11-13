@@ -1,19 +1,20 @@
-import { FC, useState } from "react";
+import { FC, useState, useContext } from "react";
 import { Document, Link } from "../utils/interfaces";
 import ModalAddConnection from "../components/ModalAddConnection";
 import "../styles/Sidebar.scss";
 import dayjs from "dayjs";
+import { authContext } from "../context/auth";
 
 interface SidebarProps {
   document: Document | null;
   documents: Document[];
-  loggedIn: boolean;
   setSidebarOpen: (isOpen: boolean) => void;
   setDocument: (doc: Document) => void;
   setDocuments: (docs: Document[]) => void;
 }
 
 const Sidebar: FC<SidebarProps> = (props) => {
+  const { user } = useContext(authContext);
   // State for controlling the modal for adding connections
   const [modalConnectionOpen, setModalConnectionOpen] = useState(false);
 
@@ -104,7 +105,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
           <h4>
             Connections: <a>{props.document?.connections?.length}</a>
           </h4>
-          {props.loggedIn && (
+          {user && (
             <button
               className="btn-add-button"
               onClick={handleModalOpenConnection}
