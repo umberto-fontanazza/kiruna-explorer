@@ -16,11 +16,7 @@ import dayjs from "dayjs";
 interface ModalAddProps {
   modalOpen: boolean;
   onClose: () => void;
-  onSubmit: (
-    newDocument: Document,
-    targetId: number,
-    linkType: LinkType
-  ) => void;
+  onSubmit: (newDocument: Document) => void;
   documents: Document[];
 }
 
@@ -39,7 +35,7 @@ const ModalForm: FC<ModalAddProps> = ({
     scale: "",
     issuanceDate: null,
     type: undefined,
-    connections: [],
+    links: [],
     language: "",
     pages: null,
     coordinates: { latitude: null, longitude: null },
@@ -64,10 +60,6 @@ const ModalForm: FC<ModalAddProps> = ({
 
   const [page, setPage] = useState<number>(1);
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
-  const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
-  const [newTypeConnection, setNewTypeConnection] = useState<
-    LinkType | undefined
-  >(undefined);
   const [isNumericScale, setIsNumericScale] = useState<boolean>(false);
   const [tableLinks, setTableLinks] = useState<Link[]>([]);
 
@@ -122,27 +114,18 @@ const ModalForm: FC<ModalAddProps> = ({
     if (isNumericScale) {
       newDoc.scale = "1:" + newDoc.scale;
     }
-    onSubmit(
-      {
-        ...newDoc,
-        connections: [
-          {
-            targetDocumentId: targetDocumentId,
-            type: newTypeConnection ? [newTypeConnection] : [],
-          },
-        ],
-      },
-      targetDocumentId,
-      newTypeConnection ? LinkType.Direct : LinkType.Collateral
-    );
+    onSubmit({
+      ...newDoc,
+      links: tableLinks,
+    });
     resetForm();
   };
 
   // Reset Form
   const resetForm = () => {
     setNewDoc(initialDocumentState);
-    setNewTypeConnection(LinkType.Direct);
-    setTargetDocumentId(-1);
+    setPage(1);
+    setTableLinks([]);
   };
 
   // Return early if modal is closed
@@ -423,7 +406,7 @@ const ModalForm: FC<ModalAddProps> = ({
                           },
                         }))
                       }
-                      placeholder="Es. 34.1234"
+                      placeholder="Es. 67.8558"
                       required
                     />
                   </div>
@@ -452,69 +435,11 @@ const ModalForm: FC<ModalAddProps> = ({
                           },
                         }));
                       }}
-                      placeholder="Es. 123.1234"
+                      placeholder="Es. 20.2253"
                       required
                     />
                   </div>
                 </div>
-
-                {/* Connections */}
-
-                {/* Target Document ID */}
-                {/*<div className="form-group">
-                  <label>Connection *</label>
-                  <select
-                    value={targetDocumentId ?? ""}
-                    onChange={(e) => setTargetDocumentId(Number(e.target.value))}
-                  >
-                    <option value="" hidden selected>
-                      Select a document to link
-                    </option>
-                    {documents.map((doc) => (
-                      <option key={doc.id} value={doc.id}>
-                        {doc.title}
-                      </option>
-                    ))}
-                  </select>
-                </div>*/}
-
-                {/* Connection Type */}
-                {/*<div className="form-group">
-                  <label>Connection Type *</label>
-                  <select
-                    value={newTypeConnection}
-                    onChange={(e) =>
-                      setNewTypeConnection(e.target.value as LinkType)
-                    }
-                  >
-                    <option value="" disabled>
-                      Select the Connection's type
-                    </option>
-                    <option value="DIRECT">Direct</option>
-                    <option value="COLLATERAL">Collateral</option>
-                    <option value="PROJECTION">Projection</option>
-                    <option value="UPDATE">Update</option>
-                  </select>
-                </div>*/}
-                {/* Connection Type */}
-                {/*<div className="form-group">
-                <label>Connection Type *</label>
-                <select
-                  value={newTypeConnection}
-                  onChange={(e) =>
-                    setNewTypeConnection(e.target.value as LinkType)
-                  }
-                >
-                  <option value="" disabled>
-                    Select the Connection's type
-                  </option>
-                  <option value="direct">Direct</option>
-                  <option value="collateral">Collateral</option>
-                  <option value="projection">Projection</option>
-                  <option value="update">Update</option>
-                </select>
-              </div>*/}
-
                 {/* Form Buttons */}
                 <div className="button-group">
                   <button className="submit-button" onClick={() => setPage(2)}>
@@ -539,6 +464,7 @@ const ModalForm: FC<ModalAddProps> = ({
                 onClick={() => {
                   setNewDoc(initialDocumentState);
                   onClose();
+                  setPage(1);
                 }}
               >
                 <img src="/x.svg" alt="Close" />
@@ -548,18 +474,26 @@ const ModalForm: FC<ModalAddProps> = ({
               <body>
                 <div className="links-table-container">
                   {tableLinks.length != 0 ? (
-                    <LinksTable
-                      tableLinks={tableLinks}
-                      setTableLinks={setTableLinks}
-                      documents={documents}
-                    />
-                  ) : null}
+                    <div className="table-wrapper">
+                      <LinksTable
+                        tableLinks={tableLinks}
+                        setTableLinks={setTableLinks}
+                        documents={documents}
+                      />
+                    </div>
+                  ) : (
+                    <h5>
+                      If you need to add links to other documents, please use
+                      the search bar below.
+                    </h5>
+                  )}
                 </div>
 
                 <div className="bottom-group">
                   <form>
                     <SearchBar
                       documents={documents}
+                      tableLinks={tableLinks}
                       setTableLinks={setTableLinks}
                     />
                   </form>
@@ -571,7 +505,10 @@ const ModalForm: FC<ModalAddProps> = ({
                     >
                       Back
                     </button>
-                    <button className="submit-button-2" type="submit">
+                    <button
+                      className="submit-button-2"
+                      onClick={(e) => handleFormSubmit(e)}
+                    >
                       Add Document
                     </button>
                   </div>
@@ -585,10 +522,13 @@ const ModalForm: FC<ModalAddProps> = ({
   }
 };
 
-function SearchBar(props: {
+interface SearchBarProps {
   documents: Document[];
+  tableLinks: Link[];
   setTableLinks: React.Dispatch<React.SetStateAction<Link[]>>;
-}) {
+}
+
+function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
   // Stato per gestire l'input e i suggerimenti filtrati
   const [query, setQuery] = useState("");
   const [selectedDocument, setSelectedDocument] = useState<Document>();
@@ -604,7 +544,7 @@ function SearchBar(props: {
     setQuery(userInput);
 
     // Filtra le opzioni in base all'input
-    const filtered = props.documents.filter((document) =>
+    const filtered = documents.filter((document) =>
       document.title.toLowerCase().includes(userInput.toLowerCase())
     );
     setFilteredSuggestions(filtered);
@@ -627,12 +567,44 @@ function SearchBar(props: {
   const handleAddLink = (e: HandleAddLinkEvent) => {
     e.preventDefault();
     if (selectedDocument?.id !== undefined) {
-      props.setTableLinks((prev: Link[]) => {
-        return [
-          ...prev,
-          { targetDocumentId: selectedDocument.id - 1, type: [type] },
-        ];
-      });
+      //se è stato selezionato un documento
+
+      const target = tableLinks.find(
+        (link) => link.targetDocumentId === selectedDocument.id - 1
+      );
+
+      if (target) {
+        setTableLinks((prev: Link[]) => {
+          const updatedLinks = prev.map((link) => {
+            if (link.targetDocumentId === selectedDocument.id - 1) {
+              if (!link.type.includes(type)) {
+                return {
+                  ...link,
+                  type: [...link.type, type],
+                };
+              } else {
+                console.log("Link already exists");
+              }
+            }
+            return link; // If the link is not the one to update, return it as it is
+          });
+
+          // Return the updated links
+          return updatedLinks;
+        });
+      } else {
+        setTableLinks((prev: Link[]) => {
+          return [
+            ...prev,
+            {
+              targetDocumentId: selectedDocument.id - 1,
+              type: [type],
+            },
+          ];
+        });
+      }
+    } else {
+      console.log("Document not selected");
     }
   };
 
@@ -687,21 +659,35 @@ function SearchBar(props: {
   );
 }
 
-// interface LinksTableProps {
-//   tableLinks: Link[];
-//   setTableLinks: SetStateAction<Link[]>;
-//   documents: Document[];
-// }
-
-function LinksTable(props: {
+interface LinksTableProps {
   tableLinks: Link[];
-  setTableLinks: (arg0: (prev: Link[]) => Link[]) => void;
+  setTableLinks: React.Dispatch<SetStateAction<Link[]>>;
   documents: Document[];
-}) {
-  const handleRemove = (e: React.MouseEvent<HTMLButtonElement>, link: Link) => {
+}
+
+function LinksTable({ tableLinks, setTableLinks, documents }: LinksTableProps) {
+  const handleRemove = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    link: Link,
+    type: LinkType
+  ) => {
     e.preventDefault();
-    props.setTableLinks((prev: Link[]) => {
-      return prev.filter((l) => l !== link);
+
+    setTableLinks((prev: Link[]) => {
+      return prev
+        .map((l) => {
+          if (l === link) {
+            const updatedTypes = l.type.filter((t) => t !== type);
+
+            if (updatedTypes.length > 0) {
+              return { ...l, type: updatedTypes };
+            } else {
+              return null;
+            }
+          }
+          return l;
+        })
+        .filter((l) => l !== null);
     });
   };
 
@@ -716,35 +702,33 @@ function LinksTable(props: {
         </tr>
       </thead>
       <tbody>
-        {props.tableLinks.map((link, index) => (
-          <tr key={index}>
-            <td>
-              <img
-                className="doc-icon"
-                src={`/document-${props.documents[link.targetDocumentId].type}-icon.png`}
-                alt="Document icon"
-              />
-            </td>
-            <td className="doc-title">
-              {props.documents[link.targetDocumentId].title}
-            </td>
-            <td>
-              {link.type.map((type) => (
-                <span key={type} className="link-type">
-                  {type}
-                </span>
-              ))}
-            </td>
-            <td>
-              <button
-                className="remove-link"
-                onClick={(e) => handleRemove(e, link)}
-              >
-                Remove
-              </button>
-            </td>
-          </tr>
-        ))}
+        {tableLinks.flatMap((link, index) =>
+          link.type.map((type) => (
+            <tr key={`${index}-${type}`}>
+              <td>
+                <img
+                  className="doc-icon"
+                  src={`/document-${documents[link.targetDocumentId].type}-icon.png`}
+                  alt="Document icon"
+                />
+              </td>
+              <td className="doc-title">
+                {documents[link.targetDocumentId].title}
+              </td>
+              <td>
+                <span className="link-type">{type}</span>
+              </td>
+              <td>
+                <button
+                  className="remove-link"
+                  onClick={(e) => handleRemove(e, link, type)}
+                >
+                  Remove
+                </button>
+              </td>
+            </tr>
+          ))
+        )}
       </tbody>
     </table>
   );

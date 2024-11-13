@@ -43,14 +43,10 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
   };
 
   // Handle form submission for new document
-  const handleAddNewDocument = async (
-    newDocument: Document,
-    targetId: number,
-    linkType: LinkType
-  ) => {
+  const handleAddNewDocument = async (newDocument: Document) => {
     setModalOpen(false);
-    const id = await API.addDocument(newDocument);
-    //await API.putLink(targetId, [linkType], id);
+    console.log(newDocument);
+    const id = await API.addDocument(newDocument); //TODO: implement API call and make the new links added in the modal are inserted
     console.log(id);
     const updatedDocument = { ...newDocument, id: id };
     setDocuments([...documents, updatedDocument]);
