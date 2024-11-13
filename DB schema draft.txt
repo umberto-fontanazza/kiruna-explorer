@@ -1,7 +1,7 @@
 I need the PostGIS postgre extension to handle spatial data.
 
-type USER_ROLE = enum { PLANNER, RESIDENT, DEVELOPER }
-type LINK_TYPE = enum { DIRECT, COLLATERAL, PROJECTION, UPDATE}
+type USER_ROLE = enum { urban_planner, resident, developer }
+type LINK_TYPE = enum { direct, collateral, projection, update}
 //TODO: introduce DOCUMENT.links jsonb validation based on enum USER_ROLE
 
 DOCUMENT {

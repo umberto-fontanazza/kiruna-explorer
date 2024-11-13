@@ -1,5 +1,7 @@
 // File in which we define the common interfaces in shared files
 
+import dayjs, { Dayjs } from "dayjs";
+
 export interface User {
   email: string;
   name: string;
@@ -8,10 +10,10 @@ export interface User {
 }
 
 export enum UserRole {
-  Developer = "DEVELOPER",
-  Planner = "PLANNER",
-  Resident = "RESIDENT",
-  Visitor = "VISITOR",
+  Developer = "developer",
+  Planner = "planner",
+  Resident = "resident",
+  Visitor = "visitor",
 }
 
 export interface LoginErrors {
@@ -27,9 +29,9 @@ export interface Document {
   id: number;
   title: string;
   description: string | undefined;
-  stakeholders: StakeHolders[];
+  stakeholders: Stakeholder[];
   scale: string;
-  issuanceDate: Date | null;
+  issuanceDate: Dayjs | null;
   type: DocumentType | undefined;
   connections: Link[];
   language: string | undefined;
@@ -38,26 +40,23 @@ export interface Document {
 }
 
 export enum LinkType {
-  Direct = "DIRECT",
-  Collateral = "COLLATERAL",
-  Projection = "PROJECTION",
-  Update = "UPDATE",
+  Direct = "direct",
+  Collateral = "collateral",
+  Projection = "projection",
+  Update = "update",
 }
 
 export enum DocumentType {
-  Informative = "INFORMATIVE",
-  Prescriptive = "PRESCRIPTIVE",
-  Design = "DESIGN",
-  Technical = "TECHNICAL",
-  Material = "MATERIAL",
-  Others = "OTHERS",
+  Design = "design",
+  Informative = "informative",
+  MaterialEffect = "material_effect",
+  Prescriptive = "prescriptive",
+  Technical = "technical",
 }
 
-export enum StakeHolders {
-  LKAB = "LKAB",
-  KirunaCommon = "Kiruna Kommun",
-  Regional_authority = "Regional Authority",
-  Architecture_Firms = "Architectures Firms",
-  Citizens = "Citizens",
-  Others = "Others",
+export enum Stakeholder {
+  KirunaKommun = "kiruna_kommun",
+  Lkab = "lkab",
+  Residents = "residents",
+  WhiteArkitekter = "white_arkitekter",
 }

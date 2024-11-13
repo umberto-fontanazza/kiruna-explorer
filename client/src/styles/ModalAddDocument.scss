@@ -1,4 +1,4 @@
-@use "variables";
+@use "Color";
 
 .modal-overlay {
   position: fixed;
@@ -23,15 +23,168 @@
     h2 {
       font-size: 1.8rem;
       font-weight: bold;
-      color: variables.$first-color;
+      color: Color.$first;
       margin-bottom: 2vh;
       text-align: center;
     }
 
-    .close-button {
-      background-color: variables.$first-color;
+    button.close {
+      background-color: Color.$first;
+      color: Color.$third;
+      border: 2px solid Color.$first;
+      border-radius: 50%;
+      position: absolute;
+      top: 2%;
+      right: 2%;
+      width: 2vw;
+      height: 2vw;
+      transition: background-color 0.3s;
+
+      &:hover {
+        background: Color.$third;
+        color: Color.$first;
+      }
+    }
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+
+    .form-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+
+      label {
+        font-size: 1rem;
+        font-weight: bold;
+        color: Color.$first;
+      }
+
+      input,
+      textarea {
+        padding: 0.8vh 1ch;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: Color.$first;
+      }
+
+      select {
+        padding: 1vh;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        color: #333;
+        background-color: #fff;
+      }
+
+      :focus {
+        border-color: Color.$second;
+        outline: none;
+      }
+
+      .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        --columns-count: 2;
+
+        .checkbox-label {
+          display: flex;
+          align-items: center;
+          margin-bottom: 8px;
+          cursor: pointer;
+          width: calc(100% / var(--columns-count, 2) - 0.5rem);
+
+          input[type="checkbox"] {
+            margin-right: 1rem;
+            width: 1rem;
+            height: 1rem;
+            accent-color: Color.$first;
+          }
+        }
+      }
+    }
+
+    .line {
+      display: flex;
+      gap: 1rem;
+
+      .form-group {
+        gap: 0.5rem;
+        width: 100%;
+      }
+    }
+
+    .button-group {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+
+      .submit-button,
+      .cancel-button {
+        flex: 1;
+        padding: 0.75rem;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-align: center;
+      }
+
+      .submit-button {
+        background-color: Color.$first;
+        color: white;
+        border: 0.1rem solid Color.$first;
+
+        &:hover {
+          background: Color.$third;
+          color: Color.$first;
+        }
+      }
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 8vh;
+  }
+}
+
+.modal-overlay-2 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+
+  .modal-content-2 {
+    background: #f3f3eb;
+    border-radius: 16px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
+    width: 60% !important;
+    height: 90vh !important;
+    overflow-y: auto;
+
+    h2 {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: Color.$first;
+      margin-bottom: 2vh;
+      text-align: center;
+    }
+
+    .close-button-2 {
+      background-color: Color.$first;
       color: white;
-      border: 0.1rem solid variables.$first-color;
+      border: 0.1rem solid Color.$first;
       position: absolute;
       top: 2%;
       right: 2%;
@@ -42,8 +195,8 @@
       transition: background-color 0.3s;
 
       &:hover {
-        background: variables.$third-color;
-        color: variables.$first-color;
+        background: Color.$third;
+        color: Color.$first;
       }
 
       .btn-close-img {
@@ -56,6 +209,11 @@
       flex-direction: column;
       gap: 1vh;
 
+      .search-container {
+        display: flex;
+        align-items: center;
+      }
+
       .form-group {
         display: flex;
         flex-direction: column;
@@ -64,7 +222,7 @@
         label {
           font-size: 1rem;
           font-weight: bold;
-          color: variables.$first-color;
+          color: Color.$first;
         }
 
         input,
@@ -73,10 +231,10 @@
           border: 1px solid #ddd;
           border-radius: 8px;
           font-size: 1rem;
-          color: variables.$first-color;
+          color: Color.$first;
 
           &:focus {
-            border-color: variables.$second-color;
+            border-color: Color.$second;
             outline: none;
           }
         }
@@ -90,28 +248,8 @@
           background-color: #fff;
 
           &:focus {
-            border-color: variables.$second-color;
+            border-color: Color.$second;
             outline: none;
-          }
-        }
-
-        .checkbox-group {
-          display: flex;
-          flex-wrap: wrap;
-
-          .checkbox-label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-            cursor: pointer;
-            width: calc(33.33% - 1rem);
-
-            input[type="checkbox"] {
-              margin-right: 1rem;
-              width: 1rem;
-              height: 1rem;
-              accent-color: variables.$first-color;
-            }
           }
         }
       }
@@ -120,7 +258,7 @@
         display: flex;
         gap: 1rem;
 
-        .form-group {
+        .form-group-2 {
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
@@ -128,13 +266,13 @@
         }
       }
 
-      .button-group {
+      .button-group-2 {
         display: flex;
         justify-content: space-between;
         gap: 1rem;
 
-        .submit-button,
-        .cancel-button {
+        .submit-button-2,
+        .cancel-button-2 {
           flex: 1;
           padding: 0.75rem;
           font-weight: bold;
@@ -144,22 +282,17 @@
           text-align: center;
         }
 
-        .submit-button {
-          background-color: variables.$first-color;
+        .submit-button-2 {
+          background-color: Color.$first;
           color: white;
-          border: 0.1rem solid variables.$first-color;
+          border: 0.1rem solid Color.$first;
 
           &:hover {
-            background: variables.$third-color;
-            color: variables.$first-color;
+            background: Color.$third;
+            color: Color.$first;
           }
         }
       }
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 8vh;
     }
   }
 }

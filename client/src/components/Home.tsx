@@ -29,6 +29,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
       try {
         const documents: Document[] = await API.getDocuments();
         setDocuments(documents);
+        console.log(documents);
       } catch (err) {
         console.error(err);
       }
@@ -75,15 +76,10 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
             />
           }
           {props.loggedIn && (
-            <div className="button-overlay">
-              <button className="add-document" onClick={handleAddButton}>
-                <img
-                  className="doc-img"
-                  src="/public/icons8-documento-50.png"
-                ></img>
-                Add new Document
-              </button>
-            </div>
+            <button className="add-document" onClick={handleAddButton}>
+              <img className="doc-img" src="/add-document-icon.png"></img>
+              Add new Document
+            </button>
           )}
         </div>
         {/* Table to see the list of all documents */}
@@ -102,7 +98,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
           //         <td>
           //           <img
           //             className="doc-icon"
-          //             src={`/document-icon-${document.type}-iconByIcons8.png`}
+          //             src={`/document-${document.type}-icon.png`}
           //             alt="Document icon"
           //           />
           //         </td>

@@ -69,7 +69,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         center={center}
       >
         {/* Render an overlay or marker for each document with valid coordinates */}
-        {props.documents.map(
+        {props.documents?.map(
           (doc) =>
             doc.coordinates.latitude !== null &&
             doc.coordinates.longitude !== null && (
@@ -94,7 +94,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                   }}
                 >
                   <img
-                    src={`/document-icon-${doc.type}-iconByIcons8.png`}
+                    src={`/document-${doc.type}-icon.png`}
                     alt="Custom Marker"
                     style={{ width: "4vh", height: "4vh" }}
                   />

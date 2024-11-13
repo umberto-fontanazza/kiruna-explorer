@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import { Document, Link } from "../utils/interfaces";
 import ModalAddConnection from "../components/ModalAddConnection";
 import "../styles/Sidebar.scss";
+import dayjs from "dayjs";
 
 interface SidebarProps {
   document: Document | null;
@@ -76,7 +77,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
       {/* Sidebar Content */}
       <div className="content">
         <img
-          src={`/document-icon-${props.document?.type}-iconByIcons8.png`}
+          src={`/document-${props.document?.type}-icon.png`}
           alt="Under Construction"
         />
         <hr />
@@ -94,7 +95,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
         </h4>
         <h4>
           Issuance Date:{" "}
-          <a>{props.document?.issuanceDate?.toLocaleDateString()}</a>
+          <a>{props.document?.issuanceDate?.format("DD/MM/YYYY")}</a>
         </h4>
         <h4>
           Type: <a>{props.document?.type}</a>
@@ -113,12 +114,12 @@ const Sidebar: FC<SidebarProps> = (props) => {
           )}
         </div>
 
-        <h4>
+        {/* <h4>
           Language: <a>{props.document?.language}</a>
-        </h4>
-        <h4>
+        </h4> */}
+        {/* <h4>
           Pages: <a>{props.document?.pages}</a>
-        </h4>
+        </h4> */}
       </div>
       {/* Modal for adding new connections */}
       {modalConnectionOpen && (

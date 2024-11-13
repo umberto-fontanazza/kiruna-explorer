@@ -30,6 +30,20 @@ export function isLoggedIn(req: Request, res: Response, next: NextFunction) {
   res.status(StatusCodes.UNAUTHORIZED).json({ error: "Not authenticated" });
 }
 
+export function isNotLoggedIn(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) {
+  if (!request.isAuthenticated()) {
+    next();
+    return;
+  }
+  response
+    .status(StatusCodes.UNAUTHORIZED)
+    .json({ error: "Already logged in" });
+}
+
 // Autorization middlewares
 export function isDeveloper(req: Request, res: Response, next: NextFunction) {
   const user = req.user as User;
@@ -43,7 +57,7 @@ export function isDeveloper(req: Request, res: Response, next: NextFunction) {
 
 export function isPlanner(req: Request, res: Response, next: NextFunction) {
   const user = req.user as User;
-  if (user && user.role === UserRole.Planner) {
+  if (user && user.role === UserRole.UrbanPlanner) {
     next();
     return;
   }
