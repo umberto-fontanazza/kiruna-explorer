@@ -1,6 +1,8 @@
 import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
 import { FC, useState } from "react";
 import { Document } from "../utils/interfaces";
+import "@material/web/iconbutton/filled-tonal-icon-button.js";
+import "@material/web/icon/_icon.scss";
 import "../styles/Map.scss";
 
 interface MapComponentProps {
@@ -94,9 +96,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                   }}
                 >
                   <img
+                    className="doc-img"
                     src={`/document-${doc.type}-icon.png`}
                     alt="Custom Marker"
-                    style={{ width: "4vh", height: "4vh" }}
                   />
                 </div>
               </OverlayView>

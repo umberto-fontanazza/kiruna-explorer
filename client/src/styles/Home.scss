@@ -49,74 +49,39 @@
     height: 92vh;
     position: relative;
 
-    button.add-document {
+    .button-overlay {
       position: absolute;
-      bottom: 3vh;
+      bottom: 1vh;
       left: 5vw;
-
       display: flex;
+      justify-content: center;
       align-items: center;
-      padding: 0.5rem 1ch;
-      column-gap: 1ch;
 
-      .doc-img {
-        width: 2.5em;
-      }
-
-      border-radius: 1rem;
-      border: 2px solid Color.$first;
-      background-color: Color.$third;
-      color: Color.$first;
-      transition: 300ms ease;
-
-      &:hover {
+      .add-document {
+        height: 10vh;
+        width: 15vw;
+        display: flex;
+        align-items: center;
+        border-radius: 1rem;
+        padding: 0;
+        background-color: Color.$third;
         color: Color.$first;
-        background-color: #bfbfac;
+        border: 0.1rem solid Color.$first;
+        cursor: pointer;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+
+        &:hover {
+          background-color: #bfbfac;
+          color: Color.$first;
+        }
+
+        .doc-img {
+          width: 50%;
+          transform: scale(0.5);
+        }
       }
-    }
-  }
-
-  /* Media Queries */
-  @media (max-width: 768px) {
-    .map {
-      height: 60vh;
-    }
-
-    .sidebar {
-      width: 80%;
-      right: -80%;
-
-      &.open {
-        right: 0;
-      }
-    }
-
-    .button-overlay .add-document,
-    .table-documents th,
-    .table-documents td {
-      font-size: 0.9rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .map {
-      height: 50vh;
-    }
-
-    .sidebar {
-      width: 100%;
-      right: -100%;
-
-      &.open {
-        right: 0;
-      }
-    }
-
-    .button-overlay .add-document,
-    .table-documents th,
-    .table-documents td {
-      font-size: 0.8rem;
-      padding: 0.5vh 0.5vw;
     }
   }
 }

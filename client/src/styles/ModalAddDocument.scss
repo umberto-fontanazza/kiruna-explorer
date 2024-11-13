@@ -13,36 +13,44 @@
   z-index: 1000;
 
   .modal-content {
-    background: #f3f3eb;
     border-radius: 16px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
-    max-width: 60% !important;
-    max-height: 100vh !important;
+    width: 50vw;
+    max-width: 80vw !important;
+    max-height: 100vh;
     overflow-y: auto;
+    background: #e8e3d1 !important;
 
     h2 {
-      font-size: 1.8rem;
-      font-weight: bold;
+      font-family: "SwedenSansBold";
+      font-size: 3rem !important;
       color: Color.$first;
-      margin-bottom: 2vh;
+      margin-bottom: 2rem;
       text-align: center;
     }
 
-    button.close {
+    .close-button {
       background-color: Color.$first;
       color: Color.$third;
       border: 2px solid Color.$first;
       border-radius: 50%;
       position: absolute;
-      top: 2%;
-      right: 2%;
+      top: 9.1%;
+      left: 72.5%;
+      border-radius: 50%;
       width: 2vw;
       height: 2vw;
       transition: background-color 0.3s;
+      justify-content: center;
+      align-items: center;
+      display: flex;
 
       &:hover {
-        background: Color.$third;
-        color: Color.$first;
+        background: Color.$first-hover;
+      }
+
+      img {
+        transform: scale(0.2);
       }
     }
   }
@@ -58,9 +66,17 @@
       flex-direction: column;
 
       label {
+        font-family: "SwedenSansBold", sans-serif;
         font-size: 1rem;
         font-weight: bold;
         color: Color.$first;
+      }
+
+      .ratio-group {
+        .ratio {
+          font-family: "SwedenSans", sans-serif;
+          color: Color.$first;
+        }
       }
 
       input,
@@ -82,7 +98,7 @@
       }
 
       :focus {
-        border-color: Color.$second;
+        border-color: Color.$first;
         outline: none;
       }
 
@@ -115,6 +131,107 @@
       .form-group {
         gap: 0.5rem;
         width: 100%;
+        margin-bottom: 1rem;
+
+        label {
+          font-family: "SwedenSansBold", sans-serif;
+          font-size: 1.3rem !important;
+          font-weight: bold;
+          color: Color.$first;
+        }
+
+        input,
+        textarea {
+          font-family: "SwedenSans", sans-serif;
+          padding: 1vh;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          font-size: 1rem;
+          color: Color.$first;
+
+          &:focus {
+            border-color: Color.$first;
+            outline: none;
+          }
+        }
+
+        select {
+          font-family: "SwedenSans", sans-serif;
+          color: Color.$first !important;
+          padding: 1vh;
+          border: 1px solid #ddd;
+          border-radius: 8px;
+          font-size: 1rem;
+          color: #333;
+          background-color: #fff;
+
+          &:focus {
+            border-color: Color.$first !important;
+            outline: none;
+          }
+        }
+
+        .checkbox-group {
+          display: flex;
+          flex-wrap: wrap;
+
+          .checkbox-label {
+            font-family: "SwedenSans", sans-serif;
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+            width: calc(33.33% - 1rem);
+            font-size: 1.4rem !important;
+
+            input[type="checkbox"] {
+              margin-right: 1rem;
+              width: 1rem;
+              height: 1rem;
+              accent-color: Color.$first;
+            }
+          }
+        }
+      }
+
+      .line {
+        display: flex;
+        gap: 1rem;
+
+        .form-group {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+          width: 100%;
+        }
+      }
+
+      .button-group {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+
+        .submit-button,
+        .cancel-button {
+          flex: 1;
+          padding: 0.75rem;
+          font-weight: bold;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background-color 0.3s ease;
+          text-align: center;
+        }
+
+        .submit-button {
+          background-color: Color.$first;
+          color: white;
+          border: 0.1rem solid Color.$first;
+
+          &:hover {
+            background: Color.$first-hover;
+            color: white;
+          }
+        }
       }
     }
 
@@ -295,4 +412,62 @@
       }
     }
   }
+}
+
+.progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  color: Color.$first;
+  font-family: "SwedenSans", sans-serif;
+}
+
+.step .circle {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #ddd;
+  color: #555;
+  font-weight: bold;
+}
+
+.step.active .circle {
+  background-color: Color.$first;
+  color: white;
+}
+
+.step.completed .circle {
+  background-color: Color.$first;
+  color: white;
+}
+
+.step .label {
+  margin-top: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.step .line {
+  position: absolute;
+  top: 15px;
+  left: 35px;
+  right: -35px;
+  height: 2px;
+  background-color: #ddd;
+  z-index: -1;
+}
+
+.step.active + .line,
+.step.completed + .line {
+  background-color: Color.$first;
 }
