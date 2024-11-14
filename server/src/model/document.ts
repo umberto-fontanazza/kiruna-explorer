@@ -92,7 +92,7 @@ export class Document {
       scale,
       stakeholders || undefined,
       coordinates || undefined,
-      issuance_date.toLocaleDateString("en-CA") || undefined,
+      issuance_date?.toLocaleDateString("en-CA") || undefined,
     );
   }
 
