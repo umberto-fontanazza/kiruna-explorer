@@ -49,7 +49,7 @@ linkRouter.delete(
   validateQueryParameters(targetIdQueryParam),
   async (request: Request, response: Response) => {
     const sourceId = Number(request.params.id);
-    const targetId = Number(request.query.targetId);
+    const targetId = Number(request.query.targetDocumentId);
     await Link.delete(sourceId, targetId);
     response.status(StatusCodes.NO_CONTENT).send();
   },
