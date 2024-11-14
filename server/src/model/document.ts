@@ -3,6 +3,7 @@ import { Database } from "../database";
 import { DocumentNotFound } from "../error/documentError";
 import { Coordinates } from "../validation/documentSchema";
 import { Scale, ScaleType, ScaleRow } from "./scale";
+import { Link, LinkResponseBody, LinkType } from "./link";
 
 type DocumentDbRow = {
   id: number;
@@ -14,6 +15,7 @@ type DocumentDbRow = {
   stakeholders: Stakeholder[];
   coordinates: Coordinates;
   issuance_date: Date;
+  links: Record<string, LinkType[]>;
 };
 
 export enum Stakeholder {
@@ -40,6 +42,7 @@ export class Document {
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
   issuanceDate?: string;
+  links?: LinkResponseBody[];
 
   constructor(
     id: number,
@@ -50,6 +53,7 @@ export class Document {
     stakeholders: Stakeholder[] | undefined = undefined,
     coordinates: Coordinates | undefined = undefined,
     issuanceDate: string | undefined = undefined,
+    links: LinkResponseBody[] | undefined = undefined,
   ) {
     this.id = id;
     this.title = title;
@@ -59,6 +63,7 @@ export class Document {
     this.stakeholders = stakeholders;
     this.coordinates = coordinates;
     this.issuanceDate = issuanceDate;
+    this.links = links;
   }
 
   private static fromDatabaseRow(dbRow: DocumentDbRow): Document {
@@ -72,6 +77,7 @@ export class Document {
       stakeholders,
       coordinates,
       issuance_date,
+      links,
     } = dbRow;
     assert(typeof title === "string");
     assert(typeof description === "string");
@@ -93,6 +99,7 @@ export class Document {
       stakeholders || undefined,
       coordinates || undefined,
       issuance_date?.toLocaleDateString("en-CA") || undefined,
+      Link.fromJsonbField(links),
     );
   }
 
