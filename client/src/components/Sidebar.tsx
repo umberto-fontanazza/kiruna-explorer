@@ -108,10 +108,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
             Links: <a>{props.document?.connections?.length}</a>
           </h4>
           {user && (
-            <button
-              className="btn-add-button"
-              onClick={handleModalOpenConnection}
-            >
+            <button className="see-links" onClick={handleModalOpenConnection}>
               <span className="material-symbols-outlined dark">visibility</span>
             </button>
           )}
