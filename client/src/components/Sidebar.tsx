@@ -1,21 +1,22 @@
-import { FC, useState } from "react";
+import { FC, useState, useContext } from "react";
 import { Document, Link } from "../utils/interfaces";
 import ModalAddConnection from "../components/ModalAddConnection";
 import "../styles/Sidebar.scss";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import "@material/web/icon/_icon.scss";
 import dayjs from "dayjs";
+import { authContext } from "../context/auth";
 
 interface SidebarProps {
   document: Document | null;
   documents: Document[];
-  loggedIn: boolean;
   setSidebarOpen: (isOpen: boolean) => void;
   setDocument: (doc: Document) => void;
   setDocuments: (docs: Document[]) => void;
 }
 
 const Sidebar: FC<SidebarProps> = (props) => {
+  const { user } = useContext(authContext);
   // State for controlling the modal for adding connections
   const [modalConnectionOpen, setModalConnectionOpen] = useState(false);
 
@@ -106,14 +107,10 @@ const Sidebar: FC<SidebarProps> = (props) => {
           <h4>
             Links: <a>{props.document?.connections?.length}</a>
           </h4>
-          {props.loggedIn && (
-            <div>
-              <button className="see-links" onClick={handleModalOpenConnection}>
-                <span className="material-symbols-outlined dark">
-                  visibility
-                </span>
-              </button>
-            </div>
+          {user && (
+            <button className="see-links" onClick={handleModalOpenConnection}>
+              <span className="material-symbols-outlined dark">visibility</span>
+            </button>
           )}
         </div>
 

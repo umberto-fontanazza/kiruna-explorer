@@ -1,40 +1,32 @@
-import { FC, useEffect, useState } from "react";
-import { LoginErrors, User } from "../utils/interfaces";
+import { FC, useState, useContext } from "react";
+import { LoginErrors } from "../utils/interfaces";
 import "../styles/LoginForm.scss";
 import { useNavigate } from "react-router-dom";
-import API from "../API/API";
 import { Form } from "react-bootstrap";
+import { authContext } from "../context/auth";
 
-interface LoginFormProps {
-  setUser: (user: User) => void;
-  loggedIn: boolean;
-  setLoggedIn: (bool: boolean) => void;
-}
-
-const LoginForm: FC<LoginFormProps> = (props): JSX.Element => {
+const LoginForm: FC = (): JSX.Element => {
+  const { user, login } = useContext(authContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<LoginErrors>({});
-
   const nav = useNavigate();
 
-  useEffect(() => {
-    if (props.loggedIn) nav("/home");
-  });
+  if (user) {
+    // interrupt rendering
+    nav("/home");
+  }
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
-    const response = await API.login(email, password);
-
-    if (response.status === 201) {
-      const user = await response.json();
-      props.setUser(user);
-      props.setLoggedIn(true);
+    try {
+      await login(email, password);
       nav("/home");
-    } else if (response.status === 401) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_: unknown) {
       setErrors({ login: "Email and/or password wrong" });
+      console.log(errors);
     }
-    console.log(errors);
   };
 
   return (

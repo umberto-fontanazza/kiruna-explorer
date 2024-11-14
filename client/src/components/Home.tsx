@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useContext } from "react";
 import API from "../API/API";
 import { Document, LinkType, User } from "../utils/interfaces";
 import "../styles/Home.scss";
@@ -6,14 +6,10 @@ import NavHeader from "./NavHeader";
 import ModalForm from "./ModalAddDocument";
 import MapComponent from "./Map";
 import Sidebar from "./Sidebar";
+import { authContext } from "../context/auth";
 
-interface HomeProps {
-  loggedIn: boolean;
-  user: User;
-  handleLogout: () => void;
-}
-
-const Home: FC<HomeProps> = (props): JSX.Element => {
+const Home: FC = (): JSX.Element => {
+  const { user } = useContext(authContext);
   // State to hold list of documents
   const [documents, setDocuments] = useState<Document[]>([]);
   // State to control sidebar visibility
@@ -59,11 +55,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
   return (
     <>
       {/* Navigation Header */}
-      <NavHeader
-        logout={props.handleLogout}
-        loggedIn={props.loggedIn}
-        user={props.user}
-      />
+      <NavHeader />
 
       <div className="body-container">
         {/* Map Component with overlay button for adding documents */}
@@ -75,17 +67,15 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
               setDocSelected={setDocSelected}
             />
           }
-          {props.loggedIn && (
-            <div className="button-overlay">
-              <button className="add-document" onClick={handleAddButton}>
-                <img
-                  className="doc-img"
-                  src="/add-document-icon.png"
-                  alt="Add document icon"
-                ></img>
-                <h4>Add new Document</h4>
-              </button>
-            </div>
+          {user && (
+            <button className="add-document" onClick={handleAddButton}>
+              <img
+                className="doc-img"
+                src="/add-document-icon.png"
+                alt="Add document icon"
+              ></img>
+              <h4>Add new Document</h4>
+            </button>
           )}
         </div>
         {/* Table to see the list of all documents */}
@@ -134,7 +124,6 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
               setSidebarOpen={setSidebarOpen}
               document={docSelected}
               documents={documents}
-              loggedIn={props.loggedIn}
               setDocuments={setDocuments}
               setDocument={setDocSelected}
             />
