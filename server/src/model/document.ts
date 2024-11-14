@@ -3,7 +3,6 @@ import { Database } from "../database";
 import { DocumentNotFound } from "../error/documentError";
 import { Coordinates } from "../validation/documentSchema";
 import { Scale, ScaleType, ScaleRow } from "./scale";
-import dayjs, { Dayjs } from "dayjs";
 
 type DocumentDbRow = {
   id: number;
@@ -14,7 +13,7 @@ type DocumentDbRow = {
   scale_ratio: number;
   stakeholders: Stakeholder[];
   coordinates: Coordinates;
-  issuanceDate: Date;
+  issuance_date: Date;
 };
 
 export enum Stakeholder {
@@ -40,7 +39,7 @@ export class Document {
   scale: Scale;
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
-  issuanceDate?: Dayjs;
+  issuanceDate?: string;
 
   constructor(
     id: number,
@@ -50,7 +49,7 @@ export class Document {
     scale: Scale,
     stakeholders: Stakeholder[] | undefined = undefined,
     coordinates: Coordinates | undefined = undefined,
-    issuanceDate: Dayjs | undefined = undefined,
+    issuanceDate: string | undefined = undefined,
   ) {
     this.id = id;
     this.title = title;
@@ -72,13 +71,13 @@ export class Document {
       scale_ratio,
       stakeholders,
       coordinates,
-      issuanceDate,
+      issuance_date,
     } = dbRow;
     assert(typeof title === "string");
     assert(typeof description === "string");
     assert(typeof type === "string");
     assert(typeof scale_type === "string");
-    assert(!issuanceDate || issuanceDate instanceof Date);
+    assert(!issuance_date || issuance_date instanceof Date);
 
     const scale: Scale = Scale.fromDatabaseRow({
       scale_type,
@@ -93,7 +92,7 @@ export class Document {
       scale,
       stakeholders || undefined,
       coordinates || undefined,
-      dayjs(issuanceDate) || undefined,
+      issuance_date.toLocaleDateString("en-CA") || undefined,
     );
   }
 
@@ -112,7 +111,7 @@ export class Document {
       this.stakeholders || null,
       this.coordinates?.longitude || null, // BEWARE ORDERING: https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples-in-gis-services#:~:text=PostGIS%20expects%20lng/lat.
       this.coordinates?.latitude || null,
-      this.issuanceDate?.toDate() || null,
+      this.issuanceDate || null,
       this.id,
     ]);
     if (result.rowCount != 1) throw new Error("Failed db update");
@@ -125,7 +124,7 @@ export class Document {
     scale: Scale,
     stakeholders: Stakeholder[] | undefined = undefined,
     coordinates: Coordinates | undefined = undefined,
-    issuance_date: Dayjs | undefined = undefined,
+    issuance_date: string | undefined = undefined,
   ): Promise<Document> {
     const scaleRow: ScaleRow = scale.intoDatabaseRow();
     const result = await Database.query(
@@ -139,7 +138,7 @@ export class Document {
         stakeholders || null,
         coordinates?.longitude || null,
         coordinates?.latitude || null,
-        issuance_date?.toDate() || null,
+        issuance_date || null,
       ],
     );
     const documentId: number = result.rows[0].id;

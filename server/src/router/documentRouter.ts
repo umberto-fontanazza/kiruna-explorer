@@ -15,11 +15,7 @@ import {
   PostBody,
 } from "../validation/documentSchema";
 import { Scale } from "../model/scale";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
 import { isLoggedIn, isPlanner } from "../middleware/auth";
-
-dayjs.extend(customParseFormat);
 
 export const documentRouter: Router = Router();
 
@@ -84,7 +80,7 @@ documentRouter.post(
       new Scale(scale.type, scale.ratio),
       stakeholders,
       coordinates,
-      issuanceDate ? dayjs(issuanceDate, "YYYY-MM-DD", true) : undefined,
+      issuanceDate,
     );
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
     return;
@@ -126,9 +122,7 @@ documentRouter.patch(
     document.scale = (parsedScale! as Scale) || document.scale;
     document.stakeholders = stakeholders || document.stakeholders;
     document.coordinates = coordinates || document.coordinates;
-    document.issuanceDate = issuanceDate
-      ? dayjs(issuanceDate, "YYYY-MM-DD", true)
-      : document.issuanceDate;
+    document.issuanceDate = issuanceDate || document.issuanceDate;
     await document.update();
     response.status(StatusCodes.NO_CONTENT).send();
     return;
