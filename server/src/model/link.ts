@@ -36,11 +36,7 @@ export class Link {
       [documentId],
     );
     /** JSONB database repr doesn't allow numbers as keys of objects, need to parse */
-    const rawLinks = result.rows[0].links;
-    const links = Object.entries(rawLinks).map(([key, value]) =>
-      new Link(documentId, Number(key), value as LinkType[]).toResponseBody(),
-    );
-    return links;
+    return Link.fromJsonbField(result.rows[0].links);
   }
 
   /**
@@ -82,6 +78,15 @@ export class Link {
       args,
     );
     assert(result2.rowCount === 1);
+  }
+
+  static fromJsonbField(
+    linksField: Record<string, LinkType[]>,
+  ): LinkResponseBody[] {
+    return Object.entries(linksField).map(([key, value]) => ({
+      targetDocumentId: Number(key),
+      linkTypes: value,
+    }));
   }
 
   toResponseBody(): LinkResponseBody {
