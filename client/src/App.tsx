@@ -5,77 +5,57 @@ import Home from "./components/Home";
 import NotFound from "./components/NotFound";
 import API from "./API/API";
 import "./styles/global.scss";
-import { User, UserRole } from "./utils/interfaces";
+import { User } from "./utils/interfaces";
+import { authContext } from "./context/auth";
 
 const App: FC = () => {
-  const [loggedIn, setLoggedIn] = useState(false);
-  const [user, setUser] = useState<User>({
-    email: "",
-    name: "",
-    surname: "",
-    role: UserRole.Visitor,
-  });
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    const checkAuth = async () => {
+    (async () => {
       try {
         const user = await API.getUser();
-        setLoggedIn(true);
         setUser(user);
-      } catch {
-        setLoggedIn(false);
+      } catch (error: unknown) {
+        console.error(error);
       }
-    };
-    checkAuth();
+    })();
   }, []);
 
-  const handleLogout = async () => {
+  const login = async (email: string, password: string) => {
+    const user: User = await API.login(email, password);
+    setUser(user);
+  };
+
+  const logout = async () => {
     await API.logout();
-    setLoggedIn(false);
-    setUser({
-      email: "",
-      name: "",
-      surname: "",
-      role: UserRole.Visitor,
-    });
+    setUser(null);
   };
 
   return (
-    <Routes>
-      <Route
-        path="/"
-        element={
-          <>
-            <Outlet />
-          </>
-        }
-      >
-        {/* Default redirect to /home */}
-        <Route index element={<Navigate replace to="/home" />} />
-
-        {/* Route /login for the Home page with the form to perform the login */}
+    <authContext.Provider value={{ user, login, logout }}>
+      <Routes>
         <Route
-          path="/login"
+          path="/"
           element={
-            <LoginForm
-              setUser={setUser}
-              loggedIn={loggedIn}
-              setLoggedIn={setLoggedIn}
-            />
+            <>
+              <Outlet />
+            </>
           }
-        />
+        >
+          {/* Default redirect to /home */}
+          <Route index element={<Navigate replace to="/home" />} />
 
-        {/* Route /home for the Home page with the map and diagram */}
-        <Route
-          path="/home"
-          element={
-            <Home loggedIn={loggedIn} user={user} handleLogout={handleLogout} />
-          }
-        />
-        {/* Route /* to cath all bad urls */}
-        <Route path="*" element={<NotFound />} />
-      </Route>
-    </Routes>
+          {/* Route /login for the Home page with the form to perform the login */}
+          <Route path="/login" element={<LoginForm />} />
+
+          {/* Route /home for the Home page with the map and diagram */}
+          <Route path="/home" element={<Home />} />
+          {/* Route /* to cath all bad urls */}
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </authContext.Provider>
   );
 };
 

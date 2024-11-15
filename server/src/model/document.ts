@@ -3,6 +3,7 @@ import { Database } from "../database";
 import { DocumentNotFound } from "../error/documentError";
 import { Coordinates } from "../validation/documentSchema";
 import { Scale, ScaleType, ScaleRow } from "./scale";
+import { Link, LinkResponseBody, LinkType } from "./link";
 import dayjs, { Dayjs } from "dayjs";
 
 type DocumentDbRow = {
@@ -14,7 +15,8 @@ type DocumentDbRow = {
   scale_ratio: number;
   stakeholders: Stakeholder[];
   coordinates: Coordinates;
-  issuanceDate: Date;
+  issuance_date: Date;
+  links: Record<string, LinkType[]>;
 };
 
 export enum Stakeholder {
@@ -41,6 +43,7 @@ export class Document {
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
   issuanceDate?: Dayjs;
+  links?: LinkResponseBody[];
 
   constructor(
     id: number,
@@ -51,6 +54,7 @@ export class Document {
     stakeholders: Stakeholder[] | undefined = undefined,
     coordinates: Coordinates | undefined = undefined,
     issuanceDate: Dayjs | undefined = undefined,
+    links: LinkResponseBody[] | undefined = undefined,
   ) {
     this.id = id;
     this.title = title;
@@ -60,6 +64,7 @@ export class Document {
     this.stakeholders = stakeholders;
     this.coordinates = coordinates;
     this.issuanceDate = issuanceDate;
+    this.links = links;
   }
 
   private static fromDatabaseRow(dbRow: DocumentDbRow): Document {
@@ -72,13 +77,14 @@ export class Document {
       scale_ratio,
       stakeholders,
       coordinates,
-      issuanceDate,
+      issuance_date,
+      links,
     } = dbRow;
     assert(typeof title === "string");
     assert(typeof description === "string");
     assert(typeof type === "string");
     assert(typeof scale_type === "string");
-    assert(!issuanceDate || issuanceDate instanceof Date);
+    assert(!issuance_date || issuance_date instanceof Date);
 
     const scale: Scale = Scale.fromDatabaseRow({
       scale_type,
@@ -93,7 +99,8 @@ export class Document {
       scale,
       stakeholders || undefined,
       coordinates || undefined,
-      dayjs(issuanceDate) || undefined,
+      dayjs(issuance_date) || undefined,
+      Link.fromJsonbField(links),
     );
   }
 
@@ -125,7 +132,7 @@ export class Document {
     scale: Scale,
     stakeholders: Stakeholder[] | undefined = undefined,
     coordinates: Coordinates | undefined = undefined,
-    issuance_date: Dayjs | undefined = undefined,
+    issuanceDate: Dayjs | undefined = undefined,
   ): Promise<Document> {
     const scaleRow: ScaleRow = scale.intoDatabaseRow();
     const result = await Database.query(
@@ -139,7 +146,7 @@ export class Document {
         stakeholders || null,
         coordinates?.longitude || null,
         coordinates?.latitude || null,
-        issuance_date?.toDate() || null,
+        issuanceDate?.toDate() || null,
       ],
     );
     const documentId: number = result.rows[0].id;
@@ -182,5 +189,12 @@ export class Document {
     }
     const documentRow = result.rows[0];
     return Document.fromDatabaseRow(documentRow);
+  }
+
+  toResponseBody() {
+    return {
+      ...this,
+      issuanceDate: this.issuanceDate?.format("YYYY-MM-DD") || undefined,
+    };
   }
 }
