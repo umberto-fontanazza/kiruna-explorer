@@ -84,7 +84,7 @@ const Home: FC = (): JSX.Element => {
               insertMode={insertMode}
             />
           }
-          {props.loggedIn && (
+          {user && (
             <div className="button-overlay">
               <button
                 className="doc-btn"
@@ -155,7 +155,6 @@ const Home: FC = (): JSX.Element => {
               documents={documents}
               visualLinks={visualizeLinks}
               setVisualLinks={setVisualizeLinks}
-              loggedIn={props.loggedIn}
               setDocuments={setDocuments}
               setDocument={setDocSelected}
             />

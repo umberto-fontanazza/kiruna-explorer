@@ -10,7 +10,6 @@ import { authContext } from "../context/auth";
 interface SidebarProps {
   document: Document | null;
   documents: Document[];
-  loggedIn: boolean;
   visualLinks: boolean;
   setVisualLinks: (visual: boolean) => void;
   setSidebarOpen: (isOpen: boolean) => void;
@@ -105,7 +104,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
           <h4>
             Links: <a>{props.document?.connections?.length}</a>
           </h4>
-          {props.loggedIn && (
+          {user && (
             <div>
               <button
                 className={`see-links ${props.visualLinks ? "fill" : "no-fill"}`}

@@ -92,8 +92,12 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       };
 
       map.addListener("click", mapHandleClick);
+
+      return () => {
+        //Da pulire i listener.
+      };
     }
-  });
+  }, [props.insertMode]);
 
   useEffect(() => {
     const typeMapping = new Map<DocumentType, string>([
