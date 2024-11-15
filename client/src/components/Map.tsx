@@ -1,6 +1,6 @@
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { FC, useEffect, useState } from "react";
-import { Document } from "../utils/interfaces";
+import { Document, DocumentType } from "../utils/interfaces";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import "@material/web/icon/_icon.scss";
 import "../styles/Map.scss";
@@ -52,6 +52,19 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     west: 20.0,
   };
 
+  const typeMapping = new Map<DocumentType, string>([
+    [DocumentType.Design, "design_services"],
+    [DocumentType.Informative, "info"],
+    [DocumentType.MaterialEffect, "material_effect"],
+    [DocumentType.Prescriptive, "find_in_page"],
+    [DocumentType.Technical, "settings"],
+  ]);
+
+  function typeConversion(type: DocumentType | undefined): string {
+    if (!type) return "unknown"; // Gestisci il caso undefined
+    return typeMapping.get(type) || type; // Se non trova la chiave, restituisce il valore originale
+  }
+
   // Map options to control appearance and restrictions
   const mapOptions = isLoaded
     ? {
@@ -102,8 +115,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         markerClass: string
       ): google.maps.marker.AdvancedMarkerElement => {
         const markerContent = document.createElement("div");
+        const mappedType = typeConversion(doc.type);
+        console.log(mappedType);
         markerContent.className = `map-icon-documents ${markerClass}`;
-        markerContent.innerHTML = `<img class="doc-img" src="/document-${doc.type}-icon.png" alt="Custom Marker" />`;
+        markerContent.innerHTML = `<span class="material-symbols-outlined color-${mappedType} size">${mappedType}</span>`;
 
         const marker = new google.maps.marker.AdvancedMarkerElement({
           map,

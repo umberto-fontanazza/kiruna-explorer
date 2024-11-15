@@ -51,7 +51,7 @@
 
     .button-overlay {
       position: absolute;
-      bottom: 3%;
+      bottom: 5%;
       left: 1.3%;
       display: flex;
       justify-content: center;
@@ -59,8 +59,8 @@
 
       .doc-btn {
         border-radius: 1rem;
-        width: 12vw;
-        height: 7vh;
+        width: 13vw;
+        height: 8vh;
         background-color: Color.$third;
         color: Color.$first;
         border: 0.2rem solid Color.$first;
@@ -81,12 +81,13 @@
           align-items: center;
 
           .material-symbols-outlined {
-            transform: scale(1.5);
+            transform: scale(1.3);
           }
 
           h4 {
             font-family: "SwedenSansBold", sans-serif;
             margin-left: 5%;
+            font-size: 1.3rem;
           }
         }
       }

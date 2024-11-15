@@ -104,7 +104,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
                       <span className="material-symbols-outlined">
                         arrow_back
                       </span>
-                      <h4>Back to Normal View</h4>
+                      <h4>Back</h4>
                     </div>
                   ) : (
                     <div className="back-container">

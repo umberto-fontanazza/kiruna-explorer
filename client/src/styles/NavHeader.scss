@@ -49,6 +49,7 @@ body {
 
       .username {
         display: flex;
+        font-family: "SwedenSansBold", sans-serif;
         background-color: Color.$first;
         border: 0.1rem solid Color.$first;
         border-radius: 1rem;
@@ -63,6 +64,7 @@ body {
       }
 
       button {
+        font-family: "SwedenSansBold", sans-serif;
         background-color: Color.$first;
         border: 0.1rem solid white;
         color: white;
