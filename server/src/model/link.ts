@@ -8,28 +8,35 @@ export enum LinkType {
   Update = "update",
 }
 
+export type LinkResponseBody = {
+  targetDocumentId: number;
+  linkTypes: LinkType[];
+};
+
 export class Link {
-  sourceId: number;
-  targetId: number;
+  sourceDocumentId: number;
+  targetDocumentId: number;
   linkTypes: LinkType[];
 
-  constructor(sourceId: number, targetId: number, types: LinkType[]) {
-    this.sourceId = sourceId;
-    this.targetId = targetId;
+  constructor(
+    sourceDocumentId: number,
+    targetDocumentId: number,
+    types: LinkType[],
+  ) {
+    this.sourceDocumentId = sourceDocumentId;
+    this.targetDocumentId = targetDocumentId;
     this.linkTypes = types;
   }
 
-  static async fromDocumentAll(documentId: number): Promise<Link[]> {
+  static async fromDocumentAll(
+    documentId: number,
+  ): Promise<LinkResponseBody[]> {
     const result = await Database.query(
       "SELECT links FROM document WHERE id = $1",
       [documentId],
     );
     /** JSONB database repr doesn't allow numbers as keys of objects, need to parse */
-    const rawLinks = result.rows[0].links;
-    const links = Object.entries(rawLinks).map(
-      ([key, value]) => new Link(documentId, Number(key), value as LinkType[]),
-    );
-    return links;
+    return Link.fromJsonbField(result.rows[0].links);
   }
 
   /**
@@ -38,7 +45,11 @@ export class Link {
    */
   async update(): Promise<void> {
     //TODO: the two queries should be in a transaction
-    const args = [this.targetId, JSON.stringify(this.linkTypes), this.sourceId];
+    const args = [
+      this.targetDocumentId,
+      JSON.stringify(this.linkTypes),
+      this.sourceDocumentId,
+    ];
     let result = await Database.query(
       "UPDATE document SET links[$1] = $2 where id = $3",
       args,
@@ -67,5 +78,21 @@ export class Link {
       args,
     );
     assert(result2.rowCount === 1);
+  }
+
+  static fromJsonbField(
+    linksField: Record<string, LinkType[]>,
+  ): LinkResponseBody[] {
+    return Object.entries(linksField).map(([key, value]) => ({
+      targetDocumentId: Number(key),
+      linkTypes: value,
+    }));
+  }
+
+  toResponseBody(): LinkResponseBody {
+    return {
+      targetDocumentId: this.targetDocumentId,
+      linkTypes: this.linkTypes,
+    };
   }
 }

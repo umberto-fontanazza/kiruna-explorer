@@ -15,37 +15,23 @@ import {
   PostBody,
 } from "../validation/documentSchema";
 import { Scale } from "../model/scale";
+import { isLoggedIn, isPlanner } from "../middleware/auth";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { isLoggedIn, isPlanner } from "../middleware/auth";
-
 dayjs.extend(customParseFormat);
 
 export const documentRouter: Router = Router();
 
 documentRouter.use("/:id/links", linkRouter);
 
-documentRouter.get(
-  "/",
-  // TODO: the retrieved documents needs to be turned into the
-  // respective response body representation.
-  // document.issueDate is a Dayjs obj and by default is JSON.stringified
-  // to an ISO date (we want UTC YYYY-MM-DD instead), also it needs to be enriched
-  // with links (or the API needs to change)
-  async (request: Request, response: Response) => {
-    const all: Document[] = await Document.all();
-    response.status(StatusCodes.OK).send([...all]);
-    return;
-  },
-);
+documentRouter.get("/", async (request: Request, response: Response) => {
+  const all: Document[] = await Document.all();
+  response.status(StatusCodes.OK).send(all.map((d) => d.toResponseBody()));
+  return;
+});
 
 documentRouter.get(
   "/:id",
-  // TODO: the retrieved documents needs to be turned into the
-  // respective response body representation.
-  // document.issueDate is a Dayjs obj and by default is JSON.stringified
-  // to an ISO date (we want UTC YYYY-MM-DD instead), also it needs to be enriched
-  // with links (or the API needs to change)
   validateRequestParameters(idRequestParam),
   async (request: Request, response: Response) => {
     const id = Number(request.params.id);
@@ -57,7 +43,7 @@ documentRouter.get(
       response.status(StatusCodes.BAD_REQUEST).send();
       return;
     }
-    response.status(StatusCodes.OK).send(doc);
+    response.status(StatusCodes.OK).send(doc.toResponseBody());
     return;
   },
 );
