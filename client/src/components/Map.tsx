@@ -55,7 +55,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   // Map options to control appearance and restrictions
   const mapOptions = isLoaded
     ? {
-        mapId: "MAP ID",
+        mapId: "d76bd741d388f7fd",
         mapTypeId: mapType,
         mapTypeControl: false,
         mapTypeControlOptions: {
@@ -68,7 +68,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           {
             featureType: "all",
             elementType: "labels",
-            stylers: [{ visibility: "off" }],
+            stylers: [{ visibility: "on" }],
           },
         ],
         restriction: {
@@ -80,6 +80,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   useEffect(() => {
     if (isLoaded && map && props.insertMode) {
+      console.log(google.maps.marker);
       const mapHandleClick = (event: google.maps.MapMouseEvent) => {
         if (event.latLng) {
           const latitude = event.latLng.lat();
@@ -158,20 +159,26 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               }
             });
           } else {
-            // Se `visualLinks` è disattivo, crea un marker senza connessioni
             const marker = createMarker(doc, "not-visual");
             newMarkers.push(marker);
           }
         }
       });
 
-      setMarkers(newMarkers);
+      setMarkers((prevMarkers) => {
+        prevMarkers.forEach((marker) => {
+          marker.map = null;
+        });
+        return newMarkers;
+      });
 
       return () => {
         markers.forEach((marker) => (marker.map = null));
       };
+    } else {
+      markers.forEach((marker) => (marker.map = null));
     }
-  }, [isLoaded, map, markers, props]);
+  }, [isLoaded, map, props]);
 
   // Render map only when API is loaded
   return isLoaded ? (

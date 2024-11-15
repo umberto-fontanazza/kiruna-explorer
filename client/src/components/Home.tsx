@@ -46,7 +46,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
   }, []);
 
   // Handle Add Document button click to open modal
-  const handleAddButton = async () => {
+  const handleAddButton = () => {
     setInsertMode(true);
   };
 
