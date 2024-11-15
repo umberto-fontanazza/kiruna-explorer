@@ -24,6 +24,12 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
   const [visualizeLinks, setVisualizeLinks] = useState<boolean>(false);
+  const [insertMode, setInsertMode] = useState<boolean>(false);
+
+  const [newPosition, setNewPosition] = useState<{ lat: number; lng: number }>({
+    lat: -1,
+    lng: -1,
+  });
 
   // Fetch documents on component mount
   useEffect(() => {
@@ -41,7 +47,11 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
 
   // Handle Add Document button click to open modal
   const handleAddButton = async () => {
-    setModalOpen(true);
+    setInsertMode(true);
+  };
+
+  const closeInsertMode = () => {
+    setInsertMode(false);
   };
 
   // Handle form submission for new document
@@ -76,18 +86,35 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
               documentSelected={docSelected}
               setSidebarOpen={setSidebarOpen}
               setDocSelected={setDocSelected}
+              setModalOpen={setModalOpen}
+              setNewPos={setNewPosition}
               visualLinks={visualizeLinks}
+              insertMode={insertMode}
             />
           }
           {props.loggedIn && (
             <div className="button-overlay">
-              <button className="add-document" onClick={handleAddButton}>
-                <img
-                  className="doc-img"
-                  src="/add-document-icon.png"
-                  alt="Add document icon"
-                ></img>
-                <h4>Add new Document</h4>
+              <button
+                className="doc-btn"
+                onClick={!insertMode ? handleAddButton : closeInsertMode}
+              >
+                <>
+                  {insertMode ? (
+                    <div className="add-container">
+                      <span className="material-symbols-outlined">
+                        arrow_back
+                      </span>
+                      <h4>Back to Normal View</h4>
+                    </div>
+                  ) : (
+                    <div className="back-container">
+                      <span className="material-symbols-outlined">
+                        note_add
+                      </span>
+                      <h4>Add new Document</h4>
+                    </div>
+                  )}
+                </>
               </button>
             </div>
           )}
@@ -154,6 +181,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
         onClose={() => setModalOpen(false)}
         onSubmit={handleAddNewDocument}
         documents={documents}
+        newPos={newPosition}
       />
     </>
   );

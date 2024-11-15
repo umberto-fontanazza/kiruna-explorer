@@ -5,12 +5,20 @@ import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import "@material/web/icon/_icon.scss";
 import "../styles/Map.scss";
 
+interface position {
+  lat: number;
+  lng: number;
+}
+
 interface MapComponentProps {
   documents: Document[];
   documentSelected: Document | null;
   visualLinks: boolean;
+  insertMode: boolean;
+  setModalOpen: (value: boolean) => void;
   setSidebarOpen: (value: boolean) => void;
   setDocSelected: (value: Document | null) => void;
+  setNewPos: (value: position) => void;
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
@@ -71,7 +79,23 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     : {};
 
   useEffect(() => {
-    if (isLoaded && map) {
+    if (isLoaded && map && props.insertMode) {
+      const mapHandleClick = (event: google.maps.MapMouseEvent) => {
+        if (event.latLng) {
+          const latitude = event.latLng.lat();
+          const longitude = event.latLng.lng();
+          const newPosition: position = { lat: latitude, lng: longitude };
+          props.setNewPos(newPosition);
+          props.setModalOpen(true);
+        }
+      };
+
+      map.addListener("click", mapHandleClick);
+    }
+  });
+
+  useEffect(() => {
+    if (isLoaded && map && !props.insertMode) {
       // Function to create a Marker
       const createMarker = (
         doc: Document,
@@ -135,7 +159,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     }
   }, [isLoaded, map, markers, props]);
 
-  useEffect(() => {}, [props.visualLinks]);
+  //TODO: PR del Paolozzo 22.
 
   // Render map only when API is loaded
   return isLoaded ? (
@@ -153,6 +177,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           {/* <option value="Others">Others</option> */}
         </select>
       </div>
+      {props.insertMode && (
+        <div className="insert-mode">
+          <h2>Insert Mode</h2>
+          <h3>
+            Select a point on the map, where you want to add a new Document
+          </h3>
+        </div>
+      )}
       <GoogleMap
         mapContainerStyle={containerStyle}
         zoom={10}

@@ -51,22 +51,19 @@
 
     .button-overlay {
       position: absolute;
-      bottom: 1vh;
-      left: 5vw;
+      bottom: 3%;
+      left: 1.3%;
       display: flex;
       justify-content: center;
       align-items: center;
 
-      .add-document {
-        height: 10vh;
-        width: 15vw;
-        display: flex;
-        align-items: center;
+      .doc-btn {
         border-radius: 1rem;
-        padding: 0;
+        width: 12vw;
+        height: 7vh;
         background-color: Color.$third;
         color: Color.$first;
-        border: 0.1rem solid Color.$first;
+        border: 0.2rem solid Color.$first;
         cursor: pointer;
         transition:
           background-color 0.3s ease,
@@ -77,9 +74,20 @@
           color: Color.$first;
         }
 
-        .doc-img {
-          width: 50%;
-          transform: scale(0.5);
+        .add-container,
+        .back-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .material-symbols-outlined {
+            transform: scale(1.5);
+          }
+
+          h4 {
+            font-family: "SwedenSansBold", sans-serif;
+            margin-left: 5%;
+          }
         }
       }
     }

@@ -122,6 +122,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
             </div>
           )}
         </div>
+        <button className="btn-edit">Edit Document</button>
 
         {/* <h4>
           Language: <a>{props.document?.language}</a>
