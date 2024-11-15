@@ -4,6 +4,7 @@ import { DocumentNotFound } from "../error/documentError";
 import { Coordinates } from "../validation/documentSchema";
 import { Scale, ScaleType, ScaleRow } from "./scale";
 import { Link, LinkResponseBody, LinkType } from "./link";
+import dayjs, { Dayjs } from "dayjs";
 
 type DocumentDbRow = {
   id: number;
@@ -41,7 +42,7 @@ export class Document {
   scale: Scale;
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
-  issuanceDate?: string;
+  issuanceDate?: Dayjs;
   links?: LinkResponseBody[];
 
   constructor(
@@ -52,7 +53,7 @@ export class Document {
     scale: Scale,
     stakeholders: Stakeholder[] | undefined = undefined,
     coordinates: Coordinates | undefined = undefined,
-    issuanceDate: string | undefined = undefined,
+    issuanceDate: Dayjs | undefined = undefined,
     links: LinkResponseBody[] | undefined = undefined,
   ) {
     this.id = id;
@@ -98,7 +99,7 @@ export class Document {
       scale,
       stakeholders || undefined,
       coordinates || undefined,
-      issuance_date?.toLocaleDateString("en-CA") || undefined,
+      dayjs(issuance_date) || undefined,
       Link.fromJsonbField(links),
     );
   }
@@ -118,7 +119,7 @@ export class Document {
       this.stakeholders || null,
       this.coordinates?.longitude || null, // BEWARE ORDERING: https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples-in-gis-services#:~:text=PostGIS%20expects%20lng/lat.
       this.coordinates?.latitude || null,
-      this.issuanceDate || null,
+      this.issuanceDate?.toDate() || null,
       this.id,
     ]);
     if (result.rowCount != 1) throw new Error("Failed db update");
@@ -131,7 +132,7 @@ export class Document {
     scale: Scale,
     stakeholders: Stakeholder[] | undefined = undefined,
     coordinates: Coordinates | undefined = undefined,
-    issuance_date: string | undefined = undefined,
+    issuanceDate: Dayjs | undefined = undefined,
   ): Promise<Document> {
     const scaleRow: ScaleRow = scale.intoDatabaseRow();
     const result = await Database.query(
@@ -145,7 +146,7 @@ export class Document {
         stakeholders || null,
         coordinates?.longitude || null,
         coordinates?.latitude || null,
-        issuance_date || null,
+        issuanceDate?.toDate() || null,
       ],
     );
     const documentId: number = result.rows[0].id;
@@ -188,5 +189,12 @@ export class Document {
     }
     const documentRow = result.rows[0];
     return Document.fromDatabaseRow(documentRow);
+  }
+
+  toResponseBody() {
+    return {
+      ...this,
+      issuanceDate: this.issuanceDate?.format("YYYY-MM-DD") || undefined,
+    };
   }
 }

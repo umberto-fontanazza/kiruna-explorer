@@ -16,32 +16,22 @@ import {
 } from "../validation/documentSchema";
 import { Scale } from "../model/scale";
 import { isLoggedIn, isPlanner } from "../middleware/auth";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+dayjs.extend(customParseFormat);
 
 export const documentRouter: Router = Router();
 
 documentRouter.use("/:id/links", linkRouter);
 
-documentRouter.get(
-  "/",
-  // TODO: the retrieved documents needs to be turned into the
-  // respective response body representation.
-  // document.issueDate is a Dayjs obj and by default is JSON.stringified
-  // to an ISO date (we want UTC YYYY-MM-DD instead), also it needs to be enriched
-  // with links (or the API needs to change)
-  async (request: Request, response: Response) => {
-    const all: Document[] = await Document.all();
-    response.status(StatusCodes.OK).send([...all]);
-    return;
-  },
-);
+documentRouter.get("/", async (request: Request, response: Response) => {
+  const all: Document[] = await Document.all();
+  response.status(StatusCodes.OK).send(all.map((d) => d.toResponseBody()));
+  return;
+});
 
 documentRouter.get(
   "/:id",
-  // TODO: the retrieved documents needs to be turned into the
-  // respective response body representation.
-  // document.issueDate is a Dayjs obj and by default is JSON.stringified
-  // to an ISO date (we want UTC YYYY-MM-DD instead), also it needs to be enriched
-  // with links (or the API needs to change)
   validateRequestParameters(idRequestParam),
   async (request: Request, response: Response) => {
     const id = Number(request.params.id);
@@ -53,7 +43,7 @@ documentRouter.get(
       response.status(StatusCodes.BAD_REQUEST).send();
       return;
     }
-    response.status(StatusCodes.OK).send(doc);
+    response.status(StatusCodes.OK).send(doc.toResponseBody());
     return;
   },
 );
@@ -80,7 +70,7 @@ documentRouter.post(
       new Scale(scale.type, scale.ratio),
       stakeholders,
       coordinates,
-      issuanceDate,
+      issuanceDate ? dayjs(issuanceDate, "YYYY-MM-DD", true) : undefined,
     );
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
     return;
@@ -122,7 +112,9 @@ documentRouter.patch(
     document.scale = (parsedScale! as Scale) || document.scale;
     document.stakeholders = stakeholders || document.stakeholders;
     document.coordinates = coordinates || document.coordinates;
-    document.issuanceDate = issuanceDate || document.issuanceDate;
+    document.issuanceDate = issuanceDate
+      ? dayjs(issuanceDate, "YYYY-MM-DD", true)
+      : document.issuanceDate;
     await document.update();
     response.status(StatusCodes.NO_CONTENT).send();
     return;

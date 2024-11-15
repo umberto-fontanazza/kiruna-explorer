@@ -1,4 +1,4 @@
-import { Pool, QueryResult, types } from "pg";
+import { Pool, QueryResult } from "pg";
 import { strict as assert } from "assert";
 
 let pool: Pool | undefined;
@@ -9,10 +9,6 @@ export class Database {
     const env = process.env.NODE_ENV
       ? process.env.NODE_ENV.trim()
       : "development";
-
-    types.setTypeParser(58509, (val) => {
-      return val === null ? null : val.slice(1, -1).split(",");
-    });
 
     pool = new Pool({
       host: process.env.DB_HOST,
