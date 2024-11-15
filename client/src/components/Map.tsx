@@ -52,19 +52,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     west: 20.0,
   };
 
-  const typeMapping = new Map<DocumentType, string>([
-    [DocumentType.Design, "design_services"],
-    [DocumentType.Informative, "info"],
-    [DocumentType.MaterialEffect, "material_effect"],
-    [DocumentType.Prescriptive, "find_in_page"],
-    [DocumentType.Technical, "settings"],
-  ]);
-
-  function typeConversion(type: DocumentType | undefined): string {
-    if (!type) return "unknown"; // Gestisci il caso undefined
-    return typeMapping.get(type) ?? type; // Se non trova la chiave, restituisce il valore originale
-  }
-
   // Map options to control appearance and restrictions
   const mapOptions = isLoaded
     ? {
@@ -108,6 +95,17 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   });
 
   useEffect(() => {
+    const typeMapping = new Map<DocumentType, string>([
+      [DocumentType.Design, "design_services"],
+      [DocumentType.Informative, "info"],
+      [DocumentType.MaterialEffect, "material_effect"],
+      [DocumentType.Prescriptive, "find_in_page"],
+      [DocumentType.Technical, "settings"],
+    ]);
+    function typeConversion(type: DocumentType | undefined): string {
+      if (!type) return "unknown";
+      return typeMapping.get(type) ?? type;
+    }
     if (isLoaded && map && !props.insertMode) {
       const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
       // Function to create a Marker
@@ -173,7 +171,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         markers.forEach((marker) => (marker.map = null));
       };
     }
-  }, [isLoaded, map, markers, props, typeConversion]);
+  }, [isLoaded, map, markers, props]);
 
   // Render map only when API is loaded
   return isLoaded ? (
