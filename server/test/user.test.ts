@@ -23,7 +23,7 @@ describe("User Class", () => {
     "test@example.com",
     "John",
     "Doe",
-    UserRole.planner,
+    UserRole.Planner,
   );
   const testPassword = "password123";
 
@@ -35,7 +35,7 @@ describe("User Class", () => {
     it("should insert a user into the database with a hashed password", async () => {
       (Database.query as jest.Mock).mockResolvedValueOnce({ rows: [] });
 
-      await User.insert(testUser, testPassword);
+      await testUser.insert(testPassword);
 
       expect(Database.query).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO "user"'),
@@ -45,7 +45,7 @@ describe("User Class", () => {
           "Doe",
           expect.any(Buffer),
           expect.any(Buffer),
-          UserRole.planner,
+          UserRole.Planner,
         ]),
       );
     });
@@ -54,7 +54,7 @@ describe("User Class", () => {
       (Database.query as jest.Mock).mockRejectedValueOnce(
         new Error("Database error"),
       );
-      await expect(User.insert(testUser, testPassword)).rejects.toThrow(
+      await expect(testUser.insert(testPassword)).rejects.toThrow(
         "Database error",
       );
     });
@@ -66,7 +66,7 @@ describe("User Class", () => {
         email: "test@example.com",
         name: "John",
         surname: "Doe",
-        role: UserRole.planner.toString(),
+        role: UserRole.Planner.toString(),
         salt: Buffer.from("randomsalt"),
         password_hash: Buffer.from("hashedpassword"),
       };
@@ -85,7 +85,7 @@ describe("User Class", () => {
         email: "test@example.com",
         name: "John",
         surname: "Doe",
-        role: UserRole.planner.toString(),
+        role: UserRole.Planner.toString(),
         salt: Buffer.from("randomsalt"),
         password_hash: Buffer.from("wronghashedpassword"),
       };
@@ -125,7 +125,7 @@ describe("User Class", () => {
         email: "test@example.com",
         name: "John",
         surname: "Doe",
-        role: UserRole.planner.toString(),
+        role: UserRole.Planner.toString(),
       };
       (Database.query as jest.Mock).mockResolvedValueOnce({
         rows: [dbUserRow],
