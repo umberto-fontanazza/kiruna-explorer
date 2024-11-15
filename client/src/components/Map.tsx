@@ -5,7 +5,7 @@ import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import "@material/web/icon/_icon.scss";
 import "../styles/Map.scss";
 
-interface position {
+interface Position {
   lat: number;
   lng: number;
 }
@@ -18,7 +18,7 @@ interface MapComponentProps {
   setModalOpen: (value: boolean) => void;
   setSidebarOpen: (value: boolean) => void;
   setDocSelected: (value: Document | null) => void;
-  setNewPos: (value: position) => void;
+  setNewPos: (value: Position) => void;
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
@@ -62,7 +62,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   function typeConversion(type: DocumentType | undefined): string {
     if (!type) return "unknown"; // Gestisci il caso undefined
-    return typeMapping.get(type) || type; // Se non trova la chiave, restituisce il valore originale
+    return typeMapping.get(type) ?? type; // Se non trova la chiave, restituisce il valore originale
   }
 
   // Map options to control appearance and restrictions
@@ -97,7 +97,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         if (event.latLng) {
           const latitude = event.latLng.lat();
           const longitude = event.latLng.lng();
-          const newPosition: position = { lat: latitude, lng: longitude };
+          const newPosition: Position = { lat: latitude, lng: longitude };
           props.setNewPos(newPosition);
           props.setModalOpen(true);
         }
@@ -109,6 +109,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   useEffect(() => {
     if (isLoaded && map && !props.insertMode) {
+      const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
       // Function to create a Marker
       const createMarker = (
         doc: Document,
@@ -150,31 +151,29 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           if (props.visualLinks) {
             if (doc.id === props.documentSelected?.id) {
               const marker = createMarker(doc, "not-visual");
-              markers.push(marker);
+              newMarkers.push(marker);
             }
             props.documentSelected?.connections.forEach((link) => {
               if (doc.id === link.targetDocumentId) {
                 const marker = createMarker(doc, "visual");
-                markers.push(marker);
+                newMarkers.push(marker);
               }
             });
           } else {
             // Se `visualLinks` è disattivo, crea un marker senza connessioni
             const marker = createMarker(doc, "not-visual");
-            markers.push(marker);
+            newMarkers.push(marker);
           }
         }
       });
 
-      setMarkers(markers);
+      setMarkers(newMarkers);
 
       return () => {
         markers.forEach((marker) => (marker.map = null));
       };
     }
-  }, [isLoaded, map, markers, props]);
-
-  //TODO: PR del Paolozzo 22.
+  }, [isLoaded, map, markers, props, typeConversion]);
 
   // Render map only when API is loaded
   return isLoaded ? (

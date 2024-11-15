@@ -11,14 +11,14 @@ import "../styles/ProgressBar.scss";
 import ISO6391 from "iso-639-1";
 import dayjs from "dayjs";
 
-interface position {
+interface Position {
   lat: number;
   lng: number;
 }
 
 interface ModalAddProps {
   modalOpen: boolean;
-  newPos: position;
+  newPos: Position;
   onClose: () => void;
   onSubmit: (
     newDocument: Document,

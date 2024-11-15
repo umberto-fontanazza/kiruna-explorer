@@ -98,23 +98,19 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
                 className="doc-btn"
                 onClick={!insertMode ? handleAddButton : closeInsertMode}
               >
-                <>
-                  {insertMode ? (
-                    <div className="add-container">
-                      <span className="material-symbols-outlined">
-                        arrow_back
-                      </span>
-                      <h4>Back</h4>
-                    </div>
-                  ) : (
-                    <div className="back-container">
-                      <span className="material-symbols-outlined">
-                        note_add
-                      </span>
-                      <h4>Add new Document</h4>
-                    </div>
-                  )}
-                </>
+                {insertMode ? (
+                  <div className="add-container">
+                    <span className="material-symbols-outlined">
+                      arrow_back
+                    </span>
+                    <h4>Back</h4>
+                  </div>
+                ) : (
+                  <div className="back-container">
+                    <span className="material-symbols-outlined">note_add</span>
+                    <h4>Add new Document</h4>
+                  </div>
+                )}
               </button>
             </div>
           )}
