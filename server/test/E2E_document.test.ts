@@ -6,6 +6,7 @@ import { Database } from "../src/database";
 import { StatusCodes } from "http-status-codes";
 import { DocumentType, Stakeholder } from "../src/model/document";
 import { ScaleType } from "../src/model/scale";
+import { LinkType, Link } from "../src/model/link";
 import { loginAsPlanner, loginAsResident } from "./utils";
 
 // End to end testing, User story 1 and User story 3.
@@ -408,9 +409,175 @@ describe("Testing story 1", () => {
   });
 });
 
-// describe("Testing story 2", () => {
+describe("Testing story 2", () => {
+  const sourceDocument1 = {
+    title: "Mandatory Fields test",
+    description: "This one will be tested for mandatory fields",
+    type: DocumentType.Prescriptive,
+    scale: { type: ScaleType.Text },
+    stakeholders: [Stakeholder.Residents],
+  };
+  const targetDocument2 = {
+    title: "Coordinates test",
+    description: "This one will be tested for all fields",
+    type: DocumentType.Informative,
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    stakeholders: [Stakeholder.KirunaKommun],
+    issuanceDate: "2021-12-12",
+    coordinates: { latitude: 45, longitude: 30 },
+  };
+  let sourceDocumentId1: number;
+  let targetDocumentId2: number;
 
-// });
+  test("US1.2 POST Document 1", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...sourceDocument1 });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    sourceDocumentId1 = response.body.id;
+  });
+
+  test("US1.2 POST Document 2", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...targetDocument2 });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    targetDocumentId2 = response.body.id;
+  });
+
+  test("US2.1 PUT link documents without being Urban Planner", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .send({ targetDocumentId: targetDocumentId2, 
+              linkTypes: [LinkType.Direct] });
+    expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
+  });
+
+  test("US2.2 PUT link documents", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: targetDocumentId2, 
+              linkTypes: [LinkType.Direct] });
+    expect(response.status).toStrictEqual(StatusCodes.CREATED);
+  });
+
+  test("US2.3 PUT link documents updating link", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: targetDocumentId2, 
+              linkTypes: [LinkType.Collateral] });
+    expect(response.status).toStrictEqual(StatusCodes.CREATED);
+  });
+
+  test("US2.4 PUT link documents for a non existing document", async () => {
+    const response = await request(app)
+      .put("/documents/0/links")
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: targetDocumentId2, 
+              linkTypes: [LinkType.Direct] });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.5 PUT link documents with wrong link type", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: targetDocumentId2, 
+              linkTypes: ["Wrong type"] });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.5 PUT link documents with wrong link type", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: targetDocumentId2, 
+              linkTypes: [123] });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.6 PUT link documents with wrong target cocument", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: 0, 
+              linkTypes: [LinkType.Projection] });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.6 PUT link documents with wrong target cocument", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: "Wrong", 
+              linkTypes: [LinkType.Direct] });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.7 PUT link documents without link types", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: targetDocumentId2 });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.8 PUT link documents without target document", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ linkTypes: [LinkType.Direct] });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.9 PUT link documents to the same document", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: sourceDocumentId1, 
+              linkTypes: [LinkType.Direct] });
+    expect(response.status).toStrictEqual(StatusCodes.CREATED);
+  });
+
+  test("US2.10 GET links for a document", async () => {
+    const response = await request(app)
+      .get(`/documents/${sourceDocumentId1}/links`);
+    expect(response.status).toStrictEqual(StatusCodes.OK);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body.length).toBe(2);
+  });
+
+  test("US2.11 GET links for a document", async () => {
+    const response = await request(app)
+      .get(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.OK);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body.length).toBe(2);
+  });
+
+  test("US2.12 GET links for a non existing document", async () => {
+    const response = await request(app)
+      .get("/documents/0/links")
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.13 DELETE link between documents without being Urban Planner", async () => {
+    const response = await request(app)
+      .delete(`/documents/${sourceDocumentId1}/links`);
+    expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
+  });
+
+});
 
 describe("Testing story 3", () => {
   const testDoc = {
@@ -532,7 +699,7 @@ describe("Testing story 3", () => {
 describe("Testing story 4", () => {
   const testDocAllFields = {
     title: "Coordinates test",
-    description: "This one will be tested for all fields",
+    description: "This one will be tested for story 4",
     type: DocumentType.Informative,
     scale: { type: ScaleType.BlueprintsOrEffect },
     stakeholders: [Stakeholder.KirunaKommun],
@@ -641,6 +808,13 @@ describe("Testing story 4", () => {
       const response = await request(app).get("/documents/-20");
       expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
     });
+  });
+
+  test("DELETE with coordinates success", async () => {
+    const response = await request(app)
+      .del(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });
 });
 

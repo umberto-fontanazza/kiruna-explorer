@@ -38,6 +38,20 @@
 20. Delete a non-existing document being an Urban Planner. DONE (BAD_REQUEST)
 
 ## US 2. As an Urban Planner I want to link documents to each other So that I can study their relationships
+1. Link documents to each other and not be an Urban Planner. DONE (UNAUTHORIZED)
+2. Create a link as Urban Planner associated with a specific document. DONE (CREATED)
+3. Update a link as Urban Planner associated with a specific document. DONE (CREATED)
+4. Create a link as Urban Planner for a non existing document.  DONE (BAD_REQUEST)
+5. Create a link as Urban Planner with wrong linkType. DONE (BAD_REQUEST)
+6. Create a link as Urban Planner with wrong Target Document. DONE (BAD_REQUEST)
+7. Create a link as Urban Planner without the linkType. DONE (BAD_REQUEST)
+8. Create a link as Urban Planner without the Target Document. DONE (BAD_REQUEST)
+9. Create a link as Urban Planner to the same document. DONE (CREATED)   ASK WHY \*
+10. View all links for a document without being Urban Planner. DONE (OK)
+11. View all links for a document being Urban Planner. DONE (OK)
+12. View links for a non existing document. DONE (BAD_REQUEST)
+13. Delete links for a specific pair of documents, being urban Planner. 
+14. Delete links for a specific pair of documents without being urban Planner. DONE (UNAUTHORIZED)
 
 ## US 3. As an Urban Planner I want to georeference a document (possibly at insertion time) So that I can study its relationship to the territory
 
