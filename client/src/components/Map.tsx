@@ -88,7 +88,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       map.addListener("click", mapHandleClick);
 
       return () => {
-        //Da pulire i listener.
+        google.maps.event.clearInstanceListeners(map);
       };
     }
   }, [props.insertMode]);
