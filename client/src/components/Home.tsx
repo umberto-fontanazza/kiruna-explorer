@@ -33,7 +33,6 @@ const Home: FC = (): JSX.Element => {
       try {
         const documents: Document[] = await API.getDocuments();
         setDocuments(documents);
-        console.log(documents);
       } catch (err) {
         console.error(err);
       }
@@ -59,7 +58,6 @@ const Home: FC = (): JSX.Element => {
     setModalOpen(false);
     const id = await API.addDocument(newDocument);
     //await API.putLink(targetId, [linkType], id);
-    console.log(id);
     const updatedDocument = { ...newDocument, id: id };
     setDocuments([...documents, updatedDocument]);
   };

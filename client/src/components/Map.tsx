@@ -80,7 +80,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   useEffect(() => {
     if (isLoaded && map && props.insertMode) {
-      console.log(google.maps.marker);
       const mapHandleClick = (event: google.maps.MapMouseEvent) => {
         if (event.latLng) {
           const latitude = event.latLng.lat();
@@ -120,7 +119,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       ): google.maps.marker.AdvancedMarkerElement => {
         const markerContent = document.createElement("div");
         const mappedType = typeConversion(doc.type);
-        console.log(mappedType);
         markerContent.className = `map-icon-documents ${markerClass}`;
         markerContent.innerHTML = `<span class="material-symbols-outlined color-${mappedType} size">${mappedType}</span>`;
 
@@ -145,30 +143,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
         return marker;
       };
-
-        const marker = new google.maps.marker.AdvancedMarkerElement({
-          map,
-          position: {
-            lat: doc.coordinates.latitude!,
-            lng: doc.coordinates.longitude!,
-          },
-          content: markerContent,
-          title: doc.title,
-        });
-
-        marker.addListener("click", () => {
-          props.setSidebarOpen(true);
-          props.setDocSelected(doc);
-          setCenter({
-            lat: doc.coordinates.latitude!,
-            lng: doc.coordinates.longitude! + 0.0019,
-          });
-        });
-
-        return marker;
-      };
-
-      const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
 
       props.documents.forEach((doc) => {
         if (
@@ -201,7 +175,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       });
 
       return () => {
-        newMarkers.forEach((marker) => (marker.map = null));
+        markers.forEach((marker) => (marker.map = null));
       };
     } else {
       markers.forEach((marker) => (marker.map = null));

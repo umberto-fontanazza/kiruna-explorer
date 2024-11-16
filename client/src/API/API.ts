@@ -50,7 +50,7 @@ const logout = async (): Promise<void> => {
 
 async function getDocuments() {
   try {
-    const response = await fetch(postmanURL + "/documents");
+    const response = await fetch(baseURL + "/documents");
     if (response.ok) {
       const documents = await response.json();
       const docsMapped = documents.map((doc: any) => {
@@ -140,8 +140,6 @@ async function addDocument(document: Document): Promise<number> {
   });
   if (response.ok) {
     const { id } = await response.json();
-    //assert(typeof id === "number");
-    console.log("Document created with id: ", id);
     return id;
   } else {
     console.error("Error creating document");
