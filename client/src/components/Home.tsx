@@ -19,6 +19,8 @@ const Home: FC = (): JSX.Element => {
   // State to control modal for adding documents
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
+  const [visualizeLinks, setVisualizeLinks] = useState<boolean>(false);
+
   // Fetch documents on component mount
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -63,8 +65,10 @@ const Home: FC = (): JSX.Element => {
           {
             <MapComponent
               documents={documents}
+              documentSelected={docSelected}
               setSidebarOpen={setSidebarOpen}
               setDocSelected={setDocSelected}
+              visualLinks={visualizeLinks}
             />
           }
           {user && (
@@ -124,6 +128,9 @@ const Home: FC = (): JSX.Element => {
               setSidebarOpen={setSidebarOpen}
               document={docSelected}
               documents={documents}
+              visualLinks={visualizeLinks}
+              setVisualLinks={setVisualizeLinks}
+              loggedIn={props.loggedIn}
               setDocuments={setDocuments}
               setDocument={setDocSelected}
             />

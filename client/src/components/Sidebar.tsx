@@ -10,6 +10,9 @@ import { authContext } from "../context/auth";
 interface SidebarProps {
   document: Document | null;
   documents: Document[];
+  loggedIn: boolean;
+  visualLinks: boolean;
+  setVisualLinks: (visual: boolean) => void;
   setSidebarOpen: (isOpen: boolean) => void;
   setDocument: (doc: Document) => void;
   setDocuments: (docs: Document[]) => void;
@@ -19,11 +22,6 @@ const Sidebar: FC<SidebarProps> = (props) => {
   const { user } = useContext(authContext);
   // State for controlling the modal for adding connections
   const [modalConnectionOpen, setModalConnectionOpen] = useState(false);
-
-  // Function to open modal for adding connections
-  const handleModalOpenConnection = () => {
-    setModalConnectionOpen(true);
-  };
 
   // Handle adding a new connection link
   const handleAddNewConnection = async (newLink: Link) => {
@@ -107,10 +105,23 @@ const Sidebar: FC<SidebarProps> = (props) => {
           <h4>
             Links: <a>{props.document?.connections?.length}</a>
           </h4>
-          {user && (
-            <button className="see-links" onClick={handleModalOpenConnection}>
-              <span className="material-symbols-outlined dark">visibility</span>
-            </button>
+          {props.loggedIn && (
+            <div>
+              <button
+                className={`see-links ${props.visualLinks ? "fill" : "no-fill"}`}
+                onClick={() =>
+                  props.visualLinks
+                    ? props.setVisualLinks(false)
+                    : props.setVisualLinks(true)
+                }
+              >
+                <span
+                  className={`material-symbols-outlined dark ${props.visualLinks ? "fill" : "no-fill"}`}
+                >
+                  visibility
+                </span>
+              </button>
+            </div>
           )}
         </div>
 
