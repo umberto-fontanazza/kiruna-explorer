@@ -1,4 +1,4 @@
-import { FC, SetStateAction, useState } from "react";
+import { FC, SetStateAction, useState, useEffect } from "react";
 
 import {
   Document,
@@ -7,13 +7,18 @@ import {
   Stakeholder,
 } from "../utils/interfaces";
 import "../styles/ModalAddDocument.scss";
+import "../styles/ProgressBar.scss";
 import ISO6391 from "iso-639-1";
 import dayjs from "dayjs";
 
-//TODO: Fix color of the form
+interface Position {
+  lat: number;
+  lng: number;
+}
 
 interface ModalAddProps {
   modalOpen: boolean;
+  newPos: Position;
   onClose: () => void;
   onSubmit: (
     newDocument: Document,
@@ -28,6 +33,7 @@ const ModalForm: FC<ModalAddProps> = ({
   onClose,
   onSubmit,
   documents,
+  newPos,
 }) => {
   // Initial State for new document
   const initialDocumentState: Document = {
@@ -41,7 +47,7 @@ const ModalForm: FC<ModalAddProps> = ({
     connections: [],
     language: "",
     pages: null,
-    coordinates: { latitude: null, longitude: null },
+    coordinates: { latitude: newPos.lat, longitude: newPos.lng },
   };
 
   ////// OPTIONS AND DATA ///////
@@ -87,6 +93,13 @@ const ModalForm: FC<ModalAddProps> = ({
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };*/
+
+  useEffect(() => {
+    setNewDoc((prev) => ({
+      ...prev,
+      coordinates: { latitude: newPos.lat, longitude: newPos.lng },
+    }));
+  }, [newPos]);
 
   // Handle Checkbox Change
   const handleCheckboxChange = (event: {

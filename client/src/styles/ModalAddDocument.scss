@@ -35,7 +35,7 @@
       border: 2px solid Color.$first;
       border-radius: 50%;
       position: absolute;
-      top: 9.1%;
+      top: 6.8%;
       left: 72.5%;
       border-radius: 50%;
       width: 2vw;
@@ -67,7 +67,7 @@
 
       label {
         font-family: "SwedenSansBold", sans-serif;
-        font-size: 1rem;
+        font-size: 1.3rem !important;
         font-weight: bold;
         color: Color.$first;
       }
@@ -81,6 +81,7 @@
 
       input,
       textarea {
+        font-family: "SwedenSans", sans-serif;
         padding: 0.8vh 1ch;
         border: 1px solid #ddd;
         border-radius: 8px;
@@ -93,7 +94,7 @@
         border: 1px solid #ddd;
         border-radius: 8px;
         font-size: 1rem;
-        color: #333;
+        color: white;
         background-color: #fff;
       }
 
@@ -147,7 +148,7 @@
           border: 1px solid #ddd;
           border-radius: 8px;
           font-size: 1rem;
-          color: Color.$first;
+          color: gray !important;
 
           &:focus {
             border-color: Color.$first;
@@ -157,12 +158,11 @@
 
         select {
           font-family: "SwedenSans", sans-serif;
-          color: Color.$first !important;
           padding: 1vh;
           border: 1px solid #ddd;
           border-radius: 8px;
           font-size: 1rem;
-          color: #333;
+          color: grey !important;
           background-color: #fff;
 
           &:focus {
@@ -257,8 +257,8 @@
         border: 0.1rem solid Color.$first;
 
         &:hover {
-          background: Color.$third;
-          color: Color.$first;
+          background-color: Color.$first-hover;
+          color: white;
         }
       }
     }
@@ -412,62 +412,4 @@
       }
     }
   }
-}
-
-.progress-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-}
-
-.step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: relative;
-  color: Color.$first;
-  font-family: "SwedenSans", sans-serif;
-}
-
-.step .circle {
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  background-color: #ddd;
-  color: #555;
-  font-weight: bold;
-}
-
-.step.active .circle {
-  background-color: Color.$first;
-  color: white;
-}
-
-.step.completed .circle {
-  background-color: Color.$first;
-  color: white;
-}
-
-.step .label {
-  margin-top: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.step .line {
-  position: absolute;
-  top: 15px;
-  left: 35px;
-  right: -35px;
-  height: 2px;
-  background-color: #ddd;
-  z-index: -1;
-}
-
-.step.active + .line,
-.step.completed + .line {
-  background-color: Color.$first;
 }
