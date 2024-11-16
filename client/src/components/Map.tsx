@@ -1,4 +1,4 @@
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { FC, useEffect, useState } from "react";
 import { Document, DocumentType } from "../utils/interfaces";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
@@ -21,6 +21,8 @@ interface MapComponentProps {
   setNewPos: (value: Position) => void;
 }
 
+const libraries: Libraries = ["marker"];
+
 const MapComponent: FC<MapComponentProps> = (props) => {
   // Coordinates for Kiruna, Sweden
   const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
@@ -35,7 +37,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-    libraries: ["marker"],
+    libraries: libraries,
   });
 
   // Styling for the map container
@@ -64,13 +66,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         },
         minZoom: 12,
         maxZoom: 20,
-        styles: [
-          {
-            featureType: "all",
-            elementType: "labels",
-            stylers: [{ visibility: "on" }],
-          },
-        ],
         restriction: {
           latLngBounds: bounds,
           strictBounds: false,
