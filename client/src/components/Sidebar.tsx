@@ -1,10 +1,11 @@
-import { FC, useState } from "react";
+import { FC, useState, useContext } from "react";
 import { Document, Link } from "../utils/interfaces";
 import ModalAddConnection from "../components/ModalAddConnection";
 import "../styles/Sidebar.scss";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import "@material/web/icon/_icon.scss";
 import dayjs from "dayjs";
+import { authContext } from "../context/auth";
 
 interface SidebarProps {
   document: Document | null;
@@ -18,6 +19,7 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = (props) => {
+  const { user } = useContext(authContext);
   // State for controlling the modal for adding connections
   const [modalConnectionOpen, setModalConnectionOpen] = useState(false);
 

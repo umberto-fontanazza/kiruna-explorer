@@ -1,5 +1,5 @@
 import { Request, Response, Router } from "express";
-import { Link } from "../model/link";
+import { Link, LinkResponseBody } from "../model/link";
 import { StatusCodes } from "http-status-codes";
 import {
   validateBody,
@@ -18,7 +18,8 @@ linkRouter.get(
   async (request: Request, response: Response) => {
     //TODO: implement search filters, query params
     const sourceDocumentId: number = Number(request.params.id);
-    const links: Link[] = await Link.fromDocumentAll(sourceDocumentId);
+    const links: LinkResponseBody[] =
+      await Link.fromDocumentAll(sourceDocumentId);
     response.status(StatusCodes.OK).send(links);
   },
 );
@@ -48,7 +49,7 @@ linkRouter.delete(
   validateQueryParameters(targetIdQueryParam),
   async (request: Request, response: Response) => {
     const sourceId = Number(request.params.id);
-    const targetId = Number(request.query.targetId);
+    const targetId = Number(request.query.targetDocumentId);
     await Link.delete(sourceId, targetId);
     response.status(StatusCodes.NO_CONTENT).send();
   },

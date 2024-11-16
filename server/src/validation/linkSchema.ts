@@ -12,6 +12,6 @@ export const deleteBody = z.object({});
 
 export const targetIdQueryParam = z
   .object({
-    targetId: z.coerce.number().min(1),
+    targetDocumentId: z.coerce.number().min(1),
   })
   .strict();
