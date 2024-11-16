@@ -146,7 +146,31 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         return marker;
       };
 
-      props.documents.map((doc) => {
+        const marker = new google.maps.marker.AdvancedMarkerElement({
+          map,
+          position: {
+            lat: doc.coordinates.latitude!,
+            lng: doc.coordinates.longitude!,
+          },
+          content: markerContent,
+          title: doc.title,
+        });
+
+        marker.addListener("click", () => {
+          props.setSidebarOpen(true);
+          props.setDocSelected(doc);
+          setCenter({
+            lat: doc.coordinates.latitude!,
+            lng: doc.coordinates.longitude! + 0.0019,
+          });
+        });
+
+        return marker;
+      };
+
+      const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
+
+      props.documents.forEach((doc) => {
         if (
           doc.coordinates.latitude !== null &&
           doc.coordinates.longitude !== null
@@ -177,7 +201,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       });
 
       return () => {
-        markers.forEach((marker) => (marker.map = null));
+        newMarkers.forEach((marker) => (marker.map = null));
       };
     } else {
       markers.forEach((marker) => (marker.map = null));
