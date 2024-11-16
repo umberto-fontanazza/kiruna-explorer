@@ -103,7 +103,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         return marker;
       };
 
-      props.documents.map((doc) => {
+      const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
+
+      props.documents.forEach((doc) => {
         if (
           doc.coordinates.latitude !== null &&
           doc.coordinates.longitude !== null
@@ -111,29 +113,29 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           if (props.visualLinks) {
             if (doc.id === props.documentSelected?.id) {
               const marker = createMarker(doc, "not-visual");
-              markers.push(marker);
+              newMarkers.push(marker);
             }
             props.documentSelected?.connections.forEach((link) => {
               if (doc.id === link.targetDocumentId) {
                 const marker = createMarker(doc, "visual");
-                markers.push(marker);
+                newMarkers.push(marker);
               }
             });
           } else {
             // Se `visualLinks` è disattivo, crea un marker senza connessioni
             const marker = createMarker(doc, "not-visual");
-            markers.push(marker);
+            newMarkers.push(marker);
           }
         }
       });
 
-      setMarkers(markers);
+      setMarkers(newMarkers);
 
       return () => {
-        markers.forEach((marker) => (marker.map = null));
+        newMarkers.forEach((marker) => (marker.map = null));
       };
     }
-  }, [isLoaded, map, markers, props]);
+  }, [isLoaded, map, props, setMarkers]);
 
   useEffect(() => {}, [props.visualLinks]);
 
