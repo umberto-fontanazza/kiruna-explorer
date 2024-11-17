@@ -1,8 +1,9 @@
 import { Document, LinkType } from "../utils/interfaces";
 import dayjs from "dayjs";
 import { User } from "../utils/interfaces";
+import { documentAPI } from "./documentAPI";
 
-const baseURL = "http://localhost:3000";
+export const baseURL = "http://localhost:3000";
 
 async function getUser(): Promise<User> {
   const response = await fetch(baseURL + "/sessions/current", {
@@ -46,83 +47,6 @@ const logout = async (): Promise<void> => {
 };
 
 /*************************   DOCUMENTS   *****************************/
-
-async function getDocuments() {
-  try {
-    const response = await fetch(baseURL + "/documents");
-    if (response.ok) {
-      const documents = await response.json();
-      const docsMapped = documents.map((doc: any) => ({
-        ...doc,
-        issuanceDate: dayjs(doc.issuanceDate),
-      }));
-      return docsMapped;
-    }
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-async function addDocument(document: Document): Promise<number> {
-  const response = await fetch(baseURL + `/documents`, {
-    method: "POST",
-    credentials: "include",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      title: document.title,
-      description: document.description,
-      // stakeholders: document.stakeholder,
-      scale: document.scale,
-      // issuanceDate: document.issuanceDate,
-      type: document.type,
-      // connections: document.connections,
-      // pages: document.pages,
-      coordinates: document.coordinates,
-    }),
-  });
-  if (response.ok) {
-    const { id } = await response.json();
-    return id;
-  } else {
-    console.error("Error creating document");
-    throw new Error("Error creating document");
-  }
-}
-
-async function updateDocument(id: number, title: string, coordinates: string) {
-  // other fields?
-  try {
-    const response = await fetch(baseURL + `/documents/${id}`, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title, coordinates }),
-    });
-    if (response.ok) {
-      return true;
-    }
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-async function deleteDocument(id: number) {
-  try {
-    const response = await fetch(baseURL + `/documents/${id}`, {
-      method: "DELETE",
-      credentials: "include",
-    });
-    if (!response.ok) {
-      throw new Error("Something went wrong deleting the Document");
-    }
-  } catch (err) {
-    console.error(err);
-  }
-}
 
 /****************************   LINKS   **********************************/
 
@@ -186,10 +110,7 @@ const API = {
   getUser,
   login,
   logout,
-  getDocuments,
-  addDocument,
-  updateDocument,
-  deleteDocument,
+  ...documentAPI,
   getLinks,
   putLink,
   deleteLink,

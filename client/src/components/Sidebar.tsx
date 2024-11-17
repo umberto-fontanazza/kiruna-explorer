@@ -41,7 +41,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
 
       const updateDocument = {
         ...props.document,
-        links: [...props.document.links, newLink],
+        links: [...(props.document.links || []), newLink],
       };
 
       props.setDocument(updateDocument);
