@@ -34,9 +34,9 @@ const Sidebar: FC<SidebarProps> = (props) => {
     if (props.document?.id) {
       // Uncomment this line if you want to save the link via an API call
       /*await API.putLink(
+          props.document?.id,
           newLink.targetDocumentId,
-          newLink.type,
-          props.document?.id
+          [newLink.type]
         );*/
 
       const updateDocument = {
