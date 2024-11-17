@@ -1,6 +1,10 @@
 import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { FC, useEffect, useState } from "react";
-import { Document, DocumentType } from "../utils/interfaces";
+import {
+  Document,
+  DocumentType,
+  fromDocumentTypeToIcon,
+} from "../utils/interfaces";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import "@material/web/icon/_icon.scss";
 import "../styles/Map.scss";
@@ -94,17 +98,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   }, [props.insertMode]);
 
   useEffect(() => {
-    const typeMapping = new Map<DocumentType, string>([
-      [DocumentType.Design, "design_services"],
-      [DocumentType.Informative, "info"],
-      [DocumentType.MaterialEffect, "material_effect"],
-      [DocumentType.Prescriptive, "find_in_page"],
-      [DocumentType.Technical, "settings"],
-    ]);
-    function typeConversion(type: DocumentType | undefined): string {
-      if (!type) return "unknown";
-      return typeMapping.get(type) ?? type;
-    }
     if (isLoaded && map && !props.insertMode) {
       const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
       // Function to create a Marker
@@ -113,7 +106,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         markerClass: string
       ): google.maps.marker.AdvancedMarkerElement => {
         const markerContent = document.createElement("div");
-        const mappedType = typeConversion(doc.type);
+        const mappedType = fromDocumentTypeToIcon.get(doc.type);
         markerContent.className = `map-icon-documents ${markerClass}`;
         markerContent.innerHTML = `<span class="material-symbols-outlined color-${mappedType} size">${mappedType}</span>`;
 

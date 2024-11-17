@@ -1,5 +1,13 @@
 import { FC, useState, useContext } from "react";
-import { Document, Link } from "../utils/interfaces";
+import {
+  Document,
+  documentTypeDisplay,
+  fromDocumentTypeToIcon,
+  Link,
+  ScaleType,
+  scaleTypeDisplay,
+  stakeholderDisplay,
+} from "../utils/interfaces";
 import ModalAddConnection from "../components/ModalAddConnection";
 import "../styles/Sidebar.scss";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
@@ -76,33 +84,57 @@ const Sidebar: FC<SidebarProps> = (props) => {
 
       {/* Sidebar Content */}
       <div className="content">
-        <img
-          src={`/document-${props.document?.type}-icon.png`}
-          alt="Under Construction"
-        />
+        <span
+          className={`material-symbols-outlined color-${fromDocumentTypeToIcon.get(props.document?.type)} size`}
+        >
+          {fromDocumentTypeToIcon.get(props.document?.type)}
+        </span>
         <hr />
         <h3>{props.document?.title}</h3>
         <p>{props.document?.description}</p>
         <hr />
         <h4>
-          Stakeholders:{" "}
-          {props.document?.stakeholders?.map((s, index) => (
-            <a key={`${props.document?.id}-${index}`}>{s} </a>
-          ))}
+          Stakeholders:&nbsp;
+          {props.document?.stakeholders ? (
+            props.document?.stakeholders?.map((s, index, arr) => (
+              <span key={`${props.document?.id}-${index}`}>
+                {stakeholderDisplay[s]}
+                {index < arr.length - 1 ? ", " : ""}
+              </span>
+            ))
+          ) : (
+            <span>-</span>
+          )}
         </h4>
         <h4>
-          Scale: <a>{props.document?.scale.type}</a>
+          Scale:&nbsp;
+          <span>
+            {props.document?.scale.type &&
+              props.document?.scale.type !== ScaleType.Ratio &&
+              scaleTypeDisplay[props.document.scale.type]}
+            {props.document?.scale.type &&
+              props.document?.scale.type === ScaleType.Ratio &&
+              `1:${props.document.scale.ratio}`}
+          </span>
+        </h4>
+
+        <h4>
+          Issuance Date:&nbsp;
+          <span>
+            {props.document?.issuanceDate?.isValid()
+              ? props.document?.issuanceDate?.format("MMMM D, YYYY")
+              : "-"}
+          </span>
         </h4>
         <h4>
-          Issuance Date:{" "}
-          <a>{props.document?.issuanceDate?.format("DD/MM/YYYY")}</a>
-        </h4>
-        <h4>
-          Type: <a>{props.document?.type}</a>
+          Type:{" "}
+          <span>
+            {props.document?.type && documentTypeDisplay[props.document?.type]}
+          </span>
         </h4>
         <div className="connection-group">
           <h4>
-            Links: <a>{props.document?.connections?.length || 0}</a>
+            Links: <span>{props.document?.connections?.length || 0}</span>
           </h4>
           {user && (
             <div>
@@ -124,12 +156,11 @@ const Sidebar: FC<SidebarProps> = (props) => {
           )}
         </div>
         <button className="btn-edit">Edit Document</button>
-
         {/* <h4>
-          Language: <a>{props.document?.language}</a>
+          Language: <span>{props.document?.language}</span>
         </h4> */}
         {/* <h4>
-          Pages: <a>{props.document?.pages}</a>
+          Pages: <span>{props.document?.pages}</span>
         </h4> */}
       </div>
       {/* Modal for adding new connections */}
