@@ -34,8 +34,6 @@ export interface Document {
   issuanceDate: Dayjs | null;
   type: DocumentType;
   links: Link[];
-  language: string | undefined;
-  pages: number | null;
   coordinates: { latitude: number | null; longitude: number | null };
 }
 

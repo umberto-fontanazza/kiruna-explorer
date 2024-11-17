@@ -78,7 +78,6 @@ async function addDocument(document: Document): Promise<number> {
       // issuanceDate: document.issuanceDate,
       type: document.type,
       // connections: document.connections,
-      language: document.language,
       // pages: document.pages,
       coordinates: document.coordinates,
     }),
