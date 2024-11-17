@@ -1,10 +1,6 @@
 import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { FC, useEffect, useState } from "react";
-import {
-  Document,
-  DocumentType,
-  fromDocumentTypeToIcon,
-} from "../utils/interfaces";
+import { Document, fromDocumentTypeToIcon } from "../utils/interfaces";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import "@material/web/icon/_icon.scss";
 import "../styles/Map.scss";

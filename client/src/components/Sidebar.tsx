@@ -8,11 +8,10 @@ import {
   scaleTypeDisplay,
   stakeholderDisplay,
 } from "../utils/interfaces";
-import ModalAddConnection from "../components/ModalAddConnection";
+import ModalAddLinks from "./ModalAddLinks";
 import "../styles/Sidebar.scss";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import "@material/web/icon/_icon.scss";
-import dayjs from "dayjs";
 import { authContext } from "../context/auth";
 
 interface SidebarProps {
@@ -165,12 +164,12 @@ const Sidebar: FC<SidebarProps> = (props) => {
       </div>
       {/* Modal for adding new links */}
       {modalConnectionOpen && (
-        <ModalAddConnection
+        <ModalAddLinks
           documents={props.documents}
           document={props.document}
           onClose={() => setModalConnectionOpen(false)}
           onSubmit={handleAddNewConnection}
-        ></ModalAddConnection>
+        ></ModalAddLinks>
       )}
     </>
   );

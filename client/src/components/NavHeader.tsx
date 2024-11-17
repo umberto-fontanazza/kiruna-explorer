@@ -1,7 +1,6 @@
 import { FC, useContext } from "react";
 import "../styles/NavHeader.scss"; // Importiamo il file SCSS personalizzato
 import { useNavigate } from "react-router-dom";
-import { User } from "../utils/interfaces";
 import { authContext } from "../context/auth";
 
 const NavHeader: FC = (): JSX.Element => {

@@ -1,6 +1,6 @@
 import { FC, useEffect, useState, useContext } from "react";
 import API from "../API/API";
-import { Document, LinkType, User } from "../utils/interfaces";
+import { Document, LinkType } from "../utils/interfaces";
 import "../styles/Home.scss";
 import NavHeader from "./NavHeader";
 import ModalForm from "./ModalAddDocument";
