@@ -1,50 +1,8 @@
 import { Document, LinkType } from "../utils/interfaces";
-import dayjs from "dayjs";
-import { User } from "../utils/interfaces";
 import { documentAPI } from "./documentAPI";
+import { authAPI } from "./authAPI";
 
 export const baseURL = "http://localhost:3000";
-
-async function getUser(): Promise<User> {
-  const response = await fetch(baseURL + "/sessions/current", {
-    credentials: "include",
-  });
-  if (!response.ok) {
-    throw new Error("Failed to retrieve session");
-  }
-  const user = await response.json();
-  return user;
-}
-
-async function login(email: string, password: string): Promise<User> {
-  const response = await fetch(baseURL + "/sessions", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      email: email,
-      password: password,
-    }),
-  });
-  if (!response.ok) {
-    throw new Error("Failed to authenticate");
-  }
-  const user = await response.json();
-  const { name, surname, role } = user;
-  return { email, name, surname, role };
-}
-
-const logout = async (): Promise<void> => {
-  const response = await fetch(baseURL + "/sessions/current", {
-    method: "DELETE",
-    credentials: "include",
-  });
-  if (!response.ok) {
-    throw new Error("Failed to logout");
-  }
-};
 
 /*************************   DOCUMENTS   *****************************/
 
@@ -107,9 +65,7 @@ async function deleteLink(
 }
 
 const API = {
-  getUser,
-  login,
-  logout,
+  ...authAPI,
   ...documentAPI,
   getLinks,
   putLink,
