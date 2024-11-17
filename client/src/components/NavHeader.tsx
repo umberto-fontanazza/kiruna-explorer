@@ -15,7 +15,7 @@ const NavHeader: FC = (): JSX.Element => {
           <div className="nav-brand">Kiruna eXplorer.</div>
         </div>
         <div className={`nav-right ${user ? "logged-in" : ""}`}>
-          {user ? <span className="username">Hi {user.name}!</span> : null}
+          {user ? <span className="user-name">Hi {user.name}!</span> : null}
           <button onClick={user ? logout : () => navigate("/login")}>
             {user ? "Logout" : "Login"}
           </button>

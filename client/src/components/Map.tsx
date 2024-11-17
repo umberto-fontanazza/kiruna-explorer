@@ -142,7 +142,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               const marker = createMarker(doc, "not-visual");
               newMarkers.push(marker);
             }
-            props.documentSelected?.connections.forEach((link) => {
+            props.documentSelected?.links.forEach((link) => {
               if (doc.id === link.targetDocumentId) {
                 const marker = createMarker(doc, "visual");
                 newMarkers.push(marker);

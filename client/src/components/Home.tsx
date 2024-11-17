@@ -43,6 +43,7 @@ const Home: FC = (): JSX.Element => {
   // Handle Add Document button click to open modal
   const handleAddButton = () => {
     setInsertMode(true);
+    setSidebarOpen(false);
   };
 
   const closeInsertMode = () => {

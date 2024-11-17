@@ -33,7 +33,7 @@ export interface Document {
   scale: Scale;
   issuanceDate: Dayjs | null;
   type: DocumentType;
-  connections: Link[];
+  links: Link[];
   language: string | undefined;
   pages: number | null;
   coordinates: { latitude: number | null; longitude: number | null };

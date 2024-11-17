@@ -27,7 +27,7 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = (props) => {
   const { user } = useContext(authContext);
-  // State for controlling the modal for adding connections
+  // State for controlling the modal for adding links
   const [modalConnectionOpen, setModalConnectionOpen] = useState(false);
 
   // Handle adding a new connection link
@@ -42,7 +42,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
 
       const updateDocument = {
         ...props.document,
-        connections: [...props.document.connections, newLink],
+        links: [...props.document.links, newLink],
       };
 
       props.setDocument(updateDocument);
@@ -134,10 +134,11 @@ const Sidebar: FC<SidebarProps> = (props) => {
         </h4>
         <div className="connection-group">
           <h4>
-            Links: <span>{props.document?.connections?.length || 0}</span>
+            Links: <span>{props.document?.links?.length || 0}</span>
           </h4>
-          {user && (
-            <div>
+          {user &&
+            props.document?.links &&
+            props.document?.links.length > 0 && (
               <button
                 className={`see-links ${props.visualLinks ? "fill" : "no-fill"}`}
                 onClick={() =>
@@ -152,8 +153,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
                   visibility
                 </span>
               </button>
-            </div>
-          )}
+            )}
         </div>
         <button className="btn-edit">Edit Document</button>
         {/* <h4>
@@ -163,7 +163,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
           Pages: <span>{props.document?.pages}</span>
         </h4> */}
       </div>
-      {/* Modal for adding new connections */}
+      {/* Modal for adding new links */}
       {modalConnectionOpen && (
         <ModalAddConnection
           documents={props.documents}

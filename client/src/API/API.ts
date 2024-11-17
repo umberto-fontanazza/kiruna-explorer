@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import { User } from "../utils/interfaces";
 
 const baseURL = "http://localhost:3000";
-const postmanURL = "https://6b963377-644f-4e74-a4b3-4c8a83295bbb.mock.pstmn.io";
 
 async function getUser(): Promise<User> {
   const response = await fetch(baseURL + "/sessions/current", {
@@ -53,69 +52,15 @@ async function getDocuments() {
     const response = await fetch(baseURL + "/documents");
     if (response.ok) {
       const documents = await response.json();
-      const docsMapped = documents.map((doc: any) => {
-        return {
-          id: doc.id,
-          title: doc.title,
-          description: doc.description,
-          stakeholders: doc.stakeholders,
-          scale: doc.scale,
-          issuanceDate: dayjs(doc.issuanceDate),
-          type: doc.type,
-          connections: doc.connections,
-          coordinates: doc.coordinates,
-        };
-      });
+      const docsMapped = documents.map((doc: any) => ({
+        ...doc,
+        issuanceDate: dayjs(doc.issuanceDate),
+      }));
       return docsMapped;
     }
   } catch (err) {
     console.error(err);
   }
-  /*
-  return [    
-    {
-      id: 5,
-      title: "Adjusted development plan (47)",
-      description:
-        "This document is the update of the Development Plan, one year after its creation, modifications are made to the general master plan, which is published under the name 'Adjusted Development Plan91,' and still represents the version used today after 10 years. Certainly, there are no drastic differences compared to the previous plan, but upon careful comparison, several modified elements stand out. For example, the central square now takes its final shape, as well as the large school complex just north of it, which appears for the first time",
-      stakeholders: ["lkab", "kiruna_kommun"],
-      scale: "1:7.500",
-      issuanceDate: new Date("2015"),
-      type: DocumentType.Design,
-      connections: [
-        { targetDocumentId: 3, type: [LinkType.Direct] },
-        { targetDocumentId: 5, type: [LinkType.Collateral] },
-        { targetDocumentId: 6, type: [LinkType.Collateral] },
-        { targetDocumentId: 7, type: [LinkType.Collateral] },
-        { targetDocumentId: 8, type: [LinkType.Collateral] },
-        { targetDocumentId: 9, type: [LinkType.Collateral] },
-      ],
-      language: "Swedish",
-      pages: 1,
-      coordinates: { latitude: 67.839, longitude: 20.245 },
-    },
-    {
-      id: 6,
-      title: "Detail plan for square and commercial street (50)",
-      description:
-        "This plan, approved in July 2016, is the first detailed plan to be implemented from the new masterplan (Adjusted development plan). The document defines the entire area near the town hall, comprising a total of 9 blocks known for their density. Among these are the 6 buildings that will face the main square. The functions are mixed, both public and private, with residential being prominent, as well as the possibility of incorporating accommodation facilities such as hotels. For all buildings in this plan, the only height limit is imposed by air traffic.",
-      stakeholders: ["lkab", "kiruna_kommun"],
-      scale: "1:1,000",
-      issuanceDate: new Date("2016/06/22"),
-      type: DocumentType.Prescriptive,
-      connections: [
-        { targetDocumentId: 3, type: [LinkType.Direct] },
-        { targetDocumentId: 5, type: [LinkType.Collateral] },
-        { targetDocumentId: 6, type: [LinkType.Collateral] },
-        { targetDocumentId: 7, type: [LinkType.Collateral] },
-        { targetDocumentId: 8, type: [LinkType.Collateral] },
-        { targetDocumentId: 9, type: [LinkType.Collateral] },
-      ],
-      language: "Swedish",
-      pages: 43,
-      coordinates: { latitude: 67.84, longitude: 20.28 },
-    },
-  ];*/
 }
 
 async function addDocument(document: Document): Promise<number> {
