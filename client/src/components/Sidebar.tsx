@@ -91,7 +91,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
           ))}
         </h4>
         <h4>
-          Scale: <a>{props.document?.scale}</a>
+          Scale: <a>{props.document?.scale.type}</a>
         </h4>
         <h4>
           Issuance Date:{" "}
@@ -102,7 +102,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
         </h4>
         <div className="connection-group">
           <h4>
-            Links: <a>{props.document?.connections?.length}</a>
+            Links: <a>{props.document?.connections?.length || 0}</a>
           </h4>
           {user && (
             <div>

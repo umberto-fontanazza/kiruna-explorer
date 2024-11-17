@@ -30,7 +30,7 @@ export interface Document {
   title: string;
   description: string | undefined;
   stakeholders: Stakeholder[];
-  scale: string;
+  scale: Scale;
   issuanceDate: Dayjs | null;
   type: DocumentType | undefined;
   connections: Link[];
@@ -59,4 +59,15 @@ export enum Stakeholder {
   Lkab = "lkab",
   Residents = "residents",
   WhiteArkitekter = "white_arkitekter",
+}
+
+export interface Scale {
+  type: ScaleType;
+  ratio?: number;
+}
+
+export enum ScaleType {
+  BlueprintsOrEffect = "blueprints/effects",
+  Text = "text",
+  Ratio = "ratio",
 }
