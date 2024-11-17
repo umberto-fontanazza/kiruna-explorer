@@ -1,6 +1,6 @@
-import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { FC, useEffect, useState } from "react";
-import { Document, DocumentType } from "../utils/interfaces";
+import { Document, fromDocumentTypeToIcon } from "../utils/interfaces";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import "@material/web/icon/_icon.scss";
 import "../styles/Map.scss";
@@ -21,6 +21,8 @@ interface MapComponentProps {
   setNewPos: (value: Position) => void;
 }
 
+const libraries: Libraries = ["marker"];
+
 const MapComponent: FC<MapComponentProps> = (props) => {
   // Coordinates for Kiruna, Sweden
   const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
@@ -35,7 +37,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-    libraries: ["marker"],
+    libraries: libraries,
   });
 
   // Styling for the map container
@@ -64,13 +66,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         },
         minZoom: 12,
         maxZoom: 20,
-        styles: [
-          {
-            featureType: "all",
-            elementType: "labels",
-            stylers: [{ visibility: "on" }],
-          },
-        ],
         restriction: {
           latLngBounds: bounds,
           strictBounds: false,
@@ -80,7 +75,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   useEffect(() => {
     if (isLoaded && map && props.insertMode) {
-      console.log(google.maps.marker);
       const mapHandleClick = (event: google.maps.MapMouseEvent) => {
         if (event.latLng) {
           const latitude = event.latLng.lat();
@@ -94,23 +88,12 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       map.addListener("click", mapHandleClick);
 
       return () => {
-        //Da pulire i listener.
+        google.maps.event.clearInstanceListeners(map);
       };
     }
   }, [props.insertMode]);
 
   useEffect(() => {
-    const typeMapping = new Map<DocumentType, string>([
-      [DocumentType.Design, "design_services"],
-      [DocumentType.Informative, "info"],
-      [DocumentType.MaterialEffect, "material_effect"],
-      [DocumentType.Prescriptive, "find_in_page"],
-      [DocumentType.Technical, "settings"],
-    ]);
-    function typeConversion(type: DocumentType | undefined): string {
-      if (!type) return "unknown";
-      return typeMapping.get(type) ?? type;
-    }
     if (isLoaded && map && !props.insertMode) {
       const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
       // Function to create a Marker
@@ -119,8 +102,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         markerClass: string
       ): google.maps.marker.AdvancedMarkerElement => {
         const markerContent = document.createElement("div");
-        const mappedType = typeConversion(doc.type);
-        console.log(mappedType);
+        const mappedType = fromDocumentTypeToIcon.get(doc.type);
         markerContent.className = `map-icon-documents ${markerClass}`;
         markerContent.innerHTML = `<span class="material-symbols-outlined color-${mappedType} size">${mappedType}</span>`;
 
@@ -146,30 +128,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         return marker;
       };
 
-        const marker = new google.maps.marker.AdvancedMarkerElement({
-          map,
-          position: {
-            lat: doc.coordinates.latitude!,
-            lng: doc.coordinates.longitude!,
-          },
-          content: markerContent,
-          title: doc.title,
-        });
-
-        marker.addListener("click", () => {
-          props.setSidebarOpen(true);
-          props.setDocSelected(doc);
-          setCenter({
-            lat: doc.coordinates.latitude!,
-            lng: doc.coordinates.longitude! + 0.0019,
-          });
-        });
-
-        return marker;
-      };
-
-      const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
-
       props.documents.forEach((doc) => {
         if (
           doc.coordinates.latitude !== null &&
@@ -180,7 +138,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               const marker = createMarker(doc, "not-visual");
               newMarkers.push(marker);
             }
-            props.documentSelected?.connections.forEach((link) => {
+            props.documentSelected?.links.forEach((link) => {
               if (doc.id === link.targetDocumentId) {
                 const marker = createMarker(doc, "visual");
                 newMarkers.push(marker);
@@ -201,7 +159,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       });
 
       return () => {
-        newMarkers.forEach((marker) => (marker.map = null));
+        markers.forEach((marker) => (marker.map = null));
       };
     } else {
       markers.forEach((marker) => (marker.map = null));

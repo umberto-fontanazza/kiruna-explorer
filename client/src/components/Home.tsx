@@ -1,6 +1,6 @@
 import { FC, useEffect, useState, useContext } from "react";
 import API from "../API/API";
-import { Document, LinkType, User } from "../utils/interfaces";
+import { Document, LinkType } from "../utils/interfaces";
 import "../styles/Home.scss";
 import NavHeader from "./NavHeader";
 import ModalForm from "./ModalAddDocument";
@@ -33,7 +33,6 @@ const Home: FC = (): JSX.Element => {
       try {
         const documents: Document[] = await API.getDocuments();
         setDocuments(documents);
-        console.log(documents);
       } catch (err) {
         console.error(err);
       }
@@ -44,6 +43,7 @@ const Home: FC = (): JSX.Element => {
   // Handle Add Document button click to open modal
   const handleAddButton = () => {
     setInsertMode(true);
+    setSidebarOpen(false);
   };
 
   const closeInsertMode = () => {
@@ -59,7 +59,6 @@ const Home: FC = (): JSX.Element => {
     setModalOpen(false);
     const id = await API.addDocument(newDocument);
     //await API.putLink(targetId, [linkType], id);
-    console.log(id);
     const updatedDocument = { ...newDocument, id: id };
     setDocuments([...documents, updatedDocument]);
   };

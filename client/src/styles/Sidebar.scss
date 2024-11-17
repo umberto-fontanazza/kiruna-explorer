@@ -92,7 +92,7 @@
     h4 {
       font-weight: normal;
       font-size: 1.3rem;
-      a {
+      span {
         font-family: "SwedenSansBold", sans-serif;
         font-weight: bold;
       }
@@ -123,7 +123,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-left: 30%;
+        margin-left: 2%;
         padding: 3px 3px;
         background-color: inherit;
         border: 0.2rem solid Color.$first;

@@ -1,7 +1,6 @@
 import { FC, useContext } from "react";
 import "../styles/NavHeader.scss"; // Importiamo il file SCSS personalizzato
 import { useNavigate } from "react-router-dom";
-import { User } from "../utils/interfaces";
 import { authContext } from "../context/auth";
 
 const NavHeader: FC = (): JSX.Element => {
@@ -15,7 +14,7 @@ const NavHeader: FC = (): JSX.Element => {
           <div className="nav-brand">Kiruna eXplorer.</div>
         </div>
         <div className={`nav-right ${user ? "logged-in" : ""}`}>
-          {user ? <span className="username">Hi {user.name}!</span> : null}
+          {user ? <span className="user-name">Hi {user.name}!</span> : null}
           <button onClick={user ? logout : () => navigate("/login")}>
             {user ? "Logout" : "Login"}
           </button>
