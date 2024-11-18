@@ -3,7 +3,7 @@ import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../styles/Map.scss";
-import { Document, fromDocumentTypeToIcon } from "../utils/interfaces";
+import { Document, fromDocumentTypeToIcon, Link } from "../utils/interfaces";
 
 interface Position {
   lat: number;
@@ -71,13 +71,11 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   });
 
   const onMapClick = (event: google.maps.MapMouseEvent) => {
-    if (event.latLng) {
-      const latitude = event.latLng.lat();
-      const longitude = event.latLng.lng();
-      const newPosition: Position = { lat: latitude, lng: longitude };
-      setNewPos(newPosition);
-      setModalOpen(true);
-    }
+    if (!event.latLng) return;
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
+    setNewPos({ lat, lng });
+    setModalOpen(true);
   };
 
   useEffect(() => {
@@ -124,6 +122,18 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     return marker;
   };
 
+  /**
+   * @param doc - the document to be checked
+   * @returns true if doc is currently selected or linked to the selected
+   */
+  const isSelectedOrLinked = (doc: Document) => {
+    const linkedIDs: number[] =
+      documentSelected?.links?.map((link: Link) => link.targetDocumentId) || [];
+    if (doc.id === documentSelected?.id) return true;
+    if (linkedIDs.includes(doc.id)) return true;
+    return false;
+  };
+
   const clearMarkers = () => {
     markers.forEach((marker) => (marker.map = null));
   };
@@ -133,31 +143,13 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       clearMarkers();
       return;
     }
-    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
-    documents
+    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
       .filter((doc) => doc.coordinates)
-      .forEach((doc) => {
-        if (visualLinks) {
-          if (doc.id === documentSelected?.id) {
-            const marker = createMarker(doc);
-            newMarkers.push(marker);
-          }
-          documentSelected?.links?.forEach((link) => {
-            if (doc.id === link.targetDocumentId) {
-              const marker = createMarker(doc, true);
-              newMarkers.push(marker);
-            }
-          });
-        } else {
-          const marker = createMarker(doc);
-          newMarkers.push(marker);
-        }
-      });
+      .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
+      .map((doc) => createMarker(doc));
 
-    setMarkers((prevMarkers) => {
-      prevMarkers.forEach((marker) => {
-        marker.map = null;
-      });
+    setMarkers((_) => {
+      clearMarkers();
       return newMarkers;
     });
     return clearMarkers;
