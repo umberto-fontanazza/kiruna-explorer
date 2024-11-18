@@ -90,13 +90,17 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     };
   }, [insertMode]);
 
+  /**
+   * @param linked - when true the documents is visualized
+   * as linked to the selected document
+   */
   const createMarker = (
     doc: Document,
-    markerClass: string
+    linked: boolean = false
   ): google.maps.marker.AdvancedMarkerElement => {
     const markerDivChild = document.createElement("div");
     const iconName = fromDocumentTypeToIcon.get(doc.type) as string;
-    markerDivChild.className = `map-icon-documents ${markerClass}`;
+    markerDivChild.className = `document-icon ${linked ? "linked" : ""}`;
     markerDivChild.innerHTML = `<span class="material-symbols-outlined color-${iconName} size">${iconName}</span>`;
 
     const marker = new google.maps.marker.AdvancedMarkerElement({
@@ -135,17 +139,17 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       .forEach((doc) => {
         if (visualLinks) {
           if (doc.id === documentSelected?.id) {
-            const marker = createMarker(doc, "not-visual");
+            const marker = createMarker(doc);
             newMarkers.push(marker);
           }
           documentSelected?.links?.forEach((link) => {
             if (doc.id === link.targetDocumentId) {
-              const marker = createMarker(doc, "visual");
+              const marker = createMarker(doc, true);
               newMarkers.push(marker);
             }
           });
         } else {
-          const marker = createMarker(doc, "not-visual");
+          const marker = createMarker(doc);
           newMarkers.push(marker);
         }
       });
@@ -161,7 +165,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   // Render map only when API is loaded
   return isLoaded ? (
-    <>
+    <section id="map">
       <select
         className="map-types"
         value={mapType}
@@ -197,7 +201,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           setMap(mapInstance);
         }}
       />
-    </>
+    </section>
   ) : (
     <div>Loading...</div>
   );
