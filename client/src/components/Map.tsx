@@ -1,5 +1,5 @@
 import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, Dispatch, SetStateAction } from "react";
 import { Document, fromDocumentTypeToIcon } from "../utils/interfaces";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import "@material/web/icon/_icon.scss";
@@ -37,18 +37,18 @@ const mapOptions = {
   },
 };
 
+const libraries: Libraries = ["marker"];
+
 interface MapComponentProps {
   documents: Document[];
   documentSelected: Document | null;
   visualLinks: boolean;
   insertMode: boolean;
-  setModalOpen: (value: boolean) => void;
-  setSidebarOpen: (value: boolean) => void;
-  setDocSelected: (value: Document | null) => void;
-  setNewPos: (value: Position) => void;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
+  setSidebarOpen: Dispatch<SetStateAction<boolean>>;
+  setDocSelected: Dispatch<SetStateAction<Document | null>>;
+  setNewPos: Dispatch<SetStateAction<Position>>;
 }
-
-const libraries: Libraries = ["marker"];
 
 const MapComponent: FC<MapComponentProps> = (props) => {
   const [center, setCenter] = useState(kirunaCoords);
