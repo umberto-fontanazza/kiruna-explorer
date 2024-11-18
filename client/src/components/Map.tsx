@@ -95,46 +95,43 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     }
   }, [insertMode]);
 
+  const createMarker = (
+    doc: Document,
+    markerClass: string
+  ): google.maps.marker.AdvancedMarkerElement => {
+    const markerDivChild = document.createElement("div");
+    const iconName = fromDocumentTypeToIcon.get(doc.type) as string;
+    markerDivChild.className = `map-icon-documents ${markerClass}`;
+    markerDivChild.innerHTML = `<span class="material-symbols-outlined color-${iconName} size">${iconName}</span>`;
+
+    const marker = new google.maps.marker.AdvancedMarkerElement({
+      map,
+      position: {
+        lat: doc.coordinates.latitude!,
+        lng: doc.coordinates.longitude!,
+      },
+      content: markerDivChild,
+      title: doc.title,
+    });
+
+    marker.addListener("click", () => {
+      setSidebarOpen(true);
+      setDocSelected(doc);
+      setCenter({
+        lat: doc.coordinates.latitude!,
+        lng: doc.coordinates.longitude! + 0.0019,
+      });
+    });
+    return marker;
+  };
+
   useEffect(() => {
     if (isLoaded && map && !insertMode) {
       const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
-      // Function to create a Marker
-      const createMarker = (
-        doc: Document,
-        markerClass: string
-      ): google.maps.marker.AdvancedMarkerElement => {
-        const markerContent = document.createElement("div");
-        const mappedType = fromDocumentTypeToIcon.get(doc.type);
-        markerContent.className = `map-icon-documents ${markerClass}`;
-        markerContent.innerHTML = `<span class="material-symbols-outlined color-${mappedType} size">${mappedType}</span>`;
 
-        const marker = new google.maps.marker.AdvancedMarkerElement({
-          map,
-          position: {
-            lat: doc.coordinates.latitude!,
-            lng: doc.coordinates.longitude!,
-          },
-          content: markerContent,
-          title: doc.title,
-        });
-
-        marker.addListener("click", () => {
-          setSidebarOpen(true);
-          setDocSelected(doc);
-          setCenter({
-            lat: doc.coordinates.latitude!,
-            lng: doc.coordinates.longitude! + 0.0019,
-          });
-        });
-
-        return marker;
-      };
-
-      documents.forEach((doc) => {
-        if (
-          doc.coordinates.latitude !== null &&
-          doc.coordinates.longitude !== null
-        ) {
+      documents
+        .filter((doc) => doc.coordinates.latitude && doc.coordinates.longitude)
+        .forEach((doc) => {
           if (visualLinks) {
             if (doc.id === documentSelected?.id) {
               const marker = createMarker(doc, "not-visual");
@@ -150,8 +147,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             const marker = createMarker(doc, "not-visual");
             newMarkers.push(marker);
           }
-        }
-      });
+        });
 
       setMarkers((prevMarkers) => {
         prevMarkers.forEach((marker) => {
