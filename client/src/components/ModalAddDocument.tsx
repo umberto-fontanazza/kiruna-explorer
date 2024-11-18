@@ -1,5 +1,8 @@
-import { FC, SetStateAction, useState, useEffect } from "react";
+import { FC, SetStateAction, useEffect, useState } from "react";
 
+import dayjs from "dayjs";
+import "../styles/ModalAddDocument.scss";
+import "../styles/ProgressBar.scss";
 import {
   Document,
   DocumentType,
@@ -7,9 +10,6 @@ import {
   ScaleType,
   Stakeholder,
 } from "../utils/interfaces";
-import "../styles/ModalAddDocument.scss";
-import "../styles/ProgressBar.scss";
-import dayjs from "dayjs";
 
 interface Position {
   lat: number;
@@ -35,8 +35,8 @@ const initialDocumentState: Document = {
   description: "",
   stakeholders: [],
   scale: { type: ScaleType.Text, ratio: 0 },
-  issuanceDate: null,
   type: DocumentType.Design,
+  issuanceDate: undefined,
   links: [],
   coordinates: { latitude: 0, longitude: 0 },
 };
@@ -310,7 +310,7 @@ const ModalForm: FC<ModalAddProps> = ({
                     <input
                       type="checkbox"
                       value={option.value}
-                      checked={newDoc.stakeholders.includes(option.value)}
+                      checked={newDoc.stakeholders?.includes(option.value)}
                       onChange={handleCheckboxChange}
                     />
                     {option.label}
@@ -392,11 +392,11 @@ const ModalForm: FC<ModalAddProps> = ({
                       : ""
                   }
                   onChange={(e) =>
-                    setNewDoc((prev) => ({
+                    setNewDoc((prev: Document) => ({
                       ...prev,
                       coordinates: {
-                        ...prev.coordinates,
                         latitude: Number(e.target.value),
+                        longitude: prev.coordinates?.longitude ?? 0,
                       },
                     }))
                   }
@@ -424,7 +424,7 @@ const ModalForm: FC<ModalAddProps> = ({
                     setNewDoc((prev) => ({
                       ...prev,
                       coordinates: {
-                        ...prev.coordinates,
+                        latitude: prev.coordinates?.latitude ?? 0,
                         longitude: Number(e.target.value),
                       },
                     }));

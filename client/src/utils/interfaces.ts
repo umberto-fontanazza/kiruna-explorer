@@ -1,6 +1,4 @@
-// File in which we define the common interfaces in shared files
-
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 
 export interface User {
   email: string;
@@ -16,6 +14,11 @@ export enum UserRole {
   Visitor = "visitor",
 }
 
+export interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
+
 export interface LoginErrors {
   login?: string;
 }
@@ -28,13 +31,14 @@ export interface Link {
 export interface Document {
   id: number;
   title: string;
-  description: string | undefined;
-  stakeholders: Stakeholder[];
-  scale: Scale;
-  issuanceDate: Dayjs | null;
+  description: string;
   type: DocumentType;
-  links: Link[];
-  coordinates: { latitude: number | null; longitude: number | null };
+  scale: Scale;
+  // optional fields below
+  stakeholders?: Stakeholder[];
+  coordinates?: Coordinates;
+  issuanceDate?: Dayjs;
+  links?: Link[];
 }
 
 export enum LinkType {
