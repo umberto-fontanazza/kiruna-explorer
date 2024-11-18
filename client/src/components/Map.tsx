@@ -123,7 +123,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
       .filter((doc) => doc.coordinates)
       .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
-      .map((doc) => createMarker(doc));
+      .map((doc) =>
+        createMarker(doc, visualLinks && doc.id !== documentSelected?.id)
+      );
 
     setMarkers((_) => {
       clearMarkers();
