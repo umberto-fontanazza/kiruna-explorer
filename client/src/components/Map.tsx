@@ -81,8 +81,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     const marker = new google.maps.marker.AdvancedMarkerElement({
       map,
       position: {
-        lat: doc.coordinates?.latitude || 0,
-        lng: doc.coordinates?.longitude || 0,
+        lat: doc.coordinates?.latitude ?? 0,
+        lng: doc.coordinates?.longitude ?? 0,
       },
       content: markerDivChild,
       title: doc.title,
@@ -92,8 +92,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       setSidebarOpen(true);
       setDocSelected(doc);
       setCenter({
-        lat: doc.coordinates?.latitude || kirunaCoords.lat,
-        lng: doc.coordinates?.longitude || kirunaCoords.lng + 0.0019, //TODO: explain this + numbers
+        lat: doc.coordinates?.latitude ?? kirunaCoords.lat,
+        lng: doc.coordinates?.longitude ?? kirunaCoords.lng + 0.0019, //TODO: explain this + numbers
       });
     });
     return marker;
@@ -105,7 +105,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
    */
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
-      documentSelected?.links?.map((link: Link) => link.targetDocumentId) || [];
+      documentSelected?.links?.map((link: Link) => link.targetDocumentId) ?? [];
     if (doc.id === documentSelected?.id) return true;
     if (linkedIDs.includes(doc.id)) return true;
     return false;
