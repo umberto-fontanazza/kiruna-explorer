@@ -31,6 +31,21 @@
 
       th {
         font-family: "SwedenSansBold", sans-serif;
+
+        .sort-icon {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          width: 2ch;
+          height: 2ch;
+          border-radius: 100%;
+          margin-left: 20%;
+          margin-top: 10%;
+          &:hover {
+            background-color: Color.$first-hover;
+          }
+        }
       }
     }
 

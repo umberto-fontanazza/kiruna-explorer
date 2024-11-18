@@ -11,7 +11,8 @@ import {
 } from "../utils/interfaces";
 
 const DocumentsList = () => {
-  const [documents_list, setDocumentsList] = useState<Document[]>([]);
+  const [documentsList, setDocumentsList] = useState<Document[]>([]);
+  const [isSortedAscending, setIsSortedAscending] = useState<boolean>(true); // Stato per il filtro
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -25,6 +26,20 @@ const DocumentsList = () => {
     };
     fetchDocuments();
   }, []);
+
+  // Funzione per ordinare i documenti
+  const sortDocumentsByDate = () => {
+    const sortedList = [...documentsList].sort((a, b) => {
+      const dateA = a.issuanceDate?.toDate(); // Convertire in oggetti Date se necessario
+      const dateB = b.issuanceDate?.toDate();
+      if (!dateA || !dateB) return 0; // Gestire casi in cui le date sono assenti o non valide
+      return isSortedAscending
+        ? dateA.getTime() - dateB.getTime()
+        : dateB.getTime() - dateA.getTime();
+    });
+    setDocumentsList(sortedList);
+    setIsSortedAscending(!isSortedAscending); // Invertire l'ordine
+  };
 
   return (
     <>
@@ -40,16 +55,27 @@ const DocumentsList = () => {
               <th>Stakeholders</th>
               <th>Scale</th>
               <th>Coordinates</th>
-              <th>Issuance Date</th>
+              <th>
+                Issuance Date{" "}
+                <span
+                  className="material-symbols-outlined sort-icon"
+                  onClick={sortDocumentsByDate}
+                  style={{ cursor: "pointer" }}
+                >
+                  swap_vert
+                </span>
+              </th>
               <th>Links</th>
             </tr>
           </thead>
           <tbody>
-            {documents_list.map((doc) => (
+            {documentsList.map((doc) => (
               <tr key={doc.id}>
                 <td>
                   <span
-                    className={`material-symbols-outlined color-${fromDocumentTypeToIcon.get(doc.type)} size`}
+                    className={`material-symbols-outlined color-${fromDocumentTypeToIcon.get(
+                      doc.type
+                    )} size`}
                   >
                     {fromDocumentTypeToIcon.get(doc.type)}
                   </span>
