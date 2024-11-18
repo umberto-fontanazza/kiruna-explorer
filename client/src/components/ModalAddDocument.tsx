@@ -1,14 +1,10 @@
-import { FC, SetStateAction, useState } from "react";
+import { FC, useState } from "react";
+import LinksTable from "./LinksTable";
+import SearchBar from "./SearchBar";
 
-import {
-  Document,
-  DocumentType,
-  Link,
-  LinkType,
-  Stakeholder,
-} from "../utils/interfaces";
+import { Document, DocumentType, Link, Stakeholder } from "../utils/interfaces";
 import "../styles/ModalAddDocument.scss";
-import ISO6391 from "iso-639-1";
+//import ISO6391 from "iso-639-1";
 import dayjs from "dayjs";
 
 //TODO: Fix color of the form
@@ -47,7 +43,7 @@ const ModalForm: FC<ModalAddProps> = ({
     { value: "blueprints/effects", label: "Blueprints/Effects" },
     { value: "text", label: "Text" },
   ];
-  const languages = ISO6391.getAllNames().sort();
+  //const languages = ISO6391.getAllNames().sort();
 
   const stakeholdersOptions = [
     { value: Stakeholder.Lkab, label: "LKAB" },
@@ -461,7 +457,7 @@ const ModalForm: FC<ModalAddProps> = ({
         {
           <div className="modal-overlay-2">
             <div className="modal-content-2">
-              <h2>Add Links</h2>
+              <h2>New Document Registration</h2>
               <button
                 className="close-button-2"
                 onClick={() => {
@@ -470,7 +466,7 @@ const ModalForm: FC<ModalAddProps> = ({
                   setPage(1);
                 }}
               >
-                <img src="/x.svg" alt="Close" />
+                <img src="/x.png" alt="Close" />
               </button>
 
               <ProgressBar currentPage={page} />
@@ -551,217 +547,5 @@ const ProgressBar = (props: { currentPage: number }) => {
     </div>
   );
 };
-
-interface SearchBarProps {
-  documents: Document[];
-  tableLinks: Link[];
-  setTableLinks: React.Dispatch<React.SetStateAction<Link[]>>;
-}
-
-function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
-  // Stato per gestire l'input e i suggerimenti filtrati
-  const [query, setQuery] = useState("");
-  const [selectedDocument, setSelectedDocument] = useState<Document>();
-  const [type, setType] = useState(LinkType.Direct);
-  const [filteredSuggestions, setFilteredSuggestions] = useState<Document[]>(
-    []
-  );
-  const [showSuggestions, setShowSuggestions] = useState(false);
-
-  // Funzione per aggiornare l'input e i suggerimenti filtrati
-  const handleChange = (e: { target: { value: string } }) => {
-    const userInput = e.target.value;
-    setQuery(userInput);
-
-    // Filtra le opzioni in base all'input
-    const filtered = documents.filter((document) =>
-      document.title.toLowerCase().includes(userInput.toLowerCase())
-    );
-    setFilteredSuggestions(filtered);
-    setShowSuggestions(true);
-  };
-
-  // Funzione per selezionare un suggerimento
-  const selectSuggestion = async (suggestion: Document) => {
-    console.log(suggestion);
-    setQuery(suggestion.title);
-    await setSelectedDocument(suggestion);
-    console.log(selectedDocument);
-    setShowSuggestions(false);
-  };
-
-  interface HandleAddLinkEvent {
-    preventDefault: () => void;
-  }
-
-  const handleAddLink = (e: HandleAddLinkEvent) => {
-    e.preventDefault();
-    if (selectedDocument?.id !== undefined) {
-      //se è stato selezionato un documento
-
-      const target = tableLinks.find(
-        (link) => link.targetDocumentId === selectedDocument.id - 1
-      );
-
-      if (target) {
-        setTableLinks((prev: Link[]) => {
-          const updatedLinks = prev.map((link) => {
-            if (link.targetDocumentId === selectedDocument.id - 1) {
-              if (!link.type.includes(type)) {
-                return {
-                  ...link,
-                  type: [...link.type, type],
-                };
-              } else {
-                console.log("Link already exists");
-              }
-            }
-            return link; // If the link is not the one to update, return it as it is
-          });
-
-          // Return the updated links
-          return updatedLinks;
-        });
-      } else {
-        setTableLinks((prev: Link[]) => {
-          return [
-            ...prev,
-            {
-              targetDocumentId: selectedDocument.id - 1,
-              type: [type],
-            },
-          ];
-        });
-      }
-    } else {
-      console.log("Document not selected");
-    }
-  };
-
-  return (
-    <>
-      <input
-        type="text"
-        className="search-input"
-        placeholder="Search for a document"
-        value={query}
-        onChange={handleChange}
-        onFocus={() => setShowSuggestions(true)}
-        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)} // Ritardo per permettere il click
-        style={{
-          width: "80%",
-          padding: "10px",
-          fontSize: "16px",
-          //boxSizing: "border-box",
-          //border: "1px solid #ddd",
-        }}
-      />
-
-      {/* Mostra i suggerimenti solo se sono presenti e se è attivo showSuggestions */}
-      {showSuggestions && filteredSuggestions.length > 0 && (
-        <div className="form-group">
-          {filteredSuggestions.slice(0, 5).map((suggestion, index) => (
-            <div
-              key={index}
-              onClick={() => selectSuggestion(suggestion)}
-              className="suggestion-item"
-              onMouseDown={(e) => e.preventDefault()} // Previene la perdita di focus
-            >
-              {suggestion.title}
-            </div>
-          ))}
-        </div>
-      )}
-      <select
-        onChange={(e) => {
-          setType(e.target.value as LinkType);
-        }}
-      >
-        <option value={LinkType.Direct}>Direct</option>
-        <option value={LinkType.Collateral}>Collateral</option>
-        <option value={LinkType.Projection}>Projection</option>
-        <option value={LinkType.Update}>Update</option>
-      </select>
-      <button onClick={(e) => handleAddLink(e)}>
-        <span>Add Link</span>
-      </button>
-    </>
-  );
-}
-
-interface LinksTableProps {
-  tableLinks: Link[];
-  setTableLinks: React.Dispatch<SetStateAction<Link[]>>;
-  documents: Document[];
-}
-
-function LinksTable({ tableLinks, setTableLinks, documents }: LinksTableProps) {
-  const handleRemove = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    link: Link,
-    type: LinkType
-  ) => {
-    e.preventDefault();
-
-    setTableLinks((prev: Link[]) => {
-      return prev
-        .map((l) => {
-          if (l === link) {
-            const updatedTypes = l.type.filter((t) => t !== type);
-
-            if (updatedTypes.length > 0) {
-              return { ...l, type: updatedTypes };
-            } else {
-              return null;
-            }
-          }
-          return l;
-        })
-        .filter((l) => l !== null);
-    });
-  };
-
-  return (
-    <table className="links-table">
-      <thead>
-        <tr>
-          <th>Icon</th>
-          <th>Title</th>
-          <th>Link Type</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {tableLinks.flatMap((link, index) =>
-          link.type.map((type) => (
-            <tr key={`${index}-${type}`}>
-              <td>
-                <img
-                  className="doc-icon"
-                  src={`/document-${documents[link.targetDocumentId].type}-icon.png`}
-                  alt="Document icon"
-                />
-              </td>
-              <td className="doc-title">
-                {documents[link.targetDocumentId].title}
-              </td>
-              <td>
-                <span className="link-type">{type}</span>
-              </td>
-              <td>
-                <button
-                  className="remove-link"
-                  onClick={(e) => handleRemove(e, link, type)}
-                >
-                  Remove
-                </button>
-              </td>
-            </tr>
-          ))
-        )}
-      </tbody>
-    </table>
-  );
-}
 
 export default ModalForm;

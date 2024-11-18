@@ -48,7 +48,7 @@ const logout = async () => {
 
 async function getDocuments() {
   try {
-    const response = await fetch(postmanURL + "/documents");
+    const response = await fetch(baseURL + "/documents");
     if (response.ok) {
       const documents = await response.json();
       const docsMapped = documents.map((doc: any) => {
