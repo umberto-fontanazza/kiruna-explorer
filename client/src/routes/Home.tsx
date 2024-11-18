@@ -6,7 +6,7 @@ import NavHeader from "../components/NavHeader";
 import Sidebar from "../components/Sidebar";
 import { authContext } from "../context/auth";
 import "../styles/Home.scss";
-import { Document, LinkType } from "../utils/interfaces";
+import { Document } from "../utils/interfaces";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
@@ -54,7 +54,10 @@ const Home: FC = (): JSX.Element => {
   const handleAddNewDocument = async (newDocument: Document) => {
     setModalOpen(false);
     const id = await API.addDocument(newDocument);
-    //await API.putLink(id, targetId, [linkType]);
+    console.log(newDocument.links);
+    newDocument.links?.forEach(async (link) => {
+      await API.putLink(link.targetDocumentId, id, link.type);
+    });
     const updatedDocument = { ...newDocument, id: id };
     setDocuments([...documents, updatedDocument]);
   };
@@ -164,6 +167,7 @@ const Home: FC = (): JSX.Element => {
         onSubmit={handleAddNewDocument}
         documents={documents}
         newPos={newPosition}
+        closeInsertMode={closeInsertMode}
       />
     </>
   );

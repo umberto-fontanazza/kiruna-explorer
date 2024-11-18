@@ -24,6 +24,7 @@ interface ModalAddProps {
   onClose: () => void;
   onSubmit: (newDocument: Document) => void;
   documents: Document[];
+  closeInsertMode: () => void;
 }
 
 // Initial State for new document
@@ -58,6 +59,7 @@ const ModalForm: FC<ModalAddProps> = ({
   onSubmit,
   documents,
   newPos,
+  closeInsertMode,
 }) => {
   const [page, setPage] = useState<number>(1);
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
@@ -128,6 +130,7 @@ const ModalForm: FC<ModalAddProps> = ({
     setNewDoc(initialDocumentState);
     setPage(1);
     setTableLinks([]);
+    closeInsertMode();
   };
 
   // Return early if modal is closed
@@ -135,7 +138,7 @@ const ModalForm: FC<ModalAddProps> = ({
   if (page === 1) {
     return (
       <div className="modal-overlay">
-        <form className="modal-content" onSubmit={handleFormSubmit}>
+        <div className="modal-content">
           <h2>New Document Registration</h2>
           <button
             className="close-button"
@@ -414,77 +417,23 @@ const ModalForm: FC<ModalAddProps> = ({
                       },
                     }));
                   }}
-                  placeholder="Es. 123.1234"
+                  placeholder="Es. 20.2253"
                   required
                 />
               </div>
             </div>
-
-            {/* Connections */}
-
-            {/* Target Document ID */}
-            {/*<div className="form-group">
-                  <label>Connection *</label>
-                  <select
-                    value={targetDocumentId ?? ""}
-                    onChange={(e) => setTargetDocumentId(Number(e.target.value))}
-                  >
-                    <option value="" hidden selected>
-                      Select a document to link
-                    </option>
-                    {documents.map((doc) => (
-                      <option key={doc.id} value={doc.id}>
-                        {doc.title}
-                      </option>
-                    ))}
-                  </select>
-                </div>*/}
-
-            {/* Connection Type */}
-            {/*<div className="form-group">
-                  <label>Connection Type *</label>
-                  <select
-                    value={newTypeConnection}
-                    onChange={(e) =>
-                      setNewTypeConnection(e.target.value as LinkType)
-                    }
-                  >
-                    <option value="" disabled>
-                      Select the Connection's type
-                    </option>
-                    <option value="DIRECT">Direct</option>
-                    <option value="COLLATERAL">Collateral</option>
-                    <option value="PROJECTION">Projection</option>
-                    <option value="UPDATE">Update</option>
-                  </select>
-                </div>*/}
-            {/* Connection Type */}
-            {/*<div className="form-group">
-                <label>Connection Type *</label>
-                <select
-                  value={newTypeConnection}
-                  onChange={(e) =>
-                    setNewTypeConnection(e.target.value as LinkType)
-                  }
-                >
-                  <option value="" disabled>
-                    Select the Connection's type
-                  </option>
-                  <option value="direct">Direct</option>
-                  <option value="collateral">Collateral</option>
-                  <option value="projection">Projection</option>
-                  <option value="update">Update</option>
-                </select>
-              </div>*/}
-
             {/* Form Buttons */}
             <div className="button-group">
-              <button className="submit-button" onClick={() => setPage(2)}>
+              <button
+                type="button"
+                className="submit-button"
+                onClick={() => setPage(2)}
+              >
                 Continue
               </button>
             </div>
           </form>
-        </form>
+        </div>
       </div>
     );
   } else if (page === 2) {
@@ -508,7 +457,7 @@ const ModalForm: FC<ModalAddProps> = ({
               <ProgressBar currentPage={page} />
 
               {/* Body */}
-              <body>
+              <div className="second-page-body">
                 <div className="links-table-container">
                   {tableLinks.length != 0 ? (
                     <div className="table-wrapper">
@@ -519,21 +468,19 @@ const ModalForm: FC<ModalAddProps> = ({
                       />
                     </div>
                   ) : (
-                    <h5>
+                    <h3>
                       If you need to add links to other documents, please use
                       the search bar below.
-                    </h5>
+                    </h3>
                   )}
                 </div>
 
                 <div className="bottom-group">
-                  <form>
-                    <SearchBar
-                      documents={documents}
-                      tableLinks={tableLinks}
-                      setTableLinks={setTableLinks}
-                    />
-                  </form>
+                  <SearchBar
+                    documents={documents}
+                    tableLinks={tableLinks}
+                    setTableLinks={setTableLinks}
+                  />
 
                   <div className="button-group-2">
                     <button
@@ -542,15 +489,14 @@ const ModalForm: FC<ModalAddProps> = ({
                     >
                       Back
                     </button>
-                    <button
-                      className="submit-button-2"
-                      onClick={(e) => handleFormSubmit(e)}
-                    >
-                      Add Document
-                    </button>
+                    <form onSubmit={handleFormSubmit}>
+                      <button className="submit-button-2" type="submit">
+                        Add Document
+                      </button>
+                    </form>
                   </div>
                 </div>
-              </body>
+              </div>
             </div>
           </div>
         }
@@ -563,8 +509,6 @@ const ProgressBar = (props: { currentPage: number }) => {
   const steps = [
     { label: "Mandatory Information", number: 1 },
     { label: "Add Links", number: 2 },
-    { label: "Add attachments", number: 3 },
-    { label: "Recap", number: 4 },
   ];
   return (
     <div className="progress-bar">

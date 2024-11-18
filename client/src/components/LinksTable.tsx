@@ -1,5 +1,6 @@
 import { Document, Link, LinkType } from "../utils/interfaces";
 import { SetStateAction } from "react";
+import "../styles/LinksTable.scss";
 
 interface LinksTableProps {
   tableLinks: Link[];
@@ -23,13 +24,12 @@ function LinksTable({ tableLinks, setTableLinks, documents }: LinksTableProps) {
 
             if (updatedTypes.length > 0) {
               return { ...l, type: updatedTypes };
-            } else {
-              return null;
             }
+            return null; // Questo è il caso in cui rimuoviamo il link
           }
           return l;
         })
-        .filter((l) => l !== null);
+        .filter((l): l is Link => l !== null); // Filtra i null
     });
   };
 
@@ -45,31 +45,42 @@ function LinksTable({ tableLinks, setTableLinks, documents }: LinksTableProps) {
       </thead>
       <tbody>
         {tableLinks.flatMap((link, index) =>
-          link.type.map((type) => (
-            <tr key={`${index}-${type}`}>
-              <td>
-                <img
-                  className="doc-icon"
-                  src={`/document-${documents[link.targetDocumentId].type}-icon.png`}
-                  alt="Document icon"
-                />
-              </td>
-              <td className="doc-title">
-                {documents[link.targetDocumentId].title}
-              </td>
-              <td>
-                <span className="link-type">{type}</span>
-              </td>
-              <td>
-                <button
-                  className="remove-link"
-                  onClick={(e) => handleRemove(e, link, type)}
-                >
-                  Remove
-                </button>
-              </td>
-            </tr>
-          ))
+          Array.isArray(link.type) && link.type.length > 0
+            ? link.type.map((type) => {
+                const document = documents.filter(
+                  (doc) => doc.id === link.targetDocumentId
+                )[0];
+                if (!document) {
+                  console.error(
+                    `Document with ID ${link.targetDocumentId} not found.`
+                  );
+                  return null; // Se il documento non esiste, non renderizzare nulla
+                }
+                return (
+                  <tr key={`${index}-${type}`}>
+                    <td>
+                      <img
+                        className="doc-icon"
+                        src={`/document-${document.type}-icon.png`}
+                        alt="Document icon"
+                      />
+                    </td>
+                    <td className="doc-title">{document.title}</td>
+                    <td>
+                      <span className="link-type">{type}</span>
+                    </td>
+                    <td>
+                      <button
+                        className="remove-link"
+                        onClick={(e) => handleRemove(e, link, type)}
+                      >
+                        Remove
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            : null
         )}
       </tbody>
     </table>

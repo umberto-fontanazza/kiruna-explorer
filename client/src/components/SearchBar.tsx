@@ -39,8 +39,8 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
 
   const handleAddLink = (e: HandleAddLinkEvent) => {
     e.preventDefault();
-    if (selectedDocument?.id !== undefined) {
-      const targetDocumentId = selectedDocument.id - 1;
+    if (selectedDocument?.id !== undefined && type !== undefined) {
+      const targetDocumentId = selectedDocument.id;
       const target = tableLinks.find(
         (link) => link.targetDocumentId === targetDocumentId
       );
