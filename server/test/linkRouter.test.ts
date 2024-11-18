@@ -35,7 +35,9 @@ describe("linkRouter", () => {
     it("should return an empty array if no links found", async () => {
       (Link.fromDocumentAll as jest.Mock).mockResolvedValue([]);
 
-      const response = await request(app).get(`/links/${sourceDocumentId}`);
+      const response = await request(app).get(
+        `http://localhost:3000/links/${sourceDocumentId}`,
+      );
 
       expect(response.status).toBe(StatusCodes.OK);
       expect(response.body).toEqual([]);
@@ -46,7 +48,9 @@ describe("linkRouter", () => {
         new Error("Database error"),
       );
 
-      const response = await request(app).get(`/links/${sourceDocumentId}`);
+      const response = await request(app).get(
+        `http://localhost:3000/links/${sourceDocumentId}`,
+      );
 
       expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
       expect(response.body.message).toBe(
@@ -67,7 +71,7 @@ describe("linkRouter", () => {
       (Link.prototype.update as jest.Mock).mockResolvedValue(linkInstance);
 
       const response = await request(app)
-        .put(`/links/${sourceDocumentId}`)
+        .put(`http://localhost:3000/links/${sourceDocumentId}`)
         .send(body);
 
       expect(response.status).toBe(StatusCodes.CREATED);
@@ -84,7 +88,7 @@ describe("linkRouter", () => {
       );
 
       const response = await request(app)
-        .put(`/links/${sourceDocumentId}`)
+        .put(`http://localhost:3000/links/${sourceDocumentId}`)
         .send(body);
 
       expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -100,7 +104,7 @@ describe("linkRouter", () => {
       (Link.delete as jest.Mock).mockResolvedValue(linkDeleteMock);
 
       const response = await request(app)
-        .delete(`/links/${sourceDocumentId}`)
+        .delete(`http://localhost:3000/links/${sourceDocumentId}`)
         .query({ targetId: targetDocumentId });
 
       expect(response.status).toBe(StatusCodes.NO_CONTENT);
@@ -114,7 +118,7 @@ describe("linkRouter", () => {
       (Link.delete as jest.Mock).mockRejectedValue(new Error("Deletion error"));
 
       const response = await request(app)
-        .delete(`/links/${sourceDocumentId}`)
+        .delete(`http://localhost:3000/links/${sourceDocumentId}`)
         .query({ targetId: targetDocumentId });
 
       expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
