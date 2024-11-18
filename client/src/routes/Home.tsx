@@ -58,7 +58,7 @@ const Home: FC = (): JSX.Element => {
   ) => {
     setModalOpen(false);
     const id = await API.addDocument(newDocument);
-    //await API.putLink(targetId, [linkType], id);
+    //await API.putLink(id, targetId, [linkType]);
     const updatedDocument = { ...newDocument, id: id };
     setDocuments([...documents, updatedDocument]);
   };

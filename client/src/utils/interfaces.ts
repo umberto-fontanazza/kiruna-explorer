@@ -26,13 +26,14 @@ export interface Link {
 export interface Document {
   id: number;
   title: string;
-  description: string | undefined;
-  stakeholders: Stakeholder[];
-  scale: Scale;
-  issuanceDate: Dayjs | null;
+  description: string;
   type: DocumentType;
-  links: Link[];
-  coordinates: { latitude: number | null; longitude: number | null };
+  scale: Scale;
+  // optional fields below
+  stakeholders?: Stakeholder[];
+  coordinates?: { latitude: number; longitude: number };
+  issuanceDate?: Dayjs;
+  links?: Link[];
 }
 
 export enum LinkType {
