@@ -95,8 +95,15 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
             <div
               key={index}
               onClick={() => selectSuggestion(suggestion)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  selectSuggestion(suggestion);
+                }
+              }}
               className="suggestion-item"
-              onMouseDown={(e) => e.preventDefault()} // To prevent the input from losing focus
+              onMouseDown={(e) => e.preventDefault()} // Prevent input from losing focus
+              tabIndex={0} // Make the div focusable
+              role="button" // Indicates that the div is acting as a button
             >
               {suggestion.title}
             </div>
