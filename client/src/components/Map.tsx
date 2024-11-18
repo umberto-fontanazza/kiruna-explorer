@@ -10,6 +10,33 @@ interface Position {
   lng: number;
 }
 
+const containerStyle = {
+  width: "100vw",
+  height: "100%",
+};
+
+const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
+const kirunaBoundaries = {
+  north: 67.9,
+  south: 67.8,
+  east: 20.4,
+  west: 20.0,
+};
+
+const mapOptions = {
+  mapId: "d76bd741d388f7fd",
+  mapTypeControl: false,
+  mapTypeControlOptions: {
+    mapTypeIds: ["satellite", "roadmap", "hybrid", "terrain"],
+  },
+  minZoom: 12,
+  maxZoom: 20,
+  restriction: {
+    latLngBounds: kirunaBoundaries,
+    strictBounds: false,
+  },
+};
+
 interface MapComponentProps {
   documents: Document[];
   documentSelected: Document | null;
@@ -24,8 +51,6 @@ interface MapComponentProps {
 const libraries: Libraries = ["marker"];
 
 const MapComponent: FC<MapComponentProps> = (props) => {
-  // Coordinates for Kiruna, Sweden
-  const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
   const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
@@ -39,39 +64,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries: libraries,
   });
-
-  // Styling for the map container
-  const containerStyle = {
-    width: "100vw",
-    height: "100%",
-  };
-
-  // Map boundaries around Kiruna
-  const bounds = {
-    north: 67.9,
-    south: 67.8,
-    east: 20.4,
-    west: 20.0,
-  };
-
-  // Map options to control appearance and restrictions
-  const mapOptions = isLoaded
-    ? {
-        mapId: "d76bd741d388f7fd",
-        mapTypeId: mapType,
-        mapTypeControl: false,
-        mapTypeControlOptions: {
-          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-          mapTypeIds: ["satellite", "roadmap", "hybrid", "terrain"],
-        },
-        minZoom: 12,
-        maxZoom: 20,
-        restriction: {
-          latLngBounds: bounds,
-          strictBounds: false,
-        },
-      }
-    : {};
 
   useEffect(() => {
     if (isLoaded && map && props.insertMode) {
@@ -193,7 +185,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       <GoogleMap
         mapContainerStyle={containerStyle}
         zoom={10}
-        options={mapOptions}
+        options={{
+          ...mapOptions,
+          mapTypeId: mapType,
+          mapTypeControlOptions: {
+            ...mapOptions.mapTypeControlOptions,
+            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+          },
+        }}
         center={center}
         onLoad={(mapInstance) => {
           setMap(mapInstance);
