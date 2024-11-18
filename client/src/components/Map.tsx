@@ -155,9 +155,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           },
         }}
         center={center}
-        onLoad={(mapInstance) => {
-          setMap(mapInstance);
-        }}
+        onLoad={setMap}
       />
     </section>
   ) : (
