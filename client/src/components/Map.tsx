@@ -4,6 +4,7 @@ import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../styles/Map.scss";
 import { Document, fromDocumentTypeToIcon, Link } from "../utils/interfaces";
+import MapTypeSelector from "./MapTypeSelector";
 
 interface Position {
   lat: number;
@@ -158,17 +159,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   // Render map only when API is loaded
   return isLoaded ? (
     <section id="map">
-      <select
-        className="map-types"
-        value={mapType}
-        onChange={(e) => setMapType(e.target.value)}
-        required
-      >
-        <option value={"roadmap"}>RoadMap</option>
-        <option value={"satellite"}>Satellite</option>
-        <option value={"hybrid"}>Hybrid</option>
-        <option value={"terrain"}>Terrain</option>
-      </select>
+      <MapTypeSelector mapType={mapType} setMapType={setMapType} />
       {insertMode && (
         <div className="insert-mode">
           <h2>Insert Mode</h2>
