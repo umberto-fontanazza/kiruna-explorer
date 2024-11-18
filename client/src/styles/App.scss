@@ -37,7 +37,7 @@ body {
   font-family: "SwedenSans", sans-serif;
 }
 
-::-webkit-scrollbar {
+/*::-webkit-scrollbar {
   width: 12px;
 }
 
@@ -48,14 +48,14 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: Color.$main;
-  border-radius: 10px;
-  border: 3px solid #f0f4f8;
+  background: Color.$first;
+  border-radius: 1rem;
+  border: 0.2rem solid #f0f4f8;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: Color.$dark-main;
-}
+}*/
 
 button {
   cursor: pointer;

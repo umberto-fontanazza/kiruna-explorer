@@ -15,6 +15,11 @@
     color: white;
   }
 
+  .nav-btns {
+    display: flex;
+    gap: 1rem;
+  }
+
   > :last-child {
     display: flex;
     align-items: center;
