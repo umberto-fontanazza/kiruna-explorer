@@ -156,7 +156,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     return clearMarkers;
   }, [isLoaded, map, props]);
 
-  // Render map only when API is loaded
   return isLoaded ? (
     <section id="map">
       <MapTypeSelector mapType={mapType} setMapType={setMapType} />
