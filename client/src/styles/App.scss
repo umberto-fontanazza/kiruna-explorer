@@ -37,7 +37,7 @@ body {
   font-family: "SwedenSans", sans-serif;
 }
 
-/*::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 12px;
 }
 
@@ -55,7 +55,7 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: Color.$dark-main;
-}*/
+}
 
 button {
   cursor: pointer;
