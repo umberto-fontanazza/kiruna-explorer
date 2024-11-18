@@ -9,16 +9,12 @@ const NavHeader: FC = (): JSX.Element => {
 
   return (
     <nav className="nav-header">
-      <div className="nav-container">
-        <div className="nav-left">
-          <div className="nav-brand">Kiruna eXplorer.</div>
-        </div>
-        <div className={`nav-right ${user ? "logged-in" : ""}`}>
-          {user ? <span className="user-name">Hi {user.name}!</span> : null}
-          <button onClick={user ? logout : () => navigate("/login")}>
-            {user ? "Logout" : "Login"}
-          </button>
-        </div>
+      <span className="brand">Kiruna eXplorer.</span>
+      <div className={`${user ? "logged-in" : ""}`}>
+        {user ? <span className="user-name">Hi {user.name}!</span> : null}
+        <button onClick={user ? logout : () => navigate("/login")}>
+          {user ? "Logout" : "Login"}
+        </button>
       </div>
     </nav>
   );

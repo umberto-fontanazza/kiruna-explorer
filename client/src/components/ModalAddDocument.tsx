@@ -1,7 +1,10 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useEffect, useState } from "react";
 import LinksTable from "./LinksTable";
 import SearchBar from "./SearchBar";
 
+import dayjs from "dayjs";
+import "../styles/ModalAddDocument.scss";
+import "../styles/ProgressBar.scss";
 import {
   Document,
   DocumentType,
@@ -9,10 +12,6 @@ import {
   ScaleType,
   Stakeholder,
 } from "../utils/interfaces";
-import "../styles/ModalAddDocument.scss";
-import "../styles/ProgressBar.scss";
-//import ISO6391 from "iso-639-1";
-import dayjs from "dayjs";
 
 interface Position {
   lat: number;
@@ -34,8 +33,8 @@ const initialDocumentState: Document = {
   description: "",
   stakeholders: [],
   scale: { type: ScaleType.Text, ratio: 0 },
-  issuanceDate: null,
   type: DocumentType.Design,
+  issuanceDate: undefined,
   links: [],
   coordinates: { latitude: 0, longitude: 0 },
 };
@@ -300,7 +299,7 @@ const ModalForm: FC<ModalAddProps> = ({
                     <input
                       type="checkbox"
                       value={option.value}
-                      checked={newDoc.stakeholders.includes(option.value)}
+                      checked={newDoc.stakeholders?.includes(option.value)}
                       onChange={handleCheckboxChange}
                     />
                     {option.label}
@@ -364,77 +363,133 @@ const ModalForm: FC<ModalAddProps> = ({
                 )}
               </div>*/}
 
-                {/* Coordinates */}
-                <div className="line">
-                  {/* Latitude */}
-                  <div className="form-group">
-                    <label>Latitude *</label>
-                    <input
-                      type="number"
-                      id="no-spin"
-                      step="0.000001"
-                      name="latitude"
-                      min="-90"
-                      max="90"
-                      value={
-                        newDoc.coordinates?.latitude !== null
-                          ? newDoc.coordinates?.latitude
-                          : ""
-                      }
-                      onChange={(e) =>
-                        setNewDoc((prev) => ({
-                          ...prev,
-                          coordinates: {
-                            ...prev.coordinates,
-                            latitude: Number(e.target.value),
-                          },
-                        }))
-                      }
-                      placeholder="Es. 67.8558"
-                      required
-                    />
-                  </div>
+            {/* Coordinates */}
+            <div className="line">
+              {/* Latitude */}
+              <div className="form-group">
+                <label>Latitude *</label>
+                <input
+                  type="number"
+                  id="no-spin"
+                  step="0.000001"
+                  name="latitude"
+                  min="-90"
+                  max="90"
+                  value={
+                    newDoc.coordinates?.latitude !== null
+                      ? newDoc.coordinates?.latitude
+                      : ""
+                  }
+                  onChange={(e) =>
+                    setNewDoc((prev: Document) => ({
+                      ...prev,
+                      coordinates: {
+                        latitude: Number(e.target.value),
+                        longitude: prev.coordinates?.longitude ?? 0,
+                      },
+                    }))
+                  }
+                  placeholder="Es. 34.1234"
+                  required
+                />
+              </div>
 
-                  {/* Longitude */}
-                  <div className="form-group">
-                    <label>Longitude *</label>
-                    <input
-                      lang="en"
-                      type="number"
-                      id="no-spin"
-                      name="longitude"
-                      min="-180"
-                      max="180"
-                      value={
-                        newDoc.coordinates?.longitude !== null
-                          ? newDoc.coordinates?.longitude
-                          : ""
-                      }
-                      onChange={(e) => {
-                        setNewDoc((prev) => ({
-                          ...prev,
-                          coordinates: {
-                            ...prev.coordinates,
-                            longitude: Number(e.target.value),
-                          },
-                        }));
-                      }}
-                      placeholder="Es. 20.2253"
-                      required
-                    />
-                  </div>
-                </div>
-                {/* Form Buttons */}
-                <div className="button-group">
-                  <button className="submit-button" onClick={() => setPage(2)}>
-                    Continue
-                  </button>
-                </div>
-              </form>
-            </form>
-          </div>
-        }
-      </>
+              {/* Longitude */}
+              <div className="form-group">
+                <label>Longitude *</label>
+                <input
+                  lang="en"
+                  type="number"
+                  id="no-spin"
+                  name="longitude"
+                  min="-180"
+                  max="180"
+                  value={
+                    newDoc.coordinates?.longitude !== null
+                      ? newDoc.coordinates?.longitude
+                      : ""
+                  }
+                  onChange={(e) => {
+                    setNewDoc((prev) => ({
+                      ...prev,
+                      coordinates: {
+                        latitude: prev.coordinates?.latitude ?? 0,
+                        longitude: Number(e.target.value),
+                      },
+                    }));
+                  }}
+                  placeholder="Es. 123.1234"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Connections */}
+
+            {/* Target Document ID */}
+            {/*<div className="form-group">
+                  <label>Connection *</label>
+                  <select
+                    value={targetDocumentId ?? ""}
+                    onChange={(e) => setTargetDocumentId(Number(e.target.value))}
+                  >
+                    <option value="" hidden selected>
+                      Select a document to link
+                    </option>
+                    {documents.map((doc) => (
+                      <option key={doc.id} value={doc.id}>
+                        {doc.title}
+                      </option>
+                    ))}
+                  </select>
+                </div>*/}
+
+            {/* Connection Type */}
+            {/*<div className="form-group">
+                  <label>Connection Type *</label>
+                  <select
+                    value={newTypeConnection}
+                    onChange={(e) =>
+                      setNewTypeConnection(e.target.value as LinkType)
+                    }
+                  >
+                    <option value="" disabled>
+                      Select the Connection's type
+                    </option>
+                    <option value="DIRECT">Direct</option>
+                    <option value="COLLATERAL">Collateral</option>
+                    <option value="PROJECTION">Projection</option>
+                    <option value="UPDATE">Update</option>
+                  </select>
+                </div>*/}
+            {/* Connection Type */}
+            {/*<div className="form-group">
+                <label>Connection Type *</label>
+                <select
+                  value={newTypeConnection}
+                  onChange={(e) =>
+                    setNewTypeConnection(e.target.value as LinkType)
+                  }
+                >
+                  <option value="" disabled>
+                    Select the Connection's type
+                  </option>
+                  <option value="direct">Direct</option>
+                  <option value="collateral">Collateral</option>
+                  <option value="projection">Projection</option>
+                  <option value="update">Update</option>
+                </select>
+              </div>*/}
+
+            {/* Form Buttons */}
+            <div className="button-group">
+              <button className="submit-button" onClick={() => setPage(2)}>
+                Continue
+              </button>
+            </div>
+          </form>
+        </form>
+      </div>
     );
   } else if (page === 2) {
     return (

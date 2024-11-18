@@ -1,12 +1,12 @@
-import { FC, useEffect, useState, useContext } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import API from "../API/API";
-import { Document, LinkType } from "../utils/interfaces";
-import "../styles/Home.scss";
-import NavHeader from "./NavHeader";
-import ModalForm from "./ModalAddDocument";
-import MapComponent from "./Map";
-import Sidebar from "./Sidebar";
+import MapComponent from "../components/Map";
+import ModalForm from "../components/ModalAddDocument";
+import NavHeader from "../components/NavHeader";
+import Sidebar from "../components/Sidebar";
 import { authContext } from "../context/auth";
+import "../styles/Home.scss";
+import { Document, LinkType } from "../utils/interfaces";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
@@ -54,7 +54,7 @@ const Home: FC = (): JSX.Element => {
   const handleAddNewDocument = async (newDocument: Document) => {
     setModalOpen(false);
     const id = await API.addDocument(newDocument);
-    //await API.putLink(targetId, [linkType], id);
+    //await API.putLink(id, targetId, [linkType]);
     const updatedDocument = { ...newDocument, id: id };
     setDocuments([...documents, updatedDocument]);
   };
