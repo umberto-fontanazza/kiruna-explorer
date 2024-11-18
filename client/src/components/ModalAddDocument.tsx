@@ -61,7 +61,6 @@ const ModalForm: FC<ModalAddProps> = ({
 }) => {
   const [page, setPage] = useState<number>(1);
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
-  const [isNumericScale, setIsNumericScale] = useState<boolean>(false);
   const [tableLinks, setTableLinks] = useState<Link[]>([]);
 
   /////// FILE ATTACHMENT CODE ///////
@@ -117,9 +116,6 @@ const ModalForm: FC<ModalAddProps> = ({
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-    if (isNumericScale) {
-      newDoc.scale = "1:" + newDoc.scale;
-    }
     onSubmit({
       ...newDoc,
       links: tableLinks,
