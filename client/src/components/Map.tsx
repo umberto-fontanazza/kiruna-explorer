@@ -1,9 +1,11 @@
 import "@material/web/icon/_icon.scss";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
-import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
-import { FC, useEffect, useState } from "react";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../styles/Map.scss";
-import { Document, fromDocumentTypeToIcon } from "../utils/interfaces";
+import { Document, fromDocumentTypeToIcon, Link } from "../utils/interfaces";
+import { kirunaCoords, libraries, mapOptions } from "../utils/map";
+import MapTypeSelector from "./MapTypeSelector";
 
 interface Position {
   lat: number;
@@ -15,17 +17,23 @@ interface MapComponentProps {
   documentSelected: Document | null;
   visualLinks: boolean;
   insertMode: boolean;
-  setModalOpen: (value: boolean) => void;
-  setSidebarOpen: (value: boolean) => void;
-  setDocSelected: (value: Document | null) => void;
-  setNewPos: (value: Position) => void;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
+  setSidebarOpen: Dispatch<SetStateAction<boolean>>;
+  setDocSelected: Dispatch<SetStateAction<Document | null>>;
+  setNewPos: Dispatch<SetStateAction<Position>>;
 }
 
-const libraries: Libraries = ["marker"];
-
 const MapComponent: FC<MapComponentProps> = (props) => {
-  // Coordinates for Kiruna, Sweden
-  const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
+  const {
+    documents,
+    documentSelected,
+    visualLinks,
+    insertMode,
+    setModalOpen,
+    setSidebarOpen,
+    setDocSelected,
+    setNewPos,
+  } = props;
   const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
@@ -33,156 +41,103 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
 
-  // Load Google Maps API with API key from environment variables
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries: libraries,
   });
 
-  // Styling for the map container
-  const containerStyle = {
-    width: "100vw",
-    height: "100%",
+  const onMapClick = (event: google.maps.MapMouseEvent) => {
+    if (!event.latLng) return;
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
+    setNewPos({ lat, lng });
+    setModalOpen(true);
   };
 
-  // Map boundaries around Kiruna
-  const bounds = {
-    north: 67.9,
-    south: 67.8,
-    east: 20.4,
-    west: 20.0,
+  useEffect(() => {
+    if (!isLoaded || !map || !insertMode) return;
+
+    map.addListener("click", onMapClick);
+
+    return () => {
+      google.maps.event.clearInstanceListeners(map);
+    };
+  }, [insertMode]);
+
+  /**
+   * @param linked - when true the documents is visualized
+   * as linked to the selected document
+   */
+  const createMarker = (
+    doc: Document,
+    linked: boolean = false
+  ): google.maps.marker.AdvancedMarkerElement => {
+    const markerDivChild = document.createElement("div");
+    const iconName = fromDocumentTypeToIcon.get(doc.type) as string;
+    markerDivChild.className = `document-icon ${linked ? "linked" : ""}`;
+    markerDivChild.innerHTML = `<span class="material-symbols-outlined color-${iconName} size">${iconName}</span>`;
+
+    const marker = new google.maps.marker.AdvancedMarkerElement({
+      map,
+      position: {
+        lat: doc.coordinates?.latitude ?? 0,
+        lng: doc.coordinates?.longitude ?? 0,
+      },
+      content: markerDivChild,
+      title: doc.title,
+    });
+
+    marker.addListener("click", () => {
+      setSidebarOpen(true);
+      setDocSelected(doc);
+      setCenter({
+        lat: doc.coordinates?.latitude ?? kirunaCoords.lat,
+        lng: doc.coordinates?.longitude ?? kirunaCoords.lng + 0.0019, //TODO: explain this + numbers
+      });
+    });
+    return marker;
   };
 
-  // Map options to control appearance and restrictions
-  const mapOptions = isLoaded
-    ? {
-        mapId: "d76bd741d388f7fd",
-        mapTypeId: mapType,
-        mapTypeControl: false,
-        mapTypeControlOptions: {
-          style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-          mapTypeIds: ["satellite", "roadmap", "hybrid", "terrain"],
-        },
-        minZoom: 12,
-        maxZoom: 20,
-        restriction: {
-          latLngBounds: bounds,
-          strictBounds: false,
-        },
-      }
-    : {};
+  /**
+   * @param doc - the document to be checked
+   * @returns true if doc is currently selected or linked to the selected
+   */
+  const isSelectedOrLinked = (doc: Document) => {
+    const linkedIDs: number[] =
+      documentSelected?.links?.map((link: Link) => link.targetDocumentId) ?? [];
+    if (doc.id === documentSelected?.id) return true;
+    if (linkedIDs.includes(doc.id)) return true;
+    return false;
+  };
+
+  const clearMarkers = () => {
+    markers.forEach((marker) => (marker.map = null));
+  };
 
   useEffect(() => {
-    if (isLoaded && map && props.insertMode) {
-      const mapHandleClick = (event: google.maps.MapMouseEvent) => {
-        if (event.latLng) {
-          const latitude = event.latLng.lat();
-          const longitude = event.latLng.lng();
-          const newPosition: Position = { lat: latitude, lng: longitude };
-          props.setNewPos(newPosition);
-          props.setModalOpen(true);
-        }
-      };
-
-      map.addListener("click", mapHandleClick);
-
-      return () => {
-        google.maps.event.clearInstanceListeners(map);
-      };
+    if (!isLoaded || !map || insertMode) {
+      clearMarkers();
+      return;
     }
-  }, [props.insertMode]);
+    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
+      .filter((doc) => doc.coordinates)
+      .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
+      .map((doc) =>
+        createMarker(doc, visualLinks && doc.id !== documentSelected?.id)
+      );
 
-  useEffect(() => {
-    if (isLoaded && map && !props.insertMode) {
-      const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
-      // Function to create a Marker
-      const createMarker = (
-        doc: Document,
-        markerClass: string
-      ): google.maps.marker.AdvancedMarkerElement => {
-        const markerContent = document.createElement("div");
-        const mappedType = fromDocumentTypeToIcon.get(doc.type);
-        markerContent.className = `map-icon-documents ${markerClass}`;
-        markerContent.innerHTML = `<span class="material-symbols-outlined color-${mappedType} size">${mappedType}</span>`;
-
-        const marker = new google.maps.marker.AdvancedMarkerElement({
-          map,
-          position: {
-            lat: doc.coordinates?.latitude!,
-            lng: doc.coordinates?.longitude!,
-          },
-          content: markerContent,
-          title: doc.title,
-        });
-
-        marker.addListener("click", () => {
-          props.setSidebarOpen(true);
-          props.setDocSelected(doc);
-          setCenter({
-            lat: doc.coordinates?.latitude!,
-            lng: doc.coordinates?.longitude! + 0.0019,
-          });
-        });
-
-        return marker;
-      };
-
-      props.documents.forEach((doc) => {
-        if (
-          doc.coordinates?.latitude !== null &&
-          doc.coordinates?.longitude !== null
-        ) {
-          if (props.visualLinks) {
-            if (doc.id === props.documentSelected?.id) {
-              const marker = createMarker(doc, "not-visual");
-              newMarkers.push(marker);
-            }
-            props.documentSelected?.links?.forEach((link) => {
-              if (doc.id === link.targetDocumentId) {
-                const marker = createMarker(doc, "visual");
-                newMarkers.push(marker);
-              }
-            });
-          } else {
-            const marker = createMarker(doc, "not-visual");
-            newMarkers.push(marker);
-          }
-        }
-      });
-
-      setMarkers((prevMarkers) => {
-        prevMarkers.forEach((marker) => {
-          marker.map = null;
-        });
-        return newMarkers;
-      });
-
-      return () => {
-        markers.forEach((marker) => (marker.map = null));
-      };
-    } else {
-      markers.forEach((marker) => (marker.map = null));
-    }
+    setMarkers((_) => {
+      clearMarkers();
+      return newMarkers;
+    });
+    return clearMarkers;
   }, [isLoaded, map, props]);
 
-  // Render map only when API is loaded
   return isLoaded ? (
-    <>
-      <div className="map-types">
-        <select
-          value={mapType}
-          onChange={(e) => setMapType(e.target.value)}
-          required
-        >
-          <option value={"roadmap"}>RoadMap</option>
-          <option value={"satellite"}>Satellite</option>
-          <option value={"hybrid"}>Hybrid</option>
-          <option value={"terrain"}>Terrain</option>
-          {/* <option value="Others">Others</option> */}
-        </select>
-      </div>
-      {props.insertMode && (
+    <section id="map">
+      <MapTypeSelector mapType={mapType} setMapType={setMapType} />
+      {insertMode && (
         <div className="insert-mode">
           <h2>Insert Mode</h2>
           <h3>
@@ -191,15 +146,20 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         </div>
       )}
       <GoogleMap
-        mapContainerStyle={containerStyle}
+        id="google-map"
         zoom={10}
-        options={mapOptions}
-        center={center}
-        onLoad={(mapInstance) => {
-          setMap(mapInstance);
+        options={{
+          ...mapOptions,
+          mapTypeId: mapType,
+          mapTypeControlOptions: {
+            ...mapOptions.mapTypeControlOptions,
+            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+          },
         }}
+        center={center}
+        onLoad={setMap}
       />
-    </>
+    </section>
   ) : (
     <div>Loading...</div>
   );
