@@ -78,7 +78,6 @@ TODO: filters
 
 This API can return the following error codes:
 
-- `401 Unauthorized`: You are unauthorized.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
 ## GET `/documents/{id}`
@@ -121,7 +120,6 @@ Retrieve a specific document by its unique identifier.
 
 This API can return the following error codes:
 
-- `401 Unauthorized`: You are unauthorized.
 - `404 Not Found`: The requested document was not found.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
