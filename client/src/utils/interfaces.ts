@@ -1,6 +1,4 @@
-// File in which we define the common interfaces in shared files
-
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 
 export interface User {
   email: string;

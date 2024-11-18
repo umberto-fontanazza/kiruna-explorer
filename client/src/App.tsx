@@ -1,12 +1,12 @@
 import { FC, useEffect, useState } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
-import LoginForm from "./components/LoginForm";
-import Home from "./components/Home";
-import NotFound from "./components/NotFound";
 import API from "./API/API";
-import "./styles/global.scss";
-import { User } from "./utils/interfaces";
+import LoginForm from "./components/LoginForm";
+import NotFound from "./components/NotFound";
 import { authContext } from "./context/auth";
+import Home from "./routes/Home";
+import "./styles/App.scss";
+import { User } from "./utils/interfaces";
 
 const App: FC = () => {
   const [user, setUser] = useState<User | null>(null);
