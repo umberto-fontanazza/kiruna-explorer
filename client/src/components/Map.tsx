@@ -10,11 +10,6 @@ interface Position {
   lng: number;
 }
 
-const containerStyle = {
-  width: "100vw",
-  height: "100%",
-};
-
 const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
 const kirunaBoundaries = {
   north: 67.9,
@@ -187,7 +182,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         </div>
       )}
       <GoogleMap
-        mapContainerStyle={containerStyle}
+        id="google-map"
         zoom={10}
         options={{
           ...mapOptions,
