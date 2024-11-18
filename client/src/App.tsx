@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import API from "./API/API";
-import LoginForm from "./components/LoginForm";
 import NotFound from "./components/NotFound";
 import { authContext } from "./context/auth";
 import Home from "./routes/Home";
+import LoginForm from "./routes/LoginForm";
 import "./styles/App.scss";
 import { User } from "./utils/interfaces";
 
