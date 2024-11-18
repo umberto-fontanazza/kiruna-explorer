@@ -14,6 +14,11 @@ export enum UserRole {
   Visitor = "visitor",
 }
 
+export interface Coordinates {
+  latitude: number;
+  longitude: number;
+}
+
 export interface LoginErrors {
   login?: string;
 }
@@ -31,7 +36,7 @@ export interface Document {
   scale: Scale;
   // optional fields below
   stakeholders?: Stakeholder[];
-  coordinates?: { latitude: number; longitude: number };
+  coordinates?: Coordinates;
   issuanceDate?: Dayjs;
   links?: Link[];
 }
