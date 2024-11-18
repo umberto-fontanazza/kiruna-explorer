@@ -89,21 +89,18 @@
   transform: scale(1.5);
 }
 
-.map-types {
+select.map-types {
   position: absolute;
+  z-index: 1;
   top: 2%;
   left: 1.3%;
-  z-index: 1;
-
-  select {
-    padding: 13%;
-    border-radius: 1rem;
-    border: 0.2rem solid Color.$first;
-    background-color: Color.$third;
-    color: Color.$first;
-    font-family: "SwedenSansBold", sans-serif;
-    font-size: 1.3rem;
-  }
+  padding: 0.5rem 1ch;
+  border-radius: 1rem;
+  border: 0.2rem solid Color.$first;
+  background-color: Color.$third;
+  color: Color.$first;
+  font-family: "SwedenSansBold", sans-serif;
+  font-size: 1.3rem;
 }
 
 #google-map {

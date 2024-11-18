@@ -160,19 +160,17 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   // Render map only when API is loaded
   return isLoaded ? (
     <>
-      <div className="map-types">
-        <select
-          value={mapType}
-          onChange={(e) => setMapType(e.target.value)}
-          required
-        >
-          <option value={"roadmap"}>RoadMap</option>
-          <option value={"satellite"}>Satellite</option>
-          <option value={"hybrid"}>Hybrid</option>
-          <option value={"terrain"}>Terrain</option>
-          {/* <option value="Others">Others</option> */}
-        </select>
-      </div>
+      <select
+        className="map-types"
+        value={mapType}
+        onChange={(e) => setMapType(e.target.value)}
+        required
+      >
+        <option value={"roadmap"}>RoadMap</option>
+        <option value={"satellite"}>Satellite</option>
+        <option value={"hybrid"}>Hybrid</option>
+        <option value={"terrain"}>Terrain</option>
+      </select>
       {insertMode && (
         <div className="insert-mode">
           <h2>Insert Mode</h2>
