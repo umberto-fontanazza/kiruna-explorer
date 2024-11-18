@@ -1,9 +1,9 @@
+import "@material/web/icon/_icon.scss";
+import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
 import { FC, useEffect, useState } from "react";
-import { Document, fromDocumentTypeToIcon } from "../utils/interfaces";
-import "@material/web/iconbutton/filled-tonal-icon-button.js";
-import "@material/web/icon/_icon.scss";
 import "../styles/Map.scss";
+import { Document, fromDocumentTypeToIcon } from "../utils/interfaces";
 
 interface Position {
   lat: number;
@@ -109,8 +109,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         const marker = new google.maps.marker.AdvancedMarkerElement({
           map,
           position: {
-            lat: doc.coordinates.latitude!,
-            lng: doc.coordinates.longitude!,
+            lat: doc.coordinates?.latitude!,
+            lng: doc.coordinates?.longitude!,
           },
           content: markerContent,
           title: doc.title,
@@ -120,8 +120,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           props.setSidebarOpen(true);
           props.setDocSelected(doc);
           setCenter({
-            lat: doc.coordinates.latitude!,
-            lng: doc.coordinates.longitude! + 0.0019,
+            lat: doc.coordinates?.latitude!,
+            lng: doc.coordinates?.longitude! + 0.0019,
           });
         });
 
@@ -130,15 +130,15 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
       props.documents.forEach((doc) => {
         if (
-          doc.coordinates.latitude !== null &&
-          doc.coordinates.longitude !== null
+          doc.coordinates?.latitude !== null &&
+          doc.coordinates?.longitude !== null
         ) {
           if (props.visualLinks) {
             if (doc.id === props.documentSelected?.id) {
               const marker = createMarker(doc, "not-visual");
               newMarkers.push(marker);
             }
-            props.documentSelected?.links.forEach((link) => {
+            props.documentSelected?.links?.forEach((link) => {
               if (doc.id === link.targetDocumentId) {
                 const marker = createMarker(doc, "visual");
                 newMarkers.push(marker);
