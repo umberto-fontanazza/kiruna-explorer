@@ -32,6 +32,8 @@ const mapOptions = {
   },
 };
 
+const libraries: Libraries = ["marker"];
+
 interface MapComponentProps {
   documents: Document[];
   documentSelected: Document | null;
@@ -65,7 +67,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
-    libraries: ["marker"] as Libraries,
+    libraries: libraries,
   });
 
   const onMapClick = (event: google.maps.MapMouseEvent) => {
