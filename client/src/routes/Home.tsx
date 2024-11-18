@@ -57,6 +57,11 @@ const Home: FC = (): JSX.Element => {
     console.log(newDocument.links);
     newDocument.links?.forEach(async (link) => {
       await API.putLink(link.targetDocumentId, id, link.type);
+      documents.map(async (doc) => {
+        if (doc.id === link.targetDocumentId) {
+          doc.links = await API.getLinks(doc.id);
+        }
+      });
     });
     const updatedDocument = { ...newDocument, id: id };
     setDocuments([...documents, updatedDocument]);
