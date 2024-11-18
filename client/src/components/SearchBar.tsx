@@ -1,5 +1,6 @@
-import { Document, Link, LinkType } from "../utils/interfaces";
 import { useState } from "react";
+import "../styles/SearchBar.scss";
+import { Document, Link, LinkType } from "../utils/interfaces";
 
 interface SearchBarProps {
   documents: Document[];
@@ -77,7 +78,7 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
   };
 
   return (
-    <>
+    <div className="search-bar">
       <input
         type="text"
         className="search-input"
@@ -115,7 +116,7 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
       <button onClick={(e) => handleAddLink(e)}>
         <span>Add Link</span>
       </button>
-    </>
+    </div>
   );
 }
 
