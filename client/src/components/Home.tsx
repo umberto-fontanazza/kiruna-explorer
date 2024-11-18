@@ -1,19 +1,15 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useState, useContext } from "react";
 import API from "../API/API";
-import { Document, LinkType, User } from "../utils/interfaces";
+import { Document, LinkType } from "../utils/interfaces";
 import "../styles/Home.scss";
 import NavHeader from "./NavHeader";
 import ModalForm from "./ModalAddDocument";
 import MapComponent from "./Map";
 import Sidebar from "./Sidebar";
+import { authContext } from "../context/auth";
 
-interface HomeProps {
-  loggedIn: boolean;
-  user: User;
-  handleLogout: () => void;
-}
-
-const Home: FC<HomeProps> = (props): JSX.Element => {
+const Home: FC = (): JSX.Element => {
+  const { user } = useContext(authContext);
   // State to hold list of documents
   const [documents, setDocuments] = useState<Document[]>([]);
   // State to control sidebar visibility
@@ -23,13 +19,20 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
   // State to control modal for adding documents
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
+  const [visualizeLinks, setVisualizeLinks] = useState<boolean>(false);
+  const [insertMode, setInsertMode] = useState<boolean>(false);
+
+  const [newPosition, setNewPosition] = useState<{ lat: number; lng: number }>({
+    lat: -1,
+    lng: -1,
+  });
+
   // Fetch documents on component mount
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
         const documents: Document[] = await API.getDocuments();
         setDocuments(documents);
-        console.log(documents);
       } catch (err) {
         console.error(err);
       }
@@ -38,16 +41,20 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
   }, []);
 
   // Handle Add Document button click to open modal
-  const handleAddButton = async () => {
-    setModalOpen(true);
+  const handleAddButton = () => {
+    setInsertMode(true);
+    setSidebarOpen(false);
+  };
+
+  const closeInsertMode = () => {
+    setInsertMode(false);
   };
 
   // Handle form submission for new document
   const handleAddNewDocument = async (newDocument: Document) => {
     setModalOpen(false);
-    console.log(newDocument);
-    const id = await API.addDocument(newDocument); //TODO: implement API call and make the new links added in the modal are inserted
-    console.log(id);
+    const id = await API.addDocument(newDocument);
+    //await API.putLink(targetId, [linkType], id);
     const updatedDocument = { ...newDocument, id: id };
     setDocuments([...documents, updatedDocument]);
   };
@@ -55,11 +62,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
   return (
     <>
       {/* Navigation Header */}
-      <NavHeader
-        logout={props.handleLogout}
-        loggedIn={props.loggedIn}
-        user={props.user}
-      />
+      <NavHeader />
 
       <div className="body-container">
         {/* Map Component with overlay button for adding documents */}
@@ -67,19 +70,34 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
           {
             <MapComponent
               documents={documents}
+              documentSelected={docSelected}
               setSidebarOpen={setSidebarOpen}
               setDocSelected={setDocSelected}
+              setModalOpen={setModalOpen}
+              setNewPos={setNewPosition}
+              visualLinks={visualizeLinks}
+              insertMode={insertMode}
             />
           }
-          {props.loggedIn && (
+          {user && (
             <div className="button-overlay">
-              <button className="add-document" onClick={handleAddButton}>
-                <img
-                  className="doc-img"
-                  src="/add-document-icon.png"
-                  alt="Add document icon"
-                ></img>
-                <h4>Add new Document</h4>
+              <button
+                className="doc-btn"
+                onClick={!insertMode ? handleAddButton : closeInsertMode}
+              >
+                {insertMode ? (
+                  <div className="add-container">
+                    <span className="material-symbols-outlined">
+                      arrow_back
+                    </span>
+                    <h4>Back</h4>
+                  </div>
+                ) : (
+                  <div className="back-container">
+                    <span className="material-symbols-outlined">note_add</span>
+                    <h4>Add new Document</h4>
+                  </div>
+                )}
               </button>
             </div>
           )}
@@ -130,7 +148,8 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
               setSidebarOpen={setSidebarOpen}
               document={docSelected}
               documents={documents}
-              loggedIn={props.loggedIn}
+              visualLinks={visualizeLinks}
+              setVisualLinks={setVisualizeLinks}
               setDocuments={setDocuments}
               setDocument={setDocSelected}
             />
@@ -144,6 +163,7 @@ const Home: FC<HomeProps> = (props): JSX.Element => {
         onClose={() => setModalOpen(false)}
         onSubmit={handleAddNewDocument}
         documents={documents}
+        newPos={newPosition}
       />
     </>
   );

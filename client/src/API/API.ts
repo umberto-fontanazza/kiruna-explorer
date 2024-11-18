@@ -1,24 +1,21 @@
 import { Document, LinkType } from "../utils/interfaces";
 import dayjs from "dayjs";
-//import { strict as assert } from "assert";
+import { User } from "../utils/interfaces";
 
 const baseURL = "http://localhost:3000";
-const postmanURL = "https://6b963377-644f-4e74-a4b3-4c8a83295bbb.mock.pstmn.io";
 
-async function getUser() {
+async function getUser(): Promise<User> {
   const response = await fetch(baseURL + "/sessions/current", {
     credentials: "include",
   });
-
-  const user = await response.json();
-  if (response.ok) {
-    return user;
-  } else {
-    throw user;
+  if (!response.ok) {
+    throw new Error("Failed to retrieve session");
   }
+  const user = await response.json();
+  return user;
 }
 
-async function login(email: string, password: string) {
+async function login(email: string, password: string): Promise<User> {
   const response = await fetch(baseURL + "/sessions", {
     method: "POST",
     headers: {
@@ -30,17 +27,21 @@ async function login(email: string, password: string) {
       password: password,
     }),
   });
-
-  return response;
+  if (!response.ok) {
+    throw new Error("Failed to authenticate");
+  }
+  const user = await response.json();
+  const { name, surname, role } = user;
+  return { email, name, surname, role };
 }
 
-const logout = async () => {
+const logout = async (): Promise<void> => {
   const response = await fetch(baseURL + "/sessions/current", {
     method: "DELETE",
     credentials: "include",
   });
-  if (response.ok) {
-    return null;
+  if (!response.ok) {
+    throw new Error("Failed to logout");
   }
 };
 
@@ -51,19 +52,10 @@ async function getDocuments() {
     const response = await fetch(baseURL + "/documents");
     if (response.ok) {
       const documents = await response.json();
-      const docsMapped = documents.map((doc: any) => {
-        return {
-          id: doc.id,
-          title: doc.title,
-          description: doc.description,
-          stakeholders: doc.stakeholders,
-          scale: doc.scale,
-          issuanceDate: dayjs(doc.issuanceDate),
-          type: doc.type,
-          connections: doc.connections,
-          coordinates: doc.coordinates,
-        };
-      });
+      const docsMapped = documents.map((doc: any) => ({
+        ...doc,
+        issuanceDate: dayjs(doc.issuanceDate),
+      }));
       return docsMapped;
     }
   } catch (err) {
@@ -85,16 +77,11 @@ async function addDocument(document: Document): Promise<number> {
       scale: document.scale,
       issuanceDate: document.issuanceDate,
       type: document.type,
-      links: document.links,
-      //language: document.language,
-      // pages: document.pages,
       coordinates: document.coordinates,
     }),
   });
   if (response.ok) {
     const { id } = await response.json();
-    //assert(typeof id === "number");
-    console.log("Document created with id: ", id);
     return id;
   } else {
     console.error("Error creating document");

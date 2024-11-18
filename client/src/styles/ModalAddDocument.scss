@@ -35,7 +35,7 @@
       border: 2px solid Color.$first;
       border-radius: 50%;
       position: absolute;
-      top: 9.1%;
+      top: 6.8%;
       left: 72.5%;
       border-radius: 50%;
       width: 2vw;
@@ -44,6 +44,7 @@
       justify-content: center;
       align-items: center;
       display: flex;
+      cursor: pointer;
 
       &:hover {
         background: Color.$first-hover;
@@ -67,7 +68,7 @@
 
       label {
         font-family: "SwedenSansBold", sans-serif;
-        font-size: 1rem;
+        font-size: 1.3rem !important;
         font-weight: bold;
         color: Color.$first;
       }
@@ -81,6 +82,7 @@
 
       input,
       textarea {
+        font-family: "SwedenSans", sans-serif;
         padding: 0.8vh 1ch;
         border: 1px solid #ddd;
         border-radius: 8px;
@@ -93,7 +95,7 @@
         border: 1px solid #ddd;
         border-radius: 8px;
         font-size: 1rem;
-        color: #333;
+        color: white;
         background-color: #fff;
       }
 
@@ -147,7 +149,7 @@
           border: 1px solid #ddd;
           border-radius: 8px;
           font-size: 1rem;
-          color: Color.$first;
+          color: gray !important;
 
           &:focus {
             border-color: Color.$first;
@@ -157,12 +159,11 @@
 
         select {
           font-family: "SwedenSans", sans-serif;
-          color: Color.$first !important;
           padding: 1vh;
           border: 1px solid #ddd;
           border-radius: 8px;
           font-size: 1rem;
-          color: #333;
+          color: grey !important;
           background-color: #fff;
 
           &:focus {
@@ -257,8 +258,8 @@
         border: 0.1rem solid Color.$first;
 
         &:hover {
-          background: Color.$third;
-          color: Color.$first;
+          background-color: Color.$first-hover;
+          color: white;
         }
       }
     }

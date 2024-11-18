@@ -9,7 +9,7 @@ interface ModalConnectionProps {
   onSubmit: (newLink: Link) => void;
 }
 
-const ModalAddConnection: FC<ModalConnectionProps> = ({
+const ModalAddLinks: FC<ModalConnectionProps> = ({
   documents,
   document,
   onClose,
@@ -96,4 +96,4 @@ const ModalAddConnection: FC<ModalConnectionProps> = ({
   );
 };
 
-export default ModalAddConnection;
+export default ModalAddLinks;

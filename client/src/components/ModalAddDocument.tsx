@@ -1,59 +1,65 @@
-import { FC, useState } from "react";
+import { FC, useState, useEffect } from "react";
 import LinksTable from "./LinksTable";
 import SearchBar from "./SearchBar";
 
-import { Document, DocumentType, Link, Stakeholder } from "../utils/interfaces";
+import {
+  Document,
+  DocumentType,
+  Link,
+  ScaleType,
+  Stakeholder,
+} from "../utils/interfaces";
 import "../styles/ModalAddDocument.scss";
+import "../styles/ProgressBar.scss";
 //import ISO6391 from "iso-639-1";
 import dayjs from "dayjs";
 
-//TODO: Fix color of the form
+interface Position {
+  lat: number;
+  lng: number;
+}
 
 interface ModalAddProps {
   modalOpen: boolean;
+  newPos: Position;
   onClose: () => void;
   onSubmit: (newDocument: Document) => void;
   documents: Document[];
 }
+
+// Initial State for new document
+const initialDocumentState: Document = {
+  id: -1,
+  title: "",
+  description: "",
+  stakeholders: [],
+  scale: { type: ScaleType.Text, ratio: 0 },
+  issuanceDate: null,
+  type: DocumentType.Design,
+  links: [],
+  coordinates: { latitude: 0, longitude: 0 },
+};
+
+const scaleValues = [
+  { value: ScaleType.BlueprintsOrEffect, label: "Blueprints/Effects" },
+  { value: ScaleType.Text, label: "Text" },
+  { value: ScaleType.Ratio, label: "Ratio" },
+];
+
+const stakeholdersOptions = [
+  { value: Stakeholder.Lkab, label: "LKAB" },
+  { value: Stakeholder.KirunaKommun, label: "Kiruna kommun" },
+  { value: Stakeholder.Residents, label: "Residents" },
+  { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
+];
 
 const ModalForm: FC<ModalAddProps> = ({
   modalOpen,
   onClose,
   onSubmit,
   documents,
+  newPos,
 }) => {
-  // Initial State for new document
-  const initialDocumentState: Document = {
-    id: -1,
-    title: "",
-    description: "",
-    stakeholders: [],
-    scale: "",
-    issuanceDate: null,
-    type: undefined,
-    links: [],
-    language: "",
-    pages: null,
-    coordinates: { latitude: null, longitude: null },
-  };
-
-  ////// OPTIONS AND DATA ///////
-
-  const scaleValues = [
-    { value: "blueprints/effects", label: "Blueprints/Effects" },
-    { value: "text", label: "Text" },
-  ];
-  //const languages = ISO6391.getAllNames().sort();
-
-  const stakeholdersOptions = [
-    { value: Stakeholder.Lkab, label: "LKAB" },
-    { value: Stakeholder.KirunaKommun, label: "Kiruna kommun" },
-    { value: Stakeholder.Residents, label: "Residents" },
-    { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
-  ];
-
-  ////// COMPONENT STATE /////
-
   const [page, setPage] = useState<number>(1);
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
   const [isNumericScale, setIsNumericScale] = useState<boolean>(false);
@@ -78,7 +84,13 @@ const ModalForm: FC<ModalAddProps> = ({
     e.preventDefault();
   };*/
 
-  // Handle Checkbox Change
+  useEffect(() => {
+    setNewDoc((prev) => ({
+      ...prev,
+      coordinates: { latitude: newPos.lat, longitude: newPos.lng },
+    }));
+  }, [newPos]);
+
   const handleCheckboxChange = (event: {
     target: { value: string; checked: boolean };
   }) => {
@@ -104,7 +116,6 @@ const ModalForm: FC<ModalAddProps> = ({
     });
   };
 
-  // Handle Form Submission
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
     if (isNumericScale) {
@@ -128,203 +139,177 @@ const ModalForm: FC<ModalAddProps> = ({
   if (!modalOpen) return null;
   if (page === 1) {
     return (
-      <>
-        {
-          <div className="modal-overlay">
-            <form className="modal-content" onSubmit={handleFormSubmit}>
-              <h2>New Document Registration</h2>
-              <button
-                className="close-button"
-                onClick={() => {
-                  setNewDoc(initialDocumentState);
-                  onClose();
-                }}
-              >
-                <img src="/x.png" alt="Close" />
-              </button>
+      <div className="modal-overlay">
+        <form className="modal-content" onSubmit={handleFormSubmit}>
+          <h2>New Document Registration</h2>
+          <button
+            className="close-button"
+            onClick={() => {
+              setNewDoc(initialDocumentState);
+              onClose();
+            }}
+          >
+            <img src="/x.png" alt="Close" />
+          </button>
 
-              <ProgressBar currentPage={page} />
+          <ProgressBar currentPage={page} />
 
-              <form onSubmit={handleFormSubmit}>
-                {/* Title Input */}
-                <div className="form-group">
-                  <label className="title">Title *</label>
-                  <input
-                    type="text"
-                    placeholder="Enter Document Title"
-                    value={newDoc.title}
-                    onChange={(e) =>
-                      setNewDoc((prev) => ({ ...prev, title: e.target.value }))
-                    }
-                    required
-                    className="input-title"
-                  />
-                </div>
+          <form onSubmit={handleFormSubmit}>
+            {/* Title Input */}
+            <div className="form-group">
+              <label className="title">Title *</label>
+              <input
+                type="text"
+                placeholder="Enter Document Title"
+                value={newDoc.title}
+                onChange={(e) =>
+                  setNewDoc((prev) => ({ ...prev, title: e.target.value }))
+                }
+                required
+                className="input-title"
+              />
+            </div>
 
-                {/* Description */}
-                <div className="form-group">
-                  <label>Description *</label>
-                  <textarea
-                    value={newDoc.description || ""}
-                    placeholder="Enter Document Description"
-                    onChange={(e) =>
-                      setNewDoc((prev) => ({
-                        ...prev,
-                        description: e.target.value,
-                      }))
-                    }
-                    required
-                  />
-                </div>
-                {/* Scale Selection */}
-                <div className="line">
-                  <div className="form-group">
-                    <label>Scale *</label>
-                    <select
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        if (value === "numeric") {
-                          setIsNumericScale(true);
-                          setNewDoc((prev) => ({ ...prev, scale: "" }));
-                        } else {
-                          setIsNumericScale(false);
-                          setNewDoc((prev) => ({ ...prev, scale: value }));
-                        }
-                      }}
-                    >
-                      <option value="">Select one option</option>
-                      {scaleValues.map((scale) => (
-                        <option key={scale.value} value={scale.value}>
-                          {scale.label}
-                        </option>
-                      ))}
-                      <option value="numeric">Ratio</option>
-                    </select>
-                  </div>
+            {/* Description */}
+            <div className="form-group">
+              <label>Description *</label>
+              <textarea
+                value={newDoc.description || ""}
+                placeholder="Enter Document Description"
+                onChange={(e) =>
+                  setNewDoc((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+                required
+              />
+            </div>
+            {/* Scale Selection */}
+            <div className="line">
+              <div className="form-group">
+                <label>Scale *</label>
+                <select
+                  onChange={(e) => {
+                    const scaleType = e.target.value;
+                    const scaleRatio =
+                      scaleType === ScaleType.Ratio ? 1 : undefined;
+                    setNewDoc((prev) => ({
+                      ...prev,
+                      scale: {
+                        type: scaleType as ScaleType,
+                        ratio: scaleRatio,
+                      },
+                    }));
+                  }}
+                >
+                  <option value="">Select one option</option>
+                  {scaleValues.map((scale) => (
+                    <option key={scale.value} value={scale.value}>
+                      {scale.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-                  {/* Numeric Scale Input */}
-                  <div className="form-group">
-                    {isNumericScale && (
-                      <div className="ratio-group">
-                        <span className="ratio">1: </span>
-                        <input
-                          type="number"
-                          id="no-spin"
-                          value={newDoc.scale}
-                          onChange={(e) =>
-                            setNewDoc((prev) => ({
-                              ...prev,
-                              scale: e.target.value,
-                            }))
-                          }
-                          style={{
-                            width: "95%",
-                            marginTop: "7.5%",
-                            padding: "0.7rem",
-                            borderRadius: "8px",
-                            fontSize: "1rem",
-                          }}
-                          required
-                        />
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="line">
-                  {/* Issuance Date */}
-                  <div className="form-group">
-                    <label>Issuance Date *</label>
+              {/* Numeric Scale Input */}
+              <div className="form-group">
+                {newDoc.scale.type === ScaleType.Ratio && (
+                  <div className="ratio-group">
+                    <span className="ratio">1: </span>
                     <input
-                      type="date"
-                      value={
-                        newDoc.issuanceDate?.toISOString().split("T")[0] || ""
-                      }
+                      type="number"
+                      min="1"
+                      id="no-spin"
+                      value={newDoc.scale.ratio}
                       onChange={(e) =>
                         setNewDoc((prev) => ({
                           ...prev,
-                          issuanceDate: dayjs(e.target.value),
+                          scale: {
+                            ...prev.scale,
+                            ratio: Number(e.target.value),
+                          },
                         }))
                       }
+                      style={{
+                        width: "95%",
+                        marginTop: "7.5%",
+                        padding: "0.7rem",
+                        borderRadius: "8px",
+                        fontSize: "1rem",
+                      }}
+                      required
                     />
                   </div>
+                )}
+              </div>
+            </div>
+            <div className="line">
+              {/* Issuance Date */}
+              <div className="form-group">
+                <label>Issuance Date *</label>
+                <input
+                  type="date"
+                  value={newDoc.issuanceDate?.toISOString().split("T")[0] || ""}
+                  onChange={(e) =>
+                    setNewDoc((prev) => ({
+                      ...prev,
+                      issuanceDate: dayjs(e.target.value),
+                    }))
+                  }
+                />
+              </div>
 
-                  {/* Language Selection */}
-                  {/*<div className="form-group">
-                    <label>Language *</label>
-                    <select
-                      value={newDoc.language}
-                      onChange={(e) =>
-                        setNewDoc((prev) => ({
-                          ...prev,
-                          language: e.target.value,
-                        }))
-                      }
-                      required
-                    >
-                      <option value="" disabled>
-                        Select language
-                      </option>
-                      {languages.map((lang) => (
-                        <option key={lang} value={lang}>
-                          {lang}
-                        </option>
-                      ))}
-                    </select>
-                  </div>*/}
+              {/* Document Type */}
+              <div className="form-group">
+                <label>Type *</label>
+                <select
+                  value={newDoc.type}
+                  onChange={(e) =>
+                    setNewDoc((prev) => ({
+                      ...prev,
+                      type: e.target.value as DocumentType,
+                    }))
+                  }
+                  required
+                >
+                  <option value="">Select type</option>
+                  <option value={DocumentType.Informative}>
+                    Informative Document
+                  </option>
+                  <option value={DocumentType.Prescriptive}>
+                    Prescriptive Document
+                  </option>
+                  <option value={DocumentType.Design}>Design Document</option>
+                  <option value={DocumentType.Technical}>
+                    Technical Document
+                  </option>
+                  <option value={DocumentType.MaterialEffect}>
+                    Material effect
+                  </option>
+                </select>
+              </div>
+            </div>
 
-                  {/* Document Type */}
-                  <div className="form-group">
-                    <label>Type *</label>
-                    <select
-                      value={newDoc.type}
-                      onChange={(e) =>
-                        setNewDoc((prev) => ({
-                          ...prev,
-                          type: e.target.value as DocumentType,
-                        }))
-                      }
-                      required
-                    >
-                      <option value="">Select type</option>
-                      <option value={DocumentType.Informative}>
-                        Informative Document
-                      </option>
-                      <option value={DocumentType.Prescriptive}>
-                        Prescriptive Document
-                      </option>
-                      <option value={DocumentType.Design}>
-                        Design Document
-                      </option>
-                      <option value={DocumentType.Technical}>
-                        Technical Document
-                      </option>
-                      <option value={DocumentType.MaterialEffect}>
-                        Material effect
-                      </option>
-                      {/* <option value="Others">Others</option> */}
-                    </select>
-                  </div>
-                </div>
-
-                {/* Stakeholders */}
-                <div className="form-group">
-                  <label>Stakeholders *</label>
-                  <div className="checkbox-group stakeholders">
-                    {stakeholdersOptions.map((option) => (
-                      <label key={option.value} className="checkbox-label">
-                        <input
-                          type="checkbox"
-                          value={option.value}
-                          checked={newDoc.stakeholders.includes(option.value)}
-                          onChange={handleCheckboxChange}
-                        />
-                        {option.label}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                {/* DO NOT ELIMINATE THIS CODE COMMENTED */}
-                {/* <div className="form-group">
+            {/* Stakeholders */}
+            <div className="form-group">
+              <label>Stakeholders *</label>
+              <div className="checkbox-group stakeholders">
+                {stakeholdersOptions.map((option) => (
+                  <label key={option.value} className="checkbox-label">
+                    <input
+                      type="checkbox"
+                      value={option.value}
+                      checked={newDoc.stakeholders.includes(option.value)}
+                      onChange={handleCheckboxChange}
+                    />
+                    {option.label}
+                  </label>
+                ))}
+              </div>
+            </div>
+            {/* DO NOT ELIMINATE THIS CODE COMMENTED */}
+            {/* <div className="form-group">
                   <label>Pages (optional):</label>
                   <input
                     type="number"
@@ -338,7 +323,7 @@ const ModalForm: FC<ModalAddProps> = ({
                     }}
                   />
                 </div> */}
-                {/*<div className="form-group">
+            {/*<div className="form-group">
                 <div
                   className="file-upload-area"
                   onDrop={handleFileDrop}

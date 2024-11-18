@@ -4,13 +4,13 @@ import { StatusCodes } from "http-status-codes";
 import { User } from "../model/user";
 import { validateBody } from "../middleware/validation";
 import { postBody } from "../validation/sessionSchema";
-import { isLoggedIn, isNotLoggedIn } from "../middleware/auth";
+import { isLoggedIn, isLoggedOut } from "../middleware/auth";
 
 export const sessionRouter: Router = Router();
 
 sessionRouter.post(
   "/",
-  isNotLoggedIn,
+  isLoggedOut,
   validateBody(postBody),
   (req: Request, res: Response, next: NextFunction) => {
     passport.authenticate(

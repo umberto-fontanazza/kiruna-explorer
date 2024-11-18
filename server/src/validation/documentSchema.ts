@@ -29,6 +29,15 @@ const scale = z
         code: z.ZodIssueCode.custom,
       });
     }
+
+    if (data.type !== ScaleType.Ratio && data.ratio !== undefined) {
+      ctx.addIssue({
+        path: ["ratio"],
+        message:
+          "scale.ratio should not be defined when scale.type is not Ratio",
+        code: z.ZodIssueCode.custom,
+      });
+    }
   });
 
 export type PostBody = z.infer<typeof postBody>;

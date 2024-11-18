@@ -1,22 +1,11 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import "../styles/NavHeader.scss"; // Importiamo il file SCSS personalizzato
 import { useNavigate } from "react-router-dom";
-import { User } from "../utils/interfaces";
-interface NavHeaderProps {
-  logout: () => void;
-  loggedIn: boolean;
-  user: User;
-}
+import { authContext } from "../context/auth";
 
-const NavHeader: FC<NavHeaderProps> = ({
-  logout,
-  loggedIn,
-  user,
-}: NavHeaderProps): JSX.Element => {
+const NavHeader: FC = (): JSX.Element => {
+  const { user, logout } = useContext(authContext);
   const navigate = useNavigate();
-  const login = () => {
-    navigate("/login");
-  };
 
   return (
     <nav className="nav-header">
@@ -24,14 +13,10 @@ const NavHeader: FC<NavHeaderProps> = ({
         <div className="nav-left">
           <div className="nav-brand">Kiruna eXplorer.</div>
         </div>
-        <div className={`nav-right ${loggedIn ? "logged-in" : ""}`}>
-          {loggedIn ? (
-            <span className="username">
-              <h4>Hi {user.name}!</h4>
-            </span>
-          ) : null}
-          <button onClick={loggedIn ? logout : login}>
-            {loggedIn ? "Logout" : "Login"}
+        <div className={`nav-right ${user ? "logged-in" : ""}`}>
+          {user ? <span className="user-name">Hi {user.name}!</span> : null}
+          <button onClick={user ? logout : () => navigate("/login")}>
+            {user ? "Logout" : "Login"}
           </button>
         </div>
       </div>
