@@ -68,24 +68,24 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     libraries: ["marker"] as Libraries,
   });
 
-  useEffect(() => {
-    if (isLoaded && map && insertMode) {
-      const mapHandleClick = (event: google.maps.MapMouseEvent) => {
-        if (event.latLng) {
-          const latitude = event.latLng.lat();
-          const longitude = event.latLng.lng();
-          const newPosition: Position = { lat: latitude, lng: longitude };
-          setNewPos(newPosition);
-          setModalOpen(true);
-        }
-      };
-
-      map.addListener("click", mapHandleClick);
-
-      return () => {
-        google.maps.event.clearInstanceListeners(map);
-      };
+  const onMapClick = (event: google.maps.MapMouseEvent) => {
+    if (event.latLng) {
+      const latitude = event.latLng.lat();
+      const longitude = event.latLng.lng();
+      const newPosition: Position = { lat: latitude, lng: longitude };
+      setNewPos(newPosition);
+      setModalOpen(true);
     }
+  };
+
+  useEffect(() => {
+    if (!isLoaded || !map || !insertMode) return;
+
+    map.addListener("click", onMapClick);
+
+    return () => {
+      google.maps.event.clearInstanceListeners(map);
+    };
   }, [insertMode]);
 
   const createMarker = (
@@ -118,43 +118,43 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     return marker;
   };
 
-  useEffect(() => {
-    if (isLoaded && map && !insertMode) {
-      const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
+  const clearMarkers = () => {
+    markers.forEach((marker) => (marker.map = null));
+  };
 
-      documents
-        .filter((doc) => doc.coordinates.latitude && doc.coordinates.longitude)
-        .forEach((doc) => {
-          if (visualLinks) {
-            if (doc.id === documentSelected?.id) {
-              const marker = createMarker(doc, "not-visual");
-              newMarkers.push(marker);
-            }
-            documentSelected?.links.forEach((link) => {
-              if (doc.id === link.targetDocumentId) {
-                const marker = createMarker(doc, "visual");
-                newMarkers.push(marker);
-              }
-            });
-          } else {
+  useEffect(() => {
+    if (!isLoaded || !map || insertMode) {
+      clearMarkers();
+      return;
+    }
+    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
+    documents
+      .filter((doc) => doc.coordinates.latitude && doc.coordinates.longitude)
+      .forEach((doc) => {
+        if (visualLinks) {
+          if (doc.id === documentSelected?.id) {
             const marker = createMarker(doc, "not-visual");
             newMarkers.push(marker);
           }
-        });
-
-      setMarkers((prevMarkers) => {
-        prevMarkers.forEach((marker) => {
-          marker.map = null;
-        });
-        return newMarkers;
+          documentSelected?.links.forEach((link) => {
+            if (doc.id === link.targetDocumentId) {
+              const marker = createMarker(doc, "visual");
+              newMarkers.push(marker);
+            }
+          });
+        } else {
+          const marker = createMarker(doc, "not-visual");
+          newMarkers.push(marker);
+        }
       });
 
-      return () => {
-        markers.forEach((marker) => (marker.map = null));
-      };
-    } else {
-      markers.forEach((marker) => (marker.map = null));
-    }
+    setMarkers((prevMarkers) => {
+      prevMarkers.forEach((marker) => {
+        marker.map = null;
+      });
+      return newMarkers;
+    });
+    return clearMarkers;
   }, [isLoaded, map, props]);
 
   // Render map only when API is loaded
