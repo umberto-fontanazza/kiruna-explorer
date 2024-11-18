@@ -51,6 +51,16 @@ interface MapComponentProps {
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
+  const {
+    documents,
+    documentSelected,
+    visualLinks,
+    insertMode,
+    setModalOpen,
+    setSidebarOpen,
+    setDocSelected,
+    setNewPos,
+  } = props;
   const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
@@ -66,14 +76,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   });
 
   useEffect(() => {
-    if (isLoaded && map && props.insertMode) {
+    if (isLoaded && map && insertMode) {
       const mapHandleClick = (event: google.maps.MapMouseEvent) => {
         if (event.latLng) {
           const latitude = event.latLng.lat();
           const longitude = event.latLng.lng();
           const newPosition: Position = { lat: latitude, lng: longitude };
-          props.setNewPos(newPosition);
-          props.setModalOpen(true);
+          setNewPos(newPosition);
+          setModalOpen(true);
         }
       };
 
@@ -83,10 +93,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         google.maps.event.clearInstanceListeners(map);
       };
     }
-  }, [props.insertMode]);
+  }, [insertMode]);
 
   useEffect(() => {
-    if (isLoaded && map && !props.insertMode) {
+    if (isLoaded && map && !insertMode) {
       const newMarkers: google.maps.marker.AdvancedMarkerElement[] = [];
       // Function to create a Marker
       const createMarker = (
@@ -109,8 +119,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         });
 
         marker.addListener("click", () => {
-          props.setSidebarOpen(true);
-          props.setDocSelected(doc);
+          setSidebarOpen(true);
+          setDocSelected(doc);
           setCenter({
             lat: doc.coordinates.latitude!,
             lng: doc.coordinates.longitude! + 0.0019,
@@ -120,17 +130,17 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         return marker;
       };
 
-      props.documents.forEach((doc) => {
+      documents.forEach((doc) => {
         if (
           doc.coordinates.latitude !== null &&
           doc.coordinates.longitude !== null
         ) {
-          if (props.visualLinks) {
-            if (doc.id === props.documentSelected?.id) {
+          if (visualLinks) {
+            if (doc.id === documentSelected?.id) {
               const marker = createMarker(doc, "not-visual");
               newMarkers.push(marker);
             }
-            props.documentSelected?.links.forEach((link) => {
+            documentSelected?.links.forEach((link) => {
               if (doc.id === link.targetDocumentId) {
                 const marker = createMarker(doc, "visual");
                 newMarkers.push(marker);
@@ -174,7 +184,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           {/* <option value="Others">Others</option> */}
         </select>
       </div>
-      {props.insertMode && (
+      {insertMode && (
         <div className="insert-mode">
           <h2>Insert Mode</h2>
           <h3>
