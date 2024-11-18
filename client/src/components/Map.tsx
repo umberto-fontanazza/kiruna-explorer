@@ -1,39 +1,16 @@
 import "@material/web/icon/_icon.scss";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
-import { GoogleMap, Libraries, useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../styles/Map.scss";
 import { Document, fromDocumentTypeToIcon, Link } from "../utils/interfaces";
+import { kirunaCoords, libraries, mapOptions } from "../utils/map";
 import MapTypeSelector from "./MapTypeSelector";
 
 interface Position {
   lat: number;
   lng: number;
 }
-
-const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
-const kirunaBoundaries = {
-  north: 67.9,
-  south: 67.8,
-  east: 20.4,
-  west: 20.0,
-};
-
-const mapOptions = {
-  mapId: "d76bd741d388f7fd",
-  mapTypeControl: false,
-  mapTypeControlOptions: {
-    mapTypeIds: ["satellite", "roadmap", "hybrid", "terrain"],
-  },
-  minZoom: 12,
-  maxZoom: 20,
-  restriction: {
-    latLngBounds: kirunaBoundaries,
-    strictBounds: false,
-  },
-};
-
-const libraries: Libraries = ["marker"];
 
 interface MapComponentProps {
   documents: Document[];
@@ -64,7 +41,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
 
-  // Load Google Maps API with API key from environment variables
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -116,8 +92,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       setSidebarOpen(true);
       setDocSelected(doc);
       setCenter({
-        lat: doc.coordinates?.latitude || 0,
-        lng: doc.coordinates?.longitude || 0 + 0.0019,
+        lat: doc.coordinates?.latitude || kirunaCoords.lat,
+        lng: doc.coordinates?.longitude || kirunaCoords.lng + 0.0019, //TODO: explain this + numbers
       });
     });
     return marker;
