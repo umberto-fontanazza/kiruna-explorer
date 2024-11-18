@@ -12,7 +12,7 @@ import {
 
 const DocumentsList = () => {
   const [documentsList, setDocumentsList] = useState<Document[]>([]);
-  const [isSortedAscending, setIsSortedAscending] = useState<boolean>(true); // Stato per il filtro
+  const [isSortedAscending, setIsSortedAscending] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -27,18 +27,17 @@ const DocumentsList = () => {
     fetchDocuments();
   }, []);
 
-  // Funzione per ordinare i documenti
   const sortDocumentsByDate = () => {
     const sortedList = [...documentsList].sort((a, b) => {
-      const dateA = a.issuanceDate?.toDate(); // Convertire in oggetti Date se necessario
+      const dateA = a.issuanceDate?.toDate();
       const dateB = b.issuanceDate?.toDate();
-      if (!dateA || !dateB) return 0; // Gestire casi in cui le date sono assenti o non valide
+      if (!dateA || !dateB) return 0;
       return isSortedAscending
         ? dateA.getTime() - dateB.getTime()
         : dateB.getTime() - dateA.getTime();
     });
     setDocumentsList(sortedList);
-    setIsSortedAscending(!isSortedAscending); // Invertire l'ordine
+    setIsSortedAscending(!isSortedAscending);
   };
 
   return (
