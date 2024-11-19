@@ -1,0 +1,184 @@
+@use "Color";
+
+.sidebar {
+  right: -30%;
+  width: 30%;
+  height: 100vh;
+  background: Color.$sidebar-background;
+  position: fixed;
+  overflow-x: hidden;
+  transition: right 0.5s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1vh;
+
+  &.open {
+    right: 0;
+  }
+
+  img {
+    height: 6vh;
+    transform: scale(0.9);
+  }
+
+  hr {
+    width: 90%;
+    margin: 1vh 0;
+  }
+
+  .container-btns {
+    display: flex;
+    width: 90%;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.5vw;
+
+    .btn-download-sidebar,
+    .btn-close-sidebar {
+      display: flex;
+      justify-content: center;
+      padding: 3px 3px;
+      background-color: inherit;
+      border: 0.1rem solid white;
+      border-radius: 100%;
+      cursor: pointer;
+      transition: background-color 0.3s;
+
+      .btn-download-img,
+      .btn-close-img {
+        height: 3vh;
+        transform: scale(0.9);
+      }
+
+      &:hover {
+        background-color: Color.$first-hover;
+      }
+    }
+  }
+
+  .content {
+    width: 90%;
+    margin-top: 1vh;
+    padding: 1vh 1vw;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: #333;
+    line-height: 1.5;
+    overflow-y: auto;
+    max-height: 80vh;
+
+    p,
+    h2,
+    h3,
+    h4 {
+      color: Color.$first;
+    }
+
+    p {
+      font-family: "SwedenSans", sans-serif;
+      font-size: 1.2rem;
+      margin-bottom: 0.1vh;
+    }
+
+    h2,
+    h3 {
+      font-family: "SwedenSansBold", sans-serif;
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    h4 {
+      font-weight: normal;
+      font-size: 1.3rem;
+      span {
+        font-family: "SwedenSansBold", sans-serif;
+        font-weight: bold;
+      }
+    }
+
+    .connection-group {
+      display: flex;
+      align-items: center;
+
+      .btn-add-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #ddd;
+        background-color: Color.$first;
+        border-radius: 50%;
+        width: 2vw;
+        height: 2vw;
+        margin-left: 2vw;
+        transition: background-color 0.3s ease;
+
+        &:hover {
+          background-color: Color.$second;
+        }
+      }
+
+      .see-links {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 2%;
+        padding: 3px 3px;
+        background-color: inherit;
+        border: 0.2rem solid Color.$first;
+        border-radius: 100%;
+        cursor: pointer;
+        transition: background-color 0.3s;
+
+        &.fill {
+          background-color: Color.$first;
+
+          &:hover {
+            background-color: Color.$first-hover;
+            border-color: Color.$first-hover;
+          }
+        }
+
+        &.no-fill {
+          &:hover {
+            background-color: Color.$first;
+          }
+        }
+
+        .dark {
+          color: Color.$first;
+
+          &.fill {
+            color: white;
+          }
+
+          &.no-fill {
+            &:hover {
+              color: white;
+              border: 0.2rem Color.$first;
+            }
+          }
+        }
+      }
+    }
+    .btn-edit {
+      width: 100%;
+      margin-top: 4%;
+      flex: 1;
+      padding: 0.75rem;
+      font-weight: bold;
+      border-radius: 8px;
+      background-color: Color.$first;
+      color: white;
+      font-family: "SwedenSansBold", sans-serif;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-align: center;
+
+      &:hover {
+        background-color: Color.$first-hover;
+      }
+    }
+  }
+}

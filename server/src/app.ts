@@ -9,7 +9,7 @@ import passport from "passport";
 import session from "express-session";
 import { userRouter } from "./router/userRouter";
 import { sessionRouter } from "./router/sessionRouter";
-import { errorHandling } from "./middleware/auth";
+import { sinkErrorHandler } from "./middleware/error";
 
 dotenv.config();
 
@@ -44,6 +44,6 @@ app.use("/users", userRouter);
 app.use("/sessions", sessionRouter);
 
 // Error handler middleware. Do not move
-app.use(errorHandling);
+app.use(sinkErrorHandler);
 
 export default app;

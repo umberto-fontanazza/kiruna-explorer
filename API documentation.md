@@ -1,15 +1,12 @@
 # Kiruna eXplorer API Documentation
 
-TODO: example of json request and responses
-TODO: write what are the mandatory parameters
-
 # Index
 
 1. [Base URL](#base-url)
 2. Collections  
-   2.1. [Colletion `documents`](#collection-documents)  
-   2.2. [Collection `links`](#collection-links)
-   2.3. [Collection `sessions`](#collection-sessions)
+   2.1. [Collection `documents`](#collection-documents)  
+   2.2. [Collection `links`](#collection-links)  
+   2.3. [Collection `sessions`](#collection-sessions)  
    2.4. [Collection `users`](#collection-users)
 
 <br/>
@@ -18,13 +15,21 @@ TODO: write what are the mandatory parameters
 
 The base URL for all API requests is:
 
-`http://localhost:3000/kiruna-eXplorer`
+`http://localhost:3000`
 
 <br/>
 
 # Collection `documents`
 
 A collection of documents representing key nodes in the relocation process of Kiruna. Each document corresponds to agreements, conflicts, consultations, material effects, or other documents that directly influence the project. Documents are categorized by type, including informative, prescriptive, and original resources, and are connected through a network of direct and collateral consequences, projections, and updates.
+
+### Supported requests
+
+- [GET `/documents`](#get-documents)
+- [GET `/documents/{id}`](#get-documentsid)
+- [POST `/documents`](#post-documents)
+- [PATCH `/documents/{id}`](#patch-documentsid)
+- [DELETE `/documents/{id}`](#delete-documentsid)
 
 ## GET `/documents`
 
@@ -34,23 +39,29 @@ Retrieve all documents.
 
 TODO: filters
 
-## Response body
+### Response body
 
 ```json
 [
     {
         "id": 1,
-        "title": "",
-        "description": "",
-        "coordinates": {
-            "latitude": 67.9, // domain [-90 deg, +90 deg]
-            "longitude": 20.22 // domain [-180 deg, +180 deg]
+        "title": "Kiruna plan",
+        "description": "Document of Kiruna plan",
+        "type": "informative",
+        "scale": {
+          "type": "ratio",
+          "ratio": 8000
         },
-        "type": "INFORMATIVE",
+        "stakeholders": ["lkab", "kiruna_kommun"],
+        "coordinates": {
+          "latitude": 67.85624725739333,
+          "longitude": 20.23857657264496
+        },
+        "issuanceDate": "2024-11-08",
         "links": [
             {
                 "targetDocumentId": 2,
-                "linkTypes": ["DIRECT", "UPDATE"]
+                "linkTypes": ["direct", "update"]
             },
             ...
         ]
@@ -67,7 +78,6 @@ TODO: filters
 
 This API can return the following error codes:
 
-- `401 Unauthorized`: You are unauthorized.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
 ## GET `/documents/{id}`
@@ -79,17 +89,23 @@ Retrieve a specific document by its unique identifier.
 ```json
 {
     "id": 1,
-    "title": "",
-    "description": "",
-    "coordinates": {
-        "latitude": 67.9, // domain [-90 deg, +90 deg]
-        "longitude": 20.22 // domain [-180 deg, +180 deg]
+    "title": "Kiruna plan",
+    "description": "Document of Kiruna plan",
+    "type": "informative",
+    "scale": {
+      "type": "ratio",
+      "ratio": 8000
     },
-    "type": "INFORMATIVE",
+    "stakeholders": ["lkab", "kiruna_kommun"],
+    "coordinates": {
+      "latitude": 67.85624725739333,
+      "longitude": 20.23857657264496
+    },
+    "issuanceDate": "2024-11-08",
     "links": [
         {
             "targetDocumentId": 2,
-            "linkTypes": ["DIRECT", "UPDATE"]
+            "linkTypes": ["direct", "update"]
         },
         ...
     ]
@@ -104,7 +120,6 @@ Retrieve a specific document by its unique identifier.
 
 This API can return the following error codes:
 
-- `401 Unauthorized`: You are unauthorized.
 - `404 Not Found`: The requested document was not found.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
@@ -112,18 +127,39 @@ This API can return the following error codes:
 
 Create a new document.
 
+### Request parameters
+
+| **Parameter**           | **Description**                                                                    | **Type**            | **Required**                   |
+| ----------------------- | ---------------------------------------------------------------------------------- | ------------------- | ------------------------------ |
+| `title`                 | The title of the document                                                          | `string`            | Yes                            |
+| `description`           | A brief description of the document                                                | `string`            | Yes                            |
+| `type`                  | Type of the document                                                               | `string`            | Yes                            |
+| `scale`                 | Relation between the real object and its size on a map                             | `object`            | Yes                            |
+| `scale.type`            | Type of the scale                                                                  | `string`            | Yes                            |
+| `scale.ratio`           | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000) | `number`            | Yes if `scale` is "ratio"      |
+| `stakeholders`          | Array of stakeholders involved with the document                                   | `array` of `string` | No                             |
+| `coordinates`           | Object containing geographical data                                                | `object`            | No                             |
+| `coordinates.latitude`  | Value in the range [-90, +90] degrees                                              | `number`            | Yes if `longitude` is provided |
+| `coordinates.longitude` | Value in the range [-180, +180] degrees                                            | `number`            | Yes if `latitude` is provided  |
+| `issuanceDate`          | UTC date (format: `YYYY-MM-DD`)                                                    | `string`            | No                             |
+
 ### Request body
 
 ```json
 {
-  "title": "",
-  "description": "",
-  "coordinates": {
-    "latitude": 67.9, // domain [-90 deg, +90 deg]
-    "longitude": 20.22 // domain [-180 deg, +180 deg]
+  "title": "Kiruna plan",
+  "description": "Document of Kiruna plan",
+  "type": "informative",
+  "scale": {
+    "type": "ratio",
+    "ratio": 8000
   },
-  "type": "INFORMATIVE"
-  //other properties
+  "stakeholders": ["lkab", "kiruna_kommun"],
+  "coordinates": {
+    "latitude": 67.85624725739333,
+    "longitude": 20.23857657264496
+  },
+  "issuanceDate": "2024-11-08"
 }
 ```
 
@@ -131,7 +167,6 @@ Create a new document.
 
 ```json
 {
-  "message": "Document created successfully",
   "id": 1
 }
 ```
@@ -152,17 +187,16 @@ This API uses the following error codes:
 
 Update an existing document by its unique identifier.
 
+### Parameters
+
+All parameters of [`POST /documents`](#post-documents) are accepted but they are all optional. Also relations between `scale` - `scaleValue` and `coordinates` - `latitude` - `longitude` remain the same.
+
 ### Request body
 
 ```json
 {
-  // "title" omitted because it was not edited
-  "description": "A new and improved descripton",
-  "coordinates": {
-    "latitude": 67.9, // domain [-90 deg, +90 deg]
-    "longitude": 20.22 // domain [-180 deg, +180 deg]
-  },
-  "type": "DESIGN"
+  "description": "A new and improved description",
+  "type": "design"
 }
 ```
 
@@ -202,6 +236,12 @@ This API uses the following error codes:
 A collection of links representing relationships between documents, serving as a sub-collection within the `documents` collection.
 Each pair of documents (nodes) is associated with at most one link. One link may be characterized by more than one association type.
 
+### Supported requests
+
+- [GET `/documents/{id}/links`](#get-documentsidlinks)
+- [PUT `/documents/{id}/links`](#put-documentsidlinks)
+- [DELETE `/documents/{id}/links`](#delete-documentsidlinks)
+
 ## GET `/documents/{id}/links`
 
 Retrieve all links associated with a specific document. If the document has no links an empty array is returned in the JSON body.
@@ -212,11 +252,11 @@ Retrieve all links associated with a specific document. If the document has no l
 [
   {
     "targetDocumentId": 2,
-    "linkTypes": ["DIRECT"]
+    "linkTypes": ["direct"]
   },
   {
     "targetDocumentId": 4,
-    "linkTypes": ["PROJECTION", "COLLATERAL"]
+    "linkTypes": ["projection", "collateral"]
   }
 ]
 ```
@@ -242,7 +282,7 @@ Create or update a link associated with a specific document. If a link existed t
 ```json
 {
   "targetDocumentId": 2,
-  "linkTypes": ["DIRECT", "UPDATE"]
+  "linkTypes": ["direct", "update"]
 }
 ```
 
@@ -287,6 +327,12 @@ This API uses the following error codes:
 
 Handles user session management.
 
+### Supported requests
+
+- [POST `/sessions`](#post-sessions)
+- [GET `/sessions/current`](#get-sessionscurrent)
+- [DELETE `/sessions/current`](#delete-sessionscurrent)
+
 ## POST `/sessions`
 
 Authenticate a user and create a session.
@@ -307,7 +353,7 @@ Authenticate a user and create a session.
   "email": "urban.planner@gmail.com",
   "name": "Luigi",
   "surname": "Bianchi",
-  "role": "RESIDENT"
+  "role": "urban_planner"
 }
 ```
 
@@ -323,7 +369,7 @@ This API uses the following error codes:
 - `401 Unauthorized`: Incorrect credentials.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
-## GET `/sessions/current/`
+## GET `/sessions/current`
 
 Retrieve information about the currently authenticated user.
 
@@ -334,7 +380,7 @@ Retrieve information about the currently authenticated user.
   "email": "urban.planner@gmail.com",
   "name": "Luigi",
   "surname": "Bianchi",
-  "role": "RESIDENT"
+  "role": "urban_planner"
 }
 ```
 
@@ -361,6 +407,7 @@ Log out the currently authenticated user.
 
 This API uses the following error codes:
 
+- `401 Unauthorized`: Not authenticated.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
 <br/>
@@ -368,6 +415,10 @@ This API uses the following error codes:
 # Collection `users`
 
 A collection describing the variety of users interacting with the Kiruna eXplorer system.
+
+### Supported requests
+
+- [POST `/users`](#post-users)
 
 ## POST `/users`
 
@@ -379,9 +430,9 @@ Register a new user.
 {
   "email": "urban.planner@gmail.com",
   "password": "ResidentResident.91",
-  "name": "Luigi",
-  "surname": "Bianchi",
-  "role": "RESIDENT"
+  "name": "Mario",
+  "surname": "Mario",
+  "role": "resident"
 }
 ```
 

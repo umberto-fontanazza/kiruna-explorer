@@ -2,100 +2,124 @@ import { strict as assert } from "assert";
 import { Database } from "../database";
 import { DocumentNotFound } from "../error/documentError";
 import { Coordinates } from "../validation/documentSchema";
+import { Scale, ScaleType, ScaleRow } from "./scale";
+import { Link, LinkResponseBody, LinkType } from "./link";
+import dayjs, { Dayjs } from "dayjs";
 
 type DocumentDbRow = {
   id: number;
   title: string;
   description: string;
-  coordinates: Coordinates;
-  scale: Scale;
   type: DocumentType;
-  language: string;
+  scale_type: ScaleType;
+  scale_ratio: number;
+  stakeholders: Stakeholder[];
+  coordinates: Coordinates;
+  issuance_date: Date;
+  links: Record<string, LinkType[]>;
 };
 
 export enum Stakeholder {
-  LKAB = "LKAB",
-  Municipality = "MUNICIPALITY",
-  RegionalAuthority = "REGIONAL AUTHORITY",
-  ArchitectureFirms = "ARCHITECTURE FIRMS",
-  Citizens = "CITIZENS",
-  Others = "OTHERS",
-}
-
-// TODO: temp scale. RATEO is now a string
-export enum Scale {
-  BlueprintsOrEffect = "BLUEPRINTS/EFFECT",
-  Text = "TEXT",
-  Rateo = "RATEO",
+  KirunaKommun = "kiruna_kommun",
+  Lkab = "lkab",
+  Residents = "residents",
+  WhiteArkitekter = "white_arkitekter",
 }
 
 export enum DocumentType {
-  Informative = "INFORMATIVE",
-  Prescriptive = "PRESCRIPTIVE",
-  Design = "DESIGN",
-  Technical = "TECHNICAL",
-  Material = "MATERIAL",
-  Others = "OTHERS",
+  Design = "design",
+  Informative = "informative",
+  MaterialEffect = "material_effect",
+  Prescriptive = "prescriptive",
+  Technical = "technical",
 }
 
 export class Document {
   id: number;
   title: string;
   description: string;
-  coordinates: Coordinates;
-  scale: Scale;
   type: DocumentType;
-  language: string;
+  scale: Scale;
+  stakeholders?: Stakeholder[];
+  coordinates?: Coordinates;
+  issuanceDate?: Dayjs;
+  links?: LinkResponseBody[];
 
   constructor(
     id: number,
     title: string,
     description: string,
-    coordinates: Coordinates,
-    scale: Scale,
     type: DocumentType,
-    language: string,
+    scale: Scale,
+    stakeholders: Stakeholder[] | undefined = undefined,
+    coordinates: Coordinates | undefined = undefined,
+    issuanceDate: Dayjs | undefined = undefined,
+    links: LinkResponseBody[] | undefined = undefined,
   ) {
     this.id = id;
     this.title = title;
     this.description = description;
-    this.coordinates = coordinates;
-    this.scale = scale;
     this.type = type;
-    this.language = language;
+    this.scale = scale;
+    this.stakeholders = stakeholders;
+    this.coordinates = coordinates;
+    this.issuanceDate = issuanceDate;
+    this.links = links;
   }
 
   private static fromDatabaseRow(dbRow: DocumentDbRow): Document {
-    const { id, title, description, coordinates, scale, type, language } =
-      dbRow;
-    assert(typeof id === "number");
+    const {
+      id,
+      title,
+      description,
+      type,
+      scale_type,
+      scale_ratio,
+      stakeholders,
+      coordinates,
+      issuance_date,
+      links,
+    } = dbRow;
     assert(typeof title === "string");
     assert(typeof description === "string");
-    assert(typeof scale === "string");
     assert(typeof type === "string");
-    assert(typeof language === "string");
-    // TODO: array asserts are missing
+    assert(typeof scale_type === "string");
+    assert(!issuance_date || issuance_date instanceof Date);
+
+    const scale: Scale = Scale.fromDatabaseRow({
+      scale_type,
+      scale_ratio,
+    } as ScaleRow);
 
     return new Document(
       id,
       title,
       description,
-      coordinates,
-      scale,
       type,
-      language,
+      scale,
+      stakeholders || undefined,
+      coordinates || undefined,
+      dayjs(issuance_date) || undefined,
+      Link.fromJsonbField(links),
     );
   }
 
   async update(): Promise<void> {
-    const sql =
-      "UPDATE document SET title = $1, description = $2, coordinates = ST_Point($3, $4)::geography, type = $5 WHERE id = $6";
+    const sql = `UPDATE document SET 
+    title = $1, description = $2, type = $3, scale_type = $4, 
+    scale_ratio = $5, stakeholders = $6, coordinates = ST_Point($7, $8)::geography, 
+    issuance_date = $9 WHERE id = $10`;
+    const scaleRow: ScaleRow = this.scale.intoDatabaseRow();
     const result = await Database.query(sql, [
       this.title,
       this.description,
-      this.coordinates.longitude, // BEWARE ORDERING: https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples-in-gis-services#:~:text=PostGIS%20expects%20lng/lat.
-      this.coordinates.latitude,
       this.type,
+      scaleRow.scale_type,
+      scaleRow.scale_ratio,
+      this.stakeholders || null,
+      this.coordinates?.longitude || null, // BEWARE ORDERING: https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples-in-gis-services#:~:text=PostGIS%20expects%20lng/lat.
+      this.coordinates?.latitude || null,
+      this.issuanceDate?.toDate() || null,
       this.id,
     ]);
     if (result.rowCount != 1) throw new Error("Failed db update");
@@ -104,33 +128,29 @@ export class Document {
   static async insert(
     title: string,
     description: string,
-    coordinates: Coordinates,
-    scale: Scale,
     type: DocumentType,
-    language: string,
+    scale: Scale,
+    stakeholders: Stakeholder[] | undefined = undefined,
+    coordinates: Coordinates | undefined = undefined,
+    issuanceDate: Dayjs | undefined = undefined,
   ): Promise<Document> {
+    const scaleRow: ScaleRow = scale.intoDatabaseRow();
     const result = await Database.query(
-      "INSERT INTO document(title, description, coordinates, scale, type, language) VALUES($1, $2, ST_Point($3, $4)::geography, $5, $6, $7) RETURNING id;",
+      "INSERT INTO document(title, description, type, scale_type, scale_ratio, stakeholders, coordinates, issuance_date) VALUES($1, $2, $3, $4, $5, $6, ST_Point($7, $8)::geography, $9) RETURNING id;",
       [
         title,
         description,
-        coordinates.longitude,
-        coordinates.latitude,
-        scale,
         type,
-        language,
+        scaleRow.scale_type,
+        scaleRow.scale_ratio || null,
+        stakeholders || null,
+        coordinates?.longitude || null,
+        coordinates?.latitude || null,
+        issuanceDate?.toDate() || null,
       ],
     );
     const documentId: number = result.rows[0].id;
-    return new Document(
-      documentId,
-      title,
-      description,
-      coordinates,
-      scale,
-      type,
-      language,
-    );
+    return new Document(documentId, title, description, type, scale);
   }
 
   static async delete(id: number): Promise<void> {
@@ -164,8 +184,17 @@ export class Document {
       FROM document WHERE id = $1`,
       [id],
     );
+    if (result.rowCount != 1) {
+      throw new DocumentNotFound();
+    }
     const documentRow = result.rows[0];
-
     return Document.fromDatabaseRow(documentRow);
+  }
+
+  toResponseBody() {
+    return {
+      ...this,
+      issuanceDate: this.issuanceDate?.format("YYYY-MM-DD") || undefined,
+    };
   }
 }

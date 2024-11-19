@@ -1,139 +1,168 @@
-import { GoogleMap, useJsApiLoader, OverlayView } from "@react-google-maps/api";
-import { FC, useEffect, useState } from "react";
-import { Document } from "../utils/interfaces";
+import "@material/web/icon/_icon.scss";
+import "@material/web/iconbutton/filled-tonal-icon-button.js";
+import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../styles/Map.scss";
+import { Document, fromDocumentTypeToIcon, Link } from "../utils/interfaces";
+import { kirunaCoords, libraries, mapOptions } from "../utils/map";
+import MapTypeSelector from "./MapTypeSelector";
+
+interface Position {
+  lat: number;
+  lng: number;
+}
 
 interface MapComponentProps {
   documents: Document[];
-  setSidebarOpen: (value: boolean) => void;
-  setDocSelected: (value: Document | null) => void;
+  documentSelected: Document | null;
+  visualLinks: boolean;
+  insertMode: boolean;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
+  setSidebarOpen: Dispatch<SetStateAction<boolean>>;
+  setDocSelected: Dispatch<SetStateAction<Document | null>>;
+  setNewPos: Dispatch<SetStateAction<Position>>;
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
-  const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
+  const {
+    documents,
+    documentSelected,
+    visualLinks,
+    insertMode,
+    setModalOpen,
+    setSidebarOpen,
+    setDocSelected,
+    setNewPos,
+  } = props;
   const [center, setCenter] = useState(kirunaCoords);
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [mapType, setMapType] = useState<string>("satellite");
+  const [markers, setMarkers] = useState<
+    google.maps.marker.AdvancedMarkerElement[]
+  >([]);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
+    libraries: libraries,
   });
 
-  const containerStyle = {
-    width: "100vw",
-    height: "100%",
+  const onMapClick = (event: google.maps.MapMouseEvent) => {
+    if (!event.latLng) return;
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
+    setNewPos({ lat, lng });
+    setModalOpen(true);
   };
 
-  const bounds = {
-    north: 67.9,
-    south: 67.8,
-    east: 20.4,
-    west: 20.0,
-  };
+  useEffect(() => {
+    if (!isLoaded || !map || !insertMode) return;
 
-  const mapOptions = {
-    mapTypeId: "satellite",
-    //mapTypeControl: true,
-    disableDefaultUI: true,
+    map.addListener("click", onMapClick);
 
-    minZoom: 12,
-    maxZoom: 20,
-    styles: [
-      {
-        featureType: "all",
-        elementType: "labels",
-        stylers: [{ visibility: "off" }],
+    return () => {
+      google.maps.event.clearInstanceListeners(map);
+    };
+  }, [insertMode]);
+
+  /**
+   * @param linked - when true the documents is visualized
+   * as linked to the selected document
+   */
+  const createMarker = (
+    doc: Document,
+    linked: boolean = false
+  ): google.maps.marker.AdvancedMarkerElement => {
+    const markerDivChild = document.createElement("div");
+    const iconName = fromDocumentTypeToIcon.get(doc.type) as string;
+    markerDivChild.className = `document-icon ${linked ? "linked" : ""}`;
+    markerDivChild.innerHTML = `<span class="material-symbols-outlined color-${iconName} size">${iconName}</span>`;
+
+    const marker = new google.maps.marker.AdvancedMarkerElement({
+      map,
+      position: {
+        lat: doc.coordinates?.latitude ?? 0,
+        lng: doc.coordinates?.longitude ?? 0,
       },
-    ],
-    restriction: {
-      latLngBounds: bounds, // Restrict map movement within bounds
-      strictBounds: false, // Allow panning outside the bounds, but snap back when released
-    },
+      content: markerDivChild,
+      title: doc.title,
+    });
+
+    marker.addListener("click", () => {
+      setSidebarOpen(true);
+      setDocSelected(doc);
+      setCenter({
+        lat: doc.coordinates?.latitude ?? kirunaCoords.lat,
+        lng: doc.coordinates?.longitude ?? kirunaCoords.lng + 0.0019, //TODO: explain this + numbers
+      });
+    });
+    return marker;
   };
 
-  // Centro della mappa su Kiruna, Svezia
+  /**
+   * @param doc - the document to be checked
+   * @returns true if doc is currently selected or linked to the selected
+   */
+  const isSelectedOrLinked = (doc: Document) => {
+    const linkedIDs: number[] =
+      documentSelected?.links?.map((link: Link) => link.targetDocumentId) ?? [];
+    if (doc.id === documentSelected?.id) return true;
+    if (linkedIDs.includes(doc.id)) return true;
+    return false;
+  };
+
+  const clearMarkers = () => {
+    markers.forEach((marker) => (marker.map = null));
+  };
+
+  useEffect(() => {
+    if (!isLoaded || !map || insertMode) {
+      clearMarkers();
+      return;
+    }
+    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
+      .filter((doc) => doc.coordinates)
+      .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
+      .map((doc) =>
+        createMarker(doc, visualLinks && doc.id !== documentSelected?.id)
+      );
+
+    setMarkers((_) => {
+      clearMarkers();
+      return newMarkers;
+    });
+    return clearMarkers;
+  }, [isLoaded, map, props]);
 
   return isLoaded ? (
-    <>
+    <section id="map">
+      <MapTypeSelector mapType={mapType} setMapType={setMapType} />
+      {insertMode && (
+        <div className="insert-mode">
+          <h2>Insert Mode</h2>
+          <h3>
+            Select a point on the map, where you want to add a new Document
+          </h3>
+        </div>
+      )}
       <GoogleMap
-        mapContainerStyle={containerStyle}
+        id="google-map"
         zoom={10}
-        options={mapOptions}
+        options={{
+          ...mapOptions,
+          mapTypeId: mapType,
+          mapTypeControlOptions: {
+            ...mapOptions.mapTypeControlOptions,
+            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+          },
+        }}
         center={center}
-      >
-        {props.documents.map(
-          (doc) =>
-            doc.coordinates.latitude !== null &&
-            doc.coordinates.longitude !== null && (
-              // <Marker
-              //   key={doc.id}
-              //   position={{
-              //     lat: doc.coordinates.latitude!,
-              //     lng: doc.coordinates.longitude!,
-              //   }}
-              //   icon={{
-              //     url: `/document-icon-${doc.type}-iconByIcons8.png`, // Replace with the path to your custom image
-              //     //scaledSize: new window.google.maps.Size(50, 50), // Adjust the size as needed
-              //     origin: new window.google.maps.Point(0, 0),
-              //     anchor: new window.google.maps.Point(25, 25), // Adjusts the anchor point based on size
-              //   }}
-              //   onClick={() => {
-              //     props.setSidebarOpen(true);
-              //     props.setDocSelected(doc);
-              //     setCenter({
-              //       lat: doc.coordinates.latitude!,
-              //       lng: doc.coordinates.longitude! + 0.0011,
-              //     });
-              //   }}
-              // />
-              <OverlayView
-                key={doc.id}
-                position={{
-                  lat: doc.coordinates.latitude!,
-                  lng: doc.coordinates.longitude!,
-                }}
-                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
-              >
-                <div
-                  className="map-icon-documents"
-                  onClick={() => {
-                    props.setSidebarOpen(true);
-                    props.setDocSelected(doc);
-                    setCenter({
-                      lat: doc.coordinates.latitude!,
-                      lng: doc.coordinates.longitude! + 0.0019,
-                    });
-                  }}
-                >
-                  <img
-                    src={`/document-icon-${doc.type}-iconByIcons8.png`}
-                    alt="Custom Marker"
-                    style={{ width: "4vh", height: "4vh" }}
-                  />
-                </div>
-              </OverlayView>
-            )
-        )}
-      </GoogleMap>
-    </>
+        onLoad={setMap}
+      />
+    </section>
   ) : (
-    <></>
+    <div>Loading...</div>
   );
 };
-
-//function MapComponent() {
-// const [map, setMap] = React.useState(null);
-
-// const onLoad = React.useCallback(function callback(map) {
-//   // This is just an example of getting and using the map instance!!! don't just blindly copy!
-//   const bounds = new window.google.maps.LatLngBounds(center)
-//   map.fitBounds(bounds)
-
-//   setMap(map)
-// }, [])
-
-// const onUnmount = React.useCallback(function callback(map) {
-//   setMap(null)
-// }, [])
-//}
 
 export default MapComponent;

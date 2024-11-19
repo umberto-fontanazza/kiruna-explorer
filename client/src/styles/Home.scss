@@ -1,19 +1,19 @@
-@use "variables";
+@use "Color";
 
 .body-container {
-  display: inline-flex;
-  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
   width: 100vw;
   overflow-y: auto;
 
   .table-documents {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 2vh;
 
     th,
     td {
-      padding: 12px;
+      padding: 1vh 1vw;
       text-align: left;
       border-bottom: 1px solid #ddd;
     }
@@ -23,30 +23,23 @@
       color: #333;
     }
 
-    /* Icona documento */
     .doc-icon {
-      width: 24px;
-      height: 24px;
+      width: 2vw;
+      height: 2vw;
     }
 
-    /* Icona info */
     .icon-info {
       cursor: pointer;
-      transition: fill 0.3s ease;
+      background-color: Color.$first;
+      border: 0.1rem solid Color.$first;
       border-radius: 0.5rem;
-      background-color: variables.$first-color;
-      padding: 0.5rem;
+      padding: 0.5vh 0.5vw;
       color: white;
-      border: 0.1rem solid variables.$first-color;
-      cursor: pointer;
-      transition:
-        background-color 0.3s ease,
-        color 0.3s ease;
+      transition: 300ms ease;
 
       &:hover {
-        background: variables.$third-color;
-        color: variables.$first-color;
-        border: 0.1rem solid variables.$first-color;
+        background: Color.$third;
+        color: Color.$first;
       }
     }
   }
@@ -54,27 +47,23 @@
   .map {
     width: 100%;
     height: 92vh;
+    position: relative;
 
     .button-overlay {
       position: absolute;
-      z-index: 1000;
-      bottom: 0.5%;
-      left: 5%;
+      bottom: 5%;
+      left: 1.3%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
 
-      .doc-img {
-        transform: scale(0.7);
-        display: flex;
-      }
-
-      .add-document {
-        display: flex;
-        margin-top: 2%;
-        margin-left: 0.5%;
+      .doc-btn {
         border-radius: 1rem;
-        background-color: variables.$third-color;
-        padding: 0.5rem;
-        color: variables.$first-color;
-        border: 0.1rem solid variables.$first-color;
+        width: 13vw;
+        height: 8vh;
+        background-color: Color.$third;
+        color: Color.$first;
+        border: 0.2rem solid Color.$first;
         cursor: pointer;
         transition:
           background-color 0.3s ease,
@@ -82,168 +71,26 @@
 
         &:hover {
           background-color: #bfbfac;
-          color: variables.$first-color;
-          border: 0.1rem solid variables.$first-color;
-        }
-      }
-    }
-  }
-
-  .sidebar {
-    right: -30%;
-    width: 30%;
-    height: 100vh;
-    background: linear-gradient(38deg, #183d5d, #d9a65f);
-    position: fixed;
-    overflow-x: hidden;
-    transition: right 0.5s;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-direction: column;
-    padding: 10px;
-
-    &.open {
-      right: 0;
-    }
-
-    img {
-      transform: scale(0.7);
-    }
-
-    hr {
-      margin: 1%;
-    }
-
-    .container-btns {
-      display: flex;
-      width: 90%;
-      justify-content: right;
-      margin-top: 5px;
-      gap: 10px;
-
-      .btn-download-sidebar {
-        padding: 3px 5px;
-        background-color: inherit;
-        border: none;
-        border-radius: 23px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-
-        &:hover {
-          background-color: variables.$third-color;
+          color: Color.$first;
         }
 
-        .btn-download-img {
-          height: 25px;
-          padding-bottom: 2px;
-        }
-      }
-
-      .btn-close-sidebar {
-        padding: 3px 3px;
-        background-color: inherit;
-        border: none;
-        border-radius: 23px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-
-        &:hover {
-          background-color: variables.$third-color;
-        }
-
-        .btn-close-img {
-          height: 28px;
-        }
-      }
-    }
-
-    .content {
-      width: 90%;
-      margin-top: 10px;
-      padding: 4px 15px;
-      background-color: #f3f3eb;
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      color: #333;
-      font-size: 1rem;
-      line-height: 1.5;
-      overflow-y: auto;
-      max-height: 80vh;
-
-      p {
-        color: variables.$first-color;
-        margin-bottom: 10px;
-        font-size: 0.9rem;
-      }
-
-      h2,
-      h3 {
-        color: variables.$first-color;
-        font-size: 1.5rem;
-        font-weight: bold;
-      }
-
-      h4 {
-        color: variables.$first-color;
-        font-weight: normal;
-        font-size: medium;
-        a {
-          font-weight: bold;
-        }
-      }
-
-      .connection-group {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        flex-direction: row;
-
-        .btn-add-button {
+        .add-container,
+        .back-container {
           display: flex;
           justify-content: center;
           align-items: center;
-          color: #ddd;
-          background-color: variables.$first-color;
-          padding: 0.7rem;
-          border-radius: 50%;
-          width: 1.5rem;
-          height: 1.5rem;
-          margin-left: 5%;
-          margin-bottom: 2%;
 
-          &:hover {
-            background-color: variables.$second-color;
-            color: variables.$first-color;
+          .material-symbols-outlined {
+            transform: scale(1.3);
+          }
+
+          h4 {
+            font-family: "SwedenSansBold", sans-serif;
+            margin-left: 5%;
+            font-size: 1.3rem;
           }
         }
       }
     }
-  }
-}
-
-// Da eliminare quando ci sarà la mappa e decommentare lo stile sopra
-
-.doc-img {
-  transform: scale(0.7);
-}
-
-.add-document {
-  margin-top: 2%;
-  margin-left: 0.5%;
-  border-radius: 1rem;
-  background-color: variables.$third-color;
-  padding: 0.5rem;
-  color: variables.$first-color;
-  border: 0.1rem solid variables.$first-color;
-  cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    color 0.3s ease;
-
-  &:hover {
-    background-color: #bfbfac;
-    color: variables.$first-color;
-    border: 0.1rem solid variables.$first-color;
   }
 }

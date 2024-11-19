@@ -1,63 +1,51 @@
-@use "variables";
-
-html,
-body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-}
+@use "Color";
 
 .nav-header {
   height: 8vh;
   padding: 1rem 2rem;
   display: flex;
-  background: variables.$main-color;
+  justify-content: space-between;
+  align-items: center;
+  background: Color.$first;
 
-  .nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-
-    .nav-left {
-      display: flex;
-
-      .nav-logo {
-        width: 2.5rem; // Adjust width as needed
-        height: auto;
-        margin-right: 0.5rem;
-        border-radius: 2rem;
-      }
-
-      .nav-brand {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #ddd;
-        display: flex;
-        align-items: center; // Align brand text vertically with the logo
-      }
-    }
+  .brand {
+    font-family: "SwedenSansBold", sans-serif;
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
   }
 
-  .btn-logout,
-  .btn-login {
-    background-color: variables.$first-color;
-    border: 0.1rem solid variables.$first-color;
-    color: #ddd;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
+  .nav-btns {
+    display: flex;
+    gap: 1rem;
+  }
+
+  > :last-child {
+    display: flex;
+    align-items: center;
+    column-gap: 1rem;
+  }
+
+  .user-name {
+    font-family: "SwedenSansBold", sans-serif;
+    color: white;
+    font-size: 1.5rem;
+  }
+
+  button {
+    padding: 0.7rem 1.3rem;
+    font-family: "SwedenSansBold", sans-serif;
+    font-size: 1.5rem;
+    color: white;
+    background-color: Color.$first;
+    border: 0.1rem solid white;
     border-radius: 1rem;
-    cursor: pointer;
-    transition:
-      background-color 0.3s ease,
-      color 0.3s ease;
+    transition: 300ms ease;
 
     &:hover {
-      background: variables.$third-color;
-      color: variables.$first-color;
-      border: 2px solid variables.$first-color;
+      background-color: white;
+      color: Color.$first;
+      border: 0.1rem solid Color.$first;
     }
   }
 }

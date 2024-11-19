@@ -1,81 +1,891 @@
 import dotenv from "dotenv";
 dotenv.config();
+import app from "../src/app";
 import request from "supertest";
 import { Database } from "../src/database";
-import app from "../src/app";
 import { StatusCodes } from "http-status-codes";
+import { DocumentType, Stakeholder } from "../src/model/document";
+import { ScaleType } from "../src/model/scale";
+import { LinkType } from "../src/model/link";
+import { loginAsPlanner, loginAsResident } from "./utils";
 
-// Tests
-describe("API End-to-End Tests", () => {
-  afterAll(async() => {
-    await Database.disconnect();
+// End to end testing
+let plannerCookie: string;
+let residentCookie: string;
+
+beforeAll(async () => {
+  plannerCookie = await loginAsPlanner();
+});
+
+afterAll(async () => {
+  await Database.disconnect();
+});
+
+describe("Testing story 1", () => {
+  const testDocMandatoryFields = {
+    title: "Mandatory Fields test",
+    description: "This one will be tested for mandatory fields",
+    type: DocumentType.Prescriptive,
+    scale: { type: ScaleType.Text },
+  };
+  const testDocAllFields = {
+    title: "Coordinates test",
+    description: "This one will be tested for all fields",
+    type: DocumentType.Informative,
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    stakeholders: [Stakeholder.KirunaKommun],
+    issuanceDate: "2021-12-12",
+    coordinates: { latitude: 45, longitude: 30 },
+  };
+  let testDocId: number;
+  let testDocIdAll: number;
+
+  test("US1.1 POST a document without being Urban Planner", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .send({ ...testDocMandatoryFields });
+    expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
   });
 
-  let testDocID: number;
+  test("US1.2 POST with All fields filled", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDocAllFields });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    testDocIdAll = response.body.id;
+  });
 
-  describe("POST /documents", () => {
-    it("should create a new document", async () => {
+  test("US1.3 POST with only mandatory fields filled", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDocMandatoryFields });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    testDocId = response.body.id;
+  });
+
+  test("US1.4 POST without a title", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({
+        description: "Nice description but the title is missing",
+        type: DocumentType.Prescriptive,
+        scale: { type: ScaleType.Text },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.5 POST missing several mandatory fields", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({
+        coordinates: { latitude: 45, longitude: 30 },
+        stakeholders: [Stakeholder.KirunaKommun],
+        issuanceDate: "2021-12-12",
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.6 POST missing all fields", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({});
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.7 POST with wrong type", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({
+        title: "Title",
+        description: "Description",
+        type: "Wrong type",
+        scale: { type: ScaleType.Text },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.7 POST with wrong description", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({
+        title: "Title",
+        description: 123,
+        type: "Wrong type",
+        scale: { type: ScaleType.Text },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.7 POST with wrong Title", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({
+        title: 123,
+        description: "description",
+        type: "Wrong type",
+        scale: { type: ScaleType.Text },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.7 POST with wrong Scale", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({
+        title: "Title",
+        description: "description",
+        type: "Wrong type",
+        scale: { type: "Wrong scale" },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.8 POST with fillin wrong all fields", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({
+        title: 123,
+        description: 123,
+        type: "Wrong type",
+        scale: { type: "Wrong scale" },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.9 PATCH without being an Urban Planner", async () => {
+    const response = await request(app)
+      .patch("/documents/1")
+      .send({ description: "New shiny description" });
+    expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
+  });
+
+  test("US1.10 PATCH all editable fields", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        title: "New title",
+        description: "This one will be tested for all fields",
+        type: DocumentType.Design,
+        scale: { type: ScaleType.BlueprintsOrEffect },
+        stakeholders: [Stakeholder.Lkab],
+        issuanceDate: "2021-12-30",
+        coordinates: { latitude: 20, longitude: 40 },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+
+  test("US1.11 PATCH only the mandatory fields", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        title: "New title",
+        description: "This one will be tested for all fields",
+        type: DocumentType.Design,
+        scale: { type: ScaleType.Ratio, ratio: 1 },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+
+  test("US1.12 PATCH  all optional fields", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        stakeholders: [Stakeholder.Residents],
+        issuanceDate: "2023-12-30",
+        coordinates: { latitude: 20, longitude: 40 },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+
+  test("US1.13 PATCH just one mandatory field", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        description: "New shiny description",
+      });
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+
+  test("US1.14 PATCH just one optional field", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        stakeholders: [Stakeholder.WhiteArkitekter],
+      });
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+
+  test("US1.15 PATCH without modify anything", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({});
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+
+  test("US1.16 PATCH with negative id", async () => {
+    const response = await request(app)
+      .patch("/documents/-1")
+      .set("Cookie", plannerCookie)
+      .send({
+        description: "New shiny description",
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.16 PATCH with wrong id", async () => {
+    const response = await request(app)
+      .patch("/documents/0")
+      .set("Cookie", plannerCookie)
+      .send({
+        description: "New shiny description",
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.16 PATCH with wrong id", async () => {
+    const response = await request(app)
+      .patch("/documents/5")
+      .set("Cookie", plannerCookie)
+      .send({
+        description: "New shiny description",
+      });
+    expect(response.status).toStrictEqual(StatusCodes.NOT_FOUND);
+  });
+
+  test("US1.17 PATCH with wrong type", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        type: "Wrong type",
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.17 PATCH with wrong description", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        description: 123,
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.17 PATCH with wrong title", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        title: 123,
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.17 PATCH with wrong scale", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        scale: { type: "Wrong scale" },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.17 PATCH with wrong stakeholders", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        stakeholders: ["Wrong stakeholder"],
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.17 PATCH with wrong issuanceDate", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        issuanceDate: "Wrong date",
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.17 PATCH with wrong coordinates", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        coordinates: { latitude: 120, longitude: 40 },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.17 PATCH with wrong coordinates", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        coordinates: { latitude: 45 },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.17 PATCH with wrong coordinates", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        coordinates: { longitude: 60 },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.17 PATCH with wrong coordinates", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        coordinates: { latitude: "Wrong", longitude: 60 },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.17 PATCH with wrong coordinates", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        coordinates: { latitude: 45, longitude: "Wrong" },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.17 PATCH with wrong coordinates", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        coordinates: { latitude: "Wrong", longitude: "Wrong" },
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.18 DELETE without being an Urban Planner", async () => {
+    const response = await request(app).delete(`/documents/${testDocId}`);
+    expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
+  });
+
+  test("US1.19 DELETE an existing document", async () => {
+    const response = await request(app)
+      .del(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+
+    await request(app)
+      .del(`/documents/${testDocIdAll}`)
+      .set("Cookie", plannerCookie);
+  });
+});
+
+describe("Testing story 2", () => {
+  const sourceDocument1 = {
+    title: "Mandatory Fields test",
+    description: "This one will be tested for mandatory fields",
+    type: DocumentType.Prescriptive,
+    scale: { type: ScaleType.Text },
+    stakeholders: [Stakeholder.Residents],
+  };
+  const targetDocument2 = {
+    title: "Coordinates test",
+    description: "This one will be tested for all fields",
+    type: DocumentType.Informative,
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    stakeholders: [Stakeholder.KirunaKommun],
+    issuanceDate: "2021-12-12",
+    coordinates: { latitude: 45, longitude: 30 },
+  };
+  let sourceDocumentId1: number;
+  let targetDocumentId2: number;
+
+  test("US1.2 POST Document 1", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...sourceDocument1 });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    sourceDocumentId1 = response.body.id;
+  });
+
+  test("US1.2 POST Document 2", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...targetDocument2 });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    targetDocumentId2 = response.body.id;
+  });
+
+  test("US2.1 PUT link documents without being Urban Planner", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .send({
+        targetDocumentId: targetDocumentId2,
+        linkTypes: [LinkType.Direct],
+      });
+    expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
+  });
+
+  test("US2.2 PUT link documents", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({
+        targetDocumentId: targetDocumentId2,
+        linkTypes: [LinkType.Direct],
+      });
+    expect(response.status).toStrictEqual(StatusCodes.CREATED);
+  });
+
+  test("US2.3 PUT link documents updating link", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({
+        targetDocumentId: targetDocumentId2,
+        linkTypes: [LinkType.Collateral],
+      });
+    expect(response.status).toStrictEqual(StatusCodes.CREATED);
+  });
+
+  test("US2.4 PUT link documents for a non existing document", async () => {
+    const response = await request(app)
+      .put("/documents/0/links")
+      .set("Cookie", plannerCookie)
+      .send({
+        targetDocumentId: targetDocumentId2,
+        linkTypes: [LinkType.Direct],
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.5 PUT link documents with wrong link type", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: targetDocumentId2, linkTypes: ["Wrong type"] });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.5 PUT link documents with wrong link type", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: targetDocumentId2, linkTypes: [123] });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.6 PUT link documents with wrong target cocument", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: 0, linkTypes: [LinkType.Projection] });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.6 PUT link documents with wrong target cocument", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: "Wrong", linkTypes: [LinkType.Direct] });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.7 PUT link documents without link types", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ targetDocumentId: targetDocumentId2 });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.8 PUT link documents without target document", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({ linkTypes: [LinkType.Direct] });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.9 PUT link documents to the same document", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({
+        targetDocumentId: sourceDocumentId1,
+        linkTypes: [LinkType.Direct],
+      });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.10 GET links for a document", async () => {
+    const response = await request(app).get(
+      `/documents/${sourceDocumentId1}/links`,
+    );
+    expect(response.status).toStrictEqual(StatusCodes.OK);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body.length).toBe(1);
+  });
+
+  test("US2.11 GET links for a document", async () => {
+    const response = await request(app)
+      .get(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.OK);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body.length).toBe(1);
+  });
+
+  test("US2.12 GET links for a non existing document", async () => {
+    const response = await request(app)
+      .get("/documents/0/links")
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US2.13 DELETE link between documents without being Urban Planner", async () => {
+    const response = await request(app).delete(
+      `/documents/${sourceDocumentId1}/links`,
+    );
+    expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
+  });
+});
+
+describe("Testing story 3 and 5", () => {
+  const testDoc = {
+    title: "Coordinates test",
+    description: "This one will be tested with coordinates",
+    scale: { type: ScaleType.Text },
+    type: DocumentType.Informative,
+    issuanceDate: "2021-12-12",
+  };
+  const wrongCoordinates = {
+    latitude: 120,
+    longitude: 40,
+  };
+  const wrongCoordinates2 = {
+    latitude: 45,
+    longitude: 190,
+  };
+  const wrongCoordinates3 = {
+    latitude: "Wrong",
+    longitude: 40,
+  };
+  const wrongCoordinates4 = {
+    latitude: 45,
+    longitude: "Wrong",
+  };
+  const missingLon = {
+    latitude: 45,
+  };
+  const missingLat = {
+    longitude: 60,
+  };
+  const coordinates = {
+    latitude: 45,
+    longitude: 30,
+  };
+  let testDocId: number;
+
+  test("US3.1 POST with georeference without being an Urban Planner", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .send({ ...testDoc, coordinates });
+    expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
+  });
+
+  test("US3.2 POST with coordinates success", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDoc, coordinates });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    testDocId = response.body.id;
+  });
+
+  test("US3.3 POST with coordinates wrong", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDoc, wrongCoordinates });
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.3 POST with coordinates wrong", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDoc, wrongCoordinates });
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.3 POST with coordinates wrong", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDoc, wrongCoordinates2 });
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.3 POST with coordinates wrong", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDoc, wrongCoordinates3 });
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.3 POST with coordinates wrong", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDoc, wrongCoordinates4 });
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.4 POST with incomplete coordinates", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDoc, missingLon });
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.4 POST with incomplete coordinates", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDoc, missingLat });
+    expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.5 PATCH with coordinates success", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({ coordinates: { latitude: 45, longitude: 20 } });
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+
+  test("US3.6 PATCH with coordinates wrong", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({ coordinates: { latitude: 200, longitude: 20 } });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.6 PATCH with coordinates wrong", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({ coordinates: { latitude: 45, longitude: 200 } });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.6 PATCH with coordinates wrong", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({ coordinates: { latitude: "Wrong", longitude: 20 } });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.6 PATCH with coordinates wrong", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({ coordinates: { latitude: 45, longitude: "Wrong" } });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.6 PATCH with coordinates wrong", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({ coordinates: { latitude: "Wrong", longitude: "Wrong" } });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.7 PATCH with incomplete coordinates", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({ coordinates: { latitude: 45 } });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US3.7 PATCH with incomplete coordinates", async () => {
+    const response = await request(app)
+      .patch(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie)
+      .send({ coordinates: { longitude: 60 } });
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("DELETE with coordinates success", async () => {
+    const response = await request(app)
+      .del(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+});
+
+describe("Testing story 4", () => {
+  const testDocAllFields = {
+    title: "Coordinates test",
+    description: "This one will be tested for story 4",
+    type: DocumentType.Informative,
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    stakeholders: [Stakeholder.KirunaKommun],
+    issuanceDate: "2021-12-12",
+    coordinates: { latitude: 45, longitude: 30 },
+  };
+  let testDocId: number;
+
+  test("POST with All fields filled", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDocAllFields });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    testDocId = response.body.id;
+  });
+
+  describe("Urban Planner", () => {
+    afterAll(async () => {
+      await request(app).delete("/current/");
+    });
+
+    test("US 4.1 GET all documents as Urban Planner", async () => {
       const response = await request(app)
-        .post("/documents")
-        .send({
-          title: "Test Document",
-          description: "This is a test document",
-        });
-      expect(response.status).toBe(StatusCodes.CREATED);
-      expect(typeof response.body.id).toEqual("number");
-      testDocID = response.body.id;
+        .get("/documents/")
+        .set("Cookie", plannerCookie);
+      expect(response.status).toStrictEqual(StatusCodes.OK);
+      expect(response.body).toBeInstanceOf(Array);
     });
-  });
 
-  describe("GET /documents", () => {
-    it("should retrieve all documents", async () => {
-      const response = await request(app).get("/documents");
-      expect(response.status).toBe(StatusCodes.OK);
-      expect(response.body.length).toBeGreaterThanOrEqual(1);
-    });
-  });
-
-  describe("GET /documents/:id", () => {
-    it("should retrieve a specific document", async () => {
-      const response = await request(app).get(`/documents/${testDocID}`);
-      expect(response.status).toBe(StatusCodes.OK);
-      expect(response.body.id).toBe(testDocID);
-    });
-    
-    // it("should return 404 when document is not found", async () => {
-    //   const response = await request(app).get("/documents/900");
-    //   expect(response.status).toBe(StatusCodes.NOT_FOUND);
-    // });
-  });
-
-  describe("PATCH /documents/:id", () => {
-    it("should update a document", async () => {
+    test("US 4.4 GET with ID as a Urban Planner", async () => {
       const response = await request(app)
-        .patch(`/documents/${testDocID}`)
-        .send({ title: "Updated Test Document" });
-      expect(response.status).toBe(StatusCodes.NO_CONTENT);
-  
-      const updatedResponse = await request(app).get(`/documents/${testDocID}`);
-      expect(updatedResponse.body.title).toBe("Updated Test Document");
+        .get(`/documents/${testDocId}`)
+        .set("Cookie", plannerCookie);
+      expect(response.status).toStrictEqual(StatusCodes.OK);
     });
 
-    // it("should return 404 when document is not found", async () => {
-    //   const response = await request(app)
-    //     .patch("/documents/999")
-    //     .send({ title: "Updated Test Document" });
-    //   expect(response.status).toBe(StatusCodes.NOT_FOUND);
-    // });
+    test("US 4.7 GET with non existing ID as Urban Planner", async () => {
+      const response = await request(app)
+        .get("/documents/5")
+        .set("Cookie", plannerCookie);
+      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+    });
+
+    test("US 4.8 GET with wrong ID as Urban Planner", async () => {
+      const response = await request(app)
+        .get("/documents/-1")
+        .set("Cookie", plannerCookie);
+      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+    });
   });
 
-  describe("DELETE /documents/:id", () => {
-    it("should delete a document", async () => {
-      const response = await request(app).delete(`/documents/${testDocID}`);
-      expect(response.status).toBe(StatusCodes.NO_CONTENT);
+  describe("Visitor", () => {
+    test("US 4.2 GET all documents as Visitor", async () => {
+      const response = await request(app).get("/documents/");
+      expect(response.status).toStrictEqual(StatusCodes.OK);
+      expect(response.body).toBeInstanceOf(Array);
     });
 
-    it("should return 404 when document is not found", async () => {
-      const response = await request(app).delete("/documents/999");
-      expect(response.status).toBe(StatusCodes.NOT_FOUND);
+    test("US 4.5 GET with ID as a Visitor", async () => {
+      const response = await request(app).get(`/documents/${testDocId}`);
+      expect(response.status).toStrictEqual(StatusCodes.OK);
     });
+
+    test("US 4.7 GET with non existing ID as Urban Planner", async () => {
+      const response = await request(app).get("/documents/5");
+      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+    });
+
+    test("US 4.8 GET with wrong ID as Visitor", async () => {
+      const response = await request(app).get("/documents/0");
+      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+    });
+  });
+
+  describe("Resident", () => {
+    beforeAll(async () => {
+      residentCookie = await loginAsResident();
+    });
+
+    test("US 4.3 GET all documents as Resident", async () => {
+      const response = await request(app)
+        .get("/documents/")
+        .set("Cookie", residentCookie);
+      expect(response.status).toStrictEqual(StatusCodes.OK);
+      expect(response.body).toBeInstanceOf(Array);
+    });
+
+    test("US 4.6 GET with ID as a Resident", async () => {
+      const response = await request(app)
+        .get(`/documents/${testDocId}`)
+        .set("Cookie", residentCookie);
+      expect(response.status).toStrictEqual(StatusCodes.OK);
+    });
+    // Verificar si este error esta mal escrito en el documento de document.router
+    test("US 4.7 GET with non existing ID as Urban Planner", async () => {
+      const response = await request(app)
+        .get("/documents/5")
+        .set("Cookie", residentCookie);
+      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+    });
+
+    test("US 4.8 GET with wrong ID as Resident", async () => {
+      const response = await request(app).get("/documents/-20");
+      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+    });
+  });
+
+  test("DELETE with coordinates success", async () => {
+    const response = await request(app)
+      .del(`/documents/${testDocId}`)
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });
 });
