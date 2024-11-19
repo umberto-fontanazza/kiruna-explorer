@@ -12,7 +12,6 @@ import {
 
 const DocumentsList = () => {
   const [documentsList, setDocumentsList] = useState<Document[]>([]);
-  const [isSortedAscending, setIsSortedAscending] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -26,19 +25,6 @@ const DocumentsList = () => {
     };
     fetchDocuments();
   }, []);
-
-  const sortDocumentsByDate = () => {
-    const sortedList = [...documentsList].sort((a, b) => {
-      const dateA = a.issuanceDate?.toDate();
-      const dateB = b.issuanceDate?.toDate();
-      if (!dateA || !dateB) return 0;
-      return isSortedAscending
-        ? dateA.getTime() - dateB.getTime()
-        : dateB.getTime() - dateA.getTime();
-    });
-    setDocumentsList(sortedList);
-    setIsSortedAscending(!isSortedAscending);
-  };
 
   return (
     <>
@@ -54,16 +40,7 @@ const DocumentsList = () => {
               <th>Stakeholders</th>
               <th>Scale</th>
               <th>Coordinates</th>
-              <th>
-                Issuance Date{" "}
-                <span
-                  className="material-symbols-outlined sort-icon"
-                  onClick={sortDocumentsByDate}
-                  style={{ cursor: "pointer" }}
-                >
-                  swap_vert
-                </span>
-              </th>
+              <th>Issuance Date</th>
               <th>Links</th>
             </tr>
           </thead>
