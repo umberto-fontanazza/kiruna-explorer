@@ -1,12 +1,12 @@
-import { FC, useEffect, useState, useContext } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import API from "../API/API";
-import { Document, LinkType, User } from "../utils/interfaces";
-import "../styles/Home.scss";
-import NavHeader from "./NavHeader";
-import ModalForm from "./ModalAddDocument";
-import MapComponent from "./Map";
-import Sidebar from "./Sidebar";
+import MapComponent from "../components/Map";
+import ModalForm from "../components/ModalAddDocument";
+import NavHeader from "../components/NavHeader";
+import Sidebar from "../components/Sidebar";
 import { authContext } from "../context/auth";
+import "../styles/Home.scss";
+import { Document } from "../utils/interfaces";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
@@ -19,13 +19,20 @@ const Home: FC = (): JSX.Element => {
   // State to control modal for adding documents
   const [modalOpen, setModalOpen] = useState<boolean>(false);
 
+  const [visualizeLinks, setVisualizeLinks] = useState<boolean>(false);
+  const [insertMode, setInsertMode] = useState<boolean>(false);
+
+  const [newPosition, setNewPosition] = useState<{ lat: number; lng: number }>({
+    lat: -1,
+    lng: -1,
+  });
+
   // Fetch documents on component mount
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
         const documents: Document[] = await API.getDocuments();
         setDocuments(documents);
-        console.log(documents);
       } catch (err) {
         console.error(err);
       }
@@ -34,20 +41,28 @@ const Home: FC = (): JSX.Element => {
   }, []);
 
   // Handle Add Document button click to open modal
-  const handleAddButton = async () => {
-    setModalOpen(true);
+  const handleAddButton = () => {
+    setInsertMode(true);
+    setSidebarOpen(false);
+  };
+
+  const closeInsertMode = () => {
+    setInsertMode(false);
   };
 
   // Handle form submission for new document
-  const handleAddNewDocument = async (
-    newDocument: Document,
-    targetId: number,
-    linkType: LinkType
-  ) => {
+  const handleAddNewDocument = async (newDocument: Document) => {
     setModalOpen(false);
     const id = await API.addDocument(newDocument);
-    //await API.putLink(targetId, [linkType], id);
-    console.log(id);
+    console.log(newDocument.links);
+    newDocument.links?.forEach(async (link) => {
+      await API.putLink(link.targetDocumentId, id, link.type);
+      documents.map(async (doc) => {
+        if (doc.id === link.targetDocumentId) {
+          doc.links = await API.getLinks(doc.id);
+        }
+      });
+    });
     const updatedDocument = { ...newDocument, id: id };
     setDocuments([...documents, updatedDocument]);
   };
@@ -63,19 +78,36 @@ const Home: FC = (): JSX.Element => {
           {
             <MapComponent
               documents={documents}
+              documentSelected={docSelected}
               setSidebarOpen={setSidebarOpen}
               setDocSelected={setDocSelected}
+              setModalOpen={setModalOpen}
+              setNewPos={setNewPosition}
+              visualLinks={visualizeLinks}
+              insertMode={insertMode}
             />
           }
           {user && (
-            <button className="add-document" onClick={handleAddButton}>
-              <img
-                className="doc-img"
-                src="/add-document-icon.png"
-                alt="Add document icon"
-              ></img>
-              <h4>Add new Document</h4>
-            </button>
+            <div className="button-overlay">
+              <button
+                className="doc-btn"
+                onClick={!insertMode ? handleAddButton : closeInsertMode}
+              >
+                {insertMode ? (
+                  <div className="add-container">
+                    <span className="material-symbols-outlined">
+                      arrow_back
+                    </span>
+                    <h4>Back</h4>
+                  </div>
+                ) : (
+                  <div className="back-container">
+                    <span className="material-symbols-outlined">note_add</span>
+                    <h4>Add new Document</h4>
+                  </div>
+                )}
+              </button>
+            </div>
           )}
         </div>
         {/* Table to see the list of all documents */}
@@ -124,6 +156,8 @@ const Home: FC = (): JSX.Element => {
               setSidebarOpen={setSidebarOpen}
               document={docSelected}
               documents={documents}
+              visualLinks={visualizeLinks}
+              setVisualLinks={setVisualizeLinks}
               setDocuments={setDocuments}
               setDocument={setDocSelected}
             />
@@ -137,6 +171,8 @@ const Home: FC = (): JSX.Element => {
         onClose={() => setModalOpen(false)}
         onSubmit={handleAddNewDocument}
         documents={documents}
+        newPos={newPosition}
+        closeInsertMode={closeInsertMode}
       />
     </>
   );

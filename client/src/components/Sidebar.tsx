@@ -1,15 +1,24 @@
 import { FC, useState, useContext } from "react";
-import { Document, Link } from "../utils/interfaces";
-import ModalAddConnection from "../components/ModalAddConnection";
+import {
+  Document,
+  documentTypeDisplay,
+  fromDocumentTypeToIcon,
+  Link,
+  ScaleType,
+  scaleTypeDisplay,
+  stakeholderDisplay,
+} from "../utils/interfaces";
+import ModalAddLinks from "./ModalAddLinks";
 import "../styles/Sidebar.scss";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import "@material/web/icon/_icon.scss";
-import dayjs from "dayjs";
 import { authContext } from "../context/auth";
 
 interface SidebarProps {
   document: Document | null;
   documents: Document[];
+  visualLinks: boolean;
+  setVisualLinks: (visual: boolean) => void;
   setSidebarOpen: (isOpen: boolean) => void;
   setDocument: (doc: Document) => void;
   setDocuments: (docs: Document[]) => void;
@@ -17,27 +26,22 @@ interface SidebarProps {
 
 const Sidebar: FC<SidebarProps> = (props) => {
   const { user } = useContext(authContext);
-  // State for controlling the modal for adding connections
+  // State for controlling the modal for adding links
   const [modalConnectionOpen, setModalConnectionOpen] = useState(false);
-
-  // Function to open modal for adding connections
-  const handleModalOpenConnection = () => {
-    setModalConnectionOpen(true);
-  };
 
   // Handle adding a new connection link
   const handleAddNewConnection = async (newLink: Link) => {
     if (props.document?.id) {
       // Uncomment this line if you want to save the link via an API call
       /*await API.putLink(
+          props.document?.id,
           newLink.targetDocumentId,
-          newLink.type,
-          props.document?.id
+          [newLink.type]
         );*/
 
       const updateDocument = {
         ...props.document,
-        connections: [...props.document.connections, newLink],
+        links: [...(props.document.links || []), newLink],
       };
 
       props.setDocument(updateDocument);
@@ -79,56 +83,93 @@ const Sidebar: FC<SidebarProps> = (props) => {
 
       {/* Sidebar Content */}
       <div className="content">
-        <img
-          src={`/document-${props.document?.type}-icon.png`}
-          alt="Under Construction"
-        />
+        <span
+          className={`material-symbols-outlined color-${fromDocumentTypeToIcon.get(props.document?.type)} size`}
+        >
+          {fromDocumentTypeToIcon.get(props.document?.type)}
+        </span>
         <hr />
         <h3>{props.document?.title}</h3>
         <p>{props.document?.description}</p>
         <hr />
         <h4>
-          Stakeholders:{" "}
-          {props.document?.stakeholders?.map((s, index) => (
-            <a key={`${props.document?.id}-${index}`}>{s} </a>
-          ))}
+          Stakeholders:&nbsp;
+          {props.document?.stakeholders ? (
+            props.document?.stakeholders?.map((s, index, arr) => (
+              <span key={`${props.document?.id}-${index}`}>
+                {stakeholderDisplay[s]}
+                {index < arr.length - 1 ? ", " : ""}
+              </span>
+            ))
+          ) : (
+            <span>-</span>
+          )}
         </h4>
         <h4>
-          Scale: <a>{props.document?.scale}</a>
+          Scale:&nbsp;
+          <span>
+            {props.document?.scale.type &&
+              props.document?.scale.type !== ScaleType.Ratio &&
+              scaleTypeDisplay[props.document.scale.type]}
+            {props.document?.scale.type &&
+              props.document?.scale.type === ScaleType.Ratio &&
+              `1:${props.document.scale.ratio}`}
+          </span>
+        </h4>
+
+        <h4>
+          Issuance Date:&nbsp;
+          <span>
+            {props.document?.issuanceDate?.isValid()
+              ? props.document?.issuanceDate?.format("MMMM D, YYYY")
+              : "-"}
+          </span>
         </h4>
         <h4>
-          Issuance Date:{" "}
-          <a>{props.document?.issuanceDate?.format("DD/MM/YYYY")}</a>
-        </h4>
-        <h4>
-          Type: <a>{props.document?.type}</a>
+          Type:{" "}
+          <span>
+            {props.document?.type && documentTypeDisplay[props.document?.type]}
+          </span>
         </h4>
         <div className="connection-group">
           <h4>
-            Links: <a>{props.document?.connections?.length}</a>
+            Links: <span>{props.document?.links?.length || 0}</span>
           </h4>
-          {user && (
-            <button className="see-links" onClick={handleModalOpenConnection}>
-              <span className="material-symbols-outlined dark">visibility</span>
-            </button>
-          )}
+          {user &&
+            props.document?.links &&
+            props.document?.links.length > 0 && (
+              <button
+                className={`see-links ${props.visualLinks ? "fill" : "no-fill"}`}
+                onClick={() =>
+                  props.visualLinks
+                    ? props.setVisualLinks(false)
+                    : props.setVisualLinks(true)
+                }
+              >
+                <span
+                  className={`material-symbols-outlined dark ${props.visualLinks ? "fill" : "no-fill"}`}
+                >
+                  visibility
+                </span>
+              </button>
+            )}
         </div>
-
+        <button className="btn-edit">Edit Document</button>
         {/* <h4>
-          Language: <a>{props.document?.language}</a>
+          Language: <span>{props.document?.language}</span>
         </h4> */}
         {/* <h4>
-          Pages: <a>{props.document?.pages}</a>
+          Pages: <span>{props.document?.pages}</span>
         </h4> */}
       </div>
-      {/* Modal for adding new connections */}
+      {/* Modal for adding new links */}
       {modalConnectionOpen && (
-        <ModalAddConnection
+        <ModalAddLinks
           documents={props.documents}
           document={props.document}
           onClose={() => setModalConnectionOpen(false)}
           onSubmit={handleAddNewConnection}
-        ></ModalAddConnection>
+        ></ModalAddLinks>
       )}
     </>
   );

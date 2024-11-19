@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import { Link, LinkResponseBody } from "../model/link";
 import { StatusCodes } from "http-status-codes";
 import {
+  checkSelfLink,
   validateBody,
   validateQueryParameters,
   validateRequestParameters,
@@ -30,6 +31,7 @@ linkRouter.put(
   isPlanner,
   validateRequestParameters(idRequestParam),
   validateBody(putBody),
+  checkSelfLink,
   async (request: Request, response: Response) => {
     const sourceDocumentId = Number(request.params.id);
     const body = request.body as PutBody;

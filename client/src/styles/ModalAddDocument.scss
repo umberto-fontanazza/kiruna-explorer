@@ -35,7 +35,7 @@
       border: 2px solid Color.$first;
       border-radius: 50%;
       position: absolute;
-      top: 9.1%;
+      top: 6.8%;
       left: 72.5%;
       border-radius: 50%;
       width: 2vw;
@@ -44,6 +44,7 @@
       justify-content: center;
       align-items: center;
       display: flex;
+      cursor: pointer;
 
       &:hover {
         background: Color.$first-hover;
@@ -67,7 +68,7 @@
 
       label {
         font-family: "SwedenSansBold", sans-serif;
-        font-size: 1rem;
+        font-size: 1.3rem !important;
         font-weight: bold;
         color: Color.$first;
       }
@@ -81,6 +82,7 @@
 
       input,
       textarea {
+        font-family: "SwedenSans", sans-serif;
         padding: 0.8vh 1ch;
         border: 1px solid #ddd;
         border-radius: 8px;
@@ -93,7 +95,7 @@
         border: 1px solid #ddd;
         border-radius: 8px;
         font-size: 1rem;
-        color: #333;
+        color: white;
         background-color: #fff;
       }
 
@@ -147,7 +149,7 @@
           border: 1px solid #ddd;
           border-radius: 8px;
           font-size: 1rem;
-          color: Color.$first;
+          color: gray !important;
 
           &:focus {
             border-color: Color.$first;
@@ -157,12 +159,11 @@
 
         select {
           font-family: "SwedenSans", sans-serif;
-          color: Color.$first !important;
           padding: 1vh;
           border: 1px solid #ddd;
           border-radius: 8px;
           font-size: 1rem;
-          color: #333;
+          color: grey !important;
           background-color: #fff;
 
           &:focus {
@@ -257,8 +258,8 @@
         border: 0.1rem solid Color.$first;
 
         &:hover {
-          background: Color.$third;
-          color: Color.$first;
+          background-color: Color.$first-hover;
+          color: white;
         }
       }
     }
@@ -283,130 +284,158 @@
   z-index: 1000;
 
   .modal-content-2 {
-    background: #f3f3eb;
+    background: #e8e3d1 !important;
     border-radius: 16px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.25);
     width: 60% !important;
     height: 90vh !important;
+    max-width: 80vw !important;
+    max-height: 100vh;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2vh;
 
     h2 {
-      font-size: 1.8rem;
-      font-weight: bold;
+      font-family: "SwedenSansBold", sans-serif;
+      font-size: 3rem !important;
       color: Color.$first;
-      margin-bottom: 2vh;
+      margin-bottom: 2rem;
       text-align: center;
     }
 
     .close-button-2 {
       background-color: Color.$first;
-      color: white;
-      border: 0.1rem solid Color.$first;
-      position: absolute;
-      top: 2%;
-      right: 2%;
+      color: Color.$third;
+      border: 2px solid Color.$first;
       border-radius: 50%;
+      position: absolute;
+      top: 8%;
+      left: 76%;
       width: 2vw;
       height: 2vw;
-      cursor: pointer;
       transition: background-color 0.3s;
+      justify-content: center;
+      align-items: center;
+      display: flex;
 
       &:hover {
-        background: Color.$third;
-        color: Color.$first;
+        background: Color.$first-hover;
       }
 
-      .btn-close-img {
-        height: 1.5vh;
+      img {
+        transform: scale(0.2);
       }
     }
-
-    form {
+    .second-page-body {
       display: flex;
       flex-direction: column;
-      gap: 1vh;
-
-      .search-container {
-        display: flex;
-        align-items: center;
-      }
-
-      .form-group {
+      justify-content: space-between;
+      background-color: transparent;
+      align-items: center;
+      width: 100%;
+      height: 80%;
+      .links-table-container {
+        position: relative;
         display: flex;
         flex-direction: column;
+        align-items: center;
         width: 100%;
+        height: 70%;
+        overflow: auto;
 
-        label {
-          font-size: 1rem;
-          font-weight: bold;
-          color: Color.$first;
-        }
-
-        input,
-        textarea {
-          padding: 1vh;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          font-size: 1rem;
-          color: Color.$first;
-
-          &:focus {
-            border-color: Color.$second;
-            outline: none;
-          }
-        }
-
-        select {
-          padding: 1vh;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          font-size: 1rem;
-          color: #333;
-          background-color: #fff;
-
-          &:focus {
-            border-color: Color.$second;
-            outline: none;
-          }
-        }
-      }
-
-      .line {
-        display: flex;
-        gap: 1rem;
-
-        .form-group-2 {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
+        .table-wrapper {
+          position: absolute;
+          top: -2px;
           width: 100%;
+          max-height: 57vh;
+          overflow-y: auto;
+        }
+
+        h3 {
+          font-size: medium;
         }
       }
 
-      .button-group-2 {
-        display: flex;
+      .bottom-group {
+        flex-direction: column;
+        width: 80%;
+        display: inline-flex;
         justify-content: space-between;
         gap: 1rem;
+        position: relative;
+        align-items: center;
 
-        .submit-button-2,
-        .cancel-button-2 {
-          flex: 1;
-          padding: 0.75rem;
-          font-weight: bold;
+        button,
+        select,
+        input {
           border-radius: 8px;
-          cursor: pointer;
-          transition: background-color 0.3s ease;
-          text-align: center;
+          padding: 10px;
+          z-index: 1000;
+        }
+        input {
+          width: 80%;
+          font-size: 16px;
         }
 
-        .submit-button-2 {
-          background-color: Color.$first;
-          color: white;
-          border: 0.1rem solid Color.$first;
+        .form-group {
+          position: absolute;
+          bottom: 85%;
+          left: 0;
+          right: 0;
+          border: 1px solid #ddd;
+          background-color: white;
+          z-index: 999;
+          max-height: 700%;
+          overflow-y: auto;
+          width: 60.5%;
+          padding-bottom: 1%;
 
-          &:hover {
-            background: Color.$third;
-            color: Color.$first;
+          .suggestion-item {
+            padding: 6px;
+            cursor: pointer;
+
+            &:hover {
+              background-color: Color.$third;
+            }
+          }
+
+          button {
+            width: 20%;
+          }
+        }
+
+        .button-group-2 {
+          position: static;
+          bottom: 5%;
+          width: 100%;
+
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+          gap: 1rem;
+
+          .submit-button-2,
+          .cancel-button-2 {
+            flex: 1;
+            padding: 0.75rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+          }
+
+          .submit-button-2 {
+            background-color: Color.$first;
+            color: white;
+            border: 0.1rem solid Color.$first;
+
+            &:hover {
+              background: Color.$third;
+              color: Color.$first;
+            }
           }
         }
       }
@@ -417,8 +446,11 @@
 .progress-bar {
   display: flex;
   align-items: center;
+  align-content: center;
   justify-content: space-between;
   margin-bottom: 2rem;
+  width: 90%;
+  align-self: center;
 }
 
 .step {

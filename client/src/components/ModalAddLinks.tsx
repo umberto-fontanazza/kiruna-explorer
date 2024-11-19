@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
-import { Document, Link, LinkType } from "../utils/interfaces";
 import "../styles/ModalConnections.scss";
+import { Document, Link, LinkType } from "../utils/interfaces";
 
 interface ModalConnectionProps {
   documents: Document[];
@@ -9,7 +9,7 @@ interface ModalConnectionProps {
   onSubmit: (newLink: Link) => void;
 }
 
-const ModalAddConnection: FC<ModalConnectionProps> = ({
+const ModalAddLinks: FC<ModalConnectionProps> = ({
   documents,
   document,
   onClose,
@@ -63,32 +63,34 @@ const ModalAddConnection: FC<ModalConnectionProps> = ({
             </select>
           </div>
 
-          {/* Connection Type Selection */}
-          <div className="form-group">
-            <label>Connection Type *</label>
-            <select
-              value={linkType ?? ""}
-              onChange={(e) => setLinkType(e.target.value as LinkType)}
-              required
-            >
-              <option value="" disabled>
-                Select the Connection's type
-              </option>
-              <option value="direct">Direct</option>
-              <option value="collateral">Collateral</option>
-              <option value="projection">Projection</option>
-              <option value="update">Update</option>
-            </select>
-          </div>
+          <div className="input-wrapper">
+            {/* Connection Type Selection */}
+            <div className="form-group">
+              <label>Connection Type *</label>
+              <select
+                value={linkType ?? ""}
+                onChange={(e) => setLinkType(e.target.value as LinkType)}
+                required
+              >
+                <option value="" disabled>
+                  Select the Connection's type
+                </option>
+                <option value="direct">Direct</option>
+                <option value="collateral">Collateral</option>
+                <option value="projection">Projection</option>
+                <option value="update">Update</option>
+              </select>
+            </div>
 
-          {/* Form Buttons */}
-          <div className="button-group">
-            <button className="submit-button" type="submit">
-              Add Document
-            </button>
-            <button className="cancel-button" type="button" onClick={onClose}>
-              Cancel
-            </button>
+            {/* Form Buttons */}
+            <div className="button-group">
+              <button className="submit-button" type="submit">
+                Add Document
+              </button>
+              <button className="cancel-button" type="button" onClick={onClose}>
+                Cancel
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -96,4 +98,4 @@ const ModalAddConnection: FC<ModalConnectionProps> = ({
   );
 };
 
-export default ModalAddConnection;
+export default ModalAddLinks;

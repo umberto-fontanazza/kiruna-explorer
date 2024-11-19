@@ -77,21 +77,22 @@
     }
 
     p {
-      font-size: 1.1rem;
-      margin-bottom: 1vh;
+      font-family: "SwedenSans", sans-serif;
+      font-size: 1.2rem;
+      margin-bottom: 0.1vh;
     }
 
     h2,
     h3 {
       font-family: "SwedenSansBold", sans-serif;
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: bold;
     }
 
     h4 {
       font-weight: normal;
       font-size: 1.3rem;
-      a {
+      span {
         font-family: "SwedenSansBold", sans-serif;
         font-weight: bold;
       }
@@ -122,7 +123,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-left: 30%;
+        margin-left: 2%;
         padding: 3px 3px;
         background-color: inherit;
         border: 0.2rem solid Color.$first;
@@ -130,19 +131,53 @@
         cursor: pointer;
         transition: background-color 0.3s;
 
-        &:hover {
+        &.fill {
           background-color: Color.$first;
-          color: white;
+
+          &:hover {
+            background-color: Color.$first-hover;
+            border-color: Color.$first-hover;
+          }
+        }
+
+        &.no-fill {
+          &:hover {
+            background-color: Color.$first;
+          }
         }
 
         .dark {
           color: Color.$first;
 
-          &:hover {
+          &.fill {
             color: white;
-            border: 0.2rem Color.$first;
+          }
+
+          &.no-fill {
+            &:hover {
+              color: white;
+              border: 0.2rem Color.$first;
+            }
           }
         }
+      }
+    }
+    .btn-edit {
+      width: 100%;
+      margin-top: 4%;
+      flex: 1;
+      padding: 0.75rem;
+      font-weight: bold;
+      border-radius: 8px;
+      background-color: Color.$first;
+      color: white;
+      font-family: "SwedenSansBold", sans-serif;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      text-align: center;
+
+      &:hover {
+        background-color: Color.$first-hover;
       }
     }
   }

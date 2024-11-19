@@ -15,8 +15,8 @@
 @font-face {
   font-family: "SwedenSans";
   src:
-    url("../assets/fonts/SwedenSansRegular.woff2") format("woff2"),
-    /* Modern Browsers */ url("../assets/fonts/SwedenSansRegular.otf")
+    url("../assets/fonts/SwedenSansBook.woff2") format("woff2"),
+    /* Modern Browsers */ url("../assets/fonts/SwedenSansBook.otf")
       format("opentype");
   font-style: normal;
   font-weight: bold;
@@ -48,11 +48,33 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: Color.$main;
-  border-radius: 10px;
-  border: 3px solid #f0f4f8;
+  background: Color.$first;
+  border-radius: 1rem;
+  border: 0.2rem solid #f0f4f8;
 }
 
 ::-webkit-scrollbar-thumb:hover {
   background: Color.$dark-main;
+}
+
+button {
+  cursor: pointer;
+}
+
+.color-design_services {
+  color: gray;
+}
+
+.color-construction {
+  color: blueviolet;
+}
+
+.color-info {
+  color: rgb(66, 66, 246);
+}
+.color-settings {
+  color: red;
+}
+.color-find_in_page {
+  color: green;
 }
