@@ -544,7 +544,7 @@ describe("Testing story 2", () => {
       .set("Cookie", plannerCookie)
       .send({ targetDocumentId: sourceDocumentId1, 
               linkTypes: [LinkType.Direct] });
-    expect(response.status).toStrictEqual(StatusCodes.CREATED);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
   test("US2.10 GET links for a document", async () => {
@@ -552,7 +552,7 @@ describe("Testing story 2", () => {
       .get(`/documents/${sourceDocumentId1}/links`);
     expect(response.status).toStrictEqual(StatusCodes.OK);
     expect(response.body).toBeInstanceOf(Array);
-    expect(response.body.length).toBe(2);
+    expect(response.body.length).toBe(1);
   });
 
   test("US2.11 GET links for a document", async () => {
@@ -561,7 +561,7 @@ describe("Testing story 2", () => {
       .set("Cookie", plannerCookie);
     expect(response.status).toStrictEqual(StatusCodes.OK);
     expect(response.body).toBeInstanceOf(Array);
-    expect(response.body.length).toBe(2);
+    expect(response.body.length).toBe(1);
   });
 
   test("US2.12 GET links for a non existing document", async () => {
