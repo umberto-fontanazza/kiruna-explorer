@@ -76,3 +76,5 @@
 8. View a document with a wrong ID as a Visitor/Urban Planner/Resident. DONE (BAD_REQUEST)
 
 ## US 5. As an Urban Planner I want to adjust/define the georeferencing of a document on the map So that I can study its relationship to the territory
+
+## US 6. As an Urban Planner I want to list all documents
