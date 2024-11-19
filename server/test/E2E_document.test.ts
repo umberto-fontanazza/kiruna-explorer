@@ -454,8 +454,10 @@ describe("Testing story 2", () => {
   test("US2.1 PUT link documents without being Urban Planner", async () => {
     const response = await request(app)
       .put(`/documents/${sourceDocumentId1}/links`)
-      .send({ targetDocumentId: targetDocumentId2, 
-              linkTypes: [LinkType.Direct] });
+      .send({
+        targetDocumentId: targetDocumentId2,
+        linkTypes: [LinkType.Direct],
+      });
     expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
   });
 
@@ -463,8 +465,10 @@ describe("Testing story 2", () => {
     const response = await request(app)
       .put(`/documents/${sourceDocumentId1}/links`)
       .set("Cookie", plannerCookie)
-      .send({ targetDocumentId: targetDocumentId2, 
-              linkTypes: [LinkType.Direct] });
+      .send({
+        targetDocumentId: targetDocumentId2,
+        linkTypes: [LinkType.Direct],
+      });
     expect(response.status).toStrictEqual(StatusCodes.CREATED);
   });
 
@@ -472,8 +476,10 @@ describe("Testing story 2", () => {
     const response = await request(app)
       .put(`/documents/${sourceDocumentId1}/links`)
       .set("Cookie", plannerCookie)
-      .send({ targetDocumentId: targetDocumentId2, 
-              linkTypes: [LinkType.Collateral] });
+      .send({
+        targetDocumentId: targetDocumentId2,
+        linkTypes: [LinkType.Collateral],
+      });
     expect(response.status).toStrictEqual(StatusCodes.CREATED);
   });
 
@@ -481,8 +487,10 @@ describe("Testing story 2", () => {
     const response = await request(app)
       .put("/documents/0/links")
       .set("Cookie", plannerCookie)
-      .send({ targetDocumentId: targetDocumentId2, 
-              linkTypes: [LinkType.Direct] });
+      .send({
+        targetDocumentId: targetDocumentId2,
+        linkTypes: [LinkType.Direct],
+      });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
@@ -490,8 +498,7 @@ describe("Testing story 2", () => {
     const response = await request(app)
       .put(`/documents/${sourceDocumentId1}/links`)
       .set("Cookie", plannerCookie)
-      .send({ targetDocumentId: targetDocumentId2, 
-              linkTypes: ["Wrong type"] });
+      .send({ targetDocumentId: targetDocumentId2, linkTypes: ["Wrong type"] });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
@@ -499,8 +506,7 @@ describe("Testing story 2", () => {
     const response = await request(app)
       .put(`/documents/${sourceDocumentId1}/links`)
       .set("Cookie", plannerCookie)
-      .send({ targetDocumentId: targetDocumentId2, 
-              linkTypes: [123] });
+      .send({ targetDocumentId: targetDocumentId2, linkTypes: [123] });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
@@ -508,8 +514,7 @@ describe("Testing story 2", () => {
     const response = await request(app)
       .put(`/documents/${sourceDocumentId1}/links`)
       .set("Cookie", plannerCookie)
-      .send({ targetDocumentId: 0, 
-              linkTypes: [LinkType.Projection] });
+      .send({ targetDocumentId: 0, linkTypes: [LinkType.Projection] });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
@@ -517,8 +522,7 @@ describe("Testing story 2", () => {
     const response = await request(app)
       .put(`/documents/${sourceDocumentId1}/links`)
       .set("Cookie", plannerCookie)
-      .send({ targetDocumentId: "Wrong", 
-              linkTypes: [LinkType.Direct] });
+      .send({ targetDocumentId: "Wrong", linkTypes: [LinkType.Direct] });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
@@ -542,14 +546,17 @@ describe("Testing story 2", () => {
     const response = await request(app)
       .put(`/documents/${sourceDocumentId1}/links`)
       .set("Cookie", plannerCookie)
-      .send({ targetDocumentId: sourceDocumentId1, 
-              linkTypes: [LinkType.Direct] });
+      .send({
+        targetDocumentId: sourceDocumentId1,
+        linkTypes: [LinkType.Direct],
+      });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
   test("US2.10 GET links for a document", async () => {
-    const response = await request(app)
-      .get(`/documents/${sourceDocumentId1}/links`);
+    const response = await request(app).get(
+      `/documents/${sourceDocumentId1}/links`,
+    );
     expect(response.status).toStrictEqual(StatusCodes.OK);
     expect(response.body).toBeInstanceOf(Array);
     expect(response.body.length).toBe(1);
@@ -572,11 +579,11 @@ describe("Testing story 2", () => {
   });
 
   test("US2.13 DELETE link between documents without being Urban Planner", async () => {
-    const response = await request(app)
-      .delete(`/documents/${sourceDocumentId1}/links`);
+    const response = await request(app).delete(
+      `/documents/${sourceDocumentId1}/links`,
+    );
     expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
   });
-
 });
 
 describe("Testing story 3", () => {
