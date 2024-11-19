@@ -30,11 +30,11 @@ describe("Database", () => {
     Database.setup();
 
     expect(Pool).toHaveBeenCalledWith({
-      host: "localhost",
-      port: 5432,
-      user: "user",
-      password: "password",
-      database: "testdb",
+      host: process.env.TEST_DB_HOST,
+      port: process.env.TEST_DB_PORT,
+      user: process.env.TEST_DB_HOST,
+      password: process.env.TEST_DB_HOST,
+      database: process.env.TEST_DB_HOST,
     });
   });
 

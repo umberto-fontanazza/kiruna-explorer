@@ -2,6 +2,9 @@ import { User, UserRole } from "../src/model/user";
 import { Database } from "../src/database";
 import crypto from "crypto";
 
+import dotenv from 'dotenv'; 
+dotenv.config(); 
+
 jest.mock("../src/database", () => ({
   Database: {
     query: jest.fn(),
@@ -20,12 +23,12 @@ jest.mock("crypto", () => ({
 
 describe("User Class", () => {
   const testUser = new User(
-    "test@example.com",
-    "John",
-    "Doe",
+    process.env.TEST_EMAIL,
+    process.env.TEST_NAME,
+    process.env.TEST_SURNAME,
     UserRole.Planner,
   );
-  const testPassword = "password123";
+  const testPassword = process.env.TEST_PASSWORD;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -40,9 +43,9 @@ describe("User Class", () => {
       expect(Database.query).toHaveBeenCalledWith(
         expect.stringContaining('INSERT INTO "user"'),
         expect.arrayContaining([
-          "test@example.com",
-          "John",
-          "Doe",
+          process.env.TEST_EMAIL,
+          process.env.TEST_NAME,
+          process.env.TEST_SURNAME,
           expect.any(Buffer),
           expect.any(Buffer),
           UserRole.Planner,
@@ -63,9 +66,9 @@ describe("User Class", () => {
   describe("login()", () => {
     it("should return a User object if login is successful", async () => {
       const dbUserRow = {
-        email: "test@example.com",
-        name: "John",
-        surname: "Doe",
+        process.env.TEST_EMAIL,
+        process.env.TEST_NAME,
+        process.env.TEST_SURNAME,
         role: UserRole.Planner.toString(),
         salt: Buffer.from("randomsalt"),
         password_hash: Buffer.from("hashedpassword"),
@@ -82,9 +85,9 @@ describe("User Class", () => {
 
     it("should return false if login fails due to incorrect password", async () => {
       const dbUserRow = {
-        email: "test@example.com",
-        name: "John",
-        surname: "Doe",
+        process.env.TEST_EMAIL,
+        process.env.TEST_NAME,
+        process.env.TEST_SURNAME,
         role: UserRole.Planner.toString(),
         salt: Buffer.from("randomsalt"),
         password_hash: Buffer.from("wronghashedpassword"),
@@ -114,7 +117,7 @@ describe("User Class", () => {
       );
 
       await expect(
-        User.login("test@example.com", testPassword),
+        User.login(process.env.TEST_EMAIL, testPassword),
       ).rejects.toThrow("Hashing error");
     });
   });
@@ -122,25 +125,25 @@ describe("User Class", () => {
   describe("getByEmail()", () => {
     it("should return a user by email", async () => {
       const dbUserRow = {
-        email: "test@example.com",
-        name: "John",
-        surname: "Doe",
+        process.env.TEST_EMAIL,
+        process.env.TEST_NAME,
+        process.env.TEST_SURNAME,
         role: UserRole.Planner.toString(),
       };
       (Database.query as jest.Mock).mockResolvedValueOnce({
         rows: [dbUserRow],
       });
 
-      const user = await User.getByEmail("test@example.com");
+      const user = await User.getByEmail(process.env.TEST_EMAIL);
 
       expect(user).toBeInstanceOf(User);
-      expect(user?.email).toBe("test@example.com");
+      expect(user?.email).toBe(process.env.TEST_EMAIL);
     });
 
     it("should return undefined if no user is found", async () => {
       (Database.query as jest.Mock).mockResolvedValueOnce({ rows: [] });
 
-      const user = await User.getByEmail("nonexistent@example.com");
+      const user = await User.getByEmail(process.env.TEST_NONEXISTENCE_EMAIL);
 
       expect(user).toBeUndefined();
     });

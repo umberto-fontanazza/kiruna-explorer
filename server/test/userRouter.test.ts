@@ -4,6 +4,9 @@ import { StatusCodes } from "http-status-codes";
 import { User } from "../src/model/user";
 import { UserError } from "../src/error/userError";
 
+import dotenv from 'dotenv'; 
+dotenv.config();  
+
 jest.mock("../src/model/user");
 // jest.mock("../src/middleware/validation", () => ({
 //   validateBody: jest.fn((req, res, next) => next()),
@@ -22,11 +25,11 @@ describe("POST /users", () => {
     // User.prototype.insert = mockInsert;
 
     const newUser = {
-      email: "test@example.com",
-      name: "testName",
-      surname: "testSurname",
-      role: "testRole",
-      password: "testPassword",
+      email: process.env.TEST_EMAIL,
+      name: process.env.TEST_NAME,
+      surname: process.env.TEST_SURNAME,
+      role: process.env.TEST_ROLE,
+      password: process.env.TEST_PASSWORD,
     };
 
     const response = await request(app)
@@ -48,11 +51,11 @@ describe("POST /users", () => {
     // User.getByEmail = mockGetByEmail;
 
     const newUser = {
-      email: "test@example.com",
-      name: "testName",
-      surname: "testSurname",
-      role: "testRole",
-      password: "testPassword",
+      email: process.env.TEST_EMAIL,
+      name: process.env.TEST_NAME,
+      surname: process.env.TEST_SURNAME,
+      role: process.env.TEST_ROLE,
+      password: process.env.TEST_PASSWORD,
     };
 
     const response = await request(app)
@@ -67,8 +70,8 @@ describe("POST /users", () => {
 
   it("should return validation error if the request body is invalid", async () => {
     const invalidUser = {
-      email: "invalid-email",
-      name: "testName",
+      email: process.env.TEST_INVALID_EMAIL,
+      name: process.env.TEST_NAME,
     };
 
     const response = await request(app)
@@ -86,11 +89,11 @@ describe("POST /users", () => {
     // User.getByEmail = mockGetByEmail;
 
     const newUser = {
-      email: "test@example.com",
-      name: "testName",
-      surname: "testSurname",
-      role: "testRole",
-      password: "testPassword",
+      email: process.env.TEST_EMAIL,
+      name: process.env.TEST_NAME,
+      surname: process.env.TEST_SURNAME,
+      role: process.env.TEST_ROLE,
+      password: process.env.TEST_PASSWORD,
     };
 
     const response = await request(app)

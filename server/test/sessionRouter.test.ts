@@ -2,6 +2,8 @@ import request from "supertest";
 import app from "../src/app";
 import passport from "passport";
 import { StatusCodes } from "http-status-codes";
+import dotenv from 'dotenv'; 
+dotenv.config(); 
 
 jest.mock("passport", () => ({
   authenticate: jest.fn(),
@@ -12,8 +14,8 @@ describe("sessionRouter", () => {
     it("should login a user successfully", async () => {
       const mockUser = {
         id: 1,
-        username: "testuser",
-        email: "test@example.com",
+        username: process.env.TEST_NAME,
+        email: process.env.TEST_EMAIL,
       };
       passport.authenticate.mockImplementationOnce((strategy, callback) =>
         callback(null, mockUser),
@@ -22,8 +24,8 @@ describe("sessionRouter", () => {
       const response = await request(app)
         .post("http://localhost:3000/sessions/")
         .send({
-          username: "testuser",
-          password: "password123",
+          username: process.env.TEST_NAME,
+          password: process.env.TEST_PASSWORD,
         });
 
       expect(response.status).toBe(StatusCodes.CREATED);
@@ -38,8 +40,8 @@ describe("sessionRouter", () => {
       const response = await request(app)
         .post("http://localhost:3000/sessions/")
         .send({
-          username: "testuser",
-          password: "wrongpassword",
+          username: process.env.TEST_NAME,
+          password: process.env.TEST_WRONG_PASSWORD,
         });
 
       expect(response.status).toBe(StatusCodes.UNAUTHORIZED);
@@ -54,8 +56,8 @@ describe("sessionRouter", () => {
       const response = await request(app)
         .post("http://localhost:3000/sessions/")
         .send({
-          username: "testuser",
-          password: "password123",
+          username: process.env.TEST_NAME,
+          password: process.env.TEST_PASSWORD,
         });
 
       expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
@@ -69,8 +71,8 @@ describe("sessionRouter", () => {
     it("should return the current user if authenticated", async () => {
       const mockUser = {
         id: 1,
-        username: "testuser",
-        email: "test@example.com",
+        username: process.env.TEST_NAME,
+        email: process.env.TEST_EMAIL,
       };
       const response = await request(app)
         .get("http://localhost:3000/sessions/current")
@@ -95,8 +97,8 @@ describe("sessionRouter", () => {
     it("should log out the current user", async () => {
       const mockUser = {
         id: 1,
-        username: "testuser",
-        email: "test@example.com",
+        username: process.env.TEST_NAME,
+        email: process.env.TEST_EMAIL,
       };
       passport.logout = jest
         .fn()
