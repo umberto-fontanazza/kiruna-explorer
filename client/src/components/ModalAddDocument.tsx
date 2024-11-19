@@ -52,8 +52,6 @@ const ModalForm: FC<ModalAddProps> = ({
   docSelected,
   editDocument,
 }) => {
-  console.log(docSelected?.scale.type);
-  console.log(docSelected?.scale.ratio);
   // Initial State for new document
   const initialDocumentState: Document = {
     id: editDocument && docSelected?.id ? docSelected.id : -1,
@@ -63,7 +61,7 @@ const ModalForm: FC<ModalAddProps> = ({
     stakeholders:
       editDocument && docSelected?.stakeholders ? docSelected.stakeholders : [],
     scale: {
-      //TODO: This is not working
+      //TODO: This is working, but input field in the select doesn't change
       type:
         editDocument && docSelected?.scale?.type
           ? docSelected.scale.type
@@ -117,7 +115,6 @@ const ModalForm: FC<ModalAddProps> = ({
       setNewDoc(docSelected);
       if (docSelected.links) {
         setTableLinks(docSelected.links);
-        console.log(docSelected.links);
       }
     }
     setIsInizialized(true);

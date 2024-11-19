@@ -27,7 +27,7 @@ function LinksTable({ tableLinks, setTableLinks, documents }: LinksTableProps) {
     setTableLinks((prev: Link[]) => {
       return prev
         .map((l) => updateLink(l, link, type))
-        .filter((l): l is Link => l !== null); // Filter out the nulls
+        .filter((l): l is Link => l !== null);
     });
   };
 
