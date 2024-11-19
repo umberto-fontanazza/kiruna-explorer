@@ -1,4 +1,8 @@
-import { FC, useState, useContext } from "react";
+import "@material/web/icon/_icon.scss";
+import "@material/web/iconbutton/filled-tonal-icon-button.js";
+import { FC, useContext, useState } from "react";
+import { authContext } from "../context/auth";
+import "../styles/Sidebar.scss";
 import {
   Document,
   documentTypeDisplay,
@@ -9,10 +13,6 @@ import {
   stakeholderDisplay,
 } from "../utils/interfaces";
 import ModalAddLinks from "./ModalAddLinks";
-import "../styles/Sidebar.scss";
-import "@material/web/iconbutton/filled-tonal-icon-button.js";
-import "@material/web/icon/_icon.scss";
-import { authContext } from "../context/auth";
 
 interface SidebarProps {
   document: Document | null;
@@ -22,6 +22,7 @@ interface SidebarProps {
   setSidebarOpen: (isOpen: boolean) => void;
   setDocument: (doc: Document) => void;
   setDocuments: (docs: Document[]) => void;
+  setEditDoc: (value: boolean) => void;
 }
 
 const Sidebar: FC<SidebarProps> = (props) => {
@@ -154,7 +155,9 @@ const Sidebar: FC<SidebarProps> = (props) => {
               </button>
             )}
         </div>
-        <button className="btn-edit">Edit Document</button>
+        <button className="btn-edit" onClick={() => props.setEditDoc(true)}>
+          Edit Document
+        </button>
         {/* <h4>
           Language: <span>{props.document?.language}</span>
         </h4> */}

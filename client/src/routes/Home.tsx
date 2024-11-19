@@ -18,6 +18,8 @@ const Home: FC = (): JSX.Element => {
   const [docSelected, setDocSelected] = useState<Document | null>(null);
   // State to control modal for adding documents
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  //Staste to control modal for edit document selected
+  const [editDocument, setEditDocument] = useState(false);
 
   const [visualizeLinks, setVisualizeLinks] = useState<boolean>(false);
   const [insertMode, setInsertMode] = useState<boolean>(false);
@@ -40,6 +42,12 @@ const Home: FC = (): JSX.Element => {
     fetchDocuments();
   }, []);
 
+  useEffect(() => {
+    if (editDocument) {
+      setModalOpen(true);
+    }
+  }, [editDocument]);
+
   // Handle Add Document button click to open modal
   const handleAddButton = () => {
     setInsertMode(true);
@@ -56,7 +64,7 @@ const Home: FC = (): JSX.Element => {
     const id = await API.addDocument(newDocument);
     console.log(newDocument.links);
     newDocument.links?.forEach(async (link) => {
-      await API.putLink(link.targetDocumentId, id, link.type);
+      await API.putLink(link.targetDocumentId, id, link.linkTypes);
       documents.map(async (doc) => {
         if (doc.id === link.targetDocumentId) {
           doc.links = await API.getLinks(doc.id);
@@ -160,6 +168,7 @@ const Home: FC = (): JSX.Element => {
               setVisualLinks={setVisualizeLinks}
               setDocuments={setDocuments}
               setDocument={setDocSelected}
+              setEditDoc={setEditDocument}
             />
           }
         </div>
@@ -168,11 +177,16 @@ const Home: FC = (): JSX.Element => {
       {/* Modal for adding a new document */}
       <ModalForm
         modalOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
+        editDocument={editDocument}
+        onClose={() => {
+          setModalOpen(false);
+          setEditDocument(false);
+        }}
         onSubmit={handleAddNewDocument}
         documents={documents}
         newPos={newPosition}
         closeInsertMode={closeInsertMode}
+        docSelected={docSelected}
       />
     </>
   );

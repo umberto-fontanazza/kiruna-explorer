@@ -25,7 +25,7 @@ export interface LoginErrors {
 
 export interface Link {
   targetDocumentId: number;
-  type: LinkType[];
+  linkTypes: LinkType[];
 }
 
 export interface Document {

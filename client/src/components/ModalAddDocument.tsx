@@ -21,24 +21,13 @@ interface Position {
 interface ModalAddProps {
   modalOpen: boolean;
   newPos: Position;
+  editDocument: boolean;
   onClose: () => void;
   onSubmit: (newDocument: Document) => void;
   documents: Document[];
   closeInsertMode: () => void;
+  docSelected: Document | null;
 }
-
-// Initial State for new document
-const initialDocumentState: Document = {
-  id: -1,
-  title: "",
-  description: "",
-  stakeholders: [],
-  scale: { type: ScaleType.Text, ratio: 0 },
-  type: DocumentType.Design,
-  issuanceDate: undefined,
-  links: [],
-  coordinates: { latitude: 0, longitude: 0 },
-};
 
 const scaleValues = [
   { value: ScaleType.BlueprintsOrEffect, label: "Blueprints/Effects" },
@@ -60,10 +49,49 @@ const ModalForm: FC<ModalAddProps> = ({
   documents,
   newPos,
   closeInsertMode,
+  docSelected,
+  editDocument,
 }) => {
+  console.log(docSelected?.scale.type);
+  console.log(docSelected?.scale.ratio);
+  // Initial State for new document
+  const initialDocumentState: Document = {
+    id: editDocument && docSelected?.id ? docSelected.id : -1,
+    title: editDocument && docSelected?.title ? docSelected.title : "",
+    description:
+      editDocument && docSelected?.description ? docSelected.description : "",
+    stakeholders:
+      editDocument && docSelected?.stakeholders ? docSelected.stakeholders : [],
+    scale: {
+      //TODO: This is not working
+      type:
+        editDocument && docSelected?.scale?.type
+          ? docSelected.scale.type
+          : ScaleType.Text,
+      ratio:
+        editDocument && docSelected?.scale?.ratio !== undefined
+          ? docSelected.scale.ratio
+          : undefined,
+    },
+    type:
+      editDocument && docSelected?.type
+        ? docSelected.type
+        : DocumentType.Design,
+    issuanceDate:
+      editDocument && docSelected?.issuanceDate
+        ? dayjs(docSelected.issuanceDate)
+        : undefined,
+    links: editDocument && docSelected?.links ? docSelected.links : [],
+    coordinates:
+      editDocument && docSelected?.coordinates
+        ? docSelected.coordinates
+        : { latitude: 0, longitude: 0 },
+  };
+
   const [page, setPage] = useState<number>(1);
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
   const [tableLinks, setTableLinks] = useState<Link[]>([]);
+  const [isInitialized, setIsInizialized] = useState<boolean>(false);
 
   /////// FILE ATTACHMENT CODE ///////
 
@@ -83,6 +111,17 @@ const ModalForm: FC<ModalAddProps> = ({
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
   };*/
+
+  useEffect(() => {
+    if (docSelected) {
+      setNewDoc(docSelected);
+      if (docSelected.links) {
+        setTableLinks(docSelected.links);
+        console.log(docSelected.links);
+      }
+    }
+    setIsInizialized(true);
+  }, [newPos, editDocument, docSelected]);
 
   useEffect(() => {
     setNewDoc((prev) => ({
@@ -116,6 +155,14 @@ const ModalForm: FC<ModalAddProps> = ({
     });
   };
 
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNewDoc((prev) => ({
+      ...prev,
+      issuanceDate: value ? dayjs(value) : undefined, // Convert input value to Dayjs
+    }));
+  };
+
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
     onSubmit({
@@ -134,7 +181,7 @@ const ModalForm: FC<ModalAddProps> = ({
   };
 
   // Return early if modal is closed
-  if (!modalOpen) return null;
+  if (!modalOpen || !isInitialized) return null;
   if (page === 1) {
     return (
       <div className="modal-overlay">
@@ -248,17 +295,14 @@ const ModalForm: FC<ModalAddProps> = ({
                 <label>Issuance Date *</label>
                 <input
                   type="date"
-                  value={newDoc.issuanceDate?.toISOString().split("T")[0] || ""}
-                  onChange={(e) =>
-                    setNewDoc((prev) => ({
-                      ...prev,
-                      issuanceDate: dayjs(e.target.value),
-                    }))
+                  value={
+                    newDoc.issuanceDate
+                      ? newDoc.issuanceDate.format("YYYY-MM-DD")
+                      : ""
                   }
+                  onChange={handleDateChange}
                 />
               </div>
-
-              {/* Document Type */}
               <div className="form-group">
                 <label>Type *</label>
                 <select
