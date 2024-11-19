@@ -1,0 +1,69 @@
+@use "Color";
+
+.title {
+  font-family: "SwedenSansBold", sans-serif;
+  margin: 1.5%;
+  font-size: 3rem;
+  font-weight: bold;
+  color: Color.$first;
+  text-align: center;
+}
+
+.table-container {
+  overflow: hidden;
+  max-height: calc(80vh - 0.5vh);
+  overflow-y: auto;
+  border: 0.2rem solid #ddd;
+
+  .tableDocs {
+    width: 100%;
+    height: 100vh;
+    border-collapse: collapse;
+
+    thead {
+      color: white;
+      font-size: 1.4rem;
+      background-color: Color.$first;
+      overflow: hidden;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+
+      th {
+        font-family: "SwedenSansBold", sans-serif;
+
+        .sort-icon {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          width: 2ch;
+          height: 2ch;
+          border-radius: 100%;
+          margin-left: 20%;
+          margin-top: 10%;
+          &:hover {
+            background-color: Color.$first-hover;
+          }
+        }
+      }
+    }
+
+    th,
+    td {
+      font-family: "SwedenSans", sans-serif;
+      border: 0.2rem solid #ddd;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    /* Optional: Aggiungi una separazione visibile tra le righe */
+    tr:nth-child(even) {
+      background-color: #f4f4f4; /* Colore di sfondo per le righe pari */
+    }
+  }
+}
+
+.table-container > .tableDocs {
+  width: 100%;
+}

@@ -3,6 +3,7 @@ import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import API from "./API/API";
 import NotFound from "./components/NotFound";
 import { authContext } from "./context/auth";
+import DocumentsList from "./routes/DocumentsList";
 import Home from "./routes/Home";
 import LoginForm from "./routes/LoginForm";
 import "./styles/App.scss";
@@ -51,6 +52,9 @@ const App: FC = () => {
 
           {/* Route /home for the Home page with the map and diagram */}
           <Route path="/home" element={<Home />} />
+
+          {/* Route /documents where can be find the list of all documents */}
+          <Route path="/documents" element={<DocumentsList />} />
           {/* Route /* to cath all bad urls */}
           <Route path="*" element={<NotFound />} />
         </Route>
