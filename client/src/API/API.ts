@@ -1,5 +1,5 @@
-import { documentAPI } from "./documentAPI";
 import { authAPI } from "./authAPI";
+import { documentAPI } from "./documentAPI";
 import { linkAPI } from "./linkAPI";
 
 export const baseURL = "http://localhost:3000";

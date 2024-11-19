@@ -1,4 +1,6 @@
-import { FC, SetStateAction, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
+import LinksTable from "./LinksTable";
+import SearchBar from "./SearchBar";
 
 import dayjs from "dayjs";
 import "../styles/ModalAddDocument.scss";
@@ -6,7 +8,7 @@ import "../styles/ProgressBar.scss";
 import {
   Document,
   DocumentType,
-  LinkType,
+  Link,
   ScaleType,
   Stakeholder,
 } from "../utils/interfaces";
@@ -20,12 +22,9 @@ interface ModalAddProps {
   modalOpen: boolean;
   newPos: Position;
   onClose: () => void;
-  onSubmit: (
-    newDocument: Document,
-    targetId: number,
-    linkType: LinkType
-  ) => void;
+  onSubmit: (newDocument: Document) => void;
   documents: Document[];
+  closeInsertMode: () => void;
 }
 
 // Initial State for new document
@@ -60,13 +59,11 @@ const ModalForm: FC<ModalAddProps> = ({
   onSubmit,
   documents,
   newPos,
+  closeInsertMode,
 }) => {
   const [page, setPage] = useState<number>(1);
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
-  const [targetDocumentId, setTargetDocumentId] = useState<number>(-1);
-  const [newTypeConnection, setNewTypeConnection] = useState<
-    LinkType | undefined
-  >(undefined);
+  const [tableLinks, setTableLinks] = useState<Link[]>([]);
 
   /////// FILE ATTACHMENT CODE ///////
 
@@ -121,28 +118,19 @@ const ModalForm: FC<ModalAddProps> = ({
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-
-    onSubmit(
-      {
-        ...newDoc,
-        links: [
-          {
-            targetDocumentId: targetDocumentId,
-            type: newTypeConnection ? [newTypeConnection] : [],
-          },
-        ],
-      },
-      targetDocumentId,
-      newTypeConnection ? LinkType.Direct : LinkType.Collateral
-    );
+    onSubmit({
+      ...newDoc,
+      links: tableLinks,
+    });
     resetForm();
   };
 
   // Reset Form
   const resetForm = () => {
     setNewDoc(initialDocumentState);
-    setNewTypeConnection(LinkType.Direct);
-    setTargetDocumentId(-1);
+    setPage(1);
+    setTableLinks([]);
+    closeInsertMode();
   };
 
   // Return early if modal is closed
@@ -150,7 +138,7 @@ const ModalForm: FC<ModalAddProps> = ({
   if (page === 1) {
     return (
       <div className="modal-overlay">
-        <form className="modal-content" onSubmit={handleFormSubmit}>
+        <div className="modal-content">
           <h2>New Document Registration</h2>
           <button
             className="close-button"
@@ -429,77 +417,23 @@ const ModalForm: FC<ModalAddProps> = ({
                       },
                     }));
                   }}
-                  placeholder="Es. 123.1234"
+                  placeholder="Es. 20.2253"
                   required
                 />
               </div>
             </div>
-
-            {/* Connections */}
-
-            {/* Target Document ID */}
-            {/*<div className="form-group">
-                  <label>Connection *</label>
-                  <select
-                    value={targetDocumentId ?? ""}
-                    onChange={(e) => setTargetDocumentId(Number(e.target.value))}
-                  >
-                    <option value="" hidden selected>
-                      Select a document to link
-                    </option>
-                    {documents.map((doc) => (
-                      <option key={doc.id} value={doc.id}>
-                        {doc.title}
-                      </option>
-                    ))}
-                  </select>
-                </div>*/}
-
-            {/* Connection Type */}
-            {/*<div className="form-group">
-                  <label>Connection Type *</label>
-                  <select
-                    value={newTypeConnection}
-                    onChange={(e) =>
-                      setNewTypeConnection(e.target.value as LinkType)
-                    }
-                  >
-                    <option value="" disabled>
-                      Select the Connection's type
-                    </option>
-                    <option value="DIRECT">Direct</option>
-                    <option value="COLLATERAL">Collateral</option>
-                    <option value="PROJECTION">Projection</option>
-                    <option value="UPDATE">Update</option>
-                  </select>
-                </div>*/}
-            {/* Connection Type */}
-            {/*<div className="form-group">
-                <label>Connection Type *</label>
-                <select
-                  value={newTypeConnection}
-                  onChange={(e) =>
-                    setNewTypeConnection(e.target.value as LinkType)
-                  }
-                >
-                  <option value="" disabled>
-                    Select the Connection's type
-                  </option>
-                  <option value="direct">Direct</option>
-                  <option value="collateral">Collateral</option>
-                  <option value="projection">Projection</option>
-                  <option value="update">Update</option>
-                </select>
-              </div>*/}
-
             {/* Form Buttons */}
             <div className="button-group">
-              <button className="submit-button" onClick={() => setPage(2)}>
+              <button
+                type="button"
+                className="submit-button"
+                onClick={() => setPage(2)}
+              >
                 Continue
               </button>
             </div>
           </form>
-        </form>
+        </div>
       </div>
     );
   } else if (page === 2) {
@@ -514,29 +448,55 @@ const ModalForm: FC<ModalAddProps> = ({
                 onClick={() => {
                   setNewDoc(initialDocumentState);
                   onClose();
+                  setPage(1);
                 }}
               >
-                <img src="/x.svg" alt="Close" />
+                <img src="/x.png" alt="Close" />
               </button>
 
               <ProgressBar currentPage={page} />
 
               {/* Body */}
-              <form>
-                <SearchBar suggestions={documents} />
-
-                <div className="button-group-2">
-                  <button
-                    className="cancel-button-2"
-                    onClick={() => setPage(1)}
-                  >
-                    Back
-                  </button>
-                  <button className="submit-button-2" type="submit">
-                    Add Document
-                  </button>
+              <div className="second-page-body">
+                <div className="links-table-container">
+                  {tableLinks.length != 0 ? (
+                    <div className="table-wrapper">
+                      <LinksTable
+                        tableLinks={tableLinks}
+                        setTableLinks={setTableLinks}
+                        documents={documents}
+                      />
+                    </div>
+                  ) : (
+                    <h3>
+                      If you need to add links to other documents, please use
+                      the search bar below.
+                    </h3>
+                  )}
                 </div>
-              </form>
+
+                <div className="bottom-group">
+                  <SearchBar
+                    documents={documents}
+                    tableLinks={tableLinks}
+                    setTableLinks={setTableLinks}
+                  />
+
+                  <div className="button-group-2">
+                    <button
+                      className="cancel-button-2"
+                      onClick={() => setPage(1)}
+                    >
+                      Back
+                    </button>
+                    <form onSubmit={handleFormSubmit}>
+                      <button className="submit-button-2" type="submit">
+                        Add Document
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         }
@@ -549,8 +509,6 @@ const ProgressBar = (props: { currentPage: number }) => {
   const steps = [
     { label: "Mandatory Information", number: 1 },
     { label: "Add Links", number: 2 },
-    { label: "Add attachments", number: 3 },
-    { label: "Recap", number: 4 },
   ];
   return (
     <div className="progress-bar">
@@ -569,90 +527,5 @@ const ProgressBar = (props: { currentPage: number }) => {
     </div>
   );
 };
-
-function SearchBar(props: { suggestions: Document[] }) {
-  // Stato per gestire l'input e i suggerimenti filtrati
-  const [query, setQuery] = useState("");
-  const [filteredSuggestions, setFilteredSuggestions] = useState<Document[]>(
-    []
-  );
-  const [showSuggestions, setShowSuggestions] = useState(false);
-
-  // Funzione per aggiornare l'input e i suggerimenti filtrati
-  const handleChange = (e: { target: { value: any } }) => {
-    const userInput = e.target.value;
-    setQuery(userInput);
-
-    // Filtra le opzioni in base all'input
-    const filtered = props.suggestions.filter((suggestion) =>
-      suggestion.title.toLowerCase().includes(userInput.toLowerCase())
-    );
-    setFilteredSuggestions(filtered);
-    setShowSuggestions(true);
-  };
-
-  // Funzione per selezionare un suggerimento
-  const selectSuggestion = (suggestion: SetStateAction<string>) => {
-    setQuery(suggestion);
-    setShowSuggestions(false);
-  };
-
-  return (
-    <div
-      className="search-container"
-      style={{ position: "relative", width: "50%" }}
-    >
-      <input
-        type="text"
-        className="search-input"
-        placeholder="Search for a document"
-        value={query}
-        onChange={handleChange}
-        onFocus={() => setShowSuggestions(true)}
-        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)} // Ritardo per permettere il click
-        style={{
-          width: "100%",
-          padding: "10px",
-          fontSize: "16px",
-          //boxSizing: "border-box",
-          //border: "1px solid #ddd",
-        }}
-      />
-
-      {/* Mostra i suggerimenti solo se sono presenti e se è attivo showSuggestions */}
-      {showSuggestions && filteredSuggestions.length > 0 && (
-        <div
-          className="form-group"
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: "0",
-            right: "0",
-            border: "1px solid #ddd",
-            backgroundColor: "green",
-            zIndex: "1000",
-            maxHeight: "150px",
-            overflowY: "auto",
-          }}
-        >
-          {filteredSuggestions.slice(0, 5).map((suggestion, index) => (
-            <div
-              key={index}
-              onClick={() => selectSuggestion(suggestion.title)}
-              className="suggestion-item"
-              style={{
-                padding: "10px",
-                cursor: "pointer",
-              }}
-              onMouseDown={(e) => e.preventDefault()} // Previene la perdita di focus
-            >
-              {suggestion.title}
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default ModalForm;

@@ -68,6 +68,32 @@
     }
   }
 
+  .input-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-size: 1rem;
+      font-weight: bold;
+      color: Color.$first;
+    }
+
+    input {
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      color: #333;
+      background-color: #fff;
+      box-sizing: border-box;
+
+      &:focus {
+        border-color: Color.$second;
+        outline: none;
+      }
+    }
+  }
   .button-group {
     display: flex;
     justify-content: space-between;

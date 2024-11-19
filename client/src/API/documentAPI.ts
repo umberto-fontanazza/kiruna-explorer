@@ -1,11 +1,23 @@
-import { baseURL } from "./API";
-import { Document } from "../utils/interfaces";
 import dayjs from "dayjs";
+import { Document } from "../utils/interfaces";
+import { baseURL } from "./API";
 
 async function getDocuments(): Promise<Document[]> {
   const response = await fetch(baseURL + "/documents");
   if (!response.ok) {
     throw new Error("Error in fetching documents");
+  }
+  const documents = await response.json();
+  return documents.map((doc: any) => ({
+    ...doc,
+    issuanceDate: dayjs(doc.issuanceDate),
+  }));
+}
+
+async function getDocumentById(id: number): Promise<Document> {
+  const response = await fetch(baseURL + `/documents/${id}`);
+  if (!response.ok) {
+    throw new Error("Error in fetching document by id");
   }
   const documents = await response.json();
   return documents.map((doc: any) => ({
@@ -74,6 +86,7 @@ async function deleteDocument(id: number): Promise<void> {
 
 export const documentAPI = {
   getDocuments,
+  getDocumentById,
   addDocument,
   updateDocument,
   deleteDocument,

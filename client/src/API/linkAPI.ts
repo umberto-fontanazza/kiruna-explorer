@@ -8,7 +8,7 @@ import { baseURL } from "./API";
  * @returns
  */
 async function getLinks(documentId: number): Promise<Link[]> {
-  const response = await fetch(baseURL + `documents/${documentId}/links`);
+  const response = await fetch(baseURL + `/documents/${documentId}/links`);
   if (!response.ok) {
     throw new Error(`Failed to GET /documents/${documentId}/links`);
   }
@@ -27,7 +27,7 @@ async function putLink(
   linkTypes: LinkType[]
 ): Promise<void> {
   const response = await fetch(
-    baseURL + `documents/${sourceDocumentId}/links`,
+    baseURL + `/documents/${sourceDocumentId}/links`,
     {
       method: "PUT",
       credentials: "include",
