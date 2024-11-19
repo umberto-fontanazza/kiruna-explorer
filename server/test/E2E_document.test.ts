@@ -6,7 +6,7 @@ import { Database } from "../src/database";
 import { StatusCodes } from "http-status-codes";
 import { DocumentType, Stakeholder } from "../src/model/document";
 import { ScaleType } from "../src/model/scale";
-import { LinkType, Link } from "../src/model/link";
+import { LinkType } from "../src/model/link";
 import { loginAsPlanner, loginAsResident } from "./utils";
 
 // End to end testing, User story 1 and User story 3.
