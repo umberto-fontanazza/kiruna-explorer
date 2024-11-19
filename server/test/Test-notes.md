@@ -47,7 +47,7 @@
 6. Create a link as Urban Planner with wrong Target Document. DONE (BAD_REQUEST)
 7. Create a link as Urban Planner without the linkType. DONE (BAD_REQUEST)
 8. Create a link as Urban Planner without the Target Document. DONE (BAD_REQUEST)
-9. Create a link as Urban Planner to the same document. DONE (CREATED) ASK WHY \*
+9. Create a link as Urban Planner to the same document. DONE (BAD_REQUEST) \*
 10. View all links for a document without being Urban Planner. DONE (OK)
 11. View all links for a document being Urban Planner. DONE (OK)
 12. View links for a non existing document. DONE (BAD_REQUEST)
@@ -77,5 +77,12 @@
 8. View a document with a wrong ID as a Visitor/Urban Planner/Resident. DONE (BAD_REQUEST)
 
 ## US 5. As an Urban Planner I want to adjust/define the georeferencing of a document on the map So that I can study its relationship to the territory
+
+### Cases:
+
+1. Adjust georeference for a document and not be an Urban Planner. DONE (UNAUTHORIZED)
+2. Adjust georeference a document being an Urban Planner, filling in the information correctly. DONE (CREATED)
+3. Adjust georeferencing a document being an Urban planner, filling the information incorrectly. DONE (BAD_REQUEST)
+4. Adjust georeference a document being an Urban planner, with missing information. DONE (BAD_REQUEST)
 
 ## US 6. As an Urban Planner I want to list all documents
