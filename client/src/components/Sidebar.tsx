@@ -1,6 +1,7 @@
 import "@material/web/icon/_icon.scss";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
-import { FC, useContext, useState } from "react";
+import { Dispatch, FC, SetStateAction, useContext, useState } from "react";
+import API from "../API/API";
 import { authContext } from "../context/auth";
 import "../styles/Sidebar.scss";
 import {
@@ -21,7 +22,7 @@ interface SidebarProps {
   setVisualLinks: (visual: boolean) => void;
   setSidebarOpen: (isOpen: boolean) => void;
   setDocument: (doc: Document) => void;
-  setDocuments: (docs: Document[]) => void;
+  setDocuments: Dispatch<SetStateAction<Document[]>>;
   setEditDoc: (value: boolean) => void;
 }
 
@@ -55,6 +56,20 @@ const Sidebar: FC<SidebarProps> = (props) => {
       setModalConnectionOpen(false);
     } else {
       console.error("No document is selected, so the link cannot be added.");
+    }
+  };
+
+  const handleDeleteDocument = async () => {
+    try {
+      if (props.document) {
+        await API.deleteDocument(props.document?.id);
+        props.setSidebarOpen(false);
+        props.setDocuments((oldDocs: Document[]) => {
+          return oldDocs.filter((doc) => doc.id !== props.document?.id);
+        });
+      }
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -155,9 +170,20 @@ const Sidebar: FC<SidebarProps> = (props) => {
               </button>
             )}
         </div>
-        <button className="btn-edit" onClick={() => props.setEditDoc(true)}>
-          Edit Document
-        </button>
+        <div className="btn-group">
+          <button className="btn-edit" onClick={() => props.setEditDoc(true)}>
+            <span className="material-symbols-outlined">edit_document</span>
+          </button>
+          <button className="btn-edit pos" onClick={() => {}}>
+            <span className="material-symbols-outlined">edit_location</span>
+          </button>
+          <button
+            className="btn-edit delete"
+            onClick={() => handleDeleteDocument()}
+          >
+            <span className="material-symbols-outlined ">delete</span>
+          </button>
+        </div>
         {/* <h4>
           Language: <span>{props.document?.language}</span>
         </h4> */}

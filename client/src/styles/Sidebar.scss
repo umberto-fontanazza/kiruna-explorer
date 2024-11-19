@@ -58,6 +58,10 @@
   }
 
   .content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 90%;
     margin-top: 1vh;
     padding: 1vh 1vw;
@@ -162,22 +166,53 @@
         }
       }
     }
-    .btn-edit {
-      width: 100%;
-      margin-top: 4%;
-      flex: 1;
-      padding: 0.75rem;
-      font-weight: bold;
-      border-radius: 8px;
-      background-color: Color.$first;
-      color: white;
-      font-family: "SwedenSansBold", sans-serif;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      text-align: center;
 
-      &:hover {
-        background-color: Color.$first-hover;
+    .btn-group {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+
+      .btn-edit {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        border: 0.1rem solid Color.$first;
+        background-color: Color.$first;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin: 0 0.5rem;
+
+        &.pos {
+          background-color: #4caf50;
+          border: 0.1rem solid #4caf50;
+
+          &:hover {
+            background-color: #388e3c;
+            border: 0.1rem solid #388e3c;
+          }
+        }
+
+        &.delete {
+          background-color: #d9534f;
+          border: 0.1rem solid #d9534f;
+
+          &:hover {
+            background-color: #c12e2a;
+            border: 0.1rem solid #c12e2a;
+          }
+        }
+
+        &:hover {
+          background-color: Color.$first-hover;
+          border: none;
+        }
       }
     }
   }

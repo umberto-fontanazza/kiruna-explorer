@@ -61,7 +61,6 @@ const ModalForm: FC<ModalAddProps> = ({
     stakeholders:
       editDocument && docSelected?.stakeholders ? docSelected.stakeholders : [],
     scale: {
-      //TODO: This is working, but input field in the select doesn't change
       type:
         editDocument && docSelected?.scale?.type
           ? docSelected.scale.type
@@ -156,7 +155,7 @@ const ModalForm: FC<ModalAddProps> = ({
     const value = e.target.value;
     setNewDoc((prev) => ({
       ...prev,
-      issuanceDate: value ? dayjs(value) : undefined, // Convert input value to Dayjs
+      issuanceDate: value ? dayjs(value) : undefined,
     }));
   };
 
@@ -166,6 +165,7 @@ const ModalForm: FC<ModalAddProps> = ({
       ...newDoc,
       links: tableLinks,
     });
+
     resetForm();
   };
 
@@ -183,7 +183,7 @@ const ModalForm: FC<ModalAddProps> = ({
     return (
       <div className="modal-overlay">
         <div className="modal-content">
-          <h2>New Document Registration</h2>
+          <h2>{!editDocument ? "Add New Document" : "Update Document"}</h2>
           <button
             className="close-button"
             onClick={() => {
@@ -232,6 +232,7 @@ const ModalForm: FC<ModalAddProps> = ({
               <div className="form-group">
                 <label>Scale *</label>
                 <select
+                  defaultValue={newDoc.scale.type}
                   onChange={(e) => {
                     const scaleType = e.target.value;
                     const scaleRatio =
@@ -483,7 +484,11 @@ const ModalForm: FC<ModalAddProps> = ({
         {
           <div className="modal-overlay-2">
             <div className="modal-content-2">
-              <h2>New Document Registration</h2>
+              <h2>
+                {!editDocument
+                  ? "New Document Registration"
+                  : "Update Document"}
+              </h2>
               <button
                 className="close-button-2"
                 onClick={() => {
@@ -530,11 +535,12 @@ const ModalForm: FC<ModalAddProps> = ({
                     >
                       Back
                     </button>
-                    <form onSubmit={handleFormSubmit}>
-                      <button className="submit-button-2" type="submit">
-                        Add Document
-                      </button>
-                    </form>
+                    <button
+                      className="submit-button-2"
+                      onClick={handleFormSubmit}
+                    >
+                      {!editDocument ? "Add Document" : "Update Document"}
+                    </button>
                   </div>
                 </div>
               </div>

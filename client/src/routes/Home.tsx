@@ -61,18 +61,45 @@ const Home: FC = (): JSX.Element => {
   // Handle form submission for new document
   const handleAddNewDocument = async (newDocument: Document) => {
     setModalOpen(false);
-    const id = await API.addDocument(newDocument);
-    console.log(newDocument.links);
-    newDocument.links?.forEach(async (link) => {
-      await API.putLink(link.targetDocumentId, id, link.linkTypes);
-      documents.map(async (doc) => {
-        if (doc.id === link.targetDocumentId) {
-          doc.links = await API.getLinks(doc.id);
+    if (editDocument) {
+      const fetchUpdate = async () => {
+        try {
+          await API.updateDocument(newDocument);
+          newDocument.links?.map(async (link) => {
+            await API.putLink(
+              newDocument.id,
+              link.targetDocumentId,
+              link.linkTypes
+            );
+          });
+        } catch (err) {
+          console.error(err);
         }
+      };
+      fetchUpdate();
+      setDocuments((oldDocs) => {
+        return oldDocs.map((doc) => {
+          if (doc.id == newDocument.id) {
+            doc = { ...newDocument };
+            return doc;
+          }
+          return doc;
+        });
       });
-    });
-    const updatedDocument = { ...newDocument, id: id };
-    setDocuments([...documents, updatedDocument]);
+      setDocSelected(newDocument);
+    } else {
+      const id = await API.addDocument(newDocument);
+      newDocument.links?.forEach(async (link) => {
+        await API.putLink(link.targetDocumentId, id, link.linkTypes);
+        documents.map(async (doc) => {
+          if (doc.id === link.targetDocumentId) {
+            doc.links = await API.getLinks(doc.id);
+          }
+        });
+      });
+      const updatedDocument = { ...newDocument, id: id };
+      setDocuments([...documents, updatedDocument]);
+    }
   };
 
   return (
