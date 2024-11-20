@@ -139,7 +139,13 @@ const Sidebar: FC<SidebarProps> = (props) => {
         </h4>
         <div className="connection-group">
           <h4>
-            Links: <span>{props.document?.links?.length || 0}</span>
+            Links:
+            <span>
+              {props.document?.links?.reduce(
+                (acc: number, link: Link) => acc + link.linkTypes.length,
+                0
+              ) || 0}
+            </span>
           </h4>
           {props.document?.links && props.document?.links.length > 0 && (
             <button
