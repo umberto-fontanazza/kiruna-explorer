@@ -3,6 +3,7 @@ import API from "../API/API";
 import MapComponent from "../components/Map";
 import ModalForm from "../components/ModalAddDocument";
 import NavHeader from "../components/NavHeader";
+import Popup from "../components/Popup";
 import Sidebar from "../components/Sidebar";
 import { authContext } from "../context/auth";
 import "../styles/Home.scss";
@@ -18,8 +19,10 @@ const Home: FC = (): JSX.Element => {
   const [docSelected, setDocSelected] = useState<Document | null>(null);
   // State to control modal for adding documents
   const [modalOpen, setModalOpen] = useState<boolean>(false);
-  //Staste to control modal for edit document selected
+  //State to control modal for edit document selected
   const [editDocument, setEditDocument] = useState(false);
+  //State to control the popup to delete a document
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
 
   const [visualizeLinks, setVisualizeLinks] = useState<boolean>(false);
   const [insertMode, setInsertMode] = useState<boolean>(false);
@@ -42,11 +45,16 @@ const Home: FC = (): JSX.Element => {
     fetchDocuments();
   }, []);
 
-  useEffect(() => {
+  const handleEditButton = () => {
+    setEditDocument(true);
+    setModalOpen(true);
+  };
+
+  /*useEffect(() => {
     if (editDocument) {
       setModalOpen(true);
     }
-  }, [editDocument]);
+  }, [editDocument]);*/
 
   // Handle Add Document button click to open modal
   const handleAddButton = () => {
@@ -102,6 +110,26 @@ const Home: FC = (): JSX.Element => {
     }
   };
 
+  // Handle to delete the document selected
+  const handleDeleteDocument = async () => {
+    try {
+      if (docSelected) {
+        await API.deleteDocument(docSelected?.id);
+        setSidebarOpen(false);
+        setIsPopupOpen(false);
+        setDocuments((oldDocs: Document[]) => {
+          return oldDocs.filter((doc) => doc.id !== docSelected?.id);
+        });
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCancelPopup = () => {
+    setIsPopupOpen(false);
+  };
+
   return (
     <>
       {/* Navigation Header */}
@@ -145,6 +173,12 @@ const Home: FC = (): JSX.Element => {
             </div>
           )}
         </div>
+        <Popup
+          isOpen={isPopupOpen}
+          document={docSelected}
+          onConfirm={handleDeleteDocument}
+          onCancel={handleCancelPopup}
+        />
         {/* Table to see the list of all documents */}
         {
           // <table className="table-documents">
@@ -195,7 +229,8 @@ const Home: FC = (): JSX.Element => {
               setVisualLinks={setVisualizeLinks}
               setDocuments={setDocuments}
               setDocument={setDocSelected}
-              setEditDoc={setEditDocument}
+              toEdit={handleEditButton}
+              setPopupOpen={setIsPopupOpen}
             />
           }
         </div>

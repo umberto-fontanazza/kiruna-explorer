@@ -7,8 +7,8 @@
   .document-icon {
     border: 2px solid Color.$first;
     border-radius: 50%;
-    width: 8vh;
-    height: 8vh;
+    width: 5rem;
+    height: 5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -23,11 +23,6 @@
 
     &:hover {
       background-color: Color.$second;
-    }
-
-    .doc-img {
-      width: 4vh;
-      height: 4vh;
     }
   }
 
