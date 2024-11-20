@@ -6,26 +6,23 @@ import dayjs from "dayjs";
 import "../styles/ModalAddDocument.scss";
 import "../styles/ProgressBar.scss";
 import {
+  Coordinates,
   Document,
   DocumentType,
+  getInitialDocumentState,
   Link,
   ScaleType,
   Stakeholder,
 } from "../utils/interfaces";
 
-interface Position {
-  lat: number;
-  lng: number;
-}
-
 interface ModalAddProps {
   modalOpen: boolean;
-  newPos: Position;
-  editDocument: boolean;
+  newPos: Coordinates;
+  editDocumentMode: boolean;
   onClose: () => void;
   onSubmit: (newDocument: Document) => void;
   documents: Document[];
-  closeInsertMode: () => void;
+  closePositionView: () => void;
   docSelected: Document | null;
 }
 
@@ -48,45 +45,14 @@ const ModalForm: FC<ModalAddProps> = ({
   onSubmit,
   documents,
   newPos,
-  closeInsertMode,
+  closePositionView,
   docSelected,
-  editDocument,
+  editDocumentMode,
 }) => {
-  // Initial State for new document
-  const initialDocumentState: Document = {
-    id: editDocument && docSelected?.id ? docSelected.id : -1,
-    title: editDocument && docSelected?.title ? docSelected.title : "",
-    description:
-      editDocument && docSelected?.description ? docSelected.description : "",
-    stakeholders:
-      editDocument && docSelected?.stakeholders ? docSelected.stakeholders : [],
-    scale: {
-      type:
-        editDocument && docSelected?.scale?.type
-          ? docSelected.scale.type
-          : ScaleType.Text,
-      ratio:
-        editDocument && docSelected?.scale?.ratio !== undefined
-          ? docSelected.scale.ratio
-          : undefined,
-    },
-    type:
-      editDocument && docSelected?.type
-        ? docSelected.type
-        : DocumentType.Design,
-    issuanceDate:
-      editDocument && docSelected?.issuanceDate
-        ? dayjs(docSelected.issuanceDate)
-        : undefined,
-    links: editDocument && docSelected?.links ? docSelected.links : [],
-    coordinates:
-      editDocument && docSelected?.coordinates
-        ? docSelected.coordinates
-        : { latitude: 0, longitude: 0 },
-  };
-
   const [page, setPage] = useState<number>(1);
-  const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
+  const [newDoc, setNewDoc] = useState<Document>(
+    getInitialDocumentState(editDocumentMode, docSelected)
+  );
   const [tableLinks, setTableLinks] = useState<Link[]>([]);
   const [isInitialized, setIsInizialized] = useState<boolean>(false);
 
@@ -117,12 +83,12 @@ const ModalForm: FC<ModalAddProps> = ({
       }
     }
     setIsInizialized(true);
-  }, [newPos, editDocument, docSelected]);
+  }, [newPos, editDocumentMode, docSelected]);
 
   useEffect(() => {
     setNewDoc((prev) => ({
       ...prev,
-      coordinates: { latitude: newPos.lat, longitude: newPos.lng },
+      coordinates: { latitude: newPos.latitude, longitude: newPos.longitude },
     }));
   }, [newPos]);
 
@@ -171,10 +137,10 @@ const ModalForm: FC<ModalAddProps> = ({
 
   // Reset Form
   const resetForm = () => {
-    setNewDoc(initialDocumentState);
+    setNewDoc(getInitialDocumentState(editDocumentMode, docSelected));
     setPage(1);
     setTableLinks([]);
-    closeInsertMode();
+    closePositionView();
   };
 
   // Return early if modal is closed
@@ -183,11 +149,11 @@ const ModalForm: FC<ModalAddProps> = ({
     return (
       <div className="modal-overlay">
         <div className="modal-content">
-          <h2>{!editDocument ? "Add New Document" : "Update Document"}</h2>
+          <h2>{!editDocumentMode ? "Add New Document" : "Update Document"}</h2>
           <button
             className="close-button"
             onClick={() => {
-              setNewDoc(initialDocumentState);
+              setNewDoc(getInitialDocumentState(editDocumentMode, docSelected));
               onClose();
             }}
           >
@@ -199,7 +165,7 @@ const ModalForm: FC<ModalAddProps> = ({
           <form onSubmit={handleFormSubmit}>
             {/* Title Input */}
             <div className="form-group">
-              <label className="title">Title *</label>
+              <label>Title *</label>
               <input
                 type="text"
                 placeholder="Enter Document Title"
@@ -485,14 +451,16 @@ const ModalForm: FC<ModalAddProps> = ({
           <div className="modal-overlay-2">
             <div className="modal-content-2">
               <h2>
-                {!editDocument
+                {!editDocumentMode
                   ? "New Document Registration"
                   : "Update Document"}
               </h2>
               <button
                 className="close-button-2"
                 onClick={() => {
-                  setNewDoc(initialDocumentState);
+                  setNewDoc(
+                    getInitialDocumentState(editDocumentMode, docSelected)
+                  );
                   onClose();
                   setPage(1);
                 }}
@@ -539,7 +507,7 @@ const ModalForm: FC<ModalAddProps> = ({
                       className="submit-button-2"
                       onClick={handleFormSubmit}
                     >
-                      {!editDocument ? "Add Document" : "Update Document"}
+                      {!editDocumentMode ? "Add Document" : "Update Document"}
                     </button>
                   </div>
                 </div>

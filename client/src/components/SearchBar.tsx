@@ -53,7 +53,7 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
               if (!link.linkTypes.includes(type)) {
                 return {
                   ...link,
-                  type: [...link.linkTypes, type],
+                  linkTypes: [...link.linkTypes, type],
                 };
               }
             }

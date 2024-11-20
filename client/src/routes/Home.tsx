@@ -7,7 +7,7 @@ import Popup from "../components/Popup";
 import Sidebar from "../components/Sidebar";
 import { authContext } from "../context/auth";
 import "../styles/Home.scss";
-import { Document } from "../utils/interfaces";
+import { Coordinates, Document } from "../utils/interfaces";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
@@ -20,16 +20,19 @@ const Home: FC = (): JSX.Element => {
   // State to control modal for adding documents
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   //State to control modal for edit document selected
-  const [editDocument, setEditDocument] = useState(false);
+  const [editDocumentMode, setEditDocumentMode] = useState(false);
   //State to control the popup to delete a document
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
 
-  const [visualizeLinks, setVisualizeLinks] = useState<boolean>(false);
-  const [insertMode, setInsertMode] = useState<boolean>(false);
+  //States to handle to insertion and modification of the position of a document
+  const [positionView, setPositionView] = useState<boolean>(false);
+  const [editPositionMode, setEditPositionMode] = useState<boolean>(false);
 
-  const [newPosition, setNewPosition] = useState<{ lat: number; lng: number }>({
-    lat: -1,
-    lng: -1,
+  const [visualizeLinks, setVisualizeLinks] = useState<boolean>(false);
+
+  const [newPosition, setNewPosition] = useState<Coordinates>({
+    latitude: -1,
+    longitude: -1,
   });
 
   // Fetch documents on component mount
@@ -46,30 +49,24 @@ const Home: FC = (): JSX.Element => {
   }, []);
 
   const handleEditButton = () => {
-    setEditDocument(true);
+    setEditDocumentMode(true);
     setModalOpen(true);
   };
 
-  /*useEffect(() => {
-    if (editDocument) {
-      setModalOpen(true);
-    }
-  }, [editDocument]);*/
-
   // Handle Add Document button click to open modal
   const handleAddButton = () => {
-    setInsertMode(true);
+    setPositionView(true);
     setSidebarOpen(false);
   };
 
-  const closeInsertMode = () => {
-    setInsertMode(false);
+  const closePositionView = () => {
+    setPositionView(false);
   };
 
   // Handle form submission for new document
   const handleAddNewDocument = async (newDocument: Document) => {
     setModalOpen(false);
-    if (editDocument) {
+    if (editDocumentMode) {
       const fetchUpdate = async () => {
         try {
           await API.updateDocument(newDocument);
@@ -114,6 +111,13 @@ const Home: FC = (): JSX.Element => {
   const handleDeleteDocument = async () => {
     try {
       if (docSelected) {
+        // First delete links
+        if (docSelected.links && docSelected.links?.length > 0) {
+          docSelected.links?.map(async (link) => {
+            await API.deleteLink(docSelected.id, link.targetDocumentId);
+          });
+        }
+        // Second delete document
         await API.deleteDocument(docSelected?.id);
         setSidebarOpen(false);
         setIsPopupOpen(false);
@@ -126,8 +130,39 @@ const Home: FC = (): JSX.Element => {
     }
   };
 
+  // Handle to cancel the popup
   const handleCancelPopup = () => {
     setIsPopupOpen(false);
+  };
+
+  //Handle to edit the position of the document selected
+  const handleeditPositionMode = () => {
+    setSidebarOpen(false);
+    setPositionView(true);
+    setEditPositionMode(true);
+  };
+
+  const handleeditPositionModeConfirm = async (newPos: Coordinates) => {
+    if (docSelected) {
+      try {
+        const updateDocument = {
+          ...docSelected,
+          coordinates: {
+            latitude: newPos.latitude,
+            longitude: newPos.longitude,
+          },
+        };
+        await API.updateDocument(updateDocument);
+        setDocuments([
+          ...documents.filter((doc) => doc.id !== updateDocument.id),
+          updateDocument,
+        ]);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    setEditPositionMode(false);
+    setPositionView(false);
   };
 
   return (
@@ -145,18 +180,21 @@ const Home: FC = (): JSX.Element => {
               setSidebarOpen={setSidebarOpen}
               setDocSelected={setDocSelected}
               setModalOpen={setModalOpen}
-              setNewPos={setNewPosition}
               visualLinks={visualizeLinks}
-              insertMode={insertMode}
+              positionView={positionView}
+              editPositionMode={editPositionMode}
+              editDocumentMode={editDocumentMode}
+              onEditPos={handleeditPositionModeConfirm}
+              setNewPosition={setNewPosition}
             />
           }
           {user && (
             <div className="button-overlay">
               <button
                 className="doc-btn"
-                onClick={!insertMode ? handleAddButton : closeInsertMode}
+                onClick={!positionView ? handleAddButton : closePositionView}
               >
-                {insertMode ? (
+                {positionView ? (
                   <div className="add-container">
                     <span className="material-symbols-outlined">
                       arrow_back
@@ -231,6 +269,7 @@ const Home: FC = (): JSX.Element => {
               setDocument={setDocSelected}
               toEdit={handleEditButton}
               setPopupOpen={setIsPopupOpen}
+              toEditPos={handleeditPositionMode}
             />
           }
         </div>
@@ -239,15 +278,15 @@ const Home: FC = (): JSX.Element => {
       {/* Modal for adding a new document */}
       <ModalForm
         modalOpen={modalOpen}
-        editDocument={editDocument}
+        editDocumentMode={editDocumentMode}
         onClose={() => {
           setModalOpen(false);
-          setEditDocument(false);
+          setEditDocumentMode(false);
         }}
         onSubmit={handleAddNewDocument}
         documents={documents}
         newPos={newPosition}
-        closeInsertMode={closeInsertMode}
+        closePositionView={closePositionView}
         docSelected={docSelected}
       />
     </>

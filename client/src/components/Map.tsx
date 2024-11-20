@@ -3,24 +3,28 @@ import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../styles/Map.scss";
-import { Document, fromDocumentTypeToIcon, Link } from "../utils/interfaces";
+import {
+  Coordinates,
+  Document,
+  fromDocumentTypeToIcon,
+  getInitialDocumentState,
+  Link,
+} from "../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../utils/map";
 import MapTypeSelector from "./MapTypeSelector";
-
-interface Position {
-  lat: number;
-  lng: number;
-}
 
 interface MapComponentProps {
   documents: Document[];
   documentSelected: Document | null;
   visualLinks: boolean;
-  insertMode: boolean;
+  positionView: boolean;
+  editPositionMode: boolean;
+  editDocumentMode: boolean;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
   setDocSelected: Dispatch<SetStateAction<Document | null>>;
-  setNewPos: Dispatch<SetStateAction<Position>>;
+  setNewPosition: Dispatch<SetStateAction<Coordinates>>;
+  onEditPos: (newPos: Coordinates) => Promise<void>;
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
@@ -28,11 +32,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     documents,
     documentSelected,
     visualLinks,
-    insertMode,
+    positionView,
+    editPositionMode,
+    editDocumentMode,
     setModalOpen,
     setSidebarOpen,
     setDocSelected,
-    setNewPos,
+    onEditPos,
+    setNewPosition,
   } = props;
   const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -51,19 +58,29 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     if (!event.latLng) return;
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
-    setNewPos({ lat, lng });
-    setModalOpen(true);
+    setNewPosition({ latitude: lat, longitude: lng });
+    if (!editPositionMode) {
+      // Insert Document Position flow
+      setDocSelected(
+        getInitialDocumentState(editDocumentMode, documentSelected)
+      );
+      setModalOpen(true);
+    } else {
+      //Edit Document Position Flow
+      onEditPos({ latitude: lat, longitude: lng });
+    }
   };
 
   useEffect(() => {
-    if (!isLoaded || !map || !insertMode) return;
+    if (!isLoaded || !map || !positionView) return;
 
     map.addListener("click", onMapClick);
 
     return () => {
       google.maps.event.clearInstanceListeners(map);
     };
-  }, [insertMode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positionView]);
 
   /**
    * @param linked - when true the documents is visualized
@@ -116,7 +133,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   };
 
   useEffect(() => {
-    if (!isLoaded || !map || insertMode) {
+    if (!isLoaded || !map || positionView) {
       clearMarkers();
       return;
     }
@@ -127,21 +144,24 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         createMarker(doc, visualLinks && doc.id !== documentSelected?.id)
       );
 
-    setMarkers((_) => {
+    setMarkers(() => {
       clearMarkers();
       return newMarkers;
     });
     return clearMarkers;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, map, props]);
 
   return isLoaded ? (
     <section id="map">
       <MapTypeSelector mapType={mapType} setMapType={setMapType} />
-      {insertMode && (
+      {positionView && (
         <div className="insert-mode">
-          <h2>Insert Mode</h2>
+          <h2>{!editPositionMode ? "Insert Mode" : "Update Position"}</h2>
           <h3>
-            Select a point on the map, where you want to add a new Document
+            {!editPositionMode
+              ? "Select a point on the map, where you want to add a new Document"
+              : "Select a point on the map, where you want to update the position of the document selected"}
           </h3>
         </div>
       )}

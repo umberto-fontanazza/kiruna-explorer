@@ -20,9 +20,10 @@ interface SidebarProps {
   visualLinks: boolean;
   setVisualLinks: (visual: boolean) => void;
   setSidebarOpen: (isOpen: boolean) => void;
-  setDocument: (doc: Document) => void;
+  setDocument: (doc: Document | null) => void;
   setDocuments: Dispatch<SetStateAction<Document[]>>;
   toEdit: () => void;
+  toEditPos: () => void;
   setPopupOpen: (value: boolean) => void;
 }
 
@@ -77,7 +78,10 @@ const Sidebar: FC<SidebarProps> = (props) => {
         {/* Close sidebar button */}
         <button
           className="btn-close-sidebar"
-          onClick={() => props.setSidebarOpen(false)}
+          onClick={() => {
+            props.setSidebarOpen(false);
+            props.setDocument(null);
+          }}
         >
           <img className="btn-close-img" src="x.png" alt="Close" />
         </button>
@@ -137,39 +141,44 @@ const Sidebar: FC<SidebarProps> = (props) => {
           <h4>
             Links: <span>{props.document?.links?.length || 0}</span>
           </h4>
-          {user &&
-            props.document?.links &&
-            props.document?.links.length > 0 && (
-              <button
-                className={`see-links ${props.visualLinks ? "fill" : "no-fill"}`}
-                onClick={() =>
-                  props.visualLinks
-                    ? props.setVisualLinks(false)
-                    : props.setVisualLinks(true)
-                }
+          {props.document?.links && props.document?.links.length > 0 && (
+            <button
+              className={`see-links ${props.visualLinks ? "fill" : "no-fill"}`}
+              onClick={() =>
+                props.visualLinks
+                  ? props.setVisualLinks(false)
+                  : props.setVisualLinks(true)
+              }
+            >
+              <span
+                className={`material-symbols-outlined dark ${props.visualLinks ? "fill" : "no-fill"}`}
               >
-                <span
-                  className={`material-symbols-outlined dark ${props.visualLinks ? "fill" : "no-fill"}`}
-                >
-                  visibility
-                </span>
-              </button>
-            )}
+                visibility
+              </span>
+            </button>
+          )}
         </div>
-        <div className="btn-group">
-          <button className="btn-edit" onClick={() => props.toEdit()}>
-            <span className="material-symbols-outlined">edit_document</span>
-          </button>
-          <button className="btn-edit pos" onClick={() => {}}>
-            <span className="material-symbols-outlined">edit_location</span>
-          </button>
-          <button
-            className="btn-edit delete"
-            onClick={() => props.setPopupOpen(true)}
-          >
-            <span className="material-symbols-outlined ">delete</span>
-          </button>
-        </div>
+        {user && (
+          <div className="btn-group">
+            <button className="btn-edit" onClick={() => props.toEdit()}>
+              <span className="material-symbols-outlined">edit_document</span>
+            </button>
+            <button
+              className="btn-edit pos"
+              onClick={() => {
+                props.toEditPos();
+              }}
+            >
+              <span className="material-symbols-outlined">edit_location</span>
+            </button>
+            <button
+              className="btn-edit delete"
+              onClick={() => props.setPopupOpen(true)}
+            >
+              <span className="material-symbols-outlined ">delete</span>
+            </button>
+          </div>
+        )}
         {/* <h4>
           Language: <span>{props.document?.language}</span>
         </h4> */}
