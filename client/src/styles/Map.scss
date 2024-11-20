@@ -100,4 +100,9 @@
   font-size: 1.6em;
   justify-content: center;
   background-image: url("https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m2.png");
+  -moz-transform: scale(1.5);
+  -ms-transform: scale(1.5);
+  -o-transform: scale(1.5);
+  -webkit-transform: scale(1.5);
+  transform: scale(1.5);
 }

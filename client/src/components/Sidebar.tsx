@@ -139,7 +139,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
         </h4>
         <div className="connection-group">
           <h4>
-            Links:
+            Links:&nbsp;
             <span>
               {props.document?.links?.reduce(
                 (acc: number, link: Link) => acc + link.linkTypes.length,

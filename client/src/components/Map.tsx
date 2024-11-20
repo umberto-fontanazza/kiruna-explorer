@@ -4,9 +4,10 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../styles/Map.scss";
 import {
   Coordinates,
+  createDocumentStateFromExisting,
+  createNewDocumentState,
   Document,
   fromDocumentTypeToIcon,
-  getInitialDocumentState,
   Link,
 } from "../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../utils/map";
@@ -21,7 +22,7 @@ interface MapComponentProps {
   editDocumentMode: boolean;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
-  setDocSelected: Dispatch<SetStateAction<Document | null>>;
+  setdocumentSelected: Dispatch<SetStateAction<Document | null>>;
   setNewPosition: Dispatch<SetStateAction<Coordinates>>;
   onEditPos: (newPos: Coordinates) => Promise<void>;
 }
@@ -36,10 +37,15 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     editDocumentMode,
     setModalOpen,
     setSidebarOpen,
-    setDocSelected,
+    setdocumentSelected,
     onEditPos,
     setNewPosition,
   } = props;
+
+  const initialDocumentState =
+    editDocumentMode && documentSelected
+      ? createDocumentStateFromExisting(documentSelected)
+      : createNewDocumentState();
   const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
@@ -60,9 +66,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     setNewPosition({ latitude: lat, longitude: lng });
     if (!editPositionMode) {
       // Insert Document Position flow
-      setDocSelected(
-        getInitialDocumentState(editDocumentMode, documentSelected)
-      );
+      setdocumentSelected(initialDocumentState);
       setModalOpen(true);
     } else {
       //Edit Document Position Flow
@@ -102,7 +106,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
     marker.addListener("click", () => {
       setSidebarOpen(true);
-      setDocSelected(doc);
+      setdocumentSelected(doc);
       setCenter({
         lat: doc.coordinates?.latitude ?? kirunaCoords.lat,
         lng: doc.coordinates?.longitude ?? kirunaCoords.lng + 0.0019,

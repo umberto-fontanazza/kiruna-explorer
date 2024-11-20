@@ -7,9 +7,10 @@ import "../styles/ModalAddDocument.scss";
 import "../styles/ProgressBar.scss";
 import {
   Coordinates,
+  createDocumentStateFromExisting,
+  createNewDocumentState,
   Document,
   DocumentType,
-  getInitialDocumentState,
   Link,
   ScaleType,
   Stakeholder,
@@ -24,6 +25,7 @@ interface ModalAddProps {
   documents: Document[];
   closePositionView: () => void;
   docSelected: Document | null;
+  setEditDocumentMode: (value: boolean) => void;
 }
 
 const scaleValues = [
@@ -46,15 +48,18 @@ const ModalForm: FC<ModalAddProps> = ({
   documents,
   newPos,
   closePositionView,
+  setEditDocumentMode,
   docSelected,
   editDocumentMode,
 }) => {
+  const initialDocumentState =
+    editDocumentMode && docSelected
+      ? createDocumentStateFromExisting(docSelected)
+      : createNewDocumentState();
   const [page, setPage] = useState<number>(1);
-  const [newDoc, setNewDoc] = useState<Document>(
-    getInitialDocumentState(editDocumentMode, docSelected)
-  );
+  const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
   const [tableLinks, setTableLinks] = useState<Link[]>([]);
-  const [isInitialized, setIsInizialized] = useState<boolean>(false);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   /////// FILE ATTACHMENT CODE ///////
 
@@ -82,7 +87,7 @@ const ModalForm: FC<ModalAddProps> = ({
         setTableLinks(docSelected.links);
       }
     }
-    setIsInizialized(true);
+    setIsInitialized(true);
   }, [newPos, editDocumentMode, docSelected]);
 
   useEffect(() => {
@@ -137,7 +142,8 @@ const ModalForm: FC<ModalAddProps> = ({
 
   // Reset Form
   const resetForm = () => {
-    setNewDoc(getInitialDocumentState(editDocumentMode, docSelected));
+    setNewDoc(initialDocumentState);
+    setEditDocumentMode(false);
     setPage(1);
     setTableLinks([]);
     closePositionView();
@@ -153,7 +159,7 @@ const ModalForm: FC<ModalAddProps> = ({
           <button
             className="close-button"
             onClick={() => {
-              setNewDoc(getInitialDocumentState(editDocumentMode, docSelected));
+              setNewDoc(initialDocumentState);
               onClose();
             }}
           >
@@ -458,9 +464,7 @@ const ModalForm: FC<ModalAddProps> = ({
               <button
                 className="close-button-2"
                 onClick={() => {
-                  setNewDoc(
-                    getInitialDocumentState(editDocumentMode, docSelected)
-                  );
+                  setNewDoc(initialDocumentState);
                   onClose();
                   setPage(1);
                 }}

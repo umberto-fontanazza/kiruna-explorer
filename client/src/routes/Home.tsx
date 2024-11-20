@@ -178,7 +178,7 @@ const Home: FC = (): JSX.Element => {
               documents={documents}
               documentSelected={docSelected}
               setSidebarOpen={setSidebarOpen}
-              setDocSelected={setDocSelected}
+              setdocumentSelected={setDocSelected}
               setModalOpen={setModalOpen}
               visualLinks={visualizeLinks}
               positionView={positionView}
@@ -279,6 +279,7 @@ const Home: FC = (): JSX.Element => {
       <ModalForm
         modalOpen={modalOpen}
         editDocumentMode={editDocumentMode}
+        setEditDocumentMode={setEditDocumentMode}
         onClose={() => {
           setModalOpen(false);
           setEditDocumentMode(false);
