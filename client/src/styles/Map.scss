@@ -34,15 +34,13 @@
   .cluster-icon {
     width: 5rem;
     height: 5rem;
-    //background-color: #00d3f8;
-    //border: 2px solid #00d3f8;
     border-radius: 50%;
     background-size: contain;
     text-align: "center";
     line-height: 5rem;
-    font-family: "SwedenSansBold, sans-serif";
+    font-family: "SwedenSansBold", sans-serif;
     font-size: "1.6em";
-    color: "lightblack";
+    color: Color.$third;
     justify-content: center;
     background-image: url("https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m3.png");
   }

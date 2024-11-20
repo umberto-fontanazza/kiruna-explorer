@@ -127,8 +127,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       // Usa il `renderer` per personalizzare l'icona dei cluster
       renderer: {
         render: ({ count, position }) => {
-          const size = 50;
-
           return new google.maps.marker.AdvancedMarkerElement({
             position,
             title: count.toString(),
