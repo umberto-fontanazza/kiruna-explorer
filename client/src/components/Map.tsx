@@ -133,7 +133,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               const div = document.createElement("div");
               div.className = "cluster-icon";
               div.textContent = count.toString();
-              div.style.textAlign = "center";
               return div;
             })(),
           });
