@@ -1,11 +1,9 @@
+import { StatusCodes } from "http-status-codes";
 import request from "supertest";
 import app from "../src/app";
-import { StatusCodes } from "http-status-codes";
-import { User } from "../src/model/user";
-import { UserError } from "../src/error/userError";
 
-import dotenv from 'dotenv'; 
-dotenv.config();  
+import dotenv from "dotenv";
+dotenv.config();
 
 jest.mock("../src/model/user");
 // jest.mock("../src/middleware/validation", () => ({

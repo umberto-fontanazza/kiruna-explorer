@@ -2,8 +2,8 @@ import request from "supertest";
 import app from "../src/app";
 import passport from "passport";
 import { StatusCodes } from "http-status-codes";
-import dotenv from 'dotenv'; 
-dotenv.config(); 
+import dotenv from "dotenv";
+dotenv.config();
 
 jest.mock("passport", () => ({
   authenticate: jest.fn(),

@@ -7,31 +7,27 @@ import { StatusCodes } from "http-status-codes";
 
 // Tests
 describe("Link Router", () => {
-    let testDocID_A: number;
-    let testDocID_B: number;
+  let testDocID_A: number;
+  let testDocID_B: number;
 
-    beforeAll(async () => {
-        //Create a new pair of documents
-        const DocResponseA = await request(app)
-        .post("/documents")
-        .send({
-        title: "Test Document A",
-        description: "This is a test document",
-        });
-        
-        testDocID_A = DocResponseA.body.id;
-
-        const DocResponseB = await request(app)
-        .post("/documents")
-        .send({
-        title: "Test Document A",
-        description: "This is a test document",
-        });
-        
-        testDocID_B = DocResponseB.body.id;
+  beforeAll(async () => {
+    //Create a new pair of documents
+    const DocResponseA = await request(app).post("/documents").send({
+      title: "Test Document A",
+      description: "This is a test document",
     });
-  
-    afterAll(async () => {
+
+    testDocID_A = DocResponseA.body.id;
+
+    const DocResponseB = await request(app).post("/documents").send({
+      title: "Test Document A",
+      description: "This is a test document",
+    });
+
+    testDocID_B = DocResponseB.body.id;
+  });
+
+  afterAll(async () => {
     //Delete the documents
     await request(app).delete(`/documents/${testDocID_A}`);
     await request(app).delete(`/documents/${testDocID_B}`);
@@ -45,17 +41,19 @@ describe("Link Router", () => {
   });
 
   it("should create or update a link associated with a specific document", async () => {
-    const response = await request(app).put(`/documents/${testDocID_A}/links`).send({
-      targetDocumentId: testDocID_A,
-      linkTypes: ["DIRECT"],
-    });
+    const response = await request(app)
+      .put(`/documents/${testDocID_A}/links`)
+      .send({
+        targetDocumentId: testDocID_A,
+        linkTypes: ["DIRECT"],
+      });
     expect(response.status).toBe(StatusCodes.CREATED);
   });
 
   it("should delete a link between two specific documents", async () => {
     const response = await request(app)
-    .delete(`/documents/${testDocID_B}/links`)
-    .query({ targetId: testDocID_A });
+      .delete(`/documents/${testDocID_B}/links`)
+      .query({ targetId: testDocID_A });
     expect(response.status).toBe(StatusCodes.NO_CONTENT);
   });
 });
