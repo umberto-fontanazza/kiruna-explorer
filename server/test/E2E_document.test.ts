@@ -1,13 +1,13 @@
 import dotenv from "dotenv";
-dotenv.config();
-import app from "../src/app";
-import request from "supertest";
-import { Database } from "../src/database";
 import { StatusCodes } from "http-status-codes";
+import request from "supertest";
+import app from "../src/app";
+import { Database } from "../src/database";
 import { DocumentType, Stakeholder } from "../src/model/document";
-import { ScaleType } from "../src/model/scale";
 import { LinkType } from "../src/model/link";
+import { ScaleType } from "../src/model/scale";
 import { loginAsPlanner, loginAsResident } from "./utils";
+dotenv.config();
 
 // End to end testing
 let plannerCookie: string;
@@ -29,7 +29,7 @@ describe("Testing story 1", () => {
     scale: { type: ScaleType.Text },
   };
   const testDocAllFields = {
-    title: "Coordinates test",
+    title: "All fields test",
     description: "This one will be tested for all fields",
     type: DocumentType.Informative,
     scale: { type: ScaleType.BlueprintsOrEffect },
@@ -411,23 +411,33 @@ describe("Testing story 1", () => {
 
 describe("Testing story 2", () => {
   const sourceDocument1 = {
-    title: "Mandatory Fields test",
-    description: "This one will be tested for mandatory fields",
+    title: "Source Document",
+    description: "This one will be tested as a source",
     type: DocumentType.Prescriptive,
     scale: { type: ScaleType.Text },
     stakeholders: [Stakeholder.Residents],
   };
   const targetDocument2 = {
-    title: "Coordinates test",
-    description: "This one will be tested for all fields",
+    title: "Target Document",
+    description: "This one will be tested as a target",
     type: DocumentType.Informative,
     scale: { type: ScaleType.BlueprintsOrEffect },
     stakeholders: [Stakeholder.KirunaKommun],
     issuanceDate: "2021-12-12",
     coordinates: { latitude: 45, longitude: 30 },
   };
+  const targetDocument3 = {
+    title: "Target Document",
+    description: "This one will be tested as a target",
+    type: DocumentType.Informative,
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    stakeholders: [Stakeholder.KirunaKommun],
+    issuanceDate: "2021-12-11",
+    coordinates: { latitude: 35, longitude: 30 },
+  };
   let sourceDocumentId1: number;
   let targetDocumentId2: number;
+  let targetDocumentId3: number;
 
   test("US1.2 POST Document 1", async () => {
     const response = await request(app)
@@ -449,6 +459,17 @@ describe("Testing story 2", () => {
     expect(response.body.id).toBeDefined();
     expect(typeof response.body.id).toBe("number");
     targetDocumentId2 = response.body.id;
+  });
+
+  test("US1.2 POST Document 3", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...targetDocument3 });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    targetDocumentId3 = response.body.id;
   });
 
   test("US2.1 PUT link documents without being Urban Planner", async () => {
@@ -510,7 +531,7 @@ describe("Testing story 2", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
-  test("US2.6 PUT link documents with wrong target cocument", async () => {
+  test("US2.6 PUT link documents with wrong target document", async () => {
     const response = await request(app)
       .put(`/documents/${sourceDocumentId1}/links`)
       .set("Cookie", plannerCookie)
@@ -518,7 +539,7 @@ describe("Testing story 2", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
-  test("US2.6 PUT link documents with wrong target cocument", async () => {
+  test("US2.6 PUT link documents with wrong target document", async () => {
     const response = await request(app)
       .put(`/documents/${sourceDocumentId1}/links`)
       .set("Cookie", plannerCookie)
@@ -553,7 +574,7 @@ describe("Testing story 2", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
-  test("US2.10 GET links for a document", async () => {
+  test("US2.10 GET links for a document as Visitor", async () => {
     const response = await request(app).get(
       `/documents/${sourceDocumentId1}/links`,
     );
@@ -562,7 +583,7 @@ describe("Testing story 2", () => {
     expect(response.body.length).toBe(1);
   });
 
-  test("US2.11 GET links for a document", async () => {
+  test("US2.11 GET links for a document as Urban Planner", async () => {
     const response = await request(app)
       .get(`/documents/${sourceDocumentId1}/links`)
       .set("Cookie", plannerCookie);
@@ -584,6 +605,42 @@ describe("Testing story 2", () => {
     );
     expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
   });
+
+  test("US2.2 PUT link documents", async () => {
+    const response = await request(app)
+      .put(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie)
+      .send({
+        targetDocumentId: targetDocumentId3,
+        linkTypes: [LinkType.Projection],
+      });
+    expect(response.status).toStrictEqual(StatusCodes.CREATED);
+  });
+
+  test("US2.11 GET links for a document after creating another one", async () => {
+    const response = await request(app)
+      .get(`/documents/${sourceDocumentId1}/links`)
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.OK);
+    expect(response.body).toBeInstanceOf(Array);
+    expect(response.body).toStrictEqual([{linkTypes: ["collateral"], targetDocumentId: targetDocumentId2}, {linkTypes: ["projection"],
+      targetDocumentId: targetDocumentId3}]);
+  });
+
+  test("US1.19 DELETE an existing document", async () => {
+    const response = await request(app)
+      .del(`/documents/${sourceDocumentId1}`)
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+
+    await request(app)
+      .del(`/documents/${targetDocumentId2}`)
+      .set("Cookie", plannerCookie);
+    await request(app)
+      .del(`/documents/${targetDocumentId3}`)
+      .set("Cookie", plannerCookie);
+  });
+
 });
 
 describe("Testing story 3 and 5", () => {
@@ -768,9 +825,9 @@ describe("Testing story 3 and 5", () => {
   });
 });
 
-describe("Testing story 4", () => {
+describe("Testing story 4 and 6", () => {
   const testDocAllFields = {
-    title: "Coordinates test",
+    title: "Story 4 test",
     description: "This one will be tested for story 4",
     type: DocumentType.Informative,
     scale: { type: ScaleType.BlueprintsOrEffect },
@@ -791,7 +848,7 @@ describe("Testing story 4", () => {
     testDocId = response.body.id;
   });
 
-  describe("Urban Planner", () => {
+  describe("Urban Planner story 6", () => {
     afterAll(async () => {
       await request(app).delete("/current/");
     });
