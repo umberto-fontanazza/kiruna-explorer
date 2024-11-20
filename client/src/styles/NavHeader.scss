@@ -8,16 +8,22 @@
   align-items: center;
   background: Color.$first;
 
-  .brand {
-    font-family: "SwedenSansBold", sans-serif;
-    font-size: 2rem;
-    font-weight: bold;
-    color: white;
-  }
-
-  .nav-btns {
+  .nav-title-btns {
     display: flex;
     gap: 1rem;
+
+    .brand {
+      font-family: "SwedenSansBold", sans-serif;
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      margin-right: 2%;
+      margin-top: 1%;
+    }
+
+    button {
+      width: 100%;
+    }
   }
 
   > :last-child {
