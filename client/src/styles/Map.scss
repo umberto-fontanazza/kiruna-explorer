@@ -24,11 +24,6 @@
     &:hover {
       background-color: Color.$second;
     }
-
-    .doc-img {
-      width: 4vh;
-      height: 4vh;
-    }
   }
 
   .insert-mode {
@@ -97,12 +92,17 @@
   width: 5rem;
   height: 5rem;
   border-radius: 50%;
+  color: Color.$first;
   background-size: contain;
-  text-align: "center";
-  line-height: 5rem;
+  text-align: center;
+  line-height: 5.3rem;
   font-family: "SwedenSansBold", sans-serif;
-  font-size: "1.6em";
-  color: Color.$third;
+  font-size: 1.6em;
   justify-content: center;
-  background-image: url("https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m3.png");
+  background-image: url("https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m2.png");
+  -moz-transform: scale(1.5);
+  -ms-transform: scale(1.5);
+  -o-transform: scale(1.5);
+  -webkit-transform: scale(1.5);
+  transform: scale(1.5);
 }

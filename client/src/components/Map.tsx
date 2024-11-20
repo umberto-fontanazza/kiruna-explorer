@@ -2,24 +2,29 @@ import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../styles/Map.scss";
-import { Document, fromDocumentTypeToIcon, Link } from "../utils/interfaces";
+import {
+  Coordinates,
+  createDocumentStateFromExisting,
+  createNewDocumentState,
+  Document,
+  fromDocumentTypeToIcon,
+  Link,
+} from "../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../utils/map";
 import MapTypeSelector from "./MapTypeSelector";
-
-interface Position {
-  lat: number;
-  lng: number;
-}
 
 interface MapComponentProps {
   documents: Document[];
   documentSelected: Document | null;
   visualLinks: boolean;
-  insertMode: boolean;
+  positionView: boolean;
+  editPositionMode: boolean;
+  editDocumentMode: boolean;
   setModalOpen: Dispatch<SetStateAction<boolean>>;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
-  setDocSelected: Dispatch<SetStateAction<Document | null>>;
-  setNewPos: Dispatch<SetStateAction<Position>>;
+  setdocumentSelected: Dispatch<SetStateAction<Document | null>>;
+  setNewPosition: Dispatch<SetStateAction<Coordinates>>;
+  onEditPos: (newPos: Coordinates) => Promise<void>;
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
@@ -27,12 +32,20 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     documents,
     documentSelected,
     visualLinks,
-    insertMode,
+    positionView,
+    editPositionMode,
+    editDocumentMode,
     setModalOpen,
     setSidebarOpen,
-    setDocSelected,
-    setNewPos,
+    setdocumentSelected,
+    onEditPos,
+    setNewPosition,
   } = props;
+
+  const initialDocumentState =
+    editDocumentMode && documentSelected
+      ? createDocumentStateFromExisting(documentSelected)
+      : createNewDocumentState();
   const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
@@ -50,19 +63,27 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     if (!event.latLng) return;
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
-    setNewPos({ lat, lng });
-    setModalOpen(true);
+    setNewPosition({ latitude: lat, longitude: lng });
+    if (!editPositionMode) {
+      // Insert Document Position flow
+      setdocumentSelected(initialDocumentState);
+      setModalOpen(true);
+    } else {
+      //Edit Document Position Flow
+      onEditPos({ latitude: lat, longitude: lng });
+    }
   };
 
   useEffect(() => {
-    if (!isLoaded || !map || !insertMode) return;
+    if (!isLoaded || !map || !positionView) return;
 
     map.addListener("click", onMapClick);
 
     return () => {
       google.maps.event.clearInstanceListeners(map);
     };
-  }, [insertMode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positionView]);
 
   const createMarker = (
     doc: Document,
@@ -85,7 +106,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
     marker.addListener("click", () => {
       setSidebarOpen(true);
-      setDocSelected(doc);
+      setdocumentSelected(doc);
       setCenter({
         lat: doc.coordinates?.latitude ?? kirunaCoords.lat,
         lng: doc.coordinates?.longitude ?? kirunaCoords.lng + 0.0019,
@@ -107,7 +128,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   };
 
   useEffect(() => {
-    if (!isLoaded || !map || insertMode) {
+    if (!isLoaded || !map || positionView) {
       clearMarkers();
       return;
     }
@@ -163,11 +184,13 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   return isLoaded ? (
     <section id="map">
       <MapTypeSelector mapType={mapType} setMapType={setMapType} />
-      {insertMode && (
+      {positionView && (
         <div className="insert-mode">
-          <h2>Insert Mode</h2>
+          <h2>{!editPositionMode ? "Insert Mode" : "Update Position"}</h2>
           <h3>
-            Select a point on the map, where you want to add a new Document
+            {!editPositionMode
+              ? "Select a point on the map, where you want to add a new Document"
+              : "Select a point on the map, where you want to update the position of the document selected"}
           </h3>
         </div>
       )}

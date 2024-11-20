@@ -50,10 +50,10 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
         setTableLinks((prev: Link[]) => {
           const updatedLinks = prev.map((link) => {
             if (link.targetDocumentId === targetDocumentId) {
-              if (!link.type.includes(type)) {
+              if (!link.linkTypes.includes(type)) {
                 return {
                   ...link,
-                  type: [...link.type, type],
+                  linkTypes: [...link.linkTypes, type],
                 };
               }
             }
@@ -69,7 +69,7 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
             ...prev,
             {
               targetDocumentId: targetDocumentId,
-              type: [type],
+              linkTypes: [type],
             },
           ];
         });

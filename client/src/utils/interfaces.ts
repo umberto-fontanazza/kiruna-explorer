@@ -1,4 +1,4 @@
-import { Dayjs } from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 export interface User {
   email: string;
@@ -25,7 +25,7 @@ export interface LoginErrors {
 
 export interface Link {
   targetDocumentId: number;
-  type: LinkType[];
+  linkTypes: LinkType[];
 }
 
 export interface Document {
@@ -104,3 +104,32 @@ export const scaleTypeDisplay: { [key in ScaleType]: string } = {
   [ScaleType.Text]: "Text",
   [ScaleType.Ratio]: "Ratio",
 };
+
+export const createNewDocumentState = (): Document => ({
+  id: -1,
+  title: "",
+  description: "",
+  stakeholders: [],
+  scale: { type: ScaleType.Text, ratio: undefined },
+  type: DocumentType.Design,
+  issuanceDate: undefined,
+  links: [],
+  coordinates: { latitude: 0, longitude: 0 },
+});
+
+export const createDocumentStateFromExisting = (
+  docSelected: Document
+): Document => ({
+  id: docSelected.id,
+  title: docSelected.title,
+  description: docSelected.description,
+  stakeholders: docSelected.stakeholders,
+  scale: {
+    type: docSelected.scale?.type,
+    ratio: docSelected.scale?.ratio,
+  },
+  type: docSelected.type,
+  issuanceDate: dayjs(docSelected.issuanceDate),
+  links: docSelected.links,
+  coordinates: docSelected.coordinates,
+});

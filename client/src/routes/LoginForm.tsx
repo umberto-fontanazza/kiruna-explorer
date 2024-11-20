@@ -1,9 +1,9 @@
-import { FC, useState, useContext } from "react";
-import { LoginErrors } from "../utils/interfaces";
-import "../styles/LoginForm.scss";
-import { useNavigate } from "react-router-dom";
+import { FC, useContext, useState } from "react";
 import { Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
 import { authContext } from "../context/auth";
+import "../styles/LoginForm.scss";
+import { LoginErrors } from "../utils/interfaces";
 
 const LoginForm: FC = (): JSX.Element => {
   const { user, login } = useContext(authContext);

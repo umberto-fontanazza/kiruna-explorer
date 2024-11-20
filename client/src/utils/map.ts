@@ -9,7 +9,7 @@ export const kirunaBoundaries = {
 };
 
 export const mapOptions = {
-  mapId: "d76bd741d388f7fd",
+  mapId: "group_15",
   mapTypeControl: false,
   mapTypeControlOptions: {
     mapTypeIds: ["satellite", "roadmap", "hybrid", "terrain"],
