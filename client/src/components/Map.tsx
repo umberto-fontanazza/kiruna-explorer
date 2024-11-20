@@ -124,7 +124,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     const markerCluster = new MarkerClusterer({
       markers: newMarkers,
       map,
-      // Usa il `renderer` per personalizzare l'icona dei cluster
       renderer: {
         render: ({ count, position }) => {
           return new google.maps.marker.AdvancedMarkerElement({
@@ -135,10 +134,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               div.className = "cluster-icon";
               div.textContent = count.toString();
               div.style.textAlign = "center";
-              div.style.lineHeight = `4.9rem`;
-              div.style.fontFamily = "SwedenSansBold, sans-serif";
-              div.style.fontSize = "1.6em";
-              div.style.color = "lightblack";
               return div;
             })(),
           });
