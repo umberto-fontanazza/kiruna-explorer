@@ -95,11 +95,6 @@ describe("sessionRouter", () => {
 
   describe("DELETE /current", () => {
     it("should log out the current user", async () => {
-      const mockUser = {
-        id: 1,
-        username: process.env.TEST_NAME,
-        email: process.env.TEST_EMAIL,
-      };
       passport.logout = jest
         .fn()
         .mockImplementationOnce((callback) => callback());
