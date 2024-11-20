@@ -623,8 +623,10 @@ describe("Testing story 2", () => {
       .set("Cookie", plannerCookie);
     expect(response.status).toStrictEqual(StatusCodes.OK);
     expect(response.body).toBeInstanceOf(Array);
-    expect(response.body).toStrictEqual([{linkTypes: ["collateral"], targetDocumentId: targetDocumentId2}, {linkTypes: ["projection"],
-      targetDocumentId: targetDocumentId3}]);
+    expect(response.body).toStrictEqual([
+      { linkTypes: ["collateral"], targetDocumentId: targetDocumentId2 },
+      { linkTypes: ["projection"], targetDocumentId: targetDocumentId3 },
+    ]);
   });
 
   test("US1.19 DELETE an existing document", async () => {
@@ -640,7 +642,6 @@ describe("Testing story 2", () => {
       .del(`/documents/${targetDocumentId3}`)
       .set("Cookie", plannerCookie);
   });
-
 });
 
 describe("Testing story 3 and 5", () => {

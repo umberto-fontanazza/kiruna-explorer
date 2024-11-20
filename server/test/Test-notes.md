@@ -86,4 +86,5 @@
 4. Adjust georeference a document being an Urban planner, with missing information. DONE (BAD_REQUEST)
 
 ## US 6. As an Urban Planner I want to list all documents
+
 1. View all documents as a Urban Planner. DONE (OK)
