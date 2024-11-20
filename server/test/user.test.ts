@@ -2,8 +2,8 @@ import { User, UserRole } from "../src/model/user";
 import { Database } from "../src/database";
 import crypto from "crypto";
 
-import dotenv from 'dotenv'; 
-dotenv.config(); 
+import dotenv from "dotenv";
+dotenv.config();
 
 jest.mock("../src/database", () => ({
   Database: {
@@ -66,9 +66,9 @@ describe("User Class", () => {
   describe("login()", () => {
     it("should return a User object if login is successful", async () => {
       const dbUserRow = {
-        process.env.TEST_EMAIL,
-        process.env.TEST_NAME,
-        process.env.TEST_SURNAME,
+        email: process.env.TEST_EMAIL,
+        name: process.env.TEST_NAME,
+        surname: process.env.TEST_SURNAME,
         role: UserRole.Planner.toString(),
         salt: Buffer.from("randomsalt"),
         password_hash: Buffer.from("hashedpassword"),
@@ -85,9 +85,9 @@ describe("User Class", () => {
 
     it("should return false if login fails due to incorrect password", async () => {
       const dbUserRow = {
-        process.env.TEST_EMAIL,
-        process.env.TEST_NAME,
-        process.env.TEST_SURNAME,
+        pemail: process.env.TEST_EMAIL,
+        name: process.env.TEST_NAME,
+        surname: process.env.TEST_SURNAME,
         role: UserRole.Planner.toString(),
         salt: Buffer.from("randomsalt"),
         password_hash: Buffer.from("wronghashedpassword"),
@@ -125,9 +125,9 @@ describe("User Class", () => {
   describe("getByEmail()", () => {
     it("should return a user by email", async () => {
       const dbUserRow = {
-        process.env.TEST_EMAIL,
-        process.env.TEST_NAME,
-        process.env.TEST_SURNAME,
+        email: process.env.TEST_EMAIL,
+        name: process.env.TEST_NAME,
+        surname: process.env.TEST_SURNAME,
         role: UserRole.Planner.toString(),
       };
       (Database.query as jest.Mock).mockResolvedValueOnce({
