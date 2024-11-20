@@ -1,5 +1,4 @@
-import "@material/web/icon/_icon.scss";
-import "@material/web/iconbutton/filled-tonal-icon-button.js";
+import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../styles/Map.scss";
@@ -65,10 +64,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     };
   }, [insertMode]);
 
-  /**
-   * @param linked - when true the documents is visualized
-   * as linked to the selected document
-   */
   const createMarker = (
     doc: Document,
     linked: boolean = false
@@ -93,16 +88,12 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       setDocSelected(doc);
       setCenter({
         lat: doc.coordinates?.latitude ?? kirunaCoords.lat,
-        lng: doc.coordinates?.longitude ?? kirunaCoords.lng + 0.0019, //TODO: explain this + numbers
+        lng: doc.coordinates?.longitude ?? kirunaCoords.lng + 0.0019,
       });
     });
     return marker;
   };
 
-  /**
-   * @param doc - the document to be checked
-   * @returns true if doc is currently selected or linked to the selected
-   */
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
       documentSelected?.links?.map((link: Link) => link.targetDocumentId) ?? [];
@@ -120,6 +111,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       clearMarkers();
       return;
     }
+
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
       .filter((doc) => doc.coordinates)
       .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
@@ -127,11 +119,48 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         createMarker(doc, visualLinks && doc.id !== documentSelected?.id)
       );
 
-    setMarkers((_) => {
-      clearMarkers();
-      return newMarkers;
+    clearMarkers();
+
+    const markerCluster = new MarkerClusterer({
+      markers: newMarkers,
+      map,
+      // Usa il `renderer` per personalizzare l'icona dei cluster
+      renderer: {
+        render: ({ count, position }) => {
+          let size = 30;
+          if (count > 10) size = 50;
+          if (count > 50) size = 60;
+
+          return new google.maps.marker.AdvancedMarkerElement({
+            position,
+            title: count.toString(),
+            content: (() => {
+              const div = document.createElement("div");
+              div.style.width = `${size}px`;
+              div.style.height = `${size}px`;
+              div.style.backgroundImage = `url(https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m${Math.min(count, 3)}.png)`;
+              div.style.backgroundSize = "contain";
+              return div;
+            })(),
+          });
+        },
+      },
     });
-    return clearMarkers;
+
+    google.maps.event.addListener(
+      markerCluster,
+      "clusterclick",
+      (cluster: { getBounds: () => any }) => {
+        const bounds = cluster.getBounds();
+        map?.fitBounds(bounds); // Auto-zoom al cluster
+      }
+    );
+
+    setMarkers(newMarkers);
+
+    return () => {
+      markerCluster.clearMarkers();
+    };
   }, [isLoaded, map, props]);
 
   return isLoaded ? (
