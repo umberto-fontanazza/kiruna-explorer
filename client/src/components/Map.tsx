@@ -127,34 +127,39 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       // Usa il `renderer` per personalizzare l'icona dei cluster
       renderer: {
         render: ({ count, position }) => {
-          let size = 30;
-          if (count > 10) size = 50;
-          if (count > 50) size = 60;
+          const size = 50;
 
           return new google.maps.marker.AdvancedMarkerElement({
             position,
             title: count.toString(),
             content: (() => {
               const div = document.createElement("div");
-              div.style.width = `${size}px`;
-              div.style.height = `${size}px`;
-              div.style.backgroundImage = `url(https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m${Math.min(count, 3)}.png)`;
-              div.style.backgroundSize = "contain";
+              div.className = "cluster-icon";
+              div.textContent = count.toString();
+              div.style.textAlign = "center";
+              div.style.lineHeight = `4.9rem`;
+              div.style.fontFamily = "SwedenSansBold, sans-serif";
+              div.style.fontSize = "1.6em";
+              div.style.color = "lightblack";
               return div;
             })(),
           });
         },
       },
-    });
+      onClusterClick: (event, cluster, map) => {
+        if (cluster.bounds) {
+          const currentZoom = map.getZoom();
 
-    google.maps.event.addListener(
-      markerCluster,
-      "clusterclick",
-      (cluster: { getBounds: () => any }) => {
-        const bounds = cluster.getBounds();
-        map?.fitBounds(bounds); // Auto-zoom al cluster
-      }
-    );
+          const newZoom = Math.min(
+            (currentZoom ?? 0) + 1,
+            (map.getZoom() ?? 0) + 2
+          ); // Set new zoom level, (default zooms is the maximum zoom level)
+
+          map.fitBounds(cluster.bounds);
+          map.setZoom(newZoom);
+        }
+      },
+    });
 
     setMarkers(newMarkers);
 
