@@ -15,7 +15,7 @@ const Popup: FC<PopupProps> = (props) => {
   return (
     <div className="overlay">
       <div className="popup">
-        <h2>Confirm deletion</h2>
+        <h2>Confirmation to delete</h2>
         <p>
           Are you sure you want to delete the document{" "}
           <strong>{props.document?.title || "selected"}</strong>? This action is
