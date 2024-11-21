@@ -171,8 +171,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
           >
             {/* Title Input */}
             <div className="form-group">
-              <label>Title *</label>
+              <label htmlFor="title">Title *</label>
               <input
+                id="title"
                 type="text"
                 placeholder="Enter Document Title"
                 value={newDoc.title}
@@ -186,8 +187,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
 
             {/* Description */}
             <div className="form-group">
-              <label>Description *</label>
+              <label htmlFor="description">Description *</label>
               <textarea
+                id="description"
                 value={newDoc.description || ""}
                 placeholder="Enter Document Description"
                 onChange={(e) =>
@@ -199,11 +201,12 @@ const DocumentForm: FC<DocumentFormProps> = ({
                 required
               />
             </div>
-            {/* Scale Selection */}
+
             <div className="line">
               <div className="form-group">
-                <label>Scale *</label>
+                <label htmlFor="scale-type">Scale *</label>
                 <select
+                  id="scale-type"
                   defaultValue={newDoc.scale.type}
                   onChange={(e) => {
                     const scaleType = e.target.value;
@@ -227,7 +230,6 @@ const DocumentForm: FC<DocumentFormProps> = ({
                 </select>
               </div>
 
-              {/* Numeric Scale Input */}
               <div className="form-group">
                 {newDoc.scale.type === ScaleType.Ratio && (
                   <div className="ratio-group">
@@ -262,8 +264,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
             <div className="line">
               {/* Issuance Date */}
               <div className="form-group">
-                <label>Issuance Date</label>
+                <label htmlFor="issuance-date">Issuance Date</label>
                 <input
+                  id="issuance-date"
                   type="date"
                   value={
                     newDoc.issuanceDate
@@ -274,8 +277,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
                 />
               </div>
               <div className="form-group">
-                <label>Type *</label>
+                <label htmlFor="document-type">Type *</label>
                 <select
+                  id="document-type"
                   value={newDoc.type}
                   onChange={(e) =>
                     setNewDoc((prev) => ({
