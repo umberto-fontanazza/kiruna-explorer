@@ -10,6 +10,8 @@
 
   .nav-title-btns {
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 1rem;
 
     .brand {
@@ -18,7 +20,6 @@
       font-weight: bold;
       color: white;
       margin-right: 2%;
-      margin-top: 1%;
     }
 
     button {
