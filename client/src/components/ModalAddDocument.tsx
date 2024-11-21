@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { FC, useEffect, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../styles/ModalAddDocument.scss";
 import "../styles/ProgressBar.scss";
 import {
@@ -25,7 +25,7 @@ interface ModalAddProps {
   documents: Document[];
   closePositionView: () => void;
   docSelected: Document | null;
-  setEditDocumentMode: (value: boolean) => void;
+  setEditDocumentMode: Dispatch<SetStateAction<boolean>>;
 }
 
 const scaleValues = [
