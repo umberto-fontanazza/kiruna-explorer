@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import API from "../API/API";
 import NavHeader from "../components/NavHeader";
+import Popup from "../components/Popup";
+import { useAppContext } from "../context/appContext";
 import "../styles/DocumentsList.scss";
 import {
   Document,
@@ -11,19 +11,20 @@ import {
 } from "../utils/interfaces";
 
 const DocumentsList = () => {
-  const [documentsList, setDocumentsList] = useState<Document[]>([]);
+  const {
+    documents,
+    docSelected,
+    setDocSelected,
+    handleEditButton,
+    isPopupOpen,
+    setIsPopupOpen,
+    handleDeleteDocument,
+    handleCancelPopup,
+  } = useAppContext();
 
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        const documents = await API.getDocuments();
-        setDocumentsList(documents);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    fetchDocuments();
-  }, []);
+  function handleRowClick(doc: Document): void {
+    setDocSelected(doc);
+  }
 
   return (
     <>
@@ -46,8 +47,12 @@ const DocumentsList = () => {
               </tr>
             </thead>
             <tbody>
-              {documentsList.map((doc) => (
-                <tr key={doc.id}>
+              {documents.map((doc) => (
+                <tr
+                  key={doc.id}
+                  className={`${docSelected?.id === doc.id ? "selected-row" : ""}`}
+                  onClick={() => handleRowClick(doc)}
+                >
                   <td>
                     <span
                       className={`material-symbols-outlined color-${fromDocumentTypeToIcon.get(
@@ -92,33 +97,46 @@ const DocumentsList = () => {
                     </span>
                   </td>
                   <td>{doc.links?.length}</td>
-                  {/*<td className="actions-group">
-                    <button className="btn-edit" onClick={() => props.toEdit()}>
-                      <span className="material-symbols-outlined">
-                        edit_document
-                      </span>
-                    </button>
-                    <button
-                      className="btn-edit pos"
-                      onClick={() => {
-                        props.toEditPos();
-                      }}
-                    >
-                      <span className="material-symbols-outlined">
-                        edit_location
-                      </span>
-                    </button>
-                    <button
-                      className="btn-edit delete"
-                      onClick={() => props.setPopupOpen(true)}
-                    >
-                      <span className="material-symbols-outlined ">delete</span>
-                    </button>
-                  </td>*/}
+                  {
+                    <td className="actions-group">
+                      <button
+                        className="btn-edit"
+                        onClick={() => handleEditButton()}
+                      >
+                        <span className="material-symbols-outlined">
+                          edit_document
+                        </span>
+                      </button>
+                      <button
+                        className="btn-edit pos"
+                        onClick={() => {
+                          //props.toEditPos();
+                        }}
+                      >
+                        <span className="material-symbols-outlined">
+                          edit_location
+                        </span>
+                      </button>
+                      <button
+                        className="btn-edit delete"
+                        onClick={() => setIsPopupOpen(true)}
+                      >
+                        <span className="material-symbols-outlined ">
+                          delete
+                        </span>
+                      </button>
+                    </td>
+                  }
                 </tr>
               ))}
             </tbody>
           </table>
+          <Popup
+            isOpen={isPopupOpen}
+            document={docSelected}
+            onCancel={handleCancelPopup}
+            onConfirm={handleDeleteDocument}
+          />
         </div>
       </div>
     </>
