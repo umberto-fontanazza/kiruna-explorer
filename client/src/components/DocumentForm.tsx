@@ -90,29 +90,20 @@ const DocumentForm: FC<DocumentFormProps> = ({
     }));
   }, [newPos]);
 
-  const handleCheckboxChange = (event: {
+  const onCheckboxChange = (event: {
     target: { value: string; checked: boolean };
   }) => {
     const { value, checked } = event.target;
 
-    setNewDoc((prev) => {
-      const stakeholders = prev.stakeholders || [];
-      if (checked) {
-        // add option if selected
-        return {
-          ...prev,
-          stakeholders: [...stakeholders, value as Stakeholder],
-        };
-      } else {
-        // remove option if unselected
-        return {
-          ...prev,
-          stakeholders: stakeholders.filter(
-            (stake) => stake !== (value as Stakeholder)
-          ),
-        };
-      }
-    });
+    setNewDoc(
+      (previousDoc) =>
+        ({
+          ...previousDoc,
+          stakeholders: checked
+            ? [...(previousDoc.stakeholders ?? []), value]
+            : previousDoc.stakeholders?.filter((sh) => sh != value) || [],
+        }) as Document
+    );
   };
 
   const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -316,7 +307,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
                       type="checkbox"
                       value={option.value}
                       checked={newDoc.stakeholders?.includes(option.value)}
-                      onChange={handleCheckboxChange}
+                      onChange={onCheckboxChange}
                     />
                     {option.label}
                   </label>
