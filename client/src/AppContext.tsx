@@ -90,6 +90,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setEditDocumentMode,
         setIsPopupOpen,
         setEditPositionMode,
+        //Functions
         handleEditButton,
         handleDeleteDocument,
         handleCancelPopup,

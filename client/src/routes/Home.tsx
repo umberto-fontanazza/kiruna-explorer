@@ -1,57 +1,48 @@
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useState } from "react";
 import API from "../API/API";
 import MapComponent from "../components/Map";
 import ModalForm from "../components/ModalAddDocument";
 import NavHeader from "../components/NavHeader";
 import Popup from "../components/Popup";
 import Sidebar from "../components/Sidebar";
+import { useAppContext } from "../context/appContext";
 import { authContext } from "../context/auth";
 import "../styles/Home.scss";
 import { Coordinates, Document } from "../utils/interfaces";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
-  // State to hold list of documents
-  const [documents, setDocuments] = useState<Document[]>([]);
-  // State to control sidebar visibility
+  const {
+    documents,
+    setDocuments,
+    docSelected,
+    setDocSelected,
+    modalOpen,
+    setModalOpen,
+    editDocumentMode,
+    setEditDocumentMode,
+    isPopupOpen,
+    setIsPopupOpen,
+    editPositionMode,
+    setEditPositionMode,
+    handleEditButton,
+    handleDeleteDocument,
+    handleCancelPopup,
+  } = useAppContext();
+
+  // State to control sidebar visibility.
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  // State for selected document
-  const [docSelected, setDocSelected] = useState<Document | null>(null);
-  // State to control modal for adding documents
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-  //State to control modal for edit document selected
-  const [editDocumentMode, setEditDocumentMode] = useState(false);
-  //State to control the popup to delete a document
-  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
 
-  //States to handle to insertion and modification of the position of a document
+  //States to handle to insertion and modification of the position of a document.
   const [positionView, setPositionView] = useState<boolean>(false);
-  const [editPositionMode, setEditPositionMode] = useState<boolean>(false);
 
+  // State to handle the visualization of the links, highlighting the markers on the map.
   const [visualizeLinks, setVisualizeLinks] = useState<boolean>(false);
 
   const [newPosition, setNewPosition] = useState<Coordinates>({
     latitude: -1,
     longitude: -1,
   });
-
-  // Fetch documents on component mount
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        const documents: Document[] = await API.getDocuments();
-        setDocuments(documents);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchDocuments();
-  }, []);
-
-  const handleEditButton = () => {
-    setEditDocumentMode(true);
-    setModalOpen(true);
-  };
 
   // Handle Add Document button click to open modal
   const handleAddButton = () => {
@@ -108,41 +99,19 @@ const Home: FC = (): JSX.Element => {
   };
 
   // Handle to delete the document selected
-  const handleDeleteDocument = async () => {
-    try {
-      if (docSelected) {
-        // First delete links
-        if (docSelected.links && docSelected.links?.length > 0) {
-          docSelected.links?.map(async (link) => {
-            await API.deleteLink(docSelected.id, link.targetDocumentId);
-          });
-        }
-        // Second delete document
-        await API.deleteDocument(docSelected?.id);
-        setSidebarOpen(false);
-        setIsPopupOpen(false);
-        setDocuments((oldDocs: Document[]) => {
-          return oldDocs.filter((doc) => doc.id !== docSelected?.id);
-        });
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // Handle to cancel the popup
-  const handleCancelPopup = () => {
-    setIsPopupOpen(false);
+  const handleDelete = async () => {
+    handleDeleteDocument();
+    setSidebarOpen(false);
   };
 
   //Handle to edit the position of the document selected
-  const handleeditPositionMode = () => {
+  const handleEditPositionMode = () => {
     setSidebarOpen(false);
     setPositionView(true);
     setEditPositionMode(true);
   };
 
-  const handleeditPositionModeConfirm = async (newPos: Coordinates) => {
+  const handleEditPositionModeConfirm = async (newPos: Coordinates) => {
     if (docSelected) {
       try {
         const updateDocument = {
@@ -169,7 +138,6 @@ const Home: FC = (): JSX.Element => {
     <>
       {/* Navigation Header */}
       <NavHeader />
-
       <div className="body-container">
         {/* Map Component with overlay button for adding documents */}
         <div className="map">
@@ -184,7 +152,7 @@ const Home: FC = (): JSX.Element => {
               positionView={positionView}
               editPositionMode={editPositionMode}
               editDocumentMode={editDocumentMode}
-              onEditPos={handleeditPositionModeConfirm}
+              onEditPos={handleEditPositionModeConfirm}
               setNewPosition={setNewPosition}
             />
           }
@@ -214,47 +182,9 @@ const Home: FC = (): JSX.Element => {
         <Popup
           isOpen={isPopupOpen}
           document={docSelected}
-          onConfirm={handleDeleteDocument}
+          onConfirm={handleDelete}
           onCancel={handleCancelPopup}
         />
-        {/* Table to see the list of all documents */}
-        {
-          // <table className="table-documents">
-          //   <thead>
-          //     <tr>
-          //       <th>Icon</th>
-          //       <th>Title</th>
-          //       <th>Info</th>
-          //     </tr>
-          //   </thead>
-          //   <tbody>
-          //     {documents.map((document) => (
-          //       <tr key={document.id}>
-          //         <td>
-          //           <img
-          //             className="doc-icon"
-          //             src={`/document-${document.type}-icon.png`}
-          //             alt="Document icon"
-          //           />
-          //         </td>
-          //         <td className="doc-title">{document.title}</td>
-          //         <td>
-          //           <button
-          //             className="icon-info"
-          //             onClick={() => {
-          //               console.log(documents);
-          //               setSidebarOpen(true);
-          //               setDocSelected(document);
-          //             }}
-          //           >
-          //             Info
-          //           </button>
-          //         </td>
-          //       </tr>
-          //     ))}
-          //   </tbody>
-          // </table>
-        }
 
         {/* Sidebar to show document details */}
         <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
@@ -269,7 +199,7 @@ const Home: FC = (): JSX.Element => {
               setDocument={setDocSelected}
               toEdit={handleEditButton}
               setPopupOpen={setIsPopupOpen}
-              toEditPos={handleeditPositionMode}
+              toEditPos={handleEditPositionMode}
             />
           }
         </div>
