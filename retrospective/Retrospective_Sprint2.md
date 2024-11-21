@@ -14,7 +14,7 @@ sections:
 
 - Number of stories committed (3) vs. done (3) 
 - Total points committed (10) vs. done (10)
-- Nr of hours planned (117h 30m) vs. spent (as a team) (107h 45m)
+- Nr of hours planned (122h) vs. spent (as a team) (112h 50m)
 
 **Remember** a story is done ONLY if it fits the Definition of Done:
  
@@ -29,43 +29,44 @@ sections:
 
 | Story  | # Tasks | Points | Hours est. | Hours actual |
 |--------|---------|--------|------------|--------------|
-| _#0_   |    29   |        | 75h 30m    |   73h 05m    |
+| _#0_   |    31   |        | 78h        |   74h 10m    |
 | _#2_   |    9    |    2   |     18h    |   17h 30m    |
-| _#5_   |    8    |    2   | 13h 30m    |   12h 30m    |
-| _#6_   |    7    |    1   | 10h 30m    |    4h 40m    |
+| _#5_   |    8    |    5   | 13h 30m    |   12h 30m    |
+| _#6_   |    7    |    3   | 12h 30m    |    8h 40m    |
    
 
 > story `#0` is for technical tasks, leave out story points (not applicable in this case)
 
-- Hours per task average estimate: 2h 08m
-- Hours per task average actual: 1h 57m
-- Standard deviation (estimate and actual):1.298523	1.300582
+- Hours per task average estimate: 2h 13m
+- Hours per task average actual: 2h 03m
+- Standard deviation including the Story 0 (Technical one) (estimate and actual):1.323204-1.285484
+- Standard deviation without the Story 0 (Technical one) (estimate and actual):0.122072-0.184562
 - Total estimation error ratio: sum of total hours spent / sum of total hours effort - 1
 
     $$\frac{\sum_i spent_{task_i}}{\sum_i estimation_{task_i}} - 1$$ 
 
-    Total estimation error ratio: `-0.08298`
+    Total estimation error ratio: `-0.07514`
  
     
 - Absolute relative task estimation error: sum( abs( spent-task-i / estimation-task-i - 1))/n
 
     $$\frac{1}{n}\sum_i^n \left| \frac{spent_{task_i}}{estimation_task_i}-1 \right| $$
 
-    Absolute relative task estimation error: `0.238088`
+    Absolute relative task estimation error: `0.22824`
   
 ## QUALITY MEASURES 
 
 - Unit Testing:
-  - Total hours estimated: 
-  - Total hours spent: 
-  - Nr of automated unit test cases: 
+  - Total hours estimated: 10h
+  - Total hours spent: 5h 45m
+  - Nr of automated unit test cases: 25
   - Coverage (if available): 
 - E2E testing:
   - Total hours estimated: 12h
   - Total hours spent: 11h 45m
 - Code review 
-  - Total hours estimated: 
-  - Total hours spent: 
+  - Total hours estimated: 11h 30m
+  - Total hours spent: 11h 15m
 
 ## ASSESSMENT
 
