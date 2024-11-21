@@ -155,7 +155,6 @@ const ModalForm: FC<ModalAddProps> = ({
     return (
       <div className="modal-overlay">
         <div className="modal-content">
-          <h2>{!editDocumentMode ? "Add New Document" : "Update Document"}</h2>
           <button
             className="close-button"
             onClick={() => {
@@ -165,10 +164,19 @@ const ModalForm: FC<ModalAddProps> = ({
           >
             <img src="/x.png" alt="Close" />
           </button>
+          <h2>{!editDocumentMode ? "Add New Document" : "Update Document"}</h2>
 
           <ProgressBar currentPage={page} />
 
-          <form onSubmit={handleFormSubmit}>
+          <form
+            onSubmit={(ev) => {
+              ev.preventDefault();
+              if (page === 1) {
+                // Passa alla pagina successiva solo se la validazione è passata
+                setPage(2);
+              }
+            }}
+          >
             {/* Title Input */}
             <div className="form-group">
               <label>Title *</label>
@@ -217,6 +225,7 @@ const ModalForm: FC<ModalAddProps> = ({
                       },
                     }));
                   }}
+                  required
                 >
                   <option value="">Select one option</option>
                   {scaleValues.map((scale) => (
@@ -262,7 +271,7 @@ const ModalForm: FC<ModalAddProps> = ({
             <div className="line">
               {/* Issuance Date */}
               <div className="form-group">
-                <label>Issuance Date *</label>
+                <label>Issuance Date</label>
                 <input
                   type="date"
                   value={
@@ -384,7 +393,7 @@ const ModalForm: FC<ModalAddProps> = ({
                 <input
                   type="number"
                   id="no-spin"
-                  step="0.000001"
+                  step="0.00000000000001"
                   name="latitude"
                   min="-90"
                   max="90"
@@ -403,7 +412,6 @@ const ModalForm: FC<ModalAddProps> = ({
                     }))
                   }
                   placeholder="Es. 34.1234"
-                  required
                 />
               </div>
 
@@ -413,6 +421,7 @@ const ModalForm: FC<ModalAddProps> = ({
                 <input
                   lang="en"
                   type="number"
+                  step="0.00000000000001"
                   id="no-spin"
                   name="longitude"
                   min="-180"
@@ -432,17 +441,12 @@ const ModalForm: FC<ModalAddProps> = ({
                     }));
                   }}
                   placeholder="Es. 20.2253"
-                  required
                 />
               </div>
             </div>
             {/* Form Buttons */}
             <div className="button-group">
-              <button
-                type="button"
-                className="submit-button"
-                onClick={() => setPage(2)}
-              >
+              <button type="submit" className="submit-button">
                 Continue
               </button>
             </div>
@@ -456,11 +460,6 @@ const ModalForm: FC<ModalAddProps> = ({
         {
           <div className="modal-overlay-2">
             <div className="modal-content-2">
-              <h2>
-                {!editDocumentMode
-                  ? "New Document Registration"
-                  : "Update Document"}
-              </h2>
               <button
                 className="close-button-2"
                 onClick={() => {
@@ -471,6 +470,11 @@ const ModalForm: FC<ModalAddProps> = ({
               >
                 <img src="/x.png" alt="Close" />
               </button>
+              <h2>
+                {!editDocumentMode
+                  ? "New Document Registration"
+                  : "Update Document"}
+              </h2>
 
               <ProgressBar currentPage={page} />
 

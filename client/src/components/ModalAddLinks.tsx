@@ -32,7 +32,7 @@ const ModalAddLinks: FC<ModalConnectionProps> = ({
     // Create a new link object with selected target and link type
     const newLink: Link = {
       targetDocumentId: targetDocumentId,
-      type: [linkType || LinkType.Direct],
+      linkTypes: [linkType || LinkType.Direct],
     };
 
     onSubmit(newLink); // Trigger onSubmit callback with the new link

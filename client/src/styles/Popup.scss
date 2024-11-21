@@ -17,7 +17,7 @@
     padding: 1rem;
     border-radius: 1rem;
     width: 30%;
-    height: 15%;
+    height: auto; // Eliminato altezza fissa
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
@@ -25,21 +25,33 @@
       font-family: "SwedenSansBold", sans-serif;
       color: Color.$first;
       margin-bottom: 1rem;
+      font-size: 1.5rem; // Adattato per schermi piccoli
     }
 
     p {
-      font-family: "SwedenSansBook", sans-serif;
+      font-family: "SwedenSans", sans-serif;
       color: Color.$first;
       margin-bottom: 1.5rem;
+      font-size: 1rem; // Adattato per leggibilità su schermi piccoli
+
+      strong {
+        font-family: "SwedenSansBold", sans-serif;
+      }
     }
 
     .btn-group {
       display: flex;
+      flex-direction: row;
       justify-content: space-between;
       gap: 1rem;
 
+      @media screen and (max-width: 768px) {
+        flex-direction: column; // Bottoni in colonna su schermi stretti
+      }
+
       button {
         height: 2.5rem;
+        font-size: 0.9rem; // Adattato per schermi piccoli
       }
 
       .cancel-btn {
@@ -66,6 +78,43 @@
           background-color: #c12e2a;
           border: 0.1rem solid #c12e2a;
         }
+      }
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    .popup {
+      width: 40%; // Popup più grande su tablet
+      padding: 1.5rem;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .popup {
+      width: 80%; // Popup quasi a schermo intero su mobile
+      padding: 1rem;
+
+      h2 {
+        font-size: 1.25rem; // Font ridotto per dispositivi piccoli
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .popup {
+      width: 90%; // Margini ridotti su dispositivi molto piccoli
+      padding: 0.8rem;
+
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      p {
+        font-size: 0.85rem;
       }
     }
   }
