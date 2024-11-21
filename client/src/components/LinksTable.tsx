@@ -27,7 +27,7 @@ function LinksTable({ tableLinks, setTableLinks, documents }: LinksTableProps) {
     setTableLinks((prev: Link[]) => {
       return prev
         .map((l) => updateLink(l, link, type))
-        .filter((l): l is Link => l !== null); // Filter out the nulls
+        .filter((l): l is Link => l !== null);
     });
   };
 
@@ -37,9 +37,9 @@ function LinksTable({ tableLinks, setTableLinks, documents }: LinksTableProps) {
     typeToRemove: LinkType
   ): Link | null => {
     if (link === linkToRemoveFrom) {
-      const updatedTypes = link.type.filter((t) => t !== typeToRemove);
+      const updatedTypes = link.linkTypes.filter((t) => t !== typeToRemove);
       if (updatedTypes.length > 0) {
-        return { ...link, type: updatedTypes };
+        return { ...link, linkTypes: updatedTypes };
       }
       return null; // Link is completely removed if no types remain
     }
@@ -90,8 +90,8 @@ function LinksTable({ tableLinks, setTableLinks, documents }: LinksTableProps) {
       </thead>
       <tbody>
         {tableLinks.map((link, index) =>
-          Array.isArray(link.type) && link.type.length > 0
-            ? link.type.map((type) => renderLinkRow(link, type, index))
+          Array.isArray(link.linkTypes) && link.linkTypes.length > 0
+            ? link.linkTypes.map((type) => renderLinkRow(link, type, index))
             : null
         )}
       </tbody>

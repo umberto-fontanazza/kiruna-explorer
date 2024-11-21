@@ -6,6 +6,9 @@ import dayjs from "dayjs";
 import "../styles/ModalAddDocument.scss";
 import "../styles/ProgressBar.scss";
 import {
+  Coordinates,
+  createDocumentStateFromExisting,
+  createNewDocumentState,
   Document,
   DocumentType,
   Link,
@@ -13,32 +16,17 @@ import {
   Stakeholder,
 } from "../utils/interfaces";
 
-interface Position {
-  lat: number;
-  lng: number;
-}
-
 interface ModalAddProps {
   modalOpen: boolean;
-  newPos: Position;
+  newPos: Coordinates;
+  editDocumentMode: boolean;
   onClose: () => void;
   onSubmit: (newDocument: Document) => void;
   documents: Document[];
-  closeInsertMode: () => void;
+  closePositionView: () => void;
+  docSelected: Document | null;
+  setEditDocumentMode: (value: boolean) => void;
 }
-
-// Initial State for new document
-const initialDocumentState: Document = {
-  id: -1,
-  title: "",
-  description: "",
-  stakeholders: [],
-  scale: { type: ScaleType.Text, ratio: 0 },
-  type: DocumentType.Design,
-  issuanceDate: undefined,
-  links: [],
-  coordinates: { latitude: 0, longitude: 0 },
-};
 
 const scaleValues = [
   { value: ScaleType.BlueprintsOrEffect, label: "Blueprints/Effects" },
@@ -59,11 +47,19 @@ const ModalForm: FC<ModalAddProps> = ({
   onSubmit,
   documents,
   newPos,
-  closeInsertMode,
+  closePositionView,
+  setEditDocumentMode,
+  docSelected,
+  editDocumentMode,
 }) => {
+  const initialDocumentState =
+    editDocumentMode && docSelected
+      ? createDocumentStateFromExisting(docSelected)
+      : createNewDocumentState();
   const [page, setPage] = useState<number>(1);
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
   const [tableLinks, setTableLinks] = useState<Link[]>([]);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   /////// FILE ATTACHMENT CODE ///////
 
@@ -85,9 +81,19 @@ const ModalForm: FC<ModalAddProps> = ({
   };*/
 
   useEffect(() => {
+    if (docSelected) {
+      setNewDoc(docSelected);
+      if (docSelected.links) {
+        setTableLinks(docSelected.links);
+      }
+    }
+    setIsInitialized(true);
+  }, [newPos, editDocumentMode, docSelected]);
+
+  useEffect(() => {
     setNewDoc((prev) => ({
       ...prev,
-      coordinates: { latitude: newPos.lat, longitude: newPos.lng },
+      coordinates: { latitude: newPos.latitude, longitude: newPos.longitude },
     }));
   }, [newPos]);
 
@@ -116,30 +122,39 @@ const ModalForm: FC<ModalAddProps> = ({
     });
   };
 
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setNewDoc((prev) => ({
+      ...prev,
+      issuanceDate: value ? dayjs(value) : undefined,
+    }));
+  };
+
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
     onSubmit({
       ...newDoc,
       links: tableLinks,
     });
+
     resetForm();
   };
 
   // Reset Form
   const resetForm = () => {
     setNewDoc(initialDocumentState);
+    setEditDocumentMode(false);
     setPage(1);
     setTableLinks([]);
-    closeInsertMode();
+    closePositionView();
   };
 
   // Return early if modal is closed
-  if (!modalOpen) return null;
+  if (!modalOpen || !isInitialized) return null;
   if (page === 1) {
     return (
       <div className="modal-overlay">
         <div className="modal-content">
-          <h2>New Document Registration</h2>
           <button
             className="close-button"
             onClick={() => {
@@ -149,13 +164,22 @@ const ModalForm: FC<ModalAddProps> = ({
           >
             <img src="/x.png" alt="Close" />
           </button>
+          <h2>{!editDocumentMode ? "Add New Document" : "Update Document"}</h2>
 
           <ProgressBar currentPage={page} />
 
-          <form onSubmit={handleFormSubmit}>
+          <form
+            onSubmit={(ev) => {
+              ev.preventDefault();
+              if (page === 1) {
+                // Passa alla pagina successiva solo se la validazione è passata
+                setPage(2);
+              }
+            }}
+          >
             {/* Title Input */}
             <div className="form-group">
-              <label className="title">Title *</label>
+              <label>Title *</label>
               <input
                 type="text"
                 placeholder="Enter Document Title"
@@ -188,6 +212,7 @@ const ModalForm: FC<ModalAddProps> = ({
               <div className="form-group">
                 <label>Scale *</label>
                 <select
+                  defaultValue={newDoc.scale.type}
                   onChange={(e) => {
                     const scaleType = e.target.value;
                     const scaleRatio =
@@ -200,6 +225,7 @@ const ModalForm: FC<ModalAddProps> = ({
                       },
                     }));
                   }}
+                  required
                 >
                   <option value="">Select one option</option>
                   {scaleValues.map((scale) => (
@@ -245,20 +271,17 @@ const ModalForm: FC<ModalAddProps> = ({
             <div className="line">
               {/* Issuance Date */}
               <div className="form-group">
-                <label>Issuance Date *</label>
+                <label>Issuance Date</label>
                 <input
                   type="date"
-                  value={newDoc.issuanceDate?.toISOString().split("T")[0] || ""}
-                  onChange={(e) =>
-                    setNewDoc((prev) => ({
-                      ...prev,
-                      issuanceDate: dayjs(e.target.value),
-                    }))
+                  value={
+                    newDoc.issuanceDate
+                      ? newDoc.issuanceDate.format("YYYY-MM-DD")
+                      : ""
                   }
+                  onChange={handleDateChange}
                 />
               </div>
-
-              {/* Document Type */}
               <div className="form-group">
                 <label>Type *</label>
                 <select
@@ -370,7 +393,7 @@ const ModalForm: FC<ModalAddProps> = ({
                 <input
                   type="number"
                   id="no-spin"
-                  step="0.000001"
+                  step="0.00000000000001"
                   name="latitude"
                   min="-90"
                   max="90"
@@ -389,7 +412,6 @@ const ModalForm: FC<ModalAddProps> = ({
                     }))
                   }
                   placeholder="Es. 34.1234"
-                  required
                 />
               </div>
 
@@ -399,6 +421,7 @@ const ModalForm: FC<ModalAddProps> = ({
                 <input
                   lang="en"
                   type="number"
+                  step="0.00000000000001"
                   id="no-spin"
                   name="longitude"
                   min="-180"
@@ -418,17 +441,12 @@ const ModalForm: FC<ModalAddProps> = ({
                     }));
                   }}
                   placeholder="Es. 20.2253"
-                  required
                 />
               </div>
             </div>
             {/* Form Buttons */}
             <div className="button-group">
-              <button
-                type="button"
-                className="submit-button"
-                onClick={() => setPage(2)}
-              >
+              <button type="submit" className="submit-button">
                 Continue
               </button>
             </div>
@@ -442,7 +460,6 @@ const ModalForm: FC<ModalAddProps> = ({
         {
           <div className="modal-overlay-2">
             <div className="modal-content-2">
-              <h2>New Document Registration</h2>
               <button
                 className="close-button-2"
                 onClick={() => {
@@ -453,6 +470,11 @@ const ModalForm: FC<ModalAddProps> = ({
               >
                 <img src="/x.png" alt="Close" />
               </button>
+              <h2>
+                {!editDocumentMode
+                  ? "New Document Registration"
+                  : "Update Document"}
+              </h2>
 
               <ProgressBar currentPage={page} />
 
@@ -489,11 +511,12 @@ const ModalForm: FC<ModalAddProps> = ({
                     >
                       Back
                     </button>
-                    <form onSubmit={handleFormSubmit}>
-                      <button className="submit-button-2" type="submit">
-                        Add Document
-                      </button>
-                    </form>
+                    <button
+                      className="submit-button-2"
+                      onClick={handleFormSubmit}
+                    >
+                      {!editDocumentMode ? "Add Document" : "Update Document"}
+                    </button>
                   </div>
                 </div>
               </div>

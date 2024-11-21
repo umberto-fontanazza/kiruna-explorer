@@ -17,11 +17,6 @@
     right: 0;
   }
 
-  img {
-    height: 6vh;
-    transform: scale(0.9);
-  }
-
   hr {
     width: 90%;
     margin: 1vh 0;
@@ -58,6 +53,10 @@
   }
 
   .content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 90%;
     margin-top: 1vh;
     padding: 1vh 1vw;
@@ -68,6 +67,10 @@
     line-height: 1.5;
     overflow-y: auto;
     max-height: 80vh;
+
+    .size {
+      font-size: 4rem;
+    }
 
     p,
     h2,
@@ -92,6 +95,7 @@
     h4 {
       font-weight: normal;
       font-size: 1.3rem;
+
       span {
         font-family: "SwedenSansBold", sans-serif;
         font-weight: bold;
@@ -124,12 +128,19 @@
         justify-content: center;
         align-items: center;
         margin-left: 2%;
-        padding: 3px 3px;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        padding: 0.5rem 0.5rem;
         background-color: inherit;
         border: 0.2rem solid Color.$first;
-        border-radius: 100%;
         cursor: pointer;
         transition: background-color 0.3s;
+
+        span.material-symbols-outlined {
+          font-size: 1.5rem;
+          transition: font-size 0.3s ease;
+        }
 
         &.fill {
           background-color: Color.$first;
@@ -162,22 +173,94 @@
         }
       }
     }
-    .btn-edit {
-      width: 100%;
-      margin-top: 4%;
-      flex: 1;
-      padding: 0.75rem;
-      font-weight: bold;
-      border-radius: 8px;
-      background-color: Color.$first;
-      color: white;
-      font-family: "SwedenSansBold", sans-serif;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      text-align: center;
 
-      &:hover {
-        background-color: Color.$first-hover;
+    .btn-group {
+      position: absolute;
+      bottom: 1rem;
+      right: 1rem;
+      display: flex;
+      gap: 0.5rem;
+
+      .btn-edit {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        border: 0.1rem solid Color.$first;
+        background-color: Color.$first;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin: 0 0.5rem;
+
+        span.material-symbols-outlined {
+          font-size: 1.5rem;
+          transition: font-size 0.3s ease;
+        }
+
+        &.pos {
+          background-color: #4caf50;
+          border: 0.1rem solid #4caf50;
+
+          &:hover {
+            background-color: #388e3c;
+            border: 0.1rem solid #388e3c;
+          }
+        }
+
+        &.delete {
+          background-color: #d9534f;
+          border: 0.1rem solid #d9534f;
+
+          &:hover {
+            background-color: #c12e2a;
+            border: 0.1rem solid #c12e2a;
+          }
+        }
+
+        &:hover {
+          background-color: Color.$first-hover;
+          border: none;
+        }
+      }
+    }
+  }
+
+  // Media queries per la responsività
+  @media (max-width: 1024px) {
+    right: -40%;
+    width: 40%;
+    .content {
+      padding: 1vh 0.5vw;
+      .size {
+        font-size: 3rem;
+      }
+    }
+  }
+
+  @media (max-width: 768px) {
+    right: -50%;
+    width: 50%;
+    .content {
+      padding: 1vh 0.5vw;
+      .size {
+        font-size: 2.5rem;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    right: -100%;
+    width: 100%;
+    .container-btns {
+      flex-direction: column;
+      gap: 1vh;
+    }
+    .content {
+      .size {
+        font-size: 2rem;
       }
     }
   }

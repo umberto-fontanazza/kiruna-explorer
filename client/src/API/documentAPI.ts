@@ -19,11 +19,9 @@ async function getDocumentById(id: number): Promise<Document> {
   if (!response.ok) {
     throw new Error("Error in fetching document by id");
   }
-  const documents = await response.json();
-  return documents.map((doc: any) => ({
-    ...doc,
-    issuanceDate: dayjs(doc.issuanceDate),
-  }));
+  const document = await response.json();
+  document.issuanceDate = dayjs(document.issuanceDate);
+  return document;
 }
 
 //TODO: the param document is not actually of type document
