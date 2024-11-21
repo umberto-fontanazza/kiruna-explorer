@@ -9,12 +9,10 @@ const NavHeader: FC = (): JSX.Element => {
 
   return (
     <nav className="nav-header">
-      <div className="nav-title-btns">
-        <span className="brand">Kiruna eXplorer.</span>
+      <span className="brand">Kiruna eXplorer.</span>
+      <div className={`${user ? "logged-in" : ""}`}>
         <button onClick={() => navigate("/home")}>Home</button>
         <button onClick={() => navigate("/documents")}>Documents</button>
-      </div>
-      <div className={`${user ? "logged-in" : ""}`}>
         {user ? <span className="user-name">Hi {user.name}!</span> : null}
         <button onClick={user ? logout : () => navigate("/login")}>
           {user ? "Logout" : "Login"}
