@@ -28,12 +28,6 @@ interface DocumentFormProps {
   setEditDocumentMode: Dispatch<SetStateAction<boolean>>;
 }
 
-const scaleValues = [
-  { value: ScaleType.BlueprintsOrEffect, label: "Blueprints/Effects" },
-  { value: ScaleType.Text, label: "Text" },
-  { value: ScaleType.Ratio, label: "Ratio" },
-];
-
 const stakeholdersOptions = [
   { value: Stakeholder.Lkab, label: "LKAB" },
   { value: Stakeholder.KirunaKommun, label: "Kiruna kommun" },
@@ -226,10 +220,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
                   }}
                   required
                 >
-                  <option value="">Select one option</option>
-                  {scaleValues.map((scale) => (
-                    <option key={scale.value} value={scale.value}>
-                      {scale.label}
+                  {Object.values(ScaleType).map((val) => (
+                    <option key={val} value={val}>
+                      {val}
                     </option>
                   ))}
                 </select>
