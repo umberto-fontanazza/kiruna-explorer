@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import NavHeader from "../components/NavHeader";
 import Popup from "../components/Popup";
 import { useAppContext } from "../context/appContext";
@@ -11,12 +12,14 @@ import {
 } from "../utils/interfaces";
 
 const DocumentsList = () => {
+  const nav = useNavigate();
   const {
     documents,
     docSelected,
     setDocSelected,
-    handleEditButton,
     isPopupOpen,
+    handleEditButton,
+
     setIsPopupOpen,
     handleDeleteDocument,
     handleCancelPopup,
@@ -101,7 +104,10 @@ const DocumentsList = () => {
                     <td className="actions-group">
                       <button
                         className="btn-edit"
-                        onClick={() => handleEditButton()}
+                        onClick={() => {
+                          nav("/home");
+                          handleEditButton();
+                        }}
                       >
                         <span className="material-symbols-outlined">
                           edit_document
