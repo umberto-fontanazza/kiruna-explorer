@@ -106,7 +106,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
     );
   };
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setNewDoc((prev) => ({
       ...prev,
@@ -264,7 +264,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
                       ? newDoc.issuanceDate.format("YYYY-MM-DD")
                       : ""
                   }
-                  onChange={handleDateChange}
+                  onChange={onDateChange}
                 />
               </div>
               <div className="form-group">
