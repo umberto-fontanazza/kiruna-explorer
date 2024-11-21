@@ -140,7 +140,6 @@ const DocumentForm: FC<DocumentFormProps> = ({
     resetForm();
   };
 
-  // Reset Form
   const resetForm = () => {
     setNewDoc(initialDocumentState);
     setEditDocumentMode(false);
