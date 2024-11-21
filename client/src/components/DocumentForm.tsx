@@ -41,7 +41,7 @@ const stakeholdersOptions = [
   { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
 ];
 
-const ModalForm: FC<ModalAddProps> = ({
+const DocumentForm: FC<ModalAddProps> = ({
   modalOpen,
   onClose,
   onSubmit,
@@ -528,4 +528,4 @@ const ModalForm: FC<ModalAddProps> = ({
   }
 };
 
-export default ModalForm;
+export default DocumentForm;

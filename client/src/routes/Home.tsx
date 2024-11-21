@@ -1,7 +1,7 @@
 import { FC, useContext, useEffect, useState } from "react";
 import API from "../API/API";
+import DocumentForm from "../components/DocumentForm";
 import MapComponent from "../components/Map";
-import ModalForm from "../components/ModalAddDocument";
 import NavHeader from "../components/NavHeader";
 import Popup from "../components/Popup";
 import Sidebar from "../components/Sidebar";
@@ -276,7 +276,7 @@ const Home: FC = (): JSX.Element => {
       </div>
 
       {/* Modal for adding a new document */}
-      <ModalForm
+      <DocumentForm
         modalOpen={modalOpen}
         editDocumentMode={editDocumentMode}
         setEditDocumentMode={setEditDocumentMode}
