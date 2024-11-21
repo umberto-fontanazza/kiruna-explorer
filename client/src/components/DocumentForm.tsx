@@ -16,7 +16,7 @@ import LinksTable from "./LinksTable";
 import ProgressBar from "./ProgressBar";
 import SearchBar from "./SearchBar";
 
-interface ModalAddProps {
+interface DocumentFormProps {
   modalOpen: boolean;
   newPos: Coordinates;
   editDocumentMode: boolean;
@@ -41,7 +41,7 @@ const stakeholdersOptions = [
   { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
 ];
 
-const DocumentForm: FC<ModalAddProps> = ({
+const DocumentForm: FC<DocumentFormProps> = ({
   modalOpen,
   onClose,
   onSubmit,
