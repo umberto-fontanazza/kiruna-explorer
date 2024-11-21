@@ -28,9 +28,13 @@
     }
 
     p {
-      font-family: "SwedenSansBook", sans-serif;
+      font-family: "SwedenSans", sans-serif;
       color: Color.$first;
       margin-bottom: 1.5rem;
+
+      strong {
+        font-family: "SwedenSansBold", sans-serif;
+      }
     }
 
     .btn-group {
