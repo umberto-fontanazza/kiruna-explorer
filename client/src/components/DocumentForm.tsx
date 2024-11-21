@@ -224,11 +224,13 @@ const DocumentForm: FC<DocumentFormProps> = ({
               <div className="form-group">
                 {newDoc.scale.type === ScaleType.Ratio && (
                   <div className="ratio-group">
-                    <span className="ratio">1: </span>
+                    <label htmlFor="ratio" className="ratio">
+                      1:{" "}
+                    </label>
                     <input
+                      id="ratio"
                       type="number"
                       min="1"
-                      id="no-spin"
                       value={newDoc.scale.ratio}
                       onChange={(e) =>
                         setNewDoc((prev) => ({
