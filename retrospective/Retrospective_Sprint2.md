@@ -72,16 +72,35 @@ sections:
 
 What caused your errors in estimation (if any)?
 
+1. Some team members' health issues
+2. The form to add links between documents was harder than expected
+3. Some important tasks arised spontaneously mid-sprint 
+4. Interest on technical debt (growing complexity of the project)
 
 What lessons did you learn (both positive and negative) in this sprint?
 
+1. Styling can distract devs from important tasks
+2. Planning an internal demo in advance with respect to the official one was crucial and helpful
+3. Incremental code development without a prior architectural plan undermines SRP and induces complex dependency between components in FE
+4. Procedures over time drift away from the purpose which led to their creation which needs to be refreshed
 
 Which improvement goals set in the previous retrospective were you able to achieve?
 
+1. Early frontend and backend integration - ✓
+2. Reviewers had domain specific context - ✓
 
 Which ones you were not able to achieve? Why?
 
 One thing you are proud of as a Team
+1. The look of our UI
+
+What are our goals for this sprint?
+
+1. Have the backend team ready to work on the frontend as necessity arise
+2. Reduce frontend complexity
+3. Adopt common component organization guidelines
+
+## PRESENTATION NOTES
 
 Coordination and Planning
 - Are Scrum Meetings performed regularly?
@@ -129,12 +148,12 @@ DEVELOPMENT AND QUALITY ASSURANCE
   Yes, there are videos, notes and also screenshots.
 - Are test data for demo prepared in advance?
 
-- Is deployment of container tested on more than a pc?
+- Is deployment of container tested on more than a pc? Yes
 
--  Are the instructions to run your docker image present on DockerHub or GitHub?
+-  Are the instructions to run your docker image present on DockerHub or GitHub? No for security reasons
 
 - Is documentation of the release complete (e.g., credentials, readme, etc.)?
 
-- Are GitHub issues promptly opened after giving feedback?
+- Are GitHub issues promptly opened after giving feedback? Yes
 
-- Is follow-up activity on a feedback GitHub issue properly tracked?
+- Is follow-up activity on a feedback GitHub issue properly tracked? Yes
