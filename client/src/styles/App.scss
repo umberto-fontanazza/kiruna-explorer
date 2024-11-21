@@ -78,3 +78,22 @@ button {
 .color-find_in_page {
   color: green;
 }
+
+.hidden {
+  visibility: hidden;
+}
+
+input,
+select,
+textarea {
+  border-radius: 0.5em;
+  border: none;
+}
+
+button {
+  transition: 350ms ease;
+  border-radius: 0.5em;
+  &:hover {
+    transform: scale(1.05);
+  }
+}
