@@ -1,8 +1,5 @@
-import { FC, useEffect, useState } from "react";
-import LinksTable from "./LinksTable";
-import SearchBar from "./SearchBar";
-
 import dayjs from "dayjs";
+import { FC, useEffect, useState } from "react";
 import "../styles/ModalAddDocument.scss";
 import "../styles/ProgressBar.scss";
 import {
@@ -15,6 +12,9 @@ import {
   ScaleType,
   Stakeholder,
 } from "../utils/interfaces";
+import LinksTable from "./LinksTable";
+import ProgressBar from "./ProgressBar";
+import SearchBar from "./SearchBar";
 
 interface ModalAddProps {
   modalOpen: boolean;
@@ -526,29 +526,6 @@ const ModalForm: FC<ModalAddProps> = ({
       </>
     );
   }
-};
-
-const ProgressBar = (props: { currentPage: number }) => {
-  const steps = [
-    { label: "Mandatory Information", number: 1 },
-    { label: "Add Links", number: 2 },
-  ];
-  return (
-    <div className="progress-bar">
-      {steps.map((step, index) => (
-        <div
-          key={index}
-          className={`step ${props.currentPage >= step.number ? "active" : ""} ${
-            props.currentPage > step.number ? "completed" : ""
-          }`}
-        >
-          <div className="circle">{step.number}</div>
-          <span className="label">{step.label}</span>
-          {index < steps.length - 1 && <div className="line"></div>}
-        </div>
-      ))}
-    </div>
-  );
 };
 
 export default ModalForm;
