@@ -1,4 +1,5 @@
 import { FC } from "react";
+import "../styles/ProgressBar.scss";
 
 type ProgressBarProps = {
   currentPage: number;

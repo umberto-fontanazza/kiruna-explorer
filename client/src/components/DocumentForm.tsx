@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import "../styles/ModalAddDocument.scss";
-import "../styles/ProgressBar.scss";
+import "../styles/DocumentForm.scss";
 import {
   Coordinates,
   createDocumentStateFromExisting,
@@ -304,7 +303,6 @@ const DocumentForm: FC<DocumentFormProps> = ({
               </div>
             </div>
 
-            {/* Stakeholders */}
             <div className="form-group">
               <label>Stakeholders *</label>
               <div className="checkbox-group stakeholders">
