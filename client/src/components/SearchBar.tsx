@@ -120,8 +120,8 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
         <option value={LinkType.Projection}>Projection</option>
         <option value={LinkType.Update}>Update</option>
       </select>
-      <button onClick={(e) => handleAddLink(e)}>
-        <span>Add Link</span>
+      <button className="add-link-button" onClick={(e) => handleAddLink(e)}>
+        Add Link
       </button>
     </div>
   );

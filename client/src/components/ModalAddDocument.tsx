@@ -155,7 +155,6 @@ const ModalForm: FC<ModalAddProps> = ({
     return (
       <div className="modal-overlay">
         <div className="modal-content">
-          <h2>{!editDocumentMode ? "Add New Document" : "Update Document"}</h2>
           <button
             className="close-button"
             onClick={() => {
@@ -165,6 +164,7 @@ const ModalForm: FC<ModalAddProps> = ({
           >
             <img src="/x.png" alt="Close" />
           </button>
+          <h2>{!editDocumentMode ? "Add New Document" : "Update Document"}</h2>
 
           <ProgressBar currentPage={page} />
 
@@ -460,11 +460,6 @@ const ModalForm: FC<ModalAddProps> = ({
         {
           <div className="modal-overlay-2">
             <div className="modal-content-2">
-              <h2>
-                {!editDocumentMode
-                  ? "New Document Registration"
-                  : "Update Document"}
-              </h2>
               <button
                 className="close-button-2"
                 onClick={() => {
@@ -475,6 +470,11 @@ const ModalForm: FC<ModalAddProps> = ({
               >
                 <img src="/x.png" alt="Close" />
               </button>
+              <h2>
+                {!editDocumentMode
+                  ? "New Document Registration"
+                  : "Update Document"}
+              </h2>
 
               <ProgressBar currentPage={page} />
 

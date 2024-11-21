@@ -1,7 +1,26 @@
+@use "Color";
+
 .search-bar {
   display: inline-flex;
   justify-content: space-between;
   width: 100%;
   height: 6vh;
   gap: 1rem;
+}
+
+.add-link-button {
+  font-weight: bold;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+  background-color: Color.$first;
+  color: white;
+  border: 0.1rem solid Color.$first;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    background: Color.$first-hover;
+    color: white;
+  }
 }
