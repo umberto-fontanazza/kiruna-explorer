@@ -110,7 +110,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
     const value = e.target.value;
     setNewDoc((prev) => ({
       ...prev,
-      issuanceDate: value ? dayjs(value) : undefined,
+      issuanceDate: value ? dayjs(value) : (prev.issuanceDate ?? undefined),
     }));
   };
 
