@@ -7,7 +7,6 @@ dotenv.config();
 
 let plannerCookie: string;
 
-
 beforeAll(async () => {
   plannerCookie = await loginAsPlanner();
 });
