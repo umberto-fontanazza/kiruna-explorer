@@ -228,18 +228,6 @@
     }
   }
 
-  // Media queries per la responsività
-  @media (max-width: 1024px) {
-    right: -40%;
-    width: 40%;
-    .content {
-      padding: 1vh 0.5vw;
-      .size {
-        font-size: 3rem;
-      }
-    }
-  }
-
   @media (max-width: 768px) {
     right: -50%;
     width: 50%;
