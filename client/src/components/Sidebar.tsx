@@ -79,6 +79,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
         <button
           className="btn-close-sidebar"
           onClick={() => {
+            props.setVisualLinks(false);
             props.setSidebarOpen(false);
             props.setDocument(null);
           }}
