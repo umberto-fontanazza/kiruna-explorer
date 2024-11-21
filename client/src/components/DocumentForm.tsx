@@ -334,7 +334,11 @@ const DocumentForm: FC<DocumentFormProps> = ({
           />
         </div>
 
-        <button type="submit" onClick={() => setPage((p) => p + 1)}>
+        <button
+          className="primary"
+          type="submit"
+          onClick={() => setPage((p) => p + 1)}
+        >
           Continue
         </button>
       </form>
