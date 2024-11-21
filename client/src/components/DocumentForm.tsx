@@ -334,79 +334,58 @@ const DocumentForm: FC<DocumentFormProps> = ({
           />
         </div>
 
-        <button type="submit">Continue</button>
+        <button type="submit" onClick={() => setPage((p) => p + 1)}>
+          Continue
+        </button>
       </form>
     );
   } else if (page === 2) {
     return (
-      <>
-        {
-          <div className="modal-overlay-2">
-            <div className="modal-content-2">
-              <button
-                className="close-button-2"
-                onClick={() => {
-                  setNewDoc(initialDocumentState);
-                  onClose();
-                  setPage(1);
-                }}
-              >
-                <img src="/x.png" alt="Close" />
-              </button>
-              <h2>
-                {!editDocumentMode
-                  ? "New Document Registration"
-                  : "Update Document"}
-              </h2>
+      <form className="modal document page-2">
+        <button
+          className="close"
+          onClick={() => {
+            setNewDoc(initialDocumentState);
+            onClose();
+            setPage(1);
+          }}
+        >
+          <img src="/x.png" alt="Close" />
+        </button>
+        <h2>
+          {!editDocumentMode ? "New Document Registration" : "Update Document"}
+        </h2>
 
-              <ProgressBar currentPage={page} />
+        <ProgressBar currentPage={page} />
 
-              {/* Body */}
-              <div className="second-page-body">
-                <div className="links-table-container">
-                  {tableLinks.length != 0 ? (
-                    <div className="table-wrapper">
-                      <LinksTable
-                        tableLinks={tableLinks}
-                        setTableLinks={setTableLinks}
-                        documents={documents}
-                      />
-                    </div>
-                  ) : (
-                    <h3>
-                      If you need to add links to other documents, please use
-                      the search bar below.
-                    </h3>
-                  )}
-                </div>
+        {tableLinks.length > 0 ? (
+          <LinksTable
+            tableLinks={tableLinks}
+            setTableLinks={setTableLinks}
+            documents={documents}
+          />
+        ) : (
+          <p>
+            If you need to add links to other documents, please use the search
+            bar below.
+          </p>
+        )}
 
-                <div className="bottom-group">
-                  <SearchBar
-                    documents={documents}
-                    tableLinks={tableLinks}
-                    setTableLinks={setTableLinks}
-                  />
+        <SearchBar
+          documents={documents}
+          tableLinks={tableLinks}
+          setTableLinks={setTableLinks}
+        />
 
-                  <div className="button-group-2">
-                    <button
-                      className="cancel-button-2"
-                      onClick={() => setPage(1)}
-                    >
-                      Back
-                    </button>
-                    <button
-                      className="submit-button-2"
-                      onClick={handleFormSubmit}
-                    >
-                      {!editDocumentMode ? "Add Document" : "Update Document"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        }
-      </>
+        <div className="actions">
+          <button className="back" onClick={() => setPage((p) => p - 1)}>
+            Back
+          </button>
+          <button className="primary" onClick={handleFormSubmit}>
+            {!editDocumentMode ? "Add Document" : "Update Document"}
+          </button>
+        </div>
+      </form>
     );
   }
 };

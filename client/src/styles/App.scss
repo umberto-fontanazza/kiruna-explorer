@@ -91,9 +91,17 @@ textarea {
 }
 
 button {
+  padding: 0.8em;
+
+  &.primary {
+    border: none;
+    color: Color.$third;
+    background-color: Color.$first;
+  }
+
   transition: 350ms ease;
   border-radius: 0.5em;
   &:hover {
-    transform: scale(1.05);
+    transform: scale(1.02);
   }
 }

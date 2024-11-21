@@ -2,7 +2,7 @@
 
 $column-gap: 2ch;
 
-form.document {
+.modal {
   position: absolute;
   top: 20vh;
   left: 0;
@@ -10,7 +10,9 @@ form.document {
   margin-inline: auto;
   width: 38vw;
   background-color: Color.$third;
+}
 
+form.document {
   border-radius: 15px;
   padding: 2em;
 
@@ -76,13 +78,26 @@ form.document {
   }
 
   button[type="submit"] {
-    padding: 0.8em;
-    color: Color.$third;
-    background-color: Color.$first;
-    border: none;
-
     &:hover {
       transform: scale(1.005);
+    }
+  }
+}
+
+form.document.page-2 {
+  .actions,
+  table.links,
+  p,
+  .search-bar {
+    grid-column: 1 / span 2;
+  }
+
+  .actions {
+    display: flex;
+    gap: 1ch;
+
+    button {
+      flex: 1;
     }
   }
 }
