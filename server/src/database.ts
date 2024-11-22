@@ -1,9 +1,8 @@
-import { Pool, QueryResult, types } from "pg";
 import { strict as assert } from "assert";
+import { Pool, PoolClient, QueryResult, types } from "pg";
 
 let pool: Pool | undefined;
 
-//TODO: this needs refactoring
 export class Database {
   static setup() {
     const env = process.env.NODE_ENV
@@ -25,9 +24,10 @@ export class Database {
     });
   }
 
-  static async disconnect(): Promise<void> {
+  static async getClient(): Promise<PoolClient> {
+    if (!pool) Database.setup();
     assert(pool);
-    await pool.end();
+    return await pool.connect();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,5 +35,27 @@ export class Database {
     if (!pool) Database.setup();
     assert(pool);
     return await pool.query(text, values);
+  }
+
+  static async withTransaction<T>(
+    action: (client: PoolClient) => Promise<T>,
+  ): Promise<T> {
+    const client = await Database.getClient();
+    try {
+      await client.query("BEGIN");
+      const result = await action(client);
+      await client.query("COMMIT");
+      return result;
+    } catch (error) {
+      await client.query("ROLLBACK");
+      throw error;
+    } finally {
+      client.release();
+    }
+  }
+
+  static async disconnect(): Promise<void> {
+    assert(pool);
+    await pool.end();
   }
 }
