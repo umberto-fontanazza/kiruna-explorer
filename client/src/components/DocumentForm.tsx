@@ -8,6 +8,7 @@ import {
   DocumentForm as DocumentFormType,
   DocumentType,
   Link,
+  Scale,
   ScaleType,
   Stakeholder,
 } from "../utils/interfaces";
@@ -154,7 +155,6 @@ const DocumentForm: FC<DocumentFormProps> = ({
             <label htmlFor="scale-type">Scale *</label>
             <select
               id="scale-type"
-              defaultValue={document.scale.type}
               onChange={(e) => {
                 const scaleType = e.target.value;
                 const scaleRatio =
@@ -169,6 +169,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
               }}
               required
             >
+              <option disabled selected value="" hidden>
+                Please select an option
+              </option>
               {Object.values(ScaleType).map((val) => (
                 <option key={val} value={val}>
                   {val}
@@ -178,7 +181,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
           </div>
 
           <div
-            className={`form-group ratio ${document.scale.type === ScaleType.Ratio ? "" : "hidden"}`}
+            className={`form-group ratio ${document.scale?.type === ScaleType.Ratio ? "" : "hidden"}`}
           >
             <label htmlFor="ratio" className="ratio">
               1:{" "}
@@ -187,17 +190,17 @@ const DocumentForm: FC<DocumentFormProps> = ({
               id="ratio"
               type="number"
               min="1"
-              value={document.scale.ratio}
+              value={document.scale?.ratio}
               onChange={(e) =>
                 setDocument((prev) => ({
                   ...prev,
                   scale: {
-                    ...prev.scale,
+                    ...(prev.scale as Scale),
                     ratio: Number(e.target.value),
                   },
                 }))
               }
-              required={document.scale.type === ScaleType.Ratio}
+              required={document.scale?.type === ScaleType.Ratio}
             />
           </div>
 
@@ -219,7 +222,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
             <label htmlFor="document-type">Type *</label>
             <select
               id="document-type"
-              value={document.type}
+              value={document.type ?? ""}
               onChange={(e) =>
                 setDocument((prev) => ({
                   ...prev,
@@ -228,7 +231,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
               }
               required
             >
-              <option value="">Select type</option>
+              <option disabled selected hidden value="">
+                Select type
+              </option>
               <option value={DocumentType.Informative}>
                 Informative Document
               </option>

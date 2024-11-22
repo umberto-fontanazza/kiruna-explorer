@@ -106,8 +106,10 @@ export const scaleTypeDisplay: { [key in ScaleType]: string } = {
   [ScaleType.Ratio]: "Ratio",
 };
 
-export interface DocumentForm extends Omit<Document, "id"> {
+export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
   id: number | null;
+  scale: Scale | null;
+  type: DocumentType | null;
 }
 
 export const documentFormDefaults: DocumentForm = {
@@ -115,8 +117,8 @@ export const documentFormDefaults: DocumentForm = {
   title: "",
   description: "",
   stakeholders: [],
-  scale: { type: ScaleType.Text },
-  type: DocumentType.Design,
+  scale: null,
+  type: null,
   issuanceDate: undefined,
   links: [],
   coordinates: kirunaCoordinates,
