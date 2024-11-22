@@ -4,8 +4,7 @@ import request from "supertest";
 import app from "../src/app";
 dotenv.config();
 
-var counter: any;
-counter = Math.floor(Math.random() * (100 - 0 + 1)) + 0;
+const counter: number = Math.floor(Math.random() * (100 - 0 + 1)) + 0;
 
 describe("POST /users", () => {
   it("should create a new user when valid data is provided", async () => {
@@ -55,8 +54,6 @@ describe("POST /users", () => {
   });
 
   it("should return an error if there is an unexpected server issue", async () => {
-    const email =
-      (process.env.TEST_EMAIL ?? "defaultemail") + counter + "@gmail.com";
     const newUser = {};
 
     const response = await request(app).post("/users").send(newUser);
