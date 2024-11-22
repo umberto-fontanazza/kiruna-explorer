@@ -52,6 +52,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
   const [page, setPage] = useState<number>(1);
   const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
   const [tableLinks, setTableLinks] = useState<Link[]>([]);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   useEffect(() => {
     if (docSelected) {
@@ -60,6 +61,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
         setTableLinks(docSelected.links);
       }
     }
+    setIsInitialized(true);
   }, [newPos, editDocumentMode, docSelected]);
 
   useEffect(() => {
