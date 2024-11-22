@@ -1,10 +1,11 @@
+import { randomInt } from "crypto";
 import dotenv from "dotenv";
 import { StatusCodes } from "http-status-codes";
 import request from "supertest";
 import app from "../src/app";
 dotenv.config();
 
-const counter: number = Math.floor(Math.random() * (100 - 0 + 1)) + 0;
+const counter: number = randomInt(0, 1001);
 
 describe("POST /users", () => {
   it("should create a new user when valid data is provided", async () => {
