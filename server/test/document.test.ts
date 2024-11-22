@@ -13,7 +13,7 @@ describe("Document", () => {
   };
 
   beforeEach(() => {
-    (Database as any).query = mockDb.query;
+    (Database as unknown as { query: jest.Mock }).query = mockDb.query;
   });
 
   afterEach(() => {
