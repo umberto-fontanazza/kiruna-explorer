@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import "../styles/DocumentForm.scss";
 import {
   Coordinates,
-  createDocumentStateFromExisting,
-  createNewDocumentState,
   Document,
+  documentFormDefaults,
+  DocumentForm as DocumentFormType,
   DocumentType,
   Link,
   ScaleType,
@@ -16,15 +16,12 @@ import ProgressBar from "./ProgressBar";
 import SearchBar from "./SearchBar";
 
 interface DocumentFormProps {
-  modalOpen: boolean;
   newPos: Coordinates;
-  editDocumentMode: boolean;
   onClose: () => void;
-  onSubmit: (newDocument: Document) => void;
+  onSubmit: (newDocument: DocumentFormType) => void;
   documents: Document[];
   closePositionView: () => void;
-  docSelected: Document | null;
-  setEditDocumentMode: Dispatch<SetStateAction<boolean>>;
+  editDocument: Document | null;
 }
 
 const stakeholdersOptions = [
@@ -35,37 +32,21 @@ const stakeholdersOptions = [
 ];
 
 const DocumentForm: FC<DocumentFormProps> = ({
-  modalOpen,
+  newPos,
   onClose,
   onSubmit,
   documents,
-  newPos,
   closePositionView,
-  setEditDocumentMode,
-  docSelected,
-  editDocumentMode,
+  editDocument,
 }) => {
-  const initialDocumentState =
-    editDocumentMode && docSelected
-      ? createDocumentStateFromExisting(docSelected)
-      : createNewDocumentState();
   const [page, setPage] = useState<number>(1);
-  const [newDoc, setNewDoc] = useState<Document>(initialDocumentState);
-  const [tableLinks, setTableLinks] = useState<Link[]>([]);
-  const [isInitialized, setIsInitialized] = useState<boolean>(false);
+  const [document, setDocument] = useState<DocumentFormType>(
+    editDocument || documentFormDefaults
+  );
+  const [tableLinks, setTableLinks] = useState<Link[]>(document?.links || []);
 
   useEffect(() => {
-    if (docSelected) {
-      setNewDoc(docSelected);
-      if (docSelected.links) {
-        setTableLinks(docSelected.links);
-      }
-    }
-    setIsInitialized(true);
-  }, [newPos, editDocumentMode, docSelected]);
-
-  useEffect(() => {
-    setNewDoc((prev) => ({
+    setDocument((prev) => ({
       ...prev,
       coordinates: { latitude: newPos.latitude, longitude: newPos.longitude },
     }));
@@ -76,7 +57,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
   }) => {
     const { value, checked } = event.target;
 
-    setNewDoc(
+    setDocument(
       (previousDoc) =>
         ({
           ...previousDoc,
@@ -89,7 +70,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
 
   const onDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    setNewDoc((prev) => ({
+    setDocument((prev) => ({
       ...prev,
       issuanceDate: value ? dayjs(value) : (prev.issuanceDate ?? undefined),
     }));
@@ -98,7 +79,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
     onSubmit({
-      ...newDoc,
+      ...document,
       links: tableLinks,
     });
 
@@ -106,15 +87,11 @@ const DocumentForm: FC<DocumentFormProps> = ({
   };
 
   const resetForm = () => {
-    setNewDoc(initialDocumentState);
-    setEditDocumentMode(false);
+    setDocument(documentFormDefaults);
     setPage(1);
-    setTableLinks([]);
     closePositionView();
   };
 
-  // Return early if modal is closed
-  if (!modalOpen || !isInitialized) return null;
   return (
     <form
       className={`document modal page-${page}`}
@@ -129,7 +106,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
       <button
         className="close"
         onClick={() => {
-          setNewDoc(initialDocumentState);
+          setDocument(documentFormDefaults);
           setPage(1);
           onClose();
         }}
@@ -137,9 +114,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
         <img src="/x.png" alt="Close" />
       </button>
 
-      <h2>
-        {!editDocumentMode ? "New Document Registration" : "Update Document"}
-      </h2>
+      <h2>{document.id ? "Update Document" : "New Document Registration"}</h2>
 
       <ProgressBar currentPage={page} />
       {page === 1 ? (
@@ -150,9 +125,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
               id="title"
               type="text"
               placeholder="Enter Document Title"
-              value={newDoc.title}
+              value={document.title}
               onChange={(e) =>
-                setNewDoc((prev) => ({ ...prev, title: e.target.value }))
+                setDocument((prev) => ({ ...prev, title: e.target.value }))
               }
               required
               className="input-title"
@@ -163,10 +138,10 @@ const DocumentForm: FC<DocumentFormProps> = ({
             <label htmlFor="description">Description *</label>
             <textarea
               id="description"
-              value={newDoc.description || ""}
+              value={document.description || ""}
               placeholder="Enter Document Description"
               onChange={(e) =>
-                setNewDoc((prev) => ({
+                setDocument((prev) => ({
                   ...prev,
                   description: e.target.value,
                 }))
@@ -179,12 +154,12 @@ const DocumentForm: FC<DocumentFormProps> = ({
             <label htmlFor="scale-type">Scale *</label>
             <select
               id="scale-type"
-              defaultValue={newDoc.scale.type}
+              defaultValue={document.scale.type}
               onChange={(e) => {
                 const scaleType = e.target.value;
                 const scaleRatio =
                   scaleType === ScaleType.Ratio ? 1 : undefined;
-                setNewDoc((prev) => ({
+                setDocument((prev) => ({
                   ...prev,
                   scale: {
                     type: scaleType as ScaleType,
@@ -203,7 +178,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
           </div>
 
           <div
-            className={`form-group ratio ${newDoc.scale.type === ScaleType.Ratio ? "" : "hidden"}`}
+            className={`form-group ratio ${document.scale.type === ScaleType.Ratio ? "" : "hidden"}`}
           >
             <label htmlFor="ratio" className="ratio">
               1:{" "}
@@ -212,9 +187,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
               id="ratio"
               type="number"
               min="1"
-              value={newDoc.scale.ratio}
+              value={document.scale.ratio}
               onChange={(e) =>
-                setNewDoc((prev) => ({
+                setDocument((prev) => ({
                   ...prev,
                   scale: {
                     ...prev.scale,
@@ -222,7 +197,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
                   },
                 }))
               }
-              required={newDoc.scale.type === ScaleType.Ratio}
+              required={document.scale.type === ScaleType.Ratio}
             />
           </div>
 
@@ -232,8 +207,8 @@ const DocumentForm: FC<DocumentFormProps> = ({
               id="issuance-date"
               type="date"
               value={
-                newDoc.issuanceDate
-                  ? newDoc.issuanceDate.format("YYYY-MM-DD")
+                document.issuanceDate
+                  ? document.issuanceDate.format("YYYY-MM-DD")
                   : ""
               }
               onChange={onDateChange}
@@ -244,9 +219,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
             <label htmlFor="document-type">Type *</label>
             <select
               id="document-type"
-              value={newDoc.type}
+              value={document.type}
               onChange={(e) =>
-                setNewDoc((prev) => ({
+                setDocument((prev) => ({
                   ...prev,
                   type: e.target.value as DocumentType,
                 }))
@@ -276,7 +251,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
                   <input
                     type="checkbox"
                     value={option.value}
-                    checked={newDoc.stakeholders?.includes(option.value)}
+                    checked={document.stakeholders?.includes(option.value)}
                     onChange={onCheckboxChange}
                   />
                   {option.label}
@@ -295,12 +270,12 @@ const DocumentForm: FC<DocumentFormProps> = ({
               min="-90"
               max="90"
               value={
-                newDoc.coordinates?.latitude !== null
-                  ? newDoc.coordinates?.latitude
+                document.coordinates?.latitude !== null
+                  ? document.coordinates?.latitude
                   : ""
               }
               onChange={(e) =>
-                setNewDoc((prev: Document) => ({
+                setDocument((prev: DocumentFormType) => ({
                   ...prev,
                   coordinates: {
                     latitude: Number(e.target.value),
@@ -323,12 +298,12 @@ const DocumentForm: FC<DocumentFormProps> = ({
               min="-180"
               max="180"
               value={
-                newDoc.coordinates?.longitude !== null
-                  ? newDoc.coordinates?.longitude
+                document.coordinates?.longitude !== null
+                  ? document.coordinates?.longitude
                   : ""
               }
               onChange={(e) => {
-                setNewDoc((prev) => ({
+                setDocument((prev) => ({
                   ...prev,
                   coordinates: {
                     latitude: prev.coordinates?.latitude ?? 0,
@@ -374,7 +349,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
               Back
             </button>
             <button className="primary" onClick={handleFormSubmit}>
-              {!editDocumentMode ? "Add Document" : "Update Document"}
+              {document.id ? "Update Document" : "Add Document"}
             </button>
           </div>
         </>
