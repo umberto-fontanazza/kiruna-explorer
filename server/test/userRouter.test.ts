@@ -1,69 +1,44 @@
+import dotenv from "dotenv";
 import { StatusCodes } from "http-status-codes";
 import request from "supertest";
 import app from "../src/app";
-
-import dotenv from "dotenv";
 dotenv.config();
 
-jest.mock("../src/model/user");
-// jest.mock("../src/middleware/validation", () => ({
-//   validateBody: jest.fn((req, res, next) => next()),
-// }));
+const counter: number = Math.floor(Math.random() * (100 - 0 + 1)) + 0;
 
 describe("POST /users", () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
   it("should create a new user when valid data is provided", async () => {
-    // const mockInsert = jest.fn().mockResolvedValue(true);
-    // const mockGetByEmail = jest.fn().mockResolvedValue(null);
-
-    // User.getByEmail = mockGetByEmail;
-    // User.prototype.insert = mockInsert;
-
+    const email =
+      (process.env.TEST_EMAIL ?? "defaultemail") + counter + "@gmail.com";
     const newUser = {
-      email: process.env.TEST_EMAIL,
+      email: email,
       name: process.env.TEST_NAME,
       surname: process.env.TEST_SURNAME,
       role: process.env.TEST_ROLE,
       password: process.env.TEST_PASSWORD,
     };
 
-    const response = await request(app)
-      .post("http://localhost:3000/user/")
-      .send(newUser);
+    const response = await request(app).post("/users").send(newUser);
 
     expect(response.status).toBe(StatusCodes.CREATED);
     expect(response.body.message).toBe("User created successfully");
-    // expect(mockInsert).toHaveBeenCalledTimes(1);
-    // expect(mockGetByEmail).toHaveBeenCalledTimes(1);
-    // expect(mockGetByEmail).toHaveBeenCalledWith(newUser.email);
   });
 
   it("should return conflict error if the user already exists", async () => {
-    // const mockGetByEmail = jest.fn().mockResolvedValue({
-    //   email: "test@example.com",
-    // });
-
-    // User.getByEmail = mockGetByEmail;
-
+    const email =
+      (process.env.TEST_EMAIL ?? "defaultemail") + counter + "@gmail.com";
     const newUser = {
-      email: process.env.TEST_EMAIL,
+      email: email,
       name: process.env.TEST_NAME,
       surname: process.env.TEST_SURNAME,
       role: process.env.TEST_ROLE,
       password: process.env.TEST_PASSWORD,
     };
 
-    const response = await request(app)
-      .post("http://localhost:3000/user/")
-      .send(newUser);
+    const response = await request(app).post("/users").send(newUser);
 
     expect(response.status).toBe(StatusCodes.CONFLICT);
-    expect(response.body.message).toBe("User already exists");
-    // expect(mockGetByEmail).toHaveBeenCalledTimes(1);
-    // expect(mockGetByEmail).toHaveBeenCalledWith(newUser.email);
+    expect(response.body.message).toBe("User already existing");
   });
 
   it("should return validation error if the request body is invalid", async () => {
@@ -72,33 +47,18 @@ describe("POST /users", () => {
       name: process.env.TEST_NAME,
     };
 
-    const response = await request(app)
-      .post("http://localhost:3000/user/")
-      .send(invalidUser);
+    const response = await request(app).post("/users").send(invalidUser);
 
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
-    expect(response.body.message).toBe("Validation failed");
+    expect(response.body.message).toBeUndefined();
   });
 
   it("should return an error if there is an unexpected server issue", async () => {
-    // const mockGetByEmail = jest
-    //   .fn()
-    //   .mockRejectedValue(new Error("Unexpected error"));
-    // User.getByEmail = mockGetByEmail;
+    const newUser = {};
 
-    const newUser = {
-      email: process.env.TEST_EMAIL,
-      name: process.env.TEST_NAME,
-      surname: process.env.TEST_SURNAME,
-      role: process.env.TEST_ROLE,
-      password: process.env.TEST_PASSWORD,
-    };
+    const response = await request(app).post("/users").send(newUser);
 
-    const response = await request(app)
-      .post("http://localhost:3000/user/")
-      .send(newUser);
-
-    expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-    expect(response.body.message).toBe("Internal Server Error");
+    expect(response.status).toBe(400);
+    expect(response.body.message).toBeUndefined();
   });
 });

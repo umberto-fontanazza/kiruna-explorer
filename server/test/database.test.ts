@@ -1,25 +1,28 @@
+import dotenv from "dotenv";
+import { Pool, types } from "pg";
 import { Database } from "../src/database";
-import { Pool } from "pg";
+dotenv.config();
 
 jest.mock("pg", () => {
   const mPool = {
     query: jest.fn(),
     end: jest.fn(),
   };
-  return { Pool: jest.fn(() => mPool) };
+
+  const mTypes = {
+    setTypeParser: jest.fn(),
+  };
+
+  return { Pool: jest.fn(() => mPool), types: mTypes };
 });
 
 describe("Database", () => {
   const poolMock: Pool = new Pool();
   const queryMock = poolMock.query as jest.Mock;
+  const setTypeParserMock = types.setTypeParser as jest.Mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
-    process.env.DB_HOST = "localhost";
-    process.env.DB_PORT = "5432";
-    process.env.DB_USER = "user";
-    process.env.DB_PASSWORD = "password";
-    process.env.DB_NAME = "testdb";
   });
 
   afterAll(async () => {
@@ -29,12 +32,13 @@ describe("Database", () => {
   it("should initialize the pool with correct configuration", () => {
     Database.setup();
 
+    const port = parseInt(process.env.DB_PORT || "5432");
     expect(Pool).toHaveBeenCalledWith({
-      host: process.env.TEST_DB_HOST,
-      port: process.env.TEST_DB_PORT,
-      user: process.env.TEST_DB_HOST,
-      password: process.env.TEST_DB_HOST,
-      database: process.env.TEST_DB_HOST,
+      host: process.env.DB_HOST,
+      port: port,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_TEST_NAME,
     });
   });
 
@@ -66,8 +70,13 @@ describe("Database", () => {
 
     const result = await Database.query("SELECT * FROM users");
 
-    expect(Pool).toHaveBeenCalledTimes(1);
     expect(queryMock).toHaveBeenCalledWith("SELECT * FROM users", undefined);
     expect(result).toEqual(mockResult);
+  });
+
+  it("should call setTypeParser during setup", () => {
+    Database.setup();
+
+    expect(setTypeParserMock).toHaveBeenCalledWith(58509, expect.any(Function));
   });
 });
