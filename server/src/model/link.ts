@@ -1,5 +1,5 @@
-import { Database } from "../database";
 import { strict as assert } from "assert";
+import { Database } from "../database";
 
 export enum LinkType {
   Direct = "direct",
@@ -44,40 +44,46 @@ export class Link {
    * of linkTypes for the pair of documents.
    */
   async update(): Promise<void> {
-    //TODO: the two queries should be in a transaction
     const args = [
       this.targetDocumentId,
       JSON.stringify(this.linkTypes),
       this.sourceDocumentId,
     ];
-    let result = await Database.query(
-      "UPDATE document SET links[$1] = $2 where id = $3",
-      args,
-    );
-    assert(result.rowCount === 1);
-    result = await Database.query(
-      "UPDATE document SET links[$3] = $2 where id = $1",
-      args,
-    );
-    assert(result.rowCount === 1);
+
+    await Database.withTransaction(async (client) => {
+      let result = await client.query(
+        "UPDATE document SET links[$1] = $2 WHERE id = $3",
+        args,
+      );
+      assert(result.rowCount === 1);
+
+      result = await client.query(
+        "UPDATE document SET links[$3] = $2 WHERE id = $1",
+        args,
+      );
+      assert(result.rowCount === 1);
+    });
   }
 
   static async delete(
     sourceDocumentId: number,
     targetDocumentId: number,
   ): Promise<void> {
-    //TODO: run the two queries in the same transaction
     const args = [sourceDocumentId, targetDocumentId];
-    const result = await Database.query(
-      "UPDATE document SET links = links - $1 WHERE id = $2",
-      args,
-    );
-    assert(result.rowCount === 1);
-    const result2 = await Database.query(
-      "UPDATE document SET links = links - $2 WHERE id = $1",
-      args,
-    );
-    assert(result2.rowCount === 1);
+
+    await Database.withTransaction(async (client) => {
+      let result = await client.query(
+        "UPDATE document SET links = links - $1 WHERE id = $2",
+        args,
+      );
+      assert(result.rowCount === 1);
+
+      result = await client.query(
+        "UPDATE document SET links = links - $2 WHERE id = $1",
+        args,
+      );
+      assert(result.rowCount === 1);
+    });
   }
 
   static fromJsonbField(
