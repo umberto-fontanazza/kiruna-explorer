@@ -7,6 +7,7 @@ import {
   documentFormDefaults,
   DocumentForm as DocumentFormType,
   DocumentType,
+  documentTypeDisplay,
   Link,
   Scale,
   ScaleType,
@@ -235,17 +236,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
               <option disabled selected hidden value="">
                 Select type
               </option>
-              <option value={DocumentType.Informative}>
-                Informative Document
-              </option>
-              <option value={DocumentType.Prescriptive}>
-                Prescriptive Document
-              </option>
-              <option value={DocumentType.Design}>Design Document</option>
-              <option value={DocumentType.Technical}>Technical Document</option>
-              <option value={DocumentType.MaterialEffect}>
-                Material effect
-              </option>
+              {Object.values(DocumentType).map((value) => (
+                <option value={value}>{documentTypeDisplay[value]}</option>
+              ))}
             </select>
           </div>
 
