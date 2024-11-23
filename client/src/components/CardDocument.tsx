@@ -1,5 +1,7 @@
 import { Dispatch, FC, SetStateAction, useContext } from "react";
+import { useAppContext } from "../context/appContext";
 import { authContext } from "../context/auth";
+import { usePopupContext } from "../context/PopupContext";
 import "../styles/CardDocument.scss";
 import {
   Document,
@@ -17,11 +19,12 @@ interface CardDocumentProps {
   setVisualLinks: Dispatch<SetStateAction<boolean>>;
   toEdit: () => void;
   toEditPos: () => void;
-  setPopupOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const CardDocument: FC<CardDocumentProps> = (props) => {
   const { user } = useContext(authContext);
+  const { setIsPopupOpen } = useAppContext();
+  const { setDocumentToDelete } = usePopupContext();
   return (
     <div className="content">
       <span
@@ -115,20 +118,14 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
           <button
             className="btn-edit delete"
             onClick={() => {
-              console.log("aaaaa");
-              props.setPopupOpen(true);
+              setIsPopupOpen(true);
+              setDocumentToDelete(props.document);
             }}
           >
             <span className="material-symbols-outlined ">delete</span>
           </button>
         </div>
       )}
-      {/* <h4>
-          Language: <span>{props.document?.language}</span>
-        </h4> */}
-      {/* <h4>
-          Pages: <span>{props.document?.pages}</span>
-        </h4> */}
     </div>
   );
 };

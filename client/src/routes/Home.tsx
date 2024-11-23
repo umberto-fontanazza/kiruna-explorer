@@ -3,18 +3,16 @@ import API from "../API/API";
 import MapComponent from "../components/Map";
 import ModalForm from "../components/ModalAddDocument";
 import NavHeader from "../components/NavHeader";
-import Popup from "../components/Popup";
 import Sidebar from "../components/Sidebar";
 import { useAppContext } from "../context/appContext";
 import { authContext } from "../context/auth";
+import { usePopupContext } from "../context/PopupContext";
 import "../styles/Home.scss";
 import { Coordinates, Document } from "../utils/interfaces";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
   const {
-    docSelected,
-    setDocSelected,
     modalOpen,
     setModalOpen,
     editDocumentMode,
@@ -24,11 +22,12 @@ const Home: FC = (): JSX.Element => {
     editPositionMode,
     setEditPositionMode,
     handleEditButton,
-    handleDeleteDocument,
     handleCancelPopup,
   } = useAppContext();
+  const { isDeleted } = usePopupContext();
 
   const [documents, setDocuments] = useState<Document[]>([]);
+  const [docSelected, setDocSelected] = useState<Document | null>(null);
 
   // State to control sidebar visibility.
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
@@ -55,7 +54,7 @@ const Home: FC = (): JSX.Element => {
       }
     };
     fetchDocuments();
-  }, []);
+  }, [isDeleted]);
 
   // Handle Add Document button click to open modal
   const handleAddButton = () => {
@@ -111,11 +110,11 @@ const Home: FC = (): JSX.Element => {
     }
   };
 
-  // Handle to delete the document selected
-  const handleDelete = async () => {
-    handleDeleteDocument();
-    setSidebarOpen(false);
-  };
+  useEffect(() => {
+    if (isDeleted) {
+      setSidebarOpen(false);
+    }
+  }, [isDeleted]);
 
   //Handle to edit the position of the document selected
   const handleEditPositionMode = () => {
@@ -192,12 +191,6 @@ const Home: FC = (): JSX.Element => {
             </div>
           )}
         </div>
-        <Popup
-          isOpen={isPopupOpen}
-          document={docSelected}
-          onConfirm={handleDelete}
-          onCancel={handleCancelPopup}
-        />
 
         {/* Sidebar to show document details */}
         <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>

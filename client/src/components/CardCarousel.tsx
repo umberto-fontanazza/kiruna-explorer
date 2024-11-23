@@ -37,9 +37,6 @@ const ControlledCarousel: FC<CardCarouselProps> = (props) => {
               toEditPos={function (): void {
                 throw new Error("Function not implemented.");
               }}
-              setPopupOpen={function (value: SetStateAction<boolean>): void {
-                throw new Error("Function not implemented.");
-              }}
             />
           </div>
         ))}

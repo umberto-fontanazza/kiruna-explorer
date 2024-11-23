@@ -52,7 +52,6 @@ const Sidebar: FC<SidebarProps> = (props) => {
         document={props.document}
         toEdit={() => props.toEdit()}
         toEditPos={() => props.toEditPos()}
-        setPopupOpen={props.setPopupOpen}
         setVisualLinks={props.setVisualLinks}
         visualLinks={props.visualLinks}
       />
