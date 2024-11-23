@@ -1,5 +1,6 @@
 import React, { createContext, ReactNode, useState } from "react";
 
+const appModes: "default" | "view-links" | "edit-document" = "default";
 // Definizione del tipo per il contesto
 interface AppContextType {
   modalOpen: boolean;
