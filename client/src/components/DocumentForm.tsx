@@ -10,6 +10,7 @@ import {
   Link,
   Scale,
   ScaleType,
+  scaleTypeDisplay,
   Stakeholder,
 } from "../utils/interfaces";
 import LinksTable from "./LinksTable";
@@ -174,7 +175,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
               </option>
               {Object.values(ScaleType).map((val) => (
                 <option key={val} value={val}>
-                  {val}
+                  {scaleTypeDisplay[val]}
                 </option>
               ))}
             </select>
