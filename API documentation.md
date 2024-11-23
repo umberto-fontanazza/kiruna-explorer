@@ -7,7 +7,8 @@
    2.1. [Collection `documents`](#collection-documents)  
    2.2. [Collection `links`](#collection-links)  
    2.3. [Collection `sessions`](#collection-sessions)  
-   2.4. [Collection `users`](#collection-users)
+   2.4. [Collection `users`](#collection-users)  
+   2.5. [Collection `uploads`](#collection-uploads)
 
 <br/>
 
@@ -452,4 +453,38 @@ Register a new user.
 
 - `400 Bad Request`: The request was malformed or missing required parameters.
 - `409 Conflict`: User already existing.
+- `500 Internal Server Error`: An unexpected error occurred on the server.
+
+# Collection `uploads`
+
+## GET `/uploads`
+
+### Query parameters
+
+- `documentId`: **mandatory**. Returns uploads related to this document only.
+- `content`: either `labels` to return uploads metadata only or `full` to return metadata along with file content.
+
+## GET `/uploads/{id}`
+
+Retrieve an upload file from its identifier. The file is encoded in base64 as value of the "content" field in the JSON response.
+
+### Response body
+
+```json
+{
+  "label": "Kiruna relocation act",
+  "type": "original_resource",
+  "content": "45j24dffF526x345"
+}
+```
+
+### Success status
+
+- `200 Ok`
+
+### Errors
+
+This API can return the following error codes:
+
+- `404 Not Found`: The requested document was not found.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
