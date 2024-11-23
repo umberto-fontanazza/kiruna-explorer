@@ -42,7 +42,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
 }) => {
   const [page, setPage] = useState<number>(1);
   const [document, setDocument] = useState<DocumentFormType>(
-    editDocument || documentFormDefaults
+    editDocument || { ...documentFormDefaults }
   );
   const [tableLinks, setTableLinks] = useState<Link[]>(document?.links || []);
 
