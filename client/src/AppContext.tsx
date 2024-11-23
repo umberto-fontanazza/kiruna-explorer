@@ -1,16 +1,14 @@
-import React, { createContext, ReactNode, useEffect, useState } from "react";
+import React, { createContext, ReactNode, useState } from "react";
 import API from "./API/API";
 import { Document } from "./utils/interfaces";
 
 // Definizione del tipo per il contesto
 interface AppContextType {
-  documents: Document[];
   docSelected: Document | null;
   modalOpen: boolean;
   editDocumentMode: boolean;
   isPopupOpen: boolean;
   editPositionMode: boolean;
-  setDocuments: React.Dispatch<React.SetStateAction<Document[]>>;
   setDocSelected: React.Dispatch<React.SetStateAction<Document | null>>;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEditDocumentMode: React.Dispatch<React.SetStateAction<boolean>>;
@@ -28,25 +26,11 @@ export const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [documents, setDocuments] = useState<Document[]>([]);
   const [docSelected, setDocSelected] = useState<Document | null>(null);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editDocumentMode, setEditDocumentMode] = useState<boolean>(false);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [editPositionMode, setEditPositionMode] = useState<boolean>(false);
-
-  // Effetto per il fetch dei documenti
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        const documents: Document[] = await API.getDocuments();
-        setDocuments(documents);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchDocuments();
-  }, []);
 
   const handleEditButton = () => {
     setEditDocumentMode(true);
@@ -63,7 +47,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         }
       }
       await API.deleteDocument(docSelected.id);
-      setDocuments((prev) => prev.filter((doc) => doc.id !== docSelected.id));
+      //setDocuments((prev) => prev.filter((doc) => doc.id !== docSelected.id));
       setDocSelected(null);
       setIsPopupOpen(false);
     } catch (err) {
@@ -78,13 +62,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <AppContext.Provider
       value={{
-        documents,
         docSelected,
         modalOpen,
         editDocumentMode,
         isPopupOpen,
         editPositionMode,
-        setDocuments,
         setDocSelected,
         setModalOpen,
         setEditDocumentMode,

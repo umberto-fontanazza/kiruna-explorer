@@ -1,6 +1,8 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import API from "../API/API";
 import ControlledCarousel from "../components/CardCarousel";
 import NavHeader from "../components/NavHeader";
 import Popup from "../components/Popup";
@@ -11,7 +13,6 @@ import { Document } from "../utils/interfaces";
 const DocumentsList = () => {
   const nav = useNavigate();
   const {
-    documents,
     docSelected,
     setDocSelected,
     isPopupOpen,
@@ -21,6 +22,20 @@ const DocumentsList = () => {
     handleDeleteDocument,
     handleCancelPopup,
   } = useAppContext();
+
+  const [documents, setDocuments] = useState<Document[]>([]);
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const documents: Document[] = await API.getDocuments();
+        setDocuments(documents);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDocuments();
+  }, []);
 
   function handleRowClick(doc: Document): void {
     setDocSelected(doc);

@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import API from "../API/API";
 import MapComponent from "../components/Map";
 import ModalForm from "../components/ModalAddDocument";
@@ -13,8 +13,6 @@ import { Coordinates, Document } from "../utils/interfaces";
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
   const {
-    documents,
-    setDocuments,
     docSelected,
     setDocSelected,
     modalOpen,
@@ -30,6 +28,8 @@ const Home: FC = (): JSX.Element => {
     handleCancelPopup,
   } = useAppContext();
 
+  const [documents, setDocuments] = useState<Document[]>([]);
+
   // State to control sidebar visibility.
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
@@ -43,6 +43,19 @@ const Home: FC = (): JSX.Element => {
     latitude: -1,
     longitude: -1,
   });
+
+  // Effetto per il fetch dei documenti
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const documents: Document[] = await API.getDocuments();
+        setDocuments(documents);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDocuments();
+  }, []);
 
   // Handle Add Document button click to open modal
   const handleAddButton = () => {
