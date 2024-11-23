@@ -1,4 +1,5 @@
 import dayjs, { Dayjs } from "dayjs";
+import { kirunaCoordinates } from "./map";
 
 export interface User {
   email: string;
@@ -105,17 +106,23 @@ export const scaleTypeDisplay: { [key in ScaleType]: string } = {
   [ScaleType.Ratio]: "Ratio",
 };
 
-export const createNewDocumentState = (): Document => ({
-  id: -1,
+export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
+  id: number | null;
+  scale: Scale | null;
+  type: DocumentType | null;
+}
+
+export const documentFormDefaults: DocumentForm = {
+  id: null,
   title: "",
   description: "",
   stakeholders: [],
-  scale: { type: ScaleType.Text, ratio: undefined },
-  type: DocumentType.Design,
+  scale: null,
+  type: null,
   issuanceDate: undefined,
   links: [],
-  coordinates: { latitude: 0, longitude: 0 },
-});
+  coordinates: kirunaCoordinates,
+};
 
 export const createDocumentStateFromExisting = (
   docSelected: Document

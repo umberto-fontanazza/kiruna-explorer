@@ -1,13 +1,17 @@
 import { FC, useContext, useEffect, useState } from "react";
 import API from "../API/API";
+import DocumentForm from "../components/DocumentForm";
 import MapComponent from "../components/Map";
-import ModalForm from "../components/ModalAddDocument";
 import NavHeader from "../components/NavHeader";
 import Popup from "../components/Popup";
 import Sidebar from "../components/Sidebar";
 import { authContext } from "../context/auth";
 import "../styles/Home.scss";
-import { Coordinates, Document } from "../utils/interfaces";
+import {
+  Coordinates,
+  Document,
+  DocumentForm as DocumentFormType,
+} from "../utils/interfaces";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
@@ -63,16 +67,15 @@ const Home: FC = (): JSX.Element => {
     setPositionView(false);
   };
 
-  // Handle form submission for new document
-  const handleAddNewDocument = async (newDocument: Document) => {
+  const handleAddNewDocument = async (newDocument: DocumentFormType) => {
     setModalOpen(false);
-    if (editDocumentMode) {
+    if (newDocument.id) {
       const fetchUpdate = async () => {
         try {
-          await API.updateDocument(newDocument);
-          newDocument.links?.map(async (link) => {
+          await API.updateDocument(newDocument as Document);
+          newDocument.links?.map(async (link: any) => {
             await API.putLink(
-              newDocument.id,
+              newDocument.id!,
               link.targetDocumentId,
               link.linkTypes
             );
@@ -85,13 +88,13 @@ const Home: FC = (): JSX.Element => {
       setDocuments((oldDocs) => {
         return oldDocs.map((doc) => {
           if (doc.id == newDocument.id) {
-            doc = { ...newDocument };
+            doc = { ...(newDocument as Document) };
             return doc;
           }
           return doc;
         });
       });
-      setDocSelected(newDocument);
+      setDocSelected(newDocument as Document);
     } else {
       const id = await API.addDocument(newDocument);
       newDocument.links?.forEach(async (link) => {
@@ -275,21 +278,19 @@ const Home: FC = (): JSX.Element => {
         </div>
       </div>
 
-      {/* Modal for adding a new document */}
-      <ModalForm
-        modalOpen={modalOpen}
-        editDocumentMode={editDocumentMode}
-        setEditDocumentMode={setEditDocumentMode}
-        onClose={() => {
-          setModalOpen(false);
-          setEditDocumentMode(false);
-        }}
-        onSubmit={handleAddNewDocument}
-        documents={documents}
-        newPos={newPosition}
-        closePositionView={closePositionView}
-        docSelected={docSelected}
-      />
+      {modalOpen && (
+        <DocumentForm
+          newPos={newPosition}
+          onClose={() => {
+            setModalOpen(false);
+            setEditDocumentMode(false);
+          }}
+          onSubmit={handleAddNewDocument}
+          documents={documents}
+          closePositionView={closePositionView}
+          editDocument={(editDocumentMode && docSelected) || null}
+        />
+      )}
     </>
   );
 };

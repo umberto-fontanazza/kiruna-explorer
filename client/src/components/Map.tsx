@@ -4,8 +4,6 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../styles/Map.scss";
 import {
   Coordinates,
-  createDocumentStateFromExisting,
-  createNewDocumentState,
   Document,
   fromDocumentTypeToIcon,
   Link,
@@ -42,10 +40,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     setNewPosition,
   } = props;
 
-  const initialDocumentState =
-    editDocumentMode && documentSelected
-      ? createDocumentStateFromExisting(documentSelected)
-      : createNewDocumentState();
   const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
@@ -66,7 +60,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     setNewPosition({ latitude: lat, longitude: lng });
     if (!editPositionMode) {
       // Insert Document Position flow
-      setdocumentSelected(initialDocumentState);
+      setdocumentSelected(null);
       setModalOpen(true);
     } else {
       //Edit Document Position Flow

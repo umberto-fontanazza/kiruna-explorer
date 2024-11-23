@@ -26,7 +26,7 @@ const DocumentsList = () => {
   }, []);
 
   return (
-    <>
+    <div id="document-list">
       <NavHeader />
       <h1 className="title">Documents List</h1>
       <div className="table-container">
@@ -95,7 +95,7 @@ const DocumentsList = () => {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 };
 
