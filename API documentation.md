@@ -504,7 +504,6 @@ Register a new user.
 
 - `documentId`: **mandatory**. Returns uploads related to this document only.
 - `file`: defaults to `omit` to return uploads metadata only or `include` to return metadata along with the file.
-- `bindedDocumentIds`: defaults to `omit` but can bet set to `include` to return also an array with the ids of the documents binded to the upload
 
 ## GET `/uploads/{id}`
 
