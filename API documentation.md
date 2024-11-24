@@ -133,21 +133,24 @@ This API can return the following error codes:
 
 Create a new document.
 
-### Request parameters
+### Request body parameters
 
-| **Parameter**           | **Description**                                                                    | **Type**            | **Required**                   |
-| ----------------------- | ---------------------------------------------------------------------------------- | ------------------- | ------------------------------ |
-| `title`                 | The title of the document                                                          | `string`            | Yes                            |
-| `description`           | A brief description of the document                                                | `string`            | Yes                            |
-| `type`                  | Type of the document                                                               | `string`            | Yes                            |
-| `scale`                 | Relation between the real object and its size on a map                             | `object`            | Yes                            |
-| `scale.type`            | Type of the scale                                                                  | `string`            | Yes                            |
-| `scale.ratio`           | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000) | `number`            | Yes if `scale` is "ratio"      |
-| `stakeholders`          | Array of stakeholders involved with the document                                   | `array` of `string` | No                             |
-| `coordinates`           | Object containing geographical data                                                | `object`            | No                             |
-| `coordinates.latitude`  | Value in the range [-90, +90] degrees                                              | `number`            | Yes if `longitude` is provided |
-| `coordinates.longitude` | Value in the range [-180, +180] degrees                                            | `number`            | Yes if `latitude` is provided  |
-| `issuanceDate`          | UTC date (format: `YYYY-MM-DD`)                                                    | `string`            | No                             |
+| **Parameter**           | **Description**                                                                       | **Type**            | **Required**                   |
+| ----------------------- | ------------------------------------------------------------------------------------- | ------------------- | ------------------------------ |
+| `title`                 | The title of the document                                                             | `string`            | Yes                            |
+| `description`           | A brief description of the document                                                   | `string`            | Yes                            |
+| `type`                  | Type of the document                                                                  | `string`            | Yes                            |
+| `scale`                 | Relation between the real object and its size on a map                                | `object`            | Yes                            |
+| `scale.type`            | Type of the scale                                                                     | `string`            | Yes                            |
+| `scale.ratio`           | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000)    | `number`            | Yes if `scale` is "ratio"      |
+| `stakeholders`          | Array of stakeholders involved with the document                                      | `array` of `string` | No                             |
+| `coordinates`           | Object representing a point on the map, mutually exclusive with `area`                | `object`            | No                             |
+| `coordinates.latitude`  | Value in the range [-90, +90] degrees                                                 | `number`            | Yes if `longitude` is provided |
+| `coordinates.longitude` | Value in the range [-180, +180] degrees                                               | `number`            | Yes if `latitude` is provided  |
+| `area`                  | Object representing an area on the map, mutually exclusive with `coordinates`         | `object`            | No                             |
+| `area.include`          | Array of points on the map representing a polygon covering the area                   | `object[]`          | Yes if `area` is defined       |
+| `area.exclude`          | Array of polygons (a polygon is an array of coordinates) to be excluded from the area | `object[][]`        | Yes if `area` is defined       |
+| `issuanceDate`          | UTC date (format: `YYYY-MM-DD`)                                                       | `string`            | No                             |
 
 ### Request body
 
@@ -166,6 +169,32 @@ Create a new document.
     "longitude": 20.23857657264496
   },
   "issuanceDate": "2024-11-08"
+}
+```
+
+Insted of coordinates an area might be defined where an area is an object with the following JSON representation:
+
+//TODO: replace with meaningful coordinates
+
+```json
+{
+  "include": [
+    { "longitude": 3, "latitude": 4 },
+    { "longitude": 3, "latitude": 4 },
+    { "longitude": 3, "latitude": 4 }
+  ],
+  "exclude": [
+    [
+      { "longitude": 3, "latitude": 4 },
+      { "longitude": 3, "latitude": 4 },
+      { "longitude": 3, "latitude": 4 }
+    ],
+    [
+      { "longitude": 3, "latitude": 4 },
+      { "longitude": 3, "latitude": 4 },
+      { "longitude": 3, "latitude": 4 }
+    ]
+  ]
 }
 ```
 
@@ -512,7 +541,7 @@ This API can return the following error codes:
 
 Upload a new file to the server, binding it to one or more documents
 
-### Request parameters
+### Request body parameters
 
 | **Parameter** | **Description**                                | **Type**                            | **Required** |
 | ------------- | ---------------------------------------------- | ----------------------------------- | ------------ |
@@ -557,7 +586,7 @@ This API uses the following error codes:
 Edit upload metadata and/or binding to documents. All request body parameters are optional.
 //TODO: n:n, 1:n, or what for both original resources and attachments
 
-### Request parameters
+### Request body parameters
 
 | **Parameter**         | **Description**                                               | **Type**                    |
 | --------------------- | ------------------------------------------------------------- | --------------------------- |
