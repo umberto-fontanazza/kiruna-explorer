@@ -174,29 +174,30 @@ Create a new document.
 
 Insted of coordinates an area might be defined where an area is an object with the following JSON representation:
 
-//TODO: replace with meaningful coordinates
-
 ```json
 {
   "include": [
-    { "longitude": 3, "latitude": 4 },
-    { "longitude": 3, "latitude": 4 },
-    { "longitude": 3, "latitude": 4 }
+    { "latitude": 67.85584273627312, "longitude": 20.22534124638123 },
+    { "latitude": 67.85971234872345, "longitude": 20.21344576372931 },
+    { "latitude": 67.84217863458723, "longitude": 20.24528734962184 },
+    { "latitude": 67.83997453827193, "longitude": 20.23000083719327 }
   ],
   "exclude": [
     [
-      { "longitude": 3, "latitude": 4 },
-      { "longitude": 3, "latitude": 4 },
-      { "longitude": 3, "latitude": 4 }
+      { "latitude": 67.85000000000012, "longitude": 20.23500000000034 },
+      { "latitude": 67.84500000000045, "longitude": 20.24000000000082 },
+      { "latitude": 67.84750000000067, "longitude": 20.22800000000036 }
     ],
     [
-      { "longitude": 3, "latitude": 4 },
-      { "longitude": 3, "latitude": 4 },
-      { "longitude": 3, "latitude": 4 }
+      { "latitude": 67.85800000000079, "longitude": 20.22000000000075 },
+      { "latitude": 67.86000000000089, "longitude": 20.22600000000036 },
+      { "latitude": 67.85750000000003, "longitude": 20.23000000000058 }
     ]
   ]
 }
 ```
+
+In the example just described, the area defined represents a quadrilateral with two triangular holes in it.
 
 ### Response body
 
