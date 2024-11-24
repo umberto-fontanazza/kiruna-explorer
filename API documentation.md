@@ -500,8 +500,6 @@ Register a new user.
 
 ## GET `/uploads`
 
-//TODO: how should uploads and documents be binded?
-
 ### Query parameters
 
 - `documentId`: **mandatory**. Returns uploads related to this document only.
