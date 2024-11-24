@@ -38,7 +38,12 @@ Retrieve all documents.
 
 ### Query parameters
 
-TODO: filters
+- `type`: [optional] filter the documents on document type
+- `scaleType`: [optional] filter the documents on scale type
+- `maxIssuanceDate`: [optional] return documents which were (or may have been, if only the issuance year is known)
+  issued before or in the provided (UTC `YYYY-MM-DD`) date
+- `minIssuanceDate`: [optional] return documents which were (or may have been, if only the issuance year is known)
+  issued after or in the provided (UTC `YYYY-MM-DD`) date
 
 ### Response body
 
