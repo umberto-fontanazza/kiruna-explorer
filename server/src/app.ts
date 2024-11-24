@@ -1,16 +1,15 @@
 import cors from "cors";
 import * as dotenv from "dotenv";
 import express from "express";
-import session from "express-session";
 import { StatusCodes } from "http-status-codes";
 import morgan from "morgan";
-import passport from "passport";
-import { sinkErrorHandler } from "./middleware/error";
-import passportInitializer from "./passport-config";
 import { documentRouter } from "./router/documentRouter";
-import { sessionRouter } from "./router/sessionRouter";
-import { uploadRouter } from "./router/uploadRouter";
+import passportInitializer from "./passport-config";
+import passport from "passport";
+import session from "express-session";
 import { userRouter } from "./router/userRouter";
+import { sessionRouter } from "./router/sessionRouter";
+import { sinkErrorHandler } from "./middleware/error";
 
 dotenv.config();
 
@@ -43,7 +42,6 @@ app.use(passport.authenticate("session"));
 app.use("/documents", documentRouter);
 app.use("/users", userRouter);
 app.use("/sessions", sessionRouter);
-app.use("/uploads", uploadRouter);
 
 // Error handler middleware. Do not move
 app.use(sinkErrorHandler);
