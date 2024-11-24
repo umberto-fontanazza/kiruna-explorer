@@ -4,48 +4,48 @@
 
 ### Scenario 1.1 - From the home page, click on log in, and fill the fields with Urban Planner credentials.
 
-- Type of user: Urban Planner 
-- Precondition: Credentials for Urban Planner 
-- Post condition: Logged in as Urban Planner, and redirected to the main page with all the features available for the Urban Planner. 
+- Type of user: Urban Planner
+- Precondition: Credentials for Urban Planner
+- Post condition: Logged in as Urban Planner, and redirected to the main page with all the features available for the Urban Planner.
 
-|  Step  | System |
-| :-: | :---: |
-| 1 | User click on the "Login" button |
-| 2 | User is redirected to the login page |
-| 3 | User fill the fields with correct Username and Password |
-| 4 | User click on the "Login" button |
-| 5 | User is logged in, the user is serialized to the session |
-| 6 | User is redirected to the main page, with all actions available for the Urban Planner (e.g. Add, delete ...) |
+| Step |                                                                                                                            System                                                                                                                            |
+| :--: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|  1   |                                                                                                               User click on the "Login" button                                                                                                               |
+|  2   |                                                        User is redirected to the [Login Page](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/test/screenshots/logIn_page.png)                                                         |
+|  3   |                                                                                                   User fill the fields with correct Username and Password                                                                                                    |
+|  4   |                                                                                                               User click on the "Login" button                                                                                                               |
+|  5   |                                                                                                   User is logged in, the user is serialized to the session                                                                                                   |
+|  6   | User is redirected to the [Main Page for UP](https://github.com/umberto-fontanazza/kiruna-explorer/blob/f6669d13bae7c058b4ddc285a9cc3c59be421437/test/screenshots/main_page_UP.png), with all actions available for the Urban Planner (e.g. Add, delete ...) |
 
 ### Scenario 1.2 - From the home page, click on log in, and fill the fields with incorrect Urban Planner credentials.
 
-- Type of user: Urban Planner 
-- Precondition: Credentials for Urban Planner 
+- Type of user: Urban Planner
+- Precondition: Credentials for Urban Planner
 - Post condition: User is not logged in, email and/or password wrong.
 
-|  Step  | System |
-| :-: | :---: |
-| 1 | User click on the "Login" button |
-| 2 | User is redirected to the login page |
-| 3 | User fill the fields with incorrect Email and/or Password |
-| 4 | User click on the "Login" button |
-| 5 | The system show to the user the error message "Email and/or password wrong"|
-| 6 | User is not logged in and remain on the login page |
+| Step |                                                                                                       System                                                                                                        |
+| :--: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|  1   |                                                                                          User click on the "Login" button                                                                                           |
+|  2   |                                    User is redirected to the [Login Page](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/test/screenshots/logIn_page.png)                                    |
+|  3   |                                                                              User fill the fields with incorrect Email and/or Password                                                                              |
+|  4   |                                                                                          User click on the "Login" button                                                                                           |
+|  5   | The system show to the user the error message ["Email and/or password wrong"](https://github.com/umberto-fontanazza/kiruna-explorer/blob/f6669d13bae7c058b4ddc285a9cc3c59be421437/test/screenshots/login_error.png) |
+|  6   |                                                                                 User is not logged in and remain on the login page                                                                                  |
 
 ### Scenario 1.3 - From the home page, click on log in, and fill the fields but password or email are not filled
 
-- Type of user: Urban Planner 
-- Precondition: Credentials for Urban Planner 
+- Type of user: Urban Planner
+- Precondition: Credentials for Urban Planner
 - Post condition: User is not logged in, email and/or password missing.
 
-|  Step  | System |
-| :-: | :---: |
-| 1 | User click on the "Login" button |
-| 2 | User is redirected to the [Login Page](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/test/screenshots/logIn_page.png) |
-| 3 | User fill the fields with missing Email and/or Password |
-| 4 | User click on the "Login" button |
-| 5 | The system show to the user the warning message "Please fill out this field"|
-| 6 | User is not logged in, and remain on the login page |
+| Step |                                                                                                          System                                                                                                           |
+| :--: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|  1   |                                                                                             User click on the "Login" button                                                                                              |
+|  2   |                                       User is redirected to the [Login Page](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/test/screenshots/logIn_page.png)                                       |
+|  3   |                                                                                  User fill the fields with missing Email and/or Password                                                                                  |
+|  4   |                                                                                             User click on the "Login" button                                                                                              |
+|  5   | The system show to the user the warning message ["Please fill out this field"](https://github.com/umberto-fontanazza/kiruna-explorer/blob/f6669d13bae7c058b4ddc285a9cc3c59be421437/test/screenshots/login_incomplete.png) |
+|  6   |                                                                                    User is not logged in, and remain on the login page                                                                                    |
 
 ### Scenario 1.4 - From the home page, click on log in, and register clicking in sign up for free
 
@@ -57,118 +57,42 @@ Not yet implemented.
 
 ### Scenario 1.6: From the home page, click on log in, return to main page from login page using "Return" button
 
-- Type of user: Urban Planner 
-- Precondition: Credentials for Urban Planner 
+- Type of user: Urban Planner
+- Precondition: Credentials for Urban Planner
 - Post condition: User is not logged in, return to main page.
 
-|  Step  | System |
-| :-: | :---: |
-| 1 | User click on the "Login" button |
-| 2 | User is redirected to the login page |
-| 3 | User click on the "Return" button |
-| 5 | User is not logged in, and is redirected to the main page |
+| Step |                                                                                              System                                                                                               |
+| :--: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|  1   |                                                                                 User click on the "Login" button                                                                                  |
+|  2   |                           User is redirected to the [Login Page](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/test/screenshots/logIn_page.png)                           |
+|  3   |                                                                                 User click on the "Return" button                                                                                 |
+|  5   | User is not logged in, and is redirected to the ["Main Page"](https://github.com/umberto-fontanazza/kiruna-explorer/blob/f6669d13bae7c058b4ddc285a9cc3c59be421437/test/screenshots/main_page.png) |
 
-### Scenario 2.1: Add document logged in as an Urban Planner
+### Scenario 2.1: Enter to the for Add document, logged in as an Urban Planner
 
-Type of user: Urban Planner 
-Precondition: User is logged in as an Urban Planner [Scenario 1.1](#scenario-11---from-the-home-page-click-on-log-in-and-fill-the-fields-with-urban-planner-credentials)
-Post condition: User is not logged in, return to main page.
-Precondition: The user is logged into the system as an Urban Planner.
-Steps:
--The user clicks on the "+" button.
-Expected Result: A page or form for entering the new document details is displayed.
-````
+- Type of user: Urban Planner
+- Precondition: User is logged in as an Urban Planner [Scenario 1.1](#scenario-11---from-the-home-page-click-on-log-in-and-fill-the-fields-with-urban-planner-credentials)
+- Post condition: A form for entering the details of the new document is displayed
 
-**Scenario 9**: Add new document with valid information
+| Step |                                 System                                 |
+| :--: | :--------------------------------------------------------------------: |
+|  1   |              User click on the "Add new document" button               |
+|  2   |                User is redirected to "Select position"                 |
+|  3   | User click on the geographical point that wants to refers the document |
+|  5   |           User is redirected to the form ["New Document"]()            |
 
-```txt
-Precondition: The user is on the document addition page.
-Steps:
--The user enters a title in the "Title" field.
--The user enters names of relevant stakeholders in the "Stakeholders" field.
--The user selects a valid issuance date using the calendar menu in the "Issuance Date" field.
--The user selects an option from the "Type" dropdown.
--The user selects an option from the "Scale" dropdown.
--The user enters a language in the "Language" field.
--The user enters a string or number in the "Pages" field.
--The user enters a valid description in the "Description" field.
--The user clicks on "Save Document".
-Expected Result: The document is saved successfully, and the user is redirected to the document list, where they can see the new document with all entered information.
-```
+### Scenario 3.1: Add new document with all the fields filled
 
-**Scenario 10**: Attempt to add document with missing description
+- Type of user: Urban Planner
+- Precondition: User is on the form "New Document" [Scenario 2.1](#scenario-21-enter-to-the-for-add-document-logged-in-as-an-urban-planner)
+- Post condition: The document is saved successfully, and the user is redirected to the [Main Page for UP](https://github.com/umberto-fontanazza/kiruna-explorer/blob/f6669d13bae7c058b4ddc285a9cc3c59be421437/test/screenshots/main_page_UP.png)
 
-```txt
-Precondition: The user is on the document addition page.
-Steps:
--The user enters a valid title.
--The user leaves the "Description" field empty.
--The user clicks on "Save Document".
-Expected Result: An error message appears indicating that all the fields are required, and the document is not saved.
-```
-
-**Scenario 11**: Attempt to add document with missing issuance date
-
-```txt
-Precondition: The user is on the document addition page.
-Steps:
--The user fills in all fields with valid information except for the "Issuance Date" field, which is left empty.
--The user clicks on "Save Document".
-Expected Result: An error message appears indicating that all the fields are required, and the document is not saved.
-```
-
-**Scenario 12**: Attempt to add document with missing dropdown selections (Type and Scale)
-
-```txt
-Precondition: The user is on the document addition page.
-Steps:
--The user fills in all fields except for the "Type" and "Scale" dropdown fields, which are left empty.
--The user clicks on "Save Document".
-Expected Result: An error message appears indicating that all the fields are required, and the document is not saved.
-```
-
-**Scenario 13**: Attempt to add document with missing stakeholders
-
-```txt
-Precondition: The user is on the document addition page.
-Steps:
--The user fills in all fields except for the "Stakeholders" field, which is left empty.
--The user clicks on "Save Document".
-Expected Result: An error message appears indicating that all the fields are required, and the document is not saved.
-```
-
-**Scenario 14**: Attempt to add document with empty pages field
-
-```txt
-Precondition: The user is on the document addition page.
-Steps:
--The user fills in all fields except for the "Pages" field, which is left empty.
--The user clicks on "Save Document".
-Expected Result: An error message appears indicating that all the fields are required, and the document is not saved.
-```
-
-**Scenario 15**: Logout
-
-```txt
-Precondition: The user is logged into the system as an Urban Planner.
-Steps:
--The user clicks on the "Logout" button.
-Expected Result: The user is successfully logged out and redirected to the login page. Any unsaved information on the document addition page is cleared for security reasons.
-```
-
-**Scenario 16**: Attempt to access document addition page without login
-
-```txt
-Precondition: The user is not logged into the system.
-Steps:
--The user attempts to navigate directly to the document addition page (e.g., by entering the URL).
-Expected Result: The user is redirected to the login page and prompted to log in. Access to the document addition page is restricted until the user has logged in successfully.
-```
-**Scenario 17**: Return to homepage from addition page using "x" button
-
-```txt
-Precondition: The user is logged into the system as an Urban Planner.
-Steps:
--The user clicks on the "x" button.
-Expected Result: The user is successfullyredirected to the homepage. Any unsaved information on the document addition page is cleared for security reasons.
-```
+| Step |                                         System                                          |
+| :--: | :-------------------------------------------------------------------------------------: |
+|  1   |                        User enters a title in the "Title" field                         |
+|  2   |                  User enters a description in the "Description" field                   |
+|  3   |                  User selects an option from the "Scale" dropdown list                  |
+|  4   | User selects a valid issuance date using the calendar menu in the "Issuance Date" field |
+|  5   |                     User selects an option from the "Type" dropdown                     |
+|  6   |            User selects one or multiple options from the "Stakeholders" list            |
+|  7   |                                User click on "Continue"                                 |
