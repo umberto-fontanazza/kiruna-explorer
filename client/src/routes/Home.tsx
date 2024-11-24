@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useCallback, useContext, useEffect, useState } from "react";
 import API from "../API/API";
 import DocumentForm from "../components/DocumentForm";
 import MapComponent from "../components/Map";
@@ -20,11 +20,11 @@ const Home: FC = (): JSX.Element => {
     modalOpen,
     setModalOpen,
     editDocumentMode,
-    setEditDocumentMode,
     positionView,
     setPositionView,
     setEditPositionMode,
     handleEditPositionModeConfirm,
+    closePositionView,
   } = useAppContext();
   const { isDeleted } = usePopupContext();
 
@@ -39,7 +39,46 @@ const Home: FC = (): JSX.Element => {
     longitude: -1,
   });
 
-  // Effetto per il fetch dei documenti
+  const handleAddNewDocument = useCallback(
+    async (newDocument: DocumentFormType) => {
+      setModalOpen(false);
+      if (newDocument.id) {
+        const fetchUpdate = async () => {
+          try {
+            await API.updateDocument(newDocument as Document);
+            newDocument.links?.map(async (link: any) => {
+              await API.putLink(
+                newDocument.id!,
+                link.targetDocumentId,
+                link.linkTypes
+              );
+            });
+          } catch (err) {
+            console.error(err);
+          }
+        };
+        await fetchUpdate();
+        setDocuments((oldDocs) =>
+          oldDocs.map((doc) =>
+            doc.id === newDocument.id ? { ...(newDocument as Document) } : doc
+          )
+        );
+        setDocSelected(newDocument as Document);
+      } else {
+        const id = await API.addDocument(newDocument as Document);
+        newDocument.links?.forEach(async (link) => {
+          await API.putLink(link.targetDocumentId, id, link.linkTypes);
+          documents.map(async (doc) => {
+            if (doc.id === link.targetDocumentId) {
+              doc.links = await API.getLinks(doc.id);
+            }
+          });
+        });
+      }
+    },
+    [setModalOpen, API, setDocuments, setDocSelected]
+  );
+
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
@@ -50,59 +89,12 @@ const Home: FC = (): JSX.Element => {
       }
     };
     fetchDocuments();
-  }, [isDeleted, handleEditPositionModeConfirm]);
+  }, [isDeleted, handleEditPositionModeConfirm, handleAddNewDocument]);
 
   // Handle Add Document button click to open modal
   const handleAddButton = () => {
     setPositionView(true);
     setSidebarOpen(false);
-  };
-
-  const closePositionView = () => {
-    setPositionView(false);
-  };
-
-  const handleAddNewDocument = async (newDocument: DocumentFormType) => {
-    setModalOpen(false);
-    if (newDocument.id) {
-      const fetchUpdate = async () => {
-        try {
-          await API.updateDocument(newDocument as Document);
-          newDocument.links?.map(async (link: any) => {
-            await API.putLink(
-              newDocument.id!,
-              link.targetDocumentId,
-              link.linkTypes
-            );
-          });
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      fetchUpdate();
-      setDocuments((oldDocs) => {
-        return oldDocs.map((doc) => {
-          if (doc.id == newDocument.id) {
-            doc = { ...(newDocument as Document) };
-            return doc;
-          }
-          return doc;
-        });
-      });
-      setDocSelected(newDocument as Document);
-    } else {
-      const id = await API.addDocument(newDocument as Document);
-      newDocument.links?.forEach(async (link) => {
-        await API.putLink(link.targetDocumentId, id, link.linkTypes);
-        documents.map(async (doc) => {
-          if (doc.id === link.targetDocumentId) {
-            doc.links = await API.getLinks(doc.id);
-          }
-        });
-      });
-      const updatedDocument = { ...newDocument, id: id };
-      setDocuments([...documents, updatedDocument as Document]);
-    }
   };
 
   useEffect(() => {
@@ -176,13 +168,8 @@ const Home: FC = (): JSX.Element => {
       {modalOpen && (
         <DocumentForm
           newPos={newPosition}
-          onClose={() => {
-            setModalOpen(false);
-            setEditDocumentMode(false);
-          }}
           onSubmit={handleAddNewDocument}
           documents={documents}
-          closePositionView={closePositionView}
           editDocument={(editDocumentMode && docSelected) || null}
         />
       )}

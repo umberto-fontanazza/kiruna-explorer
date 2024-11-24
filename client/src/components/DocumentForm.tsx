@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { FC, useEffect, useState } from "react";
+import { useAppContext } from "../context/appContext";
 import "../styles/DocumentForm.scss";
 import {
   Coordinates,
@@ -20,10 +21,8 @@ import SearchBar from "./SearchBar";
 
 interface DocumentFormProps {
   newPos: Coordinates;
-  onClose: () => void;
   onSubmit: (newDocument: DocumentFormType) => void;
   documents: Document[];
-  closePositionView: () => void;
   editDocument: Document | null;
 }
 
@@ -36,12 +35,12 @@ const stakeholdersOptions = [
 
 const DocumentForm: FC<DocumentFormProps> = ({
   newPos,
-  onClose,
   onSubmit,
   documents,
-  closePositionView,
   editDocument,
 }) => {
+  const { setModalOpen, setEditDocumentMode, closePositionView } =
+    useAppContext();
   const [page, setPage] = useState<number>(1);
   const [document, setDocument] = useState<DocumentFormType>(
     editDocument || { ...documentFormDefaults }
@@ -111,7 +110,8 @@ const DocumentForm: FC<DocumentFormProps> = ({
         onClick={() => {
           setDocument(documentFormDefaults);
           setPage(1);
-          onClose();
+          setModalOpen(false);
+          setEditDocumentMode(false);
         }}
       >
         <img src="/x.png" alt="Close" />

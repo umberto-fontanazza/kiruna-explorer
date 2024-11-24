@@ -23,6 +23,7 @@ interface AppContextType {
     docSelected: Document,
     newPos: Coordinates
   ) => void;
+  closePositionView: () => void;
 }
 
 // Creazione del contesto
@@ -70,6 +71,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     setPositionView(false);
   };
 
+  const closePositionView = () => {
+    setPositionView(false);
+    setEditPositionMode(false);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -89,6 +95,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         handleEditButton,
         handleCancelPopup,
         handleEditPositionModeConfirm,
+        closePositionView,
       }}
     >
       {children}

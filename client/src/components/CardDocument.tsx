@@ -21,8 +21,13 @@ interface CardDocumentProps {
 
 const CardDocument: FC<CardDocumentProps> = (props) => {
   const { user } = useContext(authContext);
-  const { setIsPopupOpen, setModalOpen, visualLinks, setVisualLinks } =
-    useAppContext();
+  const {
+    setIsPopupOpen,
+    setModalOpen,
+    visualLinks,
+    setVisualLinks,
+    setEditDocumentMode,
+  } = useAppContext();
   const { setDocumentToDelete } = usePopupContext();
   return (
     <div className="content">
@@ -101,7 +106,13 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
       </div>
       {user && (
         <div className="btn-group">
-          <button className="btn-edit" onClick={() => setModalOpen(true)}>
+          <button
+            className="btn-edit"
+            onClick={() => {
+              setEditDocumentMode(true);
+              setModalOpen(true);
+            }}
+          >
             <span className="material-symbols-outlined">edit_document</span>
           </button>
           <button
