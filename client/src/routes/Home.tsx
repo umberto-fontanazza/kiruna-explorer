@@ -1,14 +1,18 @@
 import { FC, useContext, useEffect, useState } from "react";
 import API from "../API/API";
+import DocumentForm from "../components/DocumentForm";
 import MapComponent from "../components/Map";
-import ModalForm from "../components/ModalAddDocument";
 import NavHeader from "../components/NavHeader";
 import Sidebar from "../components/Sidebar";
 import { useAppContext } from "../context/appContext";
 import { authContext } from "../context/auth";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/Home.scss";
-import { Coordinates, Document } from "../utils/interfaces";
+import {
+  Coordinates,
+  Document,
+  DocumentForm as DocumentFormType,
+} from "../utils/interfaces";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
@@ -17,12 +21,10 @@ const Home: FC = (): JSX.Element => {
     setModalOpen,
     editDocumentMode,
     setEditDocumentMode,
-    isPopupOpen,
-    setIsPopupOpen,
-    editPositionMode,
+    positionView,
+    setPositionView,
     setEditPositionMode,
-    handleEditButton,
-    handleCancelPopup,
+    handleEditPositionModeConfirm,
   } = useAppContext();
   const { isDeleted } = usePopupContext();
 
@@ -31,12 +33,6 @@ const Home: FC = (): JSX.Element => {
 
   // State to control sidebar visibility.
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-
-  //States to handle to insertion and modification of the position of a document.
-  const [positionView, setPositionView] = useState<boolean>(false);
-
-  // State to handle the visualization of the links, highlighting the markers on the map.
-  const [visualizeLinks, setVisualizeLinks] = useState<boolean>(false);
 
   const [newPosition, setNewPosition] = useState<Coordinates>({
     latitude: -1,
@@ -54,7 +50,7 @@ const Home: FC = (): JSX.Element => {
       }
     };
     fetchDocuments();
-  }, [isDeleted]);
+  }, [isDeleted, handleEditPositionModeConfirm]);
 
   // Handle Add Document button click to open modal
   const handleAddButton = () => {
@@ -66,16 +62,15 @@ const Home: FC = (): JSX.Element => {
     setPositionView(false);
   };
 
-  // Handle form submission for new document
-  const handleAddNewDocument = async (newDocument: Document) => {
+  const handleAddNewDocument = async (newDocument: DocumentFormType) => {
     setModalOpen(false);
-    if (editDocumentMode) {
+    if (newDocument.id) {
       const fetchUpdate = async () => {
         try {
-          await API.updateDocument(newDocument);
-          newDocument.links?.map(async (link) => {
+          await API.updateDocument(newDocument as Document);
+          newDocument.links?.map(async (link: any) => {
             await API.putLink(
-              newDocument.id,
+              newDocument.id!,
               link.targetDocumentId,
               link.linkTypes
             );
@@ -88,15 +83,15 @@ const Home: FC = (): JSX.Element => {
       setDocuments((oldDocs) => {
         return oldDocs.map((doc) => {
           if (doc.id == newDocument.id) {
-            doc = { ...newDocument };
+            doc = { ...(newDocument as Document) };
             return doc;
           }
           return doc;
         });
       });
-      setDocSelected(newDocument);
+      setDocSelected(newDocument as Document);
     } else {
-      const id = await API.addDocument(newDocument);
+      const id = await API.addDocument(newDocument as Document);
       newDocument.links?.forEach(async (link) => {
         await API.putLink(link.targetDocumentId, id, link.linkTypes);
         documents.map(async (doc) => {
@@ -106,7 +101,7 @@ const Home: FC = (): JSX.Element => {
         });
       });
       const updatedDocument = { ...newDocument, id: id };
-      setDocuments([...documents, updatedDocument]);
+      setDocuments([...documents, updatedDocument as Document]);
     }
   };
 
@@ -123,29 +118,6 @@ const Home: FC = (): JSX.Element => {
     setEditPositionMode(true);
   };
 
-  const handleEditPositionModeConfirm = async (newPos: Coordinates) => {
-    if (docSelected) {
-      try {
-        const updateDocument = {
-          ...docSelected,
-          coordinates: {
-            latitude: newPos.latitude,
-            longitude: newPos.longitude,
-          },
-        };
-        await API.updateDocument(updateDocument);
-        setDocuments([
-          ...documents.filter((doc) => doc.id !== updateDocument.id),
-          updateDocument,
-        ]);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-    setEditPositionMode(false);
-    setPositionView(false);
-  };
-
   return (
     <>
       {/* Navigation Header */}
@@ -159,12 +131,6 @@ const Home: FC = (): JSX.Element => {
               documentSelected={docSelected}
               setSidebarOpen={setSidebarOpen}
               setdocumentSelected={setDocSelected}
-              setModalOpen={setModalOpen}
-              visualLinks={visualizeLinks}
-              positionView={positionView}
-              editPositionMode={editPositionMode}
-              editDocumentMode={editDocumentMode}
-              onEditPos={handleEditPositionModeConfirm}
               setNewPosition={setNewPosition}
             />
           }
@@ -199,33 +165,27 @@ const Home: FC = (): JSX.Element => {
               setSidebarOpen={setSidebarOpen}
               document={docSelected}
               documents={documents}
-              visualLinks={visualizeLinks}
-              setVisualLinks={setVisualizeLinks}
               setDocuments={setDocuments}
               setDocument={setDocSelected}
-              toEdit={handleEditButton}
-              setPopupOpen={setIsPopupOpen}
               toEditPos={handleEditPositionMode}
             />
           }
         </div>
       </div>
 
-      {/* Modal for adding a new document */}
-      <ModalForm
-        modalOpen={modalOpen}
-        editDocumentMode={editDocumentMode}
-        setEditDocumentMode={setEditDocumentMode}
-        onClose={() => {
-          setModalOpen(false);
-          setEditDocumentMode(false);
-        }}
-        onSubmit={handleAddNewDocument}
-        documents={documents}
-        newPos={newPosition}
-        closePositionView={closePositionView}
-        docSelected={docSelected}
-      />
+      {modalOpen && (
+        <DocumentForm
+          newPos={newPosition}
+          onClose={() => {
+            setModalOpen(false);
+            setEditDocumentMode(false);
+          }}
+          onSubmit={handleAddNewDocument}
+          documents={documents}
+          closePositionView={closePositionView}
+          editDocument={(editDocumentMode && docSelected) || null}
+        />
+      )}
     </>
   );
 };

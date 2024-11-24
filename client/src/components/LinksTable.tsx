@@ -79,7 +79,7 @@ function LinksTable({ tableLinks, setTableLinks, documents }: LinksTableProps) {
   };
 
   return (
-    <table className="links-table">
+    <table className="links links-table">
       <thead>
         <tr>
           <th>Icon</th>

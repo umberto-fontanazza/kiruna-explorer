@@ -24,13 +24,11 @@ async function getDocumentById(id: number): Promise<Document> {
   return document;
 }
 
-//TODO: the param document is not actually of type document
-//because it musn't have an id or a links field
 /**
  * @param document
  * @returns id of the document just added
  */
-async function addDocument(document: Document): Promise<number> {
+async function addDocument(document: Omit<Document, "id">): Promise<number> {
   const responseBody = {
     ...document,
     id: undefined,

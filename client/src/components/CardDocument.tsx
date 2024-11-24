@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useContext } from "react";
+import { FC, useContext } from "react";
 import { useAppContext } from "../context/appContext";
 import { authContext } from "../context/auth";
 import { usePopupContext } from "../context/PopupContext";
@@ -15,15 +15,14 @@ import {
 
 interface CardDocumentProps {
   document: Document | null;
-  visualLinks: boolean;
-  setVisualLinks: Dispatch<SetStateAction<boolean>>;
   toEdit: () => void;
   toEditPos: () => void;
 }
 
 const CardDocument: FC<CardDocumentProps> = (props) => {
   const { user } = useContext(authContext);
-  const { setIsPopupOpen } = useAppContext();
+  const { setIsPopupOpen, setModalOpen, visualLinks, setVisualLinks } =
+    useAppContext();
   const { setDocumentToDelete } = usePopupContext();
   return (
     <div className="content">
@@ -87,15 +86,13 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         </h4>
         {props.document?.links && props.document?.links.length > 0 && (
           <button
-            className={`see-links ${props.visualLinks ? "fill" : "no-fill"}`}
+            className={`see-links ${visualLinks ? "fill" : "no-fill"}`}
             onClick={() =>
-              props.visualLinks
-                ? props.setVisualLinks(false)
-                : props.setVisualLinks(true)
+              visualLinks ? setVisualLinks(false) : setVisualLinks(true)
             }
           >
             <span
-              className={`material-symbols-outlined dark ${props.visualLinks ? "fill" : "no-fill"}`}
+              className={`material-symbols-outlined dark ${visualLinks ? "fill" : "no-fill"}`}
             >
               visibility
             </span>
@@ -104,7 +101,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
       </div>
       {user && (
         <div className="btn-group">
-          <button className="btn-edit" onClick={() => props.toEdit()}>
+          <button className="btn-edit" onClick={() => setModalOpen(true)}>
             <span className="material-symbols-outlined">edit_document</span>
           </button>
           <button

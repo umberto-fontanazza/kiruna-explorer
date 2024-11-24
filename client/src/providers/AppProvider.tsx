@@ -1,18 +1,28 @@
 import React, { createContext, ReactNode, useState } from "react";
+import API from "../API/API";
+import { Coordinates, Document } from "../utils/interfaces";
 
-const appModes: "default" | "view-links" | "edit-document" = "default";
+//const appModes: "default" | "view-links" | "edit-document" = "default";
 // Definizione del tipo per il contesto
 interface AppContextType {
   modalOpen: boolean;
   editDocumentMode: boolean;
   isPopupOpen: boolean;
   editPositionMode: boolean;
+  visualLinks: boolean;
+  positionView: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEditDocumentMode: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEditPositionMode: React.Dispatch<React.SetStateAction<boolean>>;
+  setVisualLinks: React.Dispatch<React.SetStateAction<boolean>>;
+  setPositionView: React.Dispatch<React.SetStateAction<boolean>>;
   handleEditButton: () => void;
   handleCancelPopup: () => void;
+  handleEditPositionModeConfirm: (
+    docSelected: Document,
+    newPos: Coordinates
+  ) => void;
 }
 
 // Creazione del contesto
@@ -26,6 +36,8 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [editDocumentMode, setEditDocumentMode] = useState<boolean>(false);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [editPositionMode, setEditPositionMode] = useState<boolean>(false);
+  const [positionView, setPositionView] = useState<boolean>(false);
+  const [visualLinks, setVisualLinks] = useState<boolean>(false);
 
   const handleEditButton = () => {
     setEditDocumentMode(true);
@@ -36,6 +48,28 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     setIsPopupOpen(false);
   };
 
+  const handleEditPositionModeConfirm = async (
+    docSelected: Document,
+    newPos: Coordinates
+  ) => {
+    if (docSelected) {
+      try {
+        const updateDocument = {
+          ...docSelected,
+          coordinates: {
+            latitude: newPos.latitude,
+            longitude: newPos.longitude,
+          },
+        };
+        await API.updateDocument(updateDocument);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+    setEditPositionMode(false);
+    setPositionView(false);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -43,13 +77,18 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         editDocumentMode,
         isPopupOpen,
         editPositionMode,
+        visualLinks,
+        positionView,
         setModalOpen,
         setEditDocumentMode,
         setIsPopupOpen,
         setEditPositionMode,
+        setVisualLinks,
+        setPositionView,
         //Functions
         handleEditButton,
         handleCancelPopup,
+        handleEditPositionModeConfirm,
       }}
     >
       {children}

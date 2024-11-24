@@ -1,6 +1,7 @@
 import "@material/web/icon/_icon.scss";
 import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import { Dispatch, FC, SetStateAction } from "react";
+import { useAppContext } from "../context/appContext";
 import "../styles/Sidebar.scss";
 import { Document } from "../utils/interfaces";
 import CardDocument from "./CardDocument";
@@ -8,17 +9,14 @@ import CardDocument from "./CardDocument";
 interface SidebarProps {
   document: Document | null;
   documents: Document[];
-  visualLinks: boolean;
-  setVisualLinks: Dispatch<SetStateAction<boolean>>;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
   setDocument: (doc: Document | null) => void;
   setDocuments: Dispatch<SetStateAction<Document[]>>;
-  toEdit: () => void;
   toEditPos: () => void;
-  setPopupOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const Sidebar: FC<SidebarProps> = (props) => {
+  const { setVisualLinks, handleEditButton } = useAppContext();
   return (
     <>
       <div className="container-btns">
@@ -38,7 +36,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
         <button
           className="btn-close-sidebar"
           onClick={() => {
-            props.setVisualLinks(false);
+            setVisualLinks(false);
             props.setSidebarOpen(false);
             props.setDocument(null);
           }}
@@ -50,10 +48,8 @@ const Sidebar: FC<SidebarProps> = (props) => {
       {/* Sidebar Content */}
       <CardDocument
         document={props.document}
-        toEdit={() => props.toEdit()}
+        toEdit={() => handleEditButton()}
         toEditPos={() => props.toEditPos()}
-        setVisualLinks={props.setVisualLinks}
-        visualLinks={props.visualLinks}
       />
     </>
   );

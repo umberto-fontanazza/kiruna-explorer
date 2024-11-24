@@ -1,0 +1,104 @@
+@use "Color";
+
+$column-gap: 2ch;
+
+.modal {
+  position: absolute;
+  top: 11vh;
+  left: 0;
+  right: 0;
+  margin-inline: auto;
+  width: 38vw;
+  height: 80%;
+  background-color: Color.$third;
+}
+
+form.document {
+  border-radius: 15px;
+  padding: 2em;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $column-gap;
+
+  button.close {
+    position: absolute;
+    $close-button-size: 3em;
+    width: $close-button-size;
+    height: $close-button-size;
+    $close-button-gap: 10px;
+    top: $close-button-gap;
+    right: $close-button-gap;
+    border-radius: 50%;
+    border: none;
+    background-color: Color.$first;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      width: 70%;
+    }
+  }
+
+  .progress-bar,
+  .form-group.title,
+  .form-group.description,
+  .form-group.stakeholders,
+  button[type="submit"],
+  h2 {
+    grid-column: 1 / span 2;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    > label {
+      margin-bottom: 0.2em;
+    }
+  }
+
+  label {
+    color: Color.$first;
+  }
+
+  input:not([type="checkbox"]),
+  textarea,
+  select {
+    padding: 0.4em 2ch;
+  }
+
+  .checkbox-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: $column-gap;
+  }
+
+  input[type="checkbox"] {
+    margin-right: 0.8ch;
+  }
+
+  button[type="submit"] {
+    &:hover {
+      transform: scale(1.005);
+    }
+  }
+}
+
+form.document.page-2 {
+  .actions,
+  table.links,
+  p,
+  .search-bar {
+    grid-column: 1 / span 2;
+  }
+
+  .actions {
+    display: flex;
+    gap: 1ch;
+
+    button {
+      flex: 1;
+    }
+  }
+}

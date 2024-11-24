@@ -81,3 +81,30 @@ button {
 .color-find_in_page {
   color: green;
 }
+
+.hidden {
+  visibility: hidden;
+}
+
+input,
+select,
+textarea {
+  border-radius: 0.5em;
+  border: none;
+}
+
+button {
+  padding: 0.8em;
+
+  &.primary {
+    border: none;
+    color: Color.$third;
+    background-color: Color.$first;
+  }
+
+  transition: 350ms ease;
+  border-radius: 0.5em;
+  &:hover {
+    transform: scale(1.02);
+  }
+}

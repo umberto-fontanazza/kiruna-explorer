@@ -1,11 +1,10 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { useAppContext } from "../context/appContext";
 import "../styles/Map.scss";
 import {
   Coordinates,
-  createDocumentStateFromExisting,
-  createNewDocumentState,
   Document,
   fromDocumentTypeToIcon,
   Link,
@@ -16,36 +15,27 @@ import MapTypeSelector from "./MapTypeSelector";
 interface MapComponentProps {
   documents: Document[];
   documentSelected: Document | null;
-  visualLinks: boolean;
-  positionView: boolean;
-  editPositionMode: boolean;
-  editDocumentMode: boolean;
-  setModalOpen: Dispatch<SetStateAction<boolean>>;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
   setdocumentSelected: Dispatch<SetStateAction<Document | null>>;
   setNewPosition: Dispatch<SetStateAction<Coordinates>>;
-  onEditPos: (newPos: Coordinates) => Promise<void>;
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
   const {
     documents,
     documentSelected,
-    visualLinks,
-    positionView,
-    editPositionMode,
-    editDocumentMode,
-    setModalOpen,
     setSidebarOpen,
     setdocumentSelected,
-    onEditPos,
     setNewPosition,
   } = props;
+  const {
+    visualLinks,
+    editPositionMode,
+    positionView,
+    setModalOpen,
+    handleEditPositionModeConfirm,
+  } = useAppContext();
 
-  const initialDocumentState =
-    editDocumentMode && documentSelected
-      ? createDocumentStateFromExisting(documentSelected)
-      : createNewDocumentState();
   const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
@@ -66,11 +56,16 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     setNewPosition({ latitude: lat, longitude: lng });
     if (!editPositionMode) {
       // Insert Document Position flow
-      setdocumentSelected(initialDocumentState);
+      setdocumentSelected(null);
       setModalOpen(true);
     } else {
       //Edit Document Position Flow
-      onEditPos({ latitude: lat, longitude: lng });
+      if (documentSelected) {
+        handleEditPositionModeConfirm(documentSelected, {
+          latitude: lat,
+          longitude: lng,
+        });
+      }
     }
   };
 

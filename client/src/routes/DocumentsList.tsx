@@ -24,13 +24,13 @@ const DocumentsList = () => {
   }, []);
 
   return (
-    <>
+    <div id="document-list">
       <NavHeader />
       <div className="doc-lists">
         <h1 className="title">Documents List</h1>
         <ControlledCarousel documents={documents} />
       </div>
-    </>
+    </div>
   );
 };
 
