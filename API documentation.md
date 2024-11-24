@@ -462,7 +462,7 @@ Register a new user.
 ### Query parameters
 
 - `documentId`: **mandatory**. Returns uploads related to this document only.
-- `content`: either `labels` to return uploads metadata only or `full` to return metadata along with file content.
+- `content`: defaults to `labels` to return uploads metadata only or `full` to return metadata along with file content.
 
 ## GET `/uploads/{id}`
 
