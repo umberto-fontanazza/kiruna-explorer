@@ -10,7 +10,7 @@
     "scope": "typescript",
     "prefix": "async middleware",
     "body": [
-      "async (requse: Request, response: Response, next: NextFunction) => {",
+      "async (request: Request, response: Response, next: NextFunction) => {",
       "response.send({ message: \"To be implemented\"})",
       "}",
     ],
