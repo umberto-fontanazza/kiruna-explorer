@@ -459,6 +459,8 @@ Register a new user.
 
 ## GET `/uploads`
 
+//TODO: how should uploads and documents be linked?
+
 ### Query parameters
 
 - `documentId`: **mandatory**. Returns uploads related to this document only.
@@ -486,5 +488,48 @@ Retrieve an upload file from its identifier. The file is encoded in base64 as va
 
 This API can return the following error codes:
 
-- `404 Not Found`: The requested document was not found.
+- `404 Not Found`: The requested upload was not found.
+- `500 Internal Server Error`: An unexpected error occurred on the server.
+
+## POST `/uploads`
+
+Upload
+
+### Request parameters
+
+| **Parameter** | **Description**         | **Type**                            | **Required** |
+| ------------- | ----------------------- | ----------------------------------- | ------------ |
+| `title`       | The title of the upload | `string`                            | Yes          |
+| `type`        | Type of the document    | `original_resource` or `attachment` | Yes          |
+
+### Request body
+
+The content field of the body is the file data encoded in base64
+
+```json
+{
+  "title": "Kiruna relocation act",
+  "type": "original_resource",
+  "content": "45j24dffF526x345"
+}
+```
+
+### Response body
+
+```json
+{
+  "id": 1
+}
+```
+
+### Success status
+
+- `201 Created`
+
+### Errors
+
+This API uses the following error codes:
+
+- `400 Bad Request`: The request was malformed or missing required parameters.
+- `401 Unauthorized`: You are unauthorized.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
