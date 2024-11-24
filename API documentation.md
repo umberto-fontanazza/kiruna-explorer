@@ -468,7 +468,7 @@ Register a new user.
 ### Query parameters
 
 - `documentId`: **mandatory**. Returns uploads related to this document only.
-- `content`: defaults to `labels` to return uploads metadata only or `full` to return metadata along with file content.
+- `content`: defaults to `titles` to return uploads metadata only or `full` to return metadata along with file content.
 
 ## GET `/uploads/{id}`
 
@@ -497,24 +497,25 @@ This API can return the following error codes:
 
 ## POST `/uploads`
 
-Upload
+Upload a new file to the server, linking it to one or more documents
 
 ### Request parameters
 
-| **Parameter** | **Description**         | **Type**                            | **Required** |
-| ------------- | ----------------------- | ----------------------------------- | ------------ |
-| `title`       | The title of the upload | `string`                            | Yes          |
-| `type`        | Type of the document    | `original_resource` or `attachment` | Yes          |
+| **Parameter** | **Description**                                | **Type**                            | **Required** |
+| ------------- | ---------------------------------------------- | ----------------------------------- | ------------ |
+| `title`       | The title of the upload                        | `string`                            | Yes          |
+| `type`        | Type of the upload                             | `original_resource` or `attachment` | Yes          |
+| `documentIds` | Ids of the documents related to the attachment | `number[]`                          | Yes          |
+| `content`     | Actual content of the file encoded in base64   | `string`                            | Yes          |
 
 ### Request body
-
-The content field of the body is the file data encoded in base64
 
 ```json
 {
   "title": "Kiruna relocation act",
   "type": "original_resource",
-  "content": "45j24dffF526x345"
+  "content": "45j24dffF526x345",
+  "documentIds": [1, 3, 5]
 }
 ```
 
