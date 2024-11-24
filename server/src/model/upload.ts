@@ -1,3 +1,4 @@
+import { strict as assert } from "assert";
 import { Database } from "../database";
 
 export enum UploadType {
@@ -29,12 +30,21 @@ export class Upload {
     title: string,
     type: UploadType,
     file: Buffer,
+    bindedDocumentIds: number[],
   ): Promise<Upload> {
-    const result = await Database.query(
-      "INSERT INTO uploads(title, type, file) VALUES($1, $2, $3) RETURNING id;",
-      [title, type, file],
-    );
-    const uploadId: number = result.rows[0].id;
+    assert(bindedDocumentIds.length >= 1);
+    const uploadId = await Database.withTransaction(async (client) => {
+      const result = await client.query(
+        "INSERT INTO uploads(title, type, file) VALUES($1, $2, $3) RETURNING id;",
+        [title, type, file],
+      );
+      const uploadId: number = result.rows[0].id;
+      client.query(
+        `UPDATE document SET upload_ids = array_append(upload_ids, $1) WHERE id IN $2`,
+        [uploadId, bindedDocumentIds],
+      );
+      return uploadId;
+    });
     return new Upload(uploadId, title, type, file);
   }
 }
