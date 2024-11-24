@@ -63,7 +63,7 @@ Retrieve all documents.
           "latitude": 67.85624725739333,
           "longitude": 20.23857657264496
         },
-        "issuanceDate": "2024-11-08",
+        "issuanceTime": "2024-11-08",
         "links": [
             {
                 "targetDocumentId": 2,
@@ -107,7 +107,7 @@ Retrieve a specific document by its unique identifier.
       "latitude": 67.85624725739333,
       "longitude": 20.23857657264496
     },
-    "issuanceDate": "2024-11-08",
+    "issuanceTime": "2024-11-08",
     "links": [
         {
             "targetDocumentId": 2,
@@ -135,22 +135,22 @@ Create a new document.
 
 ### Request body parameters
 
-| **Parameter**           | **Description**                                                                       | **Type**            | **Required**                   |
-| ----------------------- | ------------------------------------------------------------------------------------- | ------------------- | ------------------------------ |
-| `title`                 | The title of the document                                                             | `string`            | Yes                            |
-| `description`           | A brief description of the document                                                   | `string`            | Yes                            |
-| `type`                  | Type of the document                                                                  | `string`            | Yes                            |
-| `scale`                 | Relation between the real object and its size on a map                                | `object`            | Yes                            |
-| `scale.type`            | Type of the scale                                                                     | `string`            | Yes                            |
-| `scale.ratio`           | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000)    | `number`            | Yes if `scale` is "ratio"      |
-| `stakeholders`          | Array of stakeholders involved with the document                                      | `array` of `string` | No                             |
-| `coordinates`           | Object representing a point on the map, mutually exclusive with `area`                | `object`            | No                             |
-| `coordinates.latitude`  | Value in the range [-90, +90] degrees                                                 | `number`            | Yes if `longitude` is provided |
-| `coordinates.longitude` | Value in the range [-180, +180] degrees                                               | `number`            | Yes if `latitude` is provided  |
-| `area`                  | Object representing an area on the map, mutually exclusive with `coordinates`         | `object`            | No                             |
-| `area.include`          | Array of points on the map representing a polygon covering the area                   | `object[]`          | Yes if `area` is defined       |
-| `area.exclude`          | Array of polygons (a polygon is an array of coordinates) to be excluded from the area | `object[][]`        | Yes if `area` is defined       |
-| `issuanceDate`          | UTC date (format: `YYYY-MM-DD`)                                                       | `string`            | No                             |
+| **Parameter**           | **Description**                                                                       | **Type**             | **Required**                   |
+| ----------------------- | ------------------------------------------------------------------------------------- | -------------------- | ------------------------------ |
+| `title`                 | The title of the document                                                             | `string`             | Yes                            |
+| `description`           | A brief description of the document                                                   | `string`             | Yes                            |
+| `type`                  | Type of the document                                                                  | `string`             | Yes                            |
+| `scale`                 | Relation between the real object and its size on a map                                | `object`             | Yes                            |
+| `scale.type`            | Type of the scale                                                                     | `string`             | Yes                            |
+| `scale.ratio`           | The numeric value representing the right side of the scale (e.g., 8000 for 1:8000)    | `number`             | Yes if `scale` is "ratio"      |
+| `stakeholders`          | Array of stakeholders involved with the document                                      | `array` of `string`  | No                             |
+| `coordinates`           | Object representing a point on the map, mutually exclusive with `area`                | `object`             | No                             |
+| `coordinates.latitude`  | Value in the range [-90, +90] degrees                                                 | `number`             | Yes if `longitude` is provided |
+| `coordinates.longitude` | Value in the range [-180, +180] degrees                                               | `number`             | Yes if `latitude` is provided  |
+| `area`                  | Object representing an area on the map, mutually exclusive with `coordinates`         | `object`             | No                             |
+| `area.include`          | Array of points on the map representing a polygon covering the area                   | `object[]`           | Yes if `area` is defined       |
+| `area.exclude`          | Array of polygons (a polygon is an array of coordinates) to be excluded from the area | `object[][]`         | Yes if `area` is defined       |
+| `issuanceTime`          | UTC date (format: `YYYY-MM-DD`) as string or issuance year as number                  | `string` or `number` | Yes                            |
 
 ### Request body
 
@@ -168,7 +168,7 @@ Create a new document.
     "latitude": 67.85624725739333,
     "longitude": 20.23857657264496
   },
-  "issuanceDate": "2024-11-08"
+  "issuanceTime": 2024
 }
 ```
 
