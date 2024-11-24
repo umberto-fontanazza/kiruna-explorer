@@ -270,7 +270,6 @@ Retrieve all links associated with a specific document. If the document has no l
 
 This API uses the following error codes:
 
-- `401 Unauthorized`
 - `404 Not Found`: The requested document was not found.
 - `500 Internal Server Error`
 
