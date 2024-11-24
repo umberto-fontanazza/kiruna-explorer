@@ -461,6 +461,14 @@ Register a new user.
 
 # Collection `uploads`
 
+### Supported requests
+
+- [GET `/uploads`](#get-uploads)
+- [GET `/uploads/{id}`](#get-uploadsid)
+- [POST `/uploads`](#post-uploads)
+- [PATCH `/uploads/{id}`](#patch-uploadsid)
+- [DELETE `/uploads/{id}`](#delete-uploadsid)
+
 ## GET `/uploads`
 
 //TODO: how should uploads and documents be binded?
