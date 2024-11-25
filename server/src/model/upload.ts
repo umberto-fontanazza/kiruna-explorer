@@ -35,12 +35,12 @@ export class Upload {
     assert(bindedDocumentIds.length >= 1);
     const uploadId = await Database.withTransaction(async (client) => {
       const result = await client.query(
-        "INSERT INTO uploads(title, type, file) VALUES($1, $2, $3) RETURNING id;",
+        "INSERT INTO upload(title, type, file) VALUES($1, $2, $3) RETURNING id;",
         [title, type, file],
       );
       const uploadId: number = result.rows[0].id;
       client.query(
-        `UPDATE document SET upload_ids = array_append(upload_ids, $1) WHERE id IN $2`,
+        `UPDATE document SET upload_ids = array_append(upload_ids, $1) WHERE id = ANY($2::int[]);`,
         [uploadId, bindedDocumentIds],
       );
       return uploadId;
