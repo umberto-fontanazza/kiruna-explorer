@@ -57,6 +57,10 @@ export class Upload {
     return new Upload(uploadId, title, type, file);
   }
 
+  /**
+   * @param bindDocuments when true checks for all documents binded to the upload
+   * @param withFile when false only the upload metadata is retrieved
+   */
   static async get(
     id: number,
     bindDocuments: boolean = false,
