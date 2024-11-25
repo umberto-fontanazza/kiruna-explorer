@@ -3,10 +3,12 @@ import { StatusCodes } from "http-status-codes";
 import { isPlanner } from "../middleware/auth";
 import {
   validateBody,
+  validateQueryParameters,
   validateRequestParameters,
 } from "../middleware/validation";
 import { Upload } from "../model/upload";
 import {
+  getManyQueryParameters,
   getQueryParameters,
   GetQueryParameters,
   idRequestParam,
@@ -15,6 +17,18 @@ import {
 } from "../validation/uploadSchema";
 
 export const uploadRouter: Router = Router();
+
+uploadRouter.get(
+  "/",
+  validateQueryParameters(getManyQueryParameters),
+  async (request: Request, response: Response, next: NextFunction) => {
+    const documentId = Number(request.query.documentId);
+    const includeFile = request.query.file === "include";
+    const uploads = await Upload.fromDocumentAll(documentId, includeFile);
+    response.status(StatusCodes.OK).send(uploads);
+    next();
+  },
+);
 
 uploadRouter.get(
   "/:id",

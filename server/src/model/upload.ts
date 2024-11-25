@@ -57,6 +57,20 @@ export class Upload {
     return new Upload(uploadId, title, type, file);
   }
 
+  static async fromDocumentAll(
+    documentId: number,
+    includeFile: boolean = false,
+  ): Promise<Upload[]> {
+    const sql = `SELECT u.id, u.title, u.type${includeFile ? ", file" : ""} 
+      FROM document d 
+      JOIN upload u ON u.id = ANY(d.upload_ids) 
+      WHERE d.id = $1`;
+    const result = await Database.query(sql, [documentId]);
+    return result.rows.map(
+      ({ id, title, type, file }) => new Upload(id, title, type, file),
+    );
+  }
+
   /**
    * @param bindDocuments when true checks for all documents binded to the upload
    * @param withFile when false only the upload metadata is retrieved
