@@ -93,11 +93,18 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     marker.addListener("click", () => {
       setSidebarOpen(true);
       setdocumentSelected(doc);
-      setCenter({
+
+      const newCenter = {
         lat: doc.coordinates?.latitude ?? kirunaCoords.lat,
-        lng: doc.coordinates?.longitude ?? kirunaCoords.lng + 0.0019,
-      });
+        lng: doc.coordinates?.longitude
+          ? doc.coordinates?.longitude + 0.1 / (map?.getZoom() ?? 1)
+          : kirunaCoords.lng,
+      };
+      if ((map?.getZoom() ?? 0) < 12) map?.setZoom(12);
+      map?.setCenter(newCenter);
+      map?.panTo(newCenter);
     });
+
     return marker;
   };
 

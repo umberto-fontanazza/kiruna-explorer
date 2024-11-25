@@ -29,7 +29,24 @@
     align-items: center;
     gap: 0.5vw;
 
-    .btn-download-sidebar,
+    .btn-download {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      border: 0.1rem solid white;
+      background-color: Color.$first;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: Color.$first-hover;
+      }
+    }
+
     .btn-close-sidebar {
       display: flex;
       justify-content: center;
@@ -44,6 +61,12 @@
       .btn-close-img {
         height: 3vh;
         transform: scale(0.9);
+      }
+
+      .dark {
+        &.fill {
+          color: white;
+        }
       }
 
       &:hover {

@@ -1,0 +1,25 @@
+@use "../Color.scss";
+
+.third-page {
+  grid-column: 1 / span 2;
+  grid-row: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  grid-template-rows: 10% 60% auto;
+}
+
+.actions {
+  display: flex;
+  gap: 1ch;
+  width: 100%;
+
+  button {
+    flex: 1;
+  }
+  .primary {
+    &:hover {
+      background-color: Color.$first-hover;
+    }
+  }
+}

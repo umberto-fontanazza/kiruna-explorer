@@ -2,21 +2,18 @@
 
 $column-gap: 2ch;
 
-.modal {
+form.document.modal {
+  font-family: "SwedenSans", sans-serif;
   position: absolute;
+  background-color: Color.$third;
   top: 11vh;
   left: 0;
   right: 0;
   margin-inline: auto;
+  height: 82%;
   width: 38vw;
-  height: 80%;
-  background-color: Color.$third;
-}
-
-form.document {
-  border-radius: 15px;
+  border-radius: 1rem;
   padding: 2em;
-
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: $column-gap;
@@ -39,6 +36,10 @@ form.document {
     img {
       width: 70%;
     }
+
+    &:hover {
+      background-color: Color.$first-hover;
+    }
   }
 
   .progress-bar,
@@ -48,6 +49,12 @@ form.document {
   button[type="submit"],
   h2 {
     grid-column: 1 / span 2;
+  }
+
+  h2,
+  label {
+    font-family: "SwedenSansBold", sans-serif;
+    color: Color.$first;
   }
 
   .form-group {
@@ -79,7 +86,10 @@ form.document {
   }
 
   button[type="submit"] {
+    color: white;
+    font-size: 1.2rem;
     &:hover {
+      background-color: Color.$first-hover;
       transform: scale(1.005);
     }
   }
@@ -93,12 +103,22 @@ form.document.page-2 {
     grid-column: 1 / span 2;
   }
 
+  .search-bar {
+    align-self: flex-end;
+  }
+
   .actions {
     display: flex;
     gap: 1ch;
+    align-self: flex-end;
 
     button {
       flex: 1;
+    }
+    .primary {
+      &:hover {
+        background-color: Color.$first-hover;
+      }
     }
   }
 }
