@@ -7,6 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
+    "link-check": "npx eslint . --max-warnings 0",
+    "format": "npx prettier . --write",
+    "format-check": "npx prettier . --check",
     "preview": "vite preview"
   },
   "dependencies": {
