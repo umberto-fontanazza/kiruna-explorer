@@ -5,6 +5,7 @@ export type ScaleRow = {
 
 export enum ScaleType {
   BlueprintsOrEffect = "blueprints/effects",
+  Concept = "concept",
   Text = "text",
   Ratio = "ratio",
 }

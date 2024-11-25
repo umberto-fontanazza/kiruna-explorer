@@ -88,6 +88,7 @@ export interface Scale {
 
 export enum ScaleType {
   BlueprintsOrEffect = "blueprints/effects",
+  Concept = "concept",
   Text = "text",
   Ratio = "ratio",
 }
