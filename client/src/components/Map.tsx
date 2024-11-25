@@ -26,8 +26,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     handleEditPositionModeConfirm,
   } = useAppContext();
   const { setCoordinates } = useDocumentFormContext();
-
-  const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
   const [markers, setMarkers] = useState<
@@ -202,7 +200,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
           },
         }}
-        center={center}
+        center={kirunaCoords}
         onLoad={setMap}
       />
     </section>
