@@ -86,4 +86,6 @@ export class Upload {
 
     return new Upload(id, title, type, file, bindedDocumentIds);
   }
+
+  toResponseBody = () => ({ ...this, file: this.file?.toString("base64") });
 }

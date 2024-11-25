@@ -25,7 +25,7 @@ uploadRouter.get(
     const bindDocuments = query?.bindedDocumentIds === "include";
     const uploadId = Number(request.params.id);
     const upload = await Upload.get(uploadId, bindDocuments, true);
-    response.status(StatusCodes.OK).send(upload);
+    response.status(StatusCodes.OK).send(upload.toResponseBody());
     next();
   },
 );
