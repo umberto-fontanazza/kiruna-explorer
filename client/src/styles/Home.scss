@@ -4,45 +4,8 @@
   display: flex;
   flex-direction: column;
   width: 100vw;
+  height: 90vh;
   overflow-y: auto;
-
-  .table-documents {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 2vh;
-
-    th,
-    td {
-      padding: 1vh 1vw;
-      text-align: left;
-      border-bottom: 1px solid #ddd;
-    }
-
-    .doc-title {
-      font-size: 1rem;
-      color: #333;
-    }
-
-    .doc-icon {
-      width: 2vw;
-      height: 2vw;
-    }
-
-    .icon-info {
-      cursor: pointer;
-      background-color: Color.$first;
-      border: 0.1rem solid Color.$first;
-      border-radius: 0.5rem;
-      padding: 0.5vh 0.5vw;
-      color: white;
-      transition: 300ms ease;
-
-      &:hover {
-        background: Color.$third;
-        color: Color.$first;
-      }
-    }
-  }
 
   .map {
     width: 100%;

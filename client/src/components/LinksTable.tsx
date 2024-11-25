@@ -1,16 +1,17 @@
 import { SetStateAction } from "react";
+import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/LinksTable.scss";
 import { Document, Link, LinkType } from "../utils/interfaces";
 
 interface LinksTableProps {
   tableLinks: Link[];
   setTableLinks: React.Dispatch<SetStateAction<Link[]>>;
-  documents: Document[];
 }
 
-function LinksTable({ tableLinks, setTableLinks, documents }: LinksTableProps) {
+function LinksTable({ tableLinks, setTableLinks }: LinksTableProps) {
+  const { searchableDocuments } = useDocumentFormContext();
   // Create a map of document IDs for quick lookup
-  const documentMap = documents.reduce(
+  const documentMap = searchableDocuments.reduce(
     (acc, document) => {
       acc[document.id] = document;
       return acc;
