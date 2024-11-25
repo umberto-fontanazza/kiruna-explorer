@@ -20,6 +20,7 @@ export const mapOptions = {
   },
   minZoom: 11,
   maxZoom: 20,
+  fullscreenControl: false,
   restriction: {
     latLngBounds: kirunaBoundaries,
     strictBounds: false,

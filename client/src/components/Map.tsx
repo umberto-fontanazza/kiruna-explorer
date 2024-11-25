@@ -1,44 +1,31 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { useAppContext } from "../context/appContext";
+import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/Map.scss";
-import {
-  Coordinates,
-  Document,
-  fromDocumentTypeToIcon,
-  Link,
-} from "../utils/interfaces";
+import { Document, fromDocumentTypeToIcon, Link } from "../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../utils/map";
+import { PositionMode } from "../utils/modes";
 import MapTypeSelector from "./MapTypeSelector";
 
 interface MapComponentProps {
   documents: Document[];
   documentSelected: Document | null;
-  visualLinks: boolean;
-  positionView: boolean;
-  editPositionMode: boolean;
-  editDocumentMode: boolean;
-  setModalOpen: Dispatch<SetStateAction<boolean>>;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
   setdocumentSelected: Dispatch<SetStateAction<Document | null>>;
-  setNewPosition: Dispatch<SetStateAction<Coordinates>>;
-  onEditPos: (newPos: Coordinates) => Promise<void>;
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
+  const { documents, documentSelected, setSidebarOpen, setdocumentSelected } =
+    props;
   const {
-    documents,
-    documentSelected,
     visualLinks,
-    positionView,
-    editPositionMode,
-    editDocumentMode,
+    positionMode,
     setModalOpen,
-    setSidebarOpen,
-    setdocumentSelected,
-    onEditPos,
-    setNewPosition,
-  } = props;
+    handleEditPositionModeConfirm,
+  } = useAppContext();
+  const { setCoordinates } = useDocumentFormContext();
 
   const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -57,19 +44,24 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     if (!event.latLng) return;
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
-    setNewPosition({ latitude: lat, longitude: lng });
-    if (!editPositionMode) {
+    setCoordinates({ latitude: lat, longitude: lng });
+    if (positionMode === PositionMode.Insert) {
       // Insert Document Position flow
       setdocumentSelected(null);
       setModalOpen(true);
     } else {
       //Edit Document Position Flow
-      onEditPos({ latitude: lat, longitude: lng });
+      if (documentSelected) {
+        handleEditPositionModeConfirm(documentSelected, {
+          latitude: lat,
+          longitude: lng,
+        });
+      }
     }
   };
 
   useEffect(() => {
-    if (!isLoaded || !map || !positionView) return;
+    if (!isLoaded || !map || positionMode === PositionMode.None) return;
 
     map.addListener("click", onMapClick);
 
@@ -77,7 +69,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       google.maps.event.clearInstanceListeners(map);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [positionView]);
+  }, [positionMode]);
 
   const createMarker = (
     doc: Document,
@@ -122,7 +114,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   };
 
   useEffect(() => {
-    if (!isLoaded || !map || positionView) {
+    if (!isLoaded || !map || positionMode !== PositionMode.None) {
       clearMarkers();
       return;
     }
@@ -178,11 +170,15 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   return isLoaded ? (
     <section id="map">
       <MapTypeSelector mapType={mapType} setMapType={setMapType} />
-      {positionView && (
+      {positionMode !== PositionMode.None && (
         <div className="insert-mode">
-          <h2>{!editPositionMode ? "Insert Mode" : "Update Position"}</h2>
+          <h2>
+            {positionMode === PositionMode.Insert
+              ? "Insert Mode"
+              : "Update Position"}
+          </h2>
           <h3>
-            {!editPositionMode
+            {positionMode === PositionMode.Insert
               ? "Select a point on the map, where you want to add a new Document"
               : "Select a point on the map, where you want to update the position of the document selected"}
           </h3>
