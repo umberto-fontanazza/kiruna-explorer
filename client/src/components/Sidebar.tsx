@@ -1,5 +1,3 @@
-import "@material/web/icon/_icon.scss";
-import "@material/web/iconbutton/filled-tonal-icon-button.js";
 import { Dispatch, FC, SetStateAction } from "react";
 import { useAppContext } from "../context/appContext";
 import "../styles/Sidebar.scss";
@@ -21,16 +19,12 @@ const Sidebar: FC<SidebarProps> = (props) => {
     <>
       <div className="container-btns">
         {/* Download Relative Document button */}
-        {/* <button
-            className="btn-download-sidebar"
-            onClick={() => props.setSidebarOpen(false)}
-          >
-            <img
-              className="btn-download-img"
-              src="/file-earmark-arrow-down.svg"
-              alt="Download"
-            />
-          </button> */}
+        <button
+          className="btn-download"
+          onClick={() => props.setSidebarOpen(false)}
+        >
+          <span className="material-symbols-outlined">file_save</span>
+        </button>
 
         {/* Close sidebar button */}
         <button
