@@ -72,6 +72,7 @@ uploadRouter.patch(
     upload.title = title ?? upload.title;
     await upload.update(bindDocumentIds, decoupleDocumentIds);
     response.status(StatusCodes.CREATED).send();
+    next();
   },
 );
 
