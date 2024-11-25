@@ -9,6 +9,7 @@ const ProgressBar: FC<ProgressBarProps> = ({ currentPage }) => {
   const steps = [
     { label: "Mandatory Information", number: 1 },
     { label: "Add Links", number: 2 },
+    { label: "Add Original Resources", number: 3 },
   ];
   return (
     <div className="progress-bar">
