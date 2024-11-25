@@ -10,6 +10,7 @@ import {
   Link,
 } from "../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../utils/map";
+import { PositionMode } from "../utils/modes";
 import MapTypeSelector from "./MapTypeSelector";
 
 interface MapComponentProps {
@@ -30,8 +31,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   } = props;
   const {
     visualLinks,
-    editPositionMode,
-    positionView,
+    positionMode,
     setModalOpen,
     handleEditPositionModeConfirm,
   } = useAppContext();
@@ -54,7 +54,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
     setNewPosition({ latitude: lat, longitude: lng });
-    if (!editPositionMode) {
+    if (positionMode === PositionMode.Insert) {
       // Insert Document Position flow
       setdocumentSelected(null);
       setModalOpen(true);
@@ -70,7 +70,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   };
 
   useEffect(() => {
-    if (!isLoaded || !map || !positionView) return;
+    if (!isLoaded || !map || positionMode === PositionMode.None) return;
 
     map.addListener("click", onMapClick);
 
@@ -78,7 +78,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       google.maps.event.clearInstanceListeners(map);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [positionView]);
+  }, [positionMode]);
 
   const createMarker = (
     doc: Document,
@@ -123,7 +123,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   };
 
   useEffect(() => {
-    if (!isLoaded || !map || positionView) {
+    if (!isLoaded || !map || positionMode !== PositionMode.None) {
       clearMarkers();
       return;
     }
@@ -179,11 +179,15 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   return isLoaded ? (
     <section id="map">
       <MapTypeSelector mapType={mapType} setMapType={setMapType} />
-      {positionView && (
+      {positionMode !== PositionMode.None && (
         <div className="insert-mode">
-          <h2>{!editPositionMode ? "Insert Mode" : "Update Position"}</h2>
+          <h2>
+            {positionMode === PositionMode.Insert
+              ? "Insert Mode"
+              : "Update Position"}
+          </h2>
           <h3>
-            {!editPositionMode
+            {positionMode === PositionMode.Insert
               ? "Select a point on the map, where you want to add a new Document"
               : "Select a point on the map, where you want to update the position of the document selected"}
           </h3>

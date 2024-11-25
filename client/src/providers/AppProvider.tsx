@@ -1,29 +1,26 @@
 import React, { createContext, ReactNode, useState } from "react";
 import API from "../API/API";
 import { Coordinates, Document } from "../utils/interfaces";
+import { PositionMode } from "../utils/modes";
 
-//const appModes: "default" | "view-links" | "edit-document" = "default";
 // Definizione del tipo per il contesto
 interface AppContextType {
   modalOpen: boolean;
   editDocumentMode: boolean;
   isPopupOpen: boolean;
-  editPositionMode: boolean;
+  positionMode: PositionMode;
   visualLinks: boolean;
-  positionView: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEditDocumentMode: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setEditPositionMode: React.Dispatch<React.SetStateAction<boolean>>;
+  setPositionMode: React.Dispatch<React.SetStateAction<PositionMode>>;
   setVisualLinks: React.Dispatch<React.SetStateAction<boolean>>;
-  setPositionView: React.Dispatch<React.SetStateAction<boolean>>;
   handleEditButton: () => void;
   handleCancelPopup: () => void;
   handleEditPositionModeConfirm: (
     docSelected: Document,
     newPos: Coordinates
   ) => void;
-  closePositionView: () => void;
 }
 
 // Creazione del contesto
@@ -36,8 +33,11 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editDocumentMode, setEditDocumentMode] = useState<boolean>(false);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
-  const [editPositionMode, setEditPositionMode] = useState<boolean>(false);
-  const [positionView, setPositionView] = useState<boolean>(false);
+
+  // Questo controlla solo il cambio di una scritta
+  const [positionMode, setPositionMode] = useState<PositionMode>(
+    PositionMode.None
+  );
   const [visualLinks, setVisualLinks] = useState<boolean>(false);
 
   const handleEditButton = () => {
@@ -67,13 +67,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         console.error(err);
       }
     }
-    setEditPositionMode(false);
-    setPositionView(false);
-  };
-
-  const closePositionView = () => {
-    setPositionView(false);
-    setEditPositionMode(false);
+    setPositionMode(PositionMode.None);
   };
 
   return (
@@ -82,20 +76,17 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         modalOpen,
         editDocumentMode,
         isPopupOpen,
-        editPositionMode,
+        positionMode,
         visualLinks,
-        positionView,
         setModalOpen,
         setEditDocumentMode,
         setIsPopupOpen,
-        setEditPositionMode,
+        setPositionMode,
         setVisualLinks,
-        setPositionView,
         //Functions
         handleEditButton,
         handleCancelPopup,
         handleEditPositionModeConfirm,
-        closePositionView,
       }}
     >
       {children}

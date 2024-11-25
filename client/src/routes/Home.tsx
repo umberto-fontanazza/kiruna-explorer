@@ -13,6 +13,7 @@ import {
   Document,
   DocumentForm as DocumentFormType,
 } from "../utils/interfaces";
+import { PositionMode } from "../utils/modes";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
@@ -20,11 +21,9 @@ const Home: FC = (): JSX.Element => {
     modalOpen,
     setModalOpen,
     editDocumentMode,
-    positionView,
-    setPositionView,
-    setEditPositionMode,
+    positionMode,
+    setPositionMode,
     handleEditPositionModeConfirm,
-    closePositionView,
   } = useAppContext();
   const { isDeleted } = usePopupContext();
 
@@ -93,7 +92,7 @@ const Home: FC = (): JSX.Element => {
 
   // Handle Add Document button click to open modal
   const handleAddButton = () => {
-    setPositionView(true);
+    setPositionMode(PositionMode.Insert);
     setSidebarOpen(false);
   };
 
@@ -106,8 +105,7 @@ const Home: FC = (): JSX.Element => {
   //Handle to edit the position of the document selected
   const handleEditPositionMode = () => {
     setSidebarOpen(false);
-    setPositionView(true);
-    setEditPositionMode(true);
+    setPositionMode(PositionMode.Update);
   };
 
   return (
@@ -130,9 +128,13 @@ const Home: FC = (): JSX.Element => {
             <div className="button-overlay">
               <button
                 className="doc-btn"
-                onClick={!positionView ? handleAddButton : closePositionView}
+                onClick={
+                  positionMode === PositionMode.None
+                    ? handleAddButton
+                    : () => setPositionMode(PositionMode.None)
+                }
               >
-                {positionView ? (
+                {positionMode !== PositionMode.None ? (
                   <div className="add-container">
                     <span className="material-symbols-outlined">
                       arrow_back
