@@ -12,6 +12,8 @@ import {
   getQueryParameters,
   GetQueryParameters,
   idRequestParam,
+  PatchBody,
+  patchBody,
   postBody,
   PostBody,
 } from "../validation/uploadSchema";
@@ -55,6 +57,21 @@ uploadRouter.post(
     const { id } = await Upload.insert(title, type, file, documentIds);
     response.status(StatusCodes.CREATED).send({ id });
     next();
+  },
+);
+
+uploadRouter.patch(
+  "/:id",
+  validateRequestParameters(idRequestParam),
+  validateBody(patchBody),
+  async (request: Request, response: Response, next: NextFunction) => {
+    const uploadId = Number(request.params.id);
+    const body = request.body as PatchBody;
+    const { title, bindDocumentIds, decoupleDocumentIds } = body;
+    const upload = await Upload.get(uploadId, true, false);
+    upload.title = title ?? upload.title;
+    await upload.update(bindDocumentIds, decoupleDocumentIds);
+    response.status(StatusCodes.CREATED).send();
   },
 );
 

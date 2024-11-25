@@ -25,6 +25,18 @@ export const getManyQueryParameters = z
   })
   .strict();
 
+//TODO: refine at least one field must be defined
+//TODO: refine intersection of ids in bind and decouple must be empty
+export type PatchBody = z.infer<typeof patchBody>;
+export const patchBody = z.object({
+  title: z.string().optional(),
+  bindDocumentIds: z.array(z.number().int().positive()).nonempty().optional(),
+  decoupleDocumentIds: z
+    .array(z.number().int().positive())
+    .nonempty()
+    .optional(),
+});
+
 export type GetQueryParameters = z.infer<typeof getQueryParameters>;
 /** WARNING for GET /uploads/:id ONLY, don't use without :id */
 export const getQueryParameters = z

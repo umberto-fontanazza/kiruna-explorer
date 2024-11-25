@@ -71,6 +71,20 @@ export class Upload {
     );
   }
 
+  async update(
+    bindDocumentIds: number[] = [],
+    decoupleDocumentIds: number[] = [],
+  ): Promise<void> {
+    const updateTitle = `UPDATE upload SET title = $1 WHERE id = $2`;
+    const bind = `UPDATE document SET upload_ids = array_append(upload_ids, $1) WHERE id = ANY($2::int[])`;
+    const decouple = `UPDATE document SET upload_ids = array_remove(upload_ids, $1) WHERE id = ANY($2::int[])`;
+    await Promise.all([
+      Database.query(updateTitle, [this.title, this.id]),
+      Database.query(bind, [this.id, bindDocumentIds]),
+      Database.query(decouple, [this.id, decoupleDocumentIds]),
+    ]);
+  }
+
   /**
    * @param bindDocuments when true checks for all documents binded to the upload
    * @param withFile when false only the upload metadata is retrieved
