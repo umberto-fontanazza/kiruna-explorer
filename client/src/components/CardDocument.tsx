@@ -18,6 +18,7 @@ interface CardDocumentProps {
   document: Document | null;
   toEdit: () => void;
   toEditPos: () => void;
+  showMapButton: boolean;
 }
 
 const CardDocument: FC<CardDocumentProps> = (props) => {
@@ -31,13 +32,64 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   } = useAppContext();
   const { setDocumentToDelete } = usePopupContext();
   const { setDocumentFormSelected, setCoordinates } = useDocumentFormContext();
+
+  const handleDownload = async () => {
+    try {
+      // Simuliamo un file JSON come risposta API
+      const simulatedFileContent = JSON.stringify({
+        id: "12345",
+        name: "Test Document",
+        content: "Questo è un file di prova per il download.",
+      });
+
+      // Creiamo un Blob con il contenuto simulato
+      const blob = new Blob([simulatedFileContent], {
+        type: "application/json",
+      });
+
+      // Crea un URL temporaneo per il Blob
+      const url = window.URL.createObjectURL(blob);
+
+      // Crea un elemento <a> invisibile per avviare il download
+      const a = document.createElement("a");
+      a.href = url;
+
+      // Nome del file per il download
+      a.download = "documento-di-prova.json";
+
+      // Simula il click per avviare il download
+      a.click();
+
+      // Libera la memoria per l'URL creato
+      window.URL.revokeObjectURL(url);
+
+      console.log("Download completato con successo!");
+    } catch (error) {
+      console.error("Errore durante il download:", error);
+      alert("Si è verificato un errore durante il download del file.");
+    }
+  };
+
   return (
     <div className="content">
-      <span
-        className={`material-symbols-outlined color-${fromDocumentTypeToIcon.get(props.document?.type)} size`}
-      >
-        {fromDocumentTypeToIcon.get(props.document?.type)}
-      </span>
+      <div className="header">
+        <span
+          className={`material-symbols-outlined color-${fromDocumentTypeToIcon.get(props.document?.type)} size`}
+        >
+          {fromDocumentTypeToIcon.get(props.document?.type)}
+        </span>
+        <div className="header-btns">
+          {props.showMapButton && (
+            <button className="btn-map" onClick={handleDownload}>
+              <span className="material-symbols-outlined">map</span>
+            </button>
+          )}
+          <button className="btn-download" onClick={handleDownload}>
+            <span className="material-symbols-outlined">file_save</span>
+          </button>
+        </div>
+      </div>
+
       <hr />
       <h3>{props.document?.title}</h3>
       <p>{props.document?.description}</p>

@@ -1,31 +1,23 @@
 @use "Color";
+
+body {
+  background: Color.$sidebar-background;
+}
+
 #document-list {
-  .title {
-    font-family: "SwedenSansBold", sans-serif;
-    margin: 1.5%;
-    font-size: 3rem;
-    font-weight: bold;
-    color: Color.$first;
-    text-align: center;
-  }
+  .doc-lists {
+    display: flex;
+    flex-direction: column;
 
-  body {
-    background: Color.$sidebar-background;
-
-    .doc-lists {
+    .title {
       display: flex;
-      flex-direction: column;
-
-      .title {
-        display: flex;
-        justify-content: flex-start;
-        font-family: "SwedenSansBold", sans-serif;
-        margin: 1.5%;
-        font-size: 3rem;
-        font-weight: bold;
-        color: white;
-        text-align: center;
-      }
+      justify-content: flex-start;
+      font-family: "SwedenSansBold", sans-serif;
+      margin: 1.5%;
+      font-size: 3rem;
+      font-weight: bold;
+      color: white;
+      text-align: center;
     }
   }
 }

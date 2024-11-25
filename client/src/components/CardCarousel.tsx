@@ -1,4 +1,4 @@
-import { FC, SetStateAction } from "react";
+import { FC } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick-theme.css";
 import "slick-carousel/slick/slick.css";
@@ -27,16 +27,13 @@ const ControlledCarousel: FC<CardCarouselProps> = (props) => {
           <div key={doc.id}>
             <CardDocument
               document={doc}
-              visualLinks={false}
-              setVisualLinks={function (value: SetStateAction<boolean>): void {
-                throw new Error("Function not implemented.");
-              }}
               toEdit={function (): void {
                 throw new Error("Function not implemented.");
               }}
               toEditPos={function (): void {
                 throw new Error("Function not implemented.");
               }}
+              showMapButton={true}
             />
           </div>
         ))}

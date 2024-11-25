@@ -4,7 +4,7 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start;
   width: 90%;
   margin-top: 1vh;
   padding: 1vh 1vw;
@@ -16,6 +16,50 @@
   overflow-y: auto;
   max-height: 90%;
   height: 80ch;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .header-btns {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+
+      .btn-map,
+      .btn-download {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        color: white;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+
+      .btn-map {
+        border: 0.1rem solid Color.$second;
+        background-color: Color.$second;
+
+        &:hover {
+          background-color: #d2ab0e;
+        }
+      }
+
+      .btn-download {
+        border: 0.1rem solid grey;
+        background-color: gray;
+
+        &:hover {
+          background-color: rgb(82, 82, 82);
+        }
+      }
+    }
+  }
 
   .size {
     font-size: 4rem;
@@ -176,4 +220,9 @@
       }
     }
   }
+}
+
+span.material-symbols-outlined {
+  font-size: 1.5rem;
+  transition: font-size 0.3s ease;
 }

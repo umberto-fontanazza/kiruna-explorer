@@ -11,7 +11,7 @@ const NavHeader: FC = (): JSX.Element => {
     <nav className="nav-header">
       <div className="nav-title-btns">
         <span className="brand">Kiruna eXplorer.</span>
-        <button onClick={() => navigate("/home")}>Home</button>
+        <button onClick={() => navigate("/home")}>Map</button>
         <button onClick={() => navigate("/documents")}>Documents</button>
       </div>
       <div className={`${user ? "logged-in" : ""}`}>
