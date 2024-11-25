@@ -1,14 +1,9 @@
-import { FC } from "react";
 import API from "../API/API";
 import { useAppContext } from "../context/appContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/Popup.scss";
 
-interface PopupProps {
-  isOpen: boolean;
-}
-
-const Popup: FC<PopupProps> = (props) => {
+const Popup = () => {
   const { documentToDelete, setIsDeleted } = usePopupContext();
   const { setIsPopupOpen } = useAppContext();
 
@@ -29,7 +24,6 @@ const Popup: FC<PopupProps> = (props) => {
       console.error(err);
     }
   };
-  if (!props.isOpen) return null;
 
   return (
     <div className="overlay">

@@ -1,6 +1,7 @@
 import { FC, useContext } from "react";
 import { useAppContext } from "../context/appContext";
 import { authContext } from "../context/auth";
+import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/CardDocument.scss";
 import {
@@ -29,6 +30,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     setEditDocumentMode,
   } = useAppContext();
   const { setDocumentToDelete } = usePopupContext();
+  const { setDocumentFormSelected, setCoordinates } = useDocumentFormContext();
   return (
     <div className="content">
       <span
@@ -111,6 +113,10 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
             onClick={() => {
               setEditDocumentMode(true);
               setModalOpen(true);
+              setDocumentFormSelected(props.document);
+              if (props.document?.coordinates) {
+                setCoordinates(props.document.coordinates);
+              }
             }}
           >
             <span className="material-symbols-outlined">edit_document</span>

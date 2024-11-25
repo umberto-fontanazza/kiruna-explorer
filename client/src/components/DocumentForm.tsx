@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
+import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/DocumentForm.scss";
 import {
-  Coordinates,
   Document,
   documentFormDefaults,
   DocumentForm as DocumentFormType,
@@ -15,16 +15,10 @@ import {
   scaleTypeDisplay,
   Stakeholder,
 } from "../utils/interfaces";
+import { PositionMode } from "../utils/modes";
 import LinksTable from "./LinksTable";
 import ProgressBar from "./ProgressBar";
 import SearchBar from "./SearchBar";
-
-interface DocumentFormProps {
-  newPos: Coordinates;
-  onSubmit: (newDocument: DocumentFormType) => void;
-  documents: Document[];
-  editDocument: Document | null;
-}
 
 const stakeholdersOptions = [
   { value: Stakeholder.Lkab, label: "LKAB" },
@@ -33,26 +27,30 @@ const stakeholdersOptions = [
   { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
 ];
 
-const DocumentForm: FC<DocumentFormProps> = ({
-  newPos,
-  onSubmit,
-  documents,
-  editDocument,
-}) => {
-  const { setModalOpen, setEditDocumentMode, closePositionView } =
+const DocumentForm = () => {
+  const { setModalOpen, setEditDocumentMode, setPositionMode } =
     useAppContext();
+  const {
+    coordinates,
+    documentFormSelected,
+    setDocumentFormSelected,
+    handleAddNewDocument,
+  } = useDocumentFormContext();
   const [page, setPage] = useState<number>(1);
   const [document, setDocument] = useState<DocumentFormType>(
-    editDocument || { ...documentFormDefaults }
+    documentFormSelected || { ...documentFormDefaults }
   );
   const [tableLinks, setTableLinks] = useState<Link[]>(document?.links || []);
 
   useEffect(() => {
     setDocument((prev) => ({
       ...prev,
-      coordinates: { latitude: newPos.latitude, longitude: newPos.longitude },
+      coordinates: {
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude,
+      },
     }));
-  }, [newPos]);
+  }, [coordinates]);
 
   const onCheckboxChange = (event: {
     target: { value: string; checked: boolean };
@@ -80,18 +78,18 @@ const DocumentForm: FC<DocumentFormProps> = ({
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-    onSubmit({
+    handleAddNewDocument({
       ...document,
       links: tableLinks,
     });
-
     resetForm();
   };
 
   const resetForm = () => {
     setDocument(documentFormDefaults);
     setPage(1);
-    closePositionView();
+    setPositionMode(PositionMode.None);
+    setModalOpen(false);
   };
 
   return (
@@ -112,6 +110,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
           setPage(1);
           setModalOpen(false);
           setEditDocumentMode(false);
+          setDocumentFormSelected(null);
         }}
       >
         <img src="/x.png" alt="Close" />
@@ -325,11 +324,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
       ) : (
         <>
           {tableLinks.length > 0 ? (
-            <LinksTable
-              tableLinks={tableLinks}
-              setTableLinks={setTableLinks}
-              documents={documents}
-            />
+            <LinksTable tableLinks={tableLinks} setTableLinks={setTableLinks} />
           ) : (
             <p>
               If you need to add links to other documents, please use the search
@@ -337,11 +332,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
             </p>
           )}
 
-          <SearchBar
-            documents={documents}
-            tableLinks={tableLinks}
-            setTableLinks={setTableLinks}
-          />
+          <SearchBar tableLinks={tableLinks} setTableLinks={setTableLinks} />
 
           <div className="actions">
             <button className="back" onClick={() => setPage((p) => p - 1)}>

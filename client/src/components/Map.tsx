@@ -2,13 +2,9 @@ import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
+import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/Map.scss";
-import {
-  Coordinates,
-  Document,
-  fromDocumentTypeToIcon,
-  Link,
-} from "../utils/interfaces";
+import { Document, fromDocumentTypeToIcon, Link } from "../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../utils/map";
 import { PositionMode } from "../utils/modes";
 import MapTypeSelector from "./MapTypeSelector";
@@ -18,23 +14,18 @@ interface MapComponentProps {
   documentSelected: Document | null;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
   setdocumentSelected: Dispatch<SetStateAction<Document | null>>;
-  setNewPosition: Dispatch<SetStateAction<Coordinates>>;
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
-  const {
-    documents,
-    documentSelected,
-    setSidebarOpen,
-    setdocumentSelected,
-    setNewPosition,
-  } = props;
+  const { documents, documentSelected, setSidebarOpen, setdocumentSelected } =
+    props;
   const {
     visualLinks,
     positionMode,
     setModalOpen,
     handleEditPositionModeConfirm,
   } = useAppContext();
+  const { setCoordinates } = useDocumentFormContext();
 
   const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -53,7 +44,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     if (!event.latLng) return;
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
-    setNewPosition({ latitude: lat, longitude: lng });
+    setCoordinates({ latitude: lat, longitude: lng });
     if (positionMode === PositionMode.Insert) {
       // Insert Document Position flow
       setdocumentSelected(null);

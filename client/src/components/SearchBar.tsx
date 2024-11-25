@@ -1,14 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import API from "../API/API";
+import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/SearchBar.scss";
 import { Document, Link, LinkType } from "../utils/interfaces";
 
 interface SearchBarProps {
-  documents: Document[];
   tableLinks: Link[];
   setTableLinks: React.Dispatch<React.SetStateAction<Link[]>>;
 }
 
-function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
+function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
+  const { searchableDocuments, setSearchableDocuments } =
+    useDocumentFormContext();
   const [query, setQuery] = useState(""); // user input
   const [selectedDocument, setSelectedDocument] = useState<Document>();
   const [type, setType] = useState(LinkType.Direct); // link type
@@ -17,11 +20,23 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
   );
   const [showSuggestions, setShowSuggestions] = useState(false);
 
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const documents: Document[] = await API.getDocuments();
+        setSearchableDocuments(documents);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDocuments();
+  });
+
   const handleChange = (e: { target: { value: string } }) => {
     const userInput = e.target.value;
     setQuery(userInput);
 
-    const filtered = documents.filter((document) =>
+    const filtered = searchableDocuments.filter((document) =>
       document.title.toLowerCase().includes(userInput.toLowerCase())
     );
     setFilteredSuggestions(filtered);
