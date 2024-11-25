@@ -1,4 +1,5 @@
 import { strict as assert } from "assert";
+import { QueryResult } from "pg";
 import { Database } from "../database";
 
 export enum UploadType {
@@ -6,7 +7,7 @@ export enum UploadType {
   attachment = "attachment",
 }
 
-type UploadDbRow = {
+export type UploadDbRow = {
   id: number;
   title: string;
   type: UploadType;
@@ -18,12 +19,20 @@ export class Upload {
   title: string;
   type: UploadType;
   file?: Buffer;
+  bindedDocumentIds?: number[];
 
-  constructor(id: number, title: string, type: UploadType, file?: Buffer) {
+  constructor(
+    id: number,
+    title: string,
+    type: UploadType,
+    file?: Buffer,
+    bindedDocumentIds?: number[],
+  ) {
     this.id = id;
     this.title = title;
     this.type = type;
     this.file = file;
+    this.bindedDocumentIds = bindedDocumentIds;
   }
 
   static async insert(
@@ -46,5 +55,31 @@ export class Upload {
       return uploadId;
     });
     return new Upload(uploadId, title, type, file);
+  }
+
+  static async get(
+    id: number,
+    bindDocuments: boolean = false,
+    withFile: boolean = true,
+  ): Promise<Upload> {
+    const sqlBindings = "SELECT id FROM document WHERE $1 = ANY(upload_ids)";
+    const sqlUpload = `SELECT title, type${withFile ? ", file" : ""} FROM upload WHERE id = $1`;
+    const [resultUpload, resultBindings] = await Promise.all([
+      Database.query(sqlUpload, [id]),
+      bindDocuments ? Database.query(sqlBindings, [id]) : Promise.resolve(),
+    ]);
+
+    // handle upload query
+    assert(resultUpload.rowCount === 1);
+    const { title, type } = resultUpload.rows[0];
+    const file = withFile ? (resultUpload.rows[0].file as Buffer) : undefined;
+
+    // handle optional document ids binding query
+    assert(!bindDocuments || (resultBindings as QueryResult).rowCount === 1);
+    const bindedDocumentIds: number[] | undefined = (
+      resultBindings?.rows as { id: number }[]
+    )?.map((obj) => obj.id);
+
+    return new Upload(id, title, type, file, bindedDocumentIds);
   }
 }
