@@ -6,9 +6,9 @@ import {
   Document,
   fromDocumentTypeToIcon,
   ScaleType,
-  scaleTypeDisplay,
   stakeholderDisplay,
 } from "../utils/interfaces";
+import { capitalizeFirstLetter } from "../utils/utils";
 
 const DocumentsList = () => {
   const [documentsList, setDocumentsList] = useState<Document[]>([]);
@@ -73,7 +73,7 @@ const DocumentsList = () => {
                   <span>
                     {doc?.scale.type &&
                       doc?.scale.type !== ScaleType.Ratio &&
-                      scaleTypeDisplay[doc.scale.type]}
+                      capitalizeFirstLetter(doc.scale.type)}
                     {doc?.scale.type &&
                       doc?.scale.type === ScaleType.Ratio &&
                       `1:${doc.scale.ratio}`}

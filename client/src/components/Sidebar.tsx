@@ -5,13 +5,12 @@ import { authContext } from "../context/auth";
 import "../styles/Sidebar.scss";
 import {
   Document,
-  documentTypeDisplay,
   fromDocumentTypeToIcon,
   Link,
   ScaleType,
-  scaleTypeDisplay,
   stakeholderDisplay,
 } from "../utils/interfaces";
+import { capitalizeFirstLetter } from "../utils/utils";
 import ModalAddLinks from "./ModalAddLinks";
 
 interface SidebarProps {
@@ -116,7 +115,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
           <span>
             {props.document?.scale.type &&
               props.document?.scale.type !== ScaleType.Ratio &&
-              scaleTypeDisplay[props.document.scale.type]}
+              capitalizeFirstLetter(props.document.scale.type)}
             {props.document?.scale.type &&
               props.document?.scale.type === ScaleType.Ratio &&
               `1:${props.document.scale.ratio}`}
@@ -134,7 +133,8 @@ const Sidebar: FC<SidebarProps> = (props) => {
         <h4>
           Type:{" "}
           <span>
-            {props.document?.type && documentTypeDisplay[props.document?.type]}
+            {props.document?.type &&
+              capitalizeFirstLetter(props.document?.type).replace(/_/g, " ")}
           </span>
         </h4>
         <div className="connection-group">

@@ -7,13 +7,12 @@ import {
   documentFormDefaults,
   DocumentForm as DocumentFormType,
   DocumentType,
-  documentTypeDisplay,
   Link,
   Scale,
   ScaleType,
-  scaleTypeDisplay,
   Stakeholder,
 } from "../utils/interfaces";
+import { capitalizeFirstLetter } from "../utils/utils";
 import LinksTable from "./LinksTable";
 import ProgressBar from "./ProgressBar";
 import SearchBar from "./SearchBar";
@@ -157,6 +156,7 @@ const DocumentForm: FC<DocumentFormProps> = ({
             <label htmlFor="scale-type">Scale *</label>
             <select
               id="scale-type"
+              value={document.scale?.type ?? ""}
               onChange={(e) => {
                 const scaleType = e.target.value;
                 const scaleRatio =
@@ -174,9 +174,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
               <option disabled selected value="" hidden>
                 Please select an option
               </option>
-              {Object.values(ScaleType).map((val) => (
-                <option key={val} value={val}>
-                  {scaleTypeDisplay[val]}
+              {Object.values(ScaleType).map((scaleType) => (
+                <option key={scaleType} value={scaleType}>
+                  {capitalizeFirstLetter(scaleType)}
                 </option>
               ))}
             </select>
@@ -237,7 +237,9 @@ const DocumentForm: FC<DocumentFormProps> = ({
                 Select type
               </option>
               {Object.values(DocumentType).map((value) => (
-                <option value={value}>{documentTypeDisplay[value]}</option>
+                <option value={value}>
+                  {capitalizeFirstLetter(value).replace(/_/g, " ")}
+                </option>
               ))}
             </select>
           </div>
