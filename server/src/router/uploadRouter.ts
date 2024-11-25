@@ -43,3 +43,15 @@ uploadRouter.post(
     next();
   },
 );
+
+uploadRouter.delete(
+  "/:id",
+  isPlanner,
+  validateRequestParameters(idRequestParam),
+  async (request: Request, response: Response, next: NextFunction) => {
+    const uploadId = Number(request.params.id);
+    await Upload.delete(uploadId);
+    response.status(StatusCodes.NO_CONTENT).send();
+    next();
+  },
+);

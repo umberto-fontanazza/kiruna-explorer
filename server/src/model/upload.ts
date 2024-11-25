@@ -87,5 +87,16 @@ export class Upload {
     return new Upload(id, title, type, file, bindedDocumentIds);
   }
 
+  static async delete(id: number): Promise<void> {
+    const sqlUpdate = "DELETE FROM upload WHERE id = $1;";
+    const sqlBindings = `UPDATE document SET upload_ids = array_remove(upload_ids, $1) 
+      WHERE array_position(upload_ids, $1) IS NOT NULL;`;
+    await Database.withTransaction(async (client) => {
+      const result = await client.query(sqlUpdate, [id]);
+      assert(result.rowCount === 1);
+      await client.query(sqlBindings, [id]);
+    });
+  }
+
   toResponseBody = () => ({ ...this, file: this.file?.toString("base64") });
 }
