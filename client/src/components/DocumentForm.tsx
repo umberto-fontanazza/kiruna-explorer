@@ -38,7 +38,7 @@ const DocumentForm = () => {
   } = useDocumentFormContext();
   const [page, setPage] = useState<number>(1);
   const [document, setDocument] = useState<DocumentFormType>(
-    documentFormSelected || { ...documentFormDefaults }
+    documentFormSelected || { ...documentFormDefaults },
   );
   const [tableLinks, setTableLinks] = useState<Link[]>(document?.links || []);
 
@@ -64,7 +64,7 @@ const DocumentForm = () => {
           stakeholders: checked
             ? [...(previousDoc.stakeholders ?? []), value]
             : previousDoc.stakeholders?.filter((sh) => sh != value) || [],
-        }) as Document
+        }) as Document,
     );
   };
 
