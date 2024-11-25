@@ -72,7 +72,7 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
                 };
               }
             }
-            return link; // If the link is not the one to update, return it as it is
+            return link;
           });
 
           // Return the updated links
