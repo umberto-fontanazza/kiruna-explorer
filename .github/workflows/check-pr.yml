@@ -6,6 +6,8 @@ name: Check format + lint + test on pull request
 on:
   pull_request:
     branches: ["main"]
+    paths:
+      - "server/**"
 
 jobs:
   check:

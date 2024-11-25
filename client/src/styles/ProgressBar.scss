@@ -4,16 +4,17 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-direction: row;
   margin-bottom: 1.5rem;
 }
 
 .step {
   display: flex;
   flex-direction: column;
+  align-items: center;
   position: relative;
   color: Color.$first;
   font-family: "SwedenSansBold", sans-serif;
-  font-size: bold;
   width: 50%;
 }
 
