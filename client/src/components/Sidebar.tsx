@@ -18,14 +18,6 @@ const Sidebar: FC<SidebarProps> = (props) => {
   return (
     <>
       <div className="container-btns">
-        {/* Download Relative Document button */}
-        <button
-          className="btn-download"
-          onClick={() => props.setSidebarOpen(false)}
-        >
-          <span className="material-symbols-outlined">file_save</span>
-        </button>
-
         {/* Close sidebar button */}
         <button
           className="btn-close-sidebar"
@@ -44,6 +36,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
         document={props.document}
         toEdit={() => handleEditButton()}
         toEditPos={() => props.toEditPos()}
+        showMapButton={false}
       />
     </>
   );
