@@ -60,6 +60,8 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
           <div
             key={doc.id}
             className={`card-container ${docSelected?.id === doc.id ? "selected" : ""}`}
+            role="button"
+            tabIndex={0}
             onClick={() => handleCardClick(doc, index)}
           >
             <CardDocument

@@ -40,22 +40,24 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   const onMapClick = (event: google.maps.MapMouseEvent) => {
     if (!event.latLng) return;
+
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
+
     setCoordinates({ latitude: lat, longitude: lng });
+
     if (positionMode === PositionMode.Insert) {
       // Insert Document Position flow
       setdocumentSelected(null);
       setModalOpen(true);
-    } else {
-      //Edit Document Position Flow
-      if (documentSelected) {
-        handleEditPositionModeConfirm(documentSelected, {
-          latitude: lat,
-          longitude: lng,
-        });
-      }
+    } else if (positionMode === PositionMode.Update && documentSelected) {
+      // Edit Document Position Flow
+      handleEditPositionModeConfirm(documentSelected, {
+        latitude: lat,
+        longitude: lng,
+      });
     }
+
     setIsSubmit(false);
   };
 

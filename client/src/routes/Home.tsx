@@ -37,17 +37,18 @@ const Home: FC = (): JSX.Element => {
   }, [isDeleted, isSubmit, handleEditPositionModeConfirm]);
 
   useEffect(() => {
-    if (docSelected?.id) {
-      try {
-        const fetchDocument = async () => {
+    const fetchDocument = async () => {
+      if (docSelected?.id) {
+        try {
           const doc = await API.getDocumentById(docSelected.id);
           setDocSelected(doc);
-        };
-        fetchDocument();
-      } catch (err) {
-        console.error(err);
+        } catch (err) {
+          console.error(err);
+        }
       }
-    }
+    };
+
+    fetchDocument();
   }, [documents]);
 
   // Handle Add Document button click to open modal
