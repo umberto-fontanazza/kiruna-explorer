@@ -63,6 +63,11 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
             role="button"
             tabIndex={0}
             onClick={() => handleCardClick(doc, index)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                handleCardClick(doc, index);
+              }
+            }}
           >
             <CardDocument
               document={doc}
