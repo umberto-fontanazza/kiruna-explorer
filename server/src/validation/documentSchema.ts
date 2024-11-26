@@ -11,7 +11,7 @@ const coordinates = z
   .strict();
 
 export const idRequestParam = z.object({
-  id: z.coerce.number().min(1),
+  id: z.coerce.number().int().positive(),
 });
 
 export type Scale = z.infer<typeof scale>;
