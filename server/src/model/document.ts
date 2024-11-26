@@ -1,10 +1,10 @@
 import { strict as assert } from "assert";
+import dayjs, { Dayjs } from "dayjs";
 import { Database } from "../database";
 import { DocumentNotFound } from "../error/documentError";
 import { Coordinates } from "../validation/documentSchema";
-import { Scale, ScaleType, ScaleRow } from "./scale";
 import { Link, LinkResponseBody, LinkType } from "./link";
-import dayjs, { Dayjs } from "dayjs";
+import { Scale, ScaleRow, ScaleType } from "./scale";
 
 type DocumentDbRow = {
   id: number;
@@ -33,6 +33,42 @@ export enum DocumentType {
   Prescriptive = "prescriptive",
   Technical = "technical",
 }
+
+const buildSqlWhere = (
+  type?: DocumentType,
+  scaleType?: ScaleType,
+  maxIssuanceDate?: Date,
+  minIssuanceDate?: Date,
+  wildcardStart: number = 1,
+): [string, unknown[]] => {
+  const sqlFilters = [
+    "type =",
+    "scale_type =",
+    "issuance_date <=",
+    "issuance_date >=",
+  ];
+  const [sqlWithWildcards, args] = [
+    type,
+    scaleType,
+    maxIssuanceDate,
+    minIssuanceDate,
+  ]
+    .map((e, i) => [e, sqlFilters[i]])
+    .filter((e) => e[0])
+    .map((argPairSql, i) => [
+      `${argPairSql[1]} $${i + wildcardStart}`,
+      argPairSql[0],
+    ])
+    .reduce(
+      (collector: unknown[][], sqlPairArg) => {
+        collector[0].push(sqlPairArg[0]);
+        collector[1].push(sqlPairArg[1]);
+        return collector;
+      },
+      [[], []],
+    );
+  return [`WHERE ${sqlWithWildcards.join(", ")}`, args];
+};
 
 export class Document {
   id: number;
@@ -162,15 +198,31 @@ export class Document {
       throw new DocumentNotFound("DELETE query affected rows were less than 1");
   }
 
-  static async all(): Promise<Document[]> {
-    const result = await Database.query(
-      `SELECT *,
+  static async all(
+    filters: {
+      type?: DocumentType;
+      scaleType?: ScaleType;
+      maxIssuanceDate?: Dayjs;
+      minIssuanceDate?: Dayjs;
+    } = {},
+  ): Promise<Document[]> {
+    const someFilters = Object.values(filters).some((d) => d);
+    const { type, scaleType, maxIssuanceDate, minIssuanceDate } = filters;
+    const [sqlWhere, sqlWhereArgs] = filters
+      ? buildSqlWhere(
+          type,
+          scaleType,
+          maxIssuanceDate?.toDate(),
+          minIssuanceDate?.toDate(),
+        )
+      : ["", []];
+    const sql = `SELECT *,
       json_build_object(
         'latitude', ST_Y(coordinates::geometry), 
         'longitude', ST_X(coordinates::geometry))
         AS coordinates
-      FROM document;`,
-    );
+        FROM document ${someFilters ? sqlWhere : ""};`;
+    const result = await Database.query(sql, sqlWhereArgs);
     return result.rows.map((row) => Document.fromDatabaseRow(row));
   }
 
