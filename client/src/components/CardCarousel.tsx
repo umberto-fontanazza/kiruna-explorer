@@ -71,7 +71,6 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
           >
             <CardDocument
               document={doc}
-              toEdit={() => {}}
               toEditPos={() => {}}
               showMapButton={true}
               isDocSelected={docSelected?.id === doc.id}

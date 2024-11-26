@@ -17,7 +17,6 @@ import {
 
 interface CardDocumentProps {
   document: Document | null;
-  toEdit: () => void;
   toEditPos: () => void;
   showMapButton: boolean;
   isDocSelected: boolean;
