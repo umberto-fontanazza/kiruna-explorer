@@ -49,6 +49,9 @@ const LoginForm: FC = (): JSX.Element => {
         </div>
 
         <div className="right-panel">
+          <button className="back-home-btn" onClick={() => nav("/home")}>
+            <span className="material-symbols-outlined">home</span>
+          </button>
           <h2>Welcome Back!</h2>
           <Form onSubmit={handleSubmit}>
             <Form.Label htmlFor="email">Email</Form.Label>

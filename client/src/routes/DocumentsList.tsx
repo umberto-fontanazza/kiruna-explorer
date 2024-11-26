@@ -42,7 +42,16 @@ const DocumentsList = () => {
     <div id="document-list">
       <NavHeader />
       <div className="doc-lists">
-        <h1 className="title">Documents List</h1>
+        <div className="header">
+          <h1 className="title">Documents List</h1>
+          <div className="searchbar-container">
+            <input type="text" className="searchbar" placeholder="Search..." />
+            <button className="search-button">
+              <span className="material-symbols-outlined">search</span>
+            </button>
+          </div>
+          <h2 className="filters">Qui ci saranno i filtri</h2>
+        </div>
         <ControlledCarousel
           documents={documents}
           setCoordinates={setDocumentCoordinates}
