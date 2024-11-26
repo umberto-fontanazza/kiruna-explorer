@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect, useState } from "react";
 import API from "../API/API";
-import MapComponent from "../components/Map";
+import MapComponent from "../components/MapComponents/Map";
 import NavHeader from "../components/NavHeader";
 import Sidebar from "../components/Sidebar";
 import { useAppContext } from "../context/appContext";

@@ -21,3 +21,18 @@ body {
     }
   }
 }
+
+.slider-container {
+  .card-container {
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+    opacity: 0.5;
+    transform: scale(0.9);
+
+    &.selected {
+      opacity: 1;
+      transform: scale(1.0006);
+    }
+  }
+}

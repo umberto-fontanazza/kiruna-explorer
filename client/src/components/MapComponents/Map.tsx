@@ -1,13 +1,13 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { useAppContext } from "../context/appContext";
-import { useDocumentFormContext } from "../context/DocumentFormContext";
-import "../styles/Map.scss";
-import { Document, fromDocumentTypeToIcon, Link } from "../utils/interfaces";
-import { kirunaCoords, libraries, mapOptions } from "../utils/map";
-import { PositionMode } from "../utils/modes";
-import MapTypeSelector from "./MapTypeSelector";
+import { useAppContext } from "../../context/appContext";
+import { useDocumentFormContext } from "../../context/DocumentFormContext";
+import "../../styles/MapComponentsStyles/Map.scss";
+import { Document, fromDocumentTypeToIcon, Link } from "../../utils/interfaces";
+import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
+import { PositionMode } from "../../utils/modes";
+import MapTypeSelector from "../MapTypeSelector";
 
 interface MapComponentProps {
   documents: Document[];
@@ -26,8 +26,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     handleEditPositionModeConfirm,
   } = useAppContext();
   const { setCoordinates } = useDocumentFormContext();
-
-  const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
   const [markers, setMarkers] = useState<
@@ -202,7 +200,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
           },
         }}
-        center={center}
+        center={kirunaCoords}
         onLoad={setMap}
       />
     </section>

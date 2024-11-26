@@ -37,6 +37,8 @@ const Sidebar: FC<SidebarProps> = (props) => {
         toEdit={() => handleEditButton()}
         toEditPos={() => props.toEditPos()}
         showMapButton={false}
+        isDocSelected={true} // always true here
+        setMinimapCoord={null} // no need here
       />
     </>
   );
