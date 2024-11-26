@@ -1,13 +1,13 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { useAppContext } from "../context/appContext";
-import { useDocumentFormContext } from "../context/DocumentFormContext";
-import "../styles/Map.scss";
-import { Document, fromDocumentTypeToIcon, Link } from "../utils/interfaces";
-import { kirunaCoords, libraries, mapOptions } from "../utils/map";
-import { PositionMode } from "../utils/modes";
-import MapTypeSelector from "./MapTypeSelector";
+import { useAppContext } from "../../context/appContext";
+import { useDocumentFormContext } from "../../context/DocumentFormContext";
+import "../../styles/MapComponentsStyles/Map.scss";
+import { Document, fromDocumentTypeToIcon, Link } from "../../utils/interfaces";
+import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
+import { PositionMode } from "../../utils/modes";
+import MapTypeSelector from "../MapTypeSelector";
 
 interface MapComponentProps {
   documents: Document[];
@@ -25,7 +25,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     setModalOpen,
     handleEditPositionModeConfirm,
   } = useAppContext();
-  const { setCoordinates } = useDocumentFormContext();
+  const { setCoordinates, setIsSubmit } = useDocumentFormContext();
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
   const [markers, setMarkers] = useState<
@@ -40,22 +40,25 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   const onMapClick = (event: google.maps.MapMouseEvent) => {
     if (!event.latLng) return;
+
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
+
     setCoordinates({ latitude: lat, longitude: lng });
+
     if (positionMode === PositionMode.Insert) {
       // Insert Document Position flow
       setdocumentSelected(null);
       setModalOpen(true);
-    } else {
-      //Edit Document Position Flow
-      if (documentSelected) {
-        handleEditPositionModeConfirm(documentSelected, {
-          latitude: lat,
-          longitude: lng,
-        });
-      }
+    } else if (positionMode === PositionMode.Update && documentSelected) {
+      // Edit Document Position Flow
+      handleEditPositionModeConfirm(documentSelected, {
+        latitude: lat,
+        longitude: lng,
+      });
     }
+
+    setIsSubmit(false);
   };
 
   useEffect(() => {

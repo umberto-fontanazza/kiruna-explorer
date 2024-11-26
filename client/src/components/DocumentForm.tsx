@@ -96,7 +96,11 @@ const DocumentForm = () => {
         />
       )}
       {page === 3 && (
-        <ThirdPageModal document={document} onSubmit={handleFormSubmit} />
+        <ThirdPageModal
+          document={document}
+          onSubmit={handleFormSubmit}
+          goBack={setPage}
+        />
       )}
     </form>
   );

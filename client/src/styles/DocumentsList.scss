@@ -76,6 +76,21 @@ body {
     }
   }
 }
+
+.slider-container {
+  .card-container {
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+    opacity: 0.5;
+    transform: scale(0.9);
+
+    &.selected {
+      opacity: 1;
+      transform: scale(1.0006);
+    }
+  }
+}
 .searchbar-container:focus-within {
   transform: scale(1.2); /* Trasformazione quando l'input è in focus */
   transition: all 0.3s ease-in-out;
