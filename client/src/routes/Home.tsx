@@ -13,8 +13,12 @@ import { PositionMode } from "../utils/modes";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
-  const { positionMode, setPositionMode, handleEditPositionModeConfirm } =
-    useAppContext();
+  const {
+    positionMode,
+    modalOpen,
+    setPositionMode,
+    handleEditPositionModeConfirm,
+  } = useAppContext();
   const { isDeleted } = usePopupContext();
   const { isSubmit } = useDocumentFormContext();
 
@@ -74,16 +78,15 @@ const Home: FC = (): JSX.Element => {
       {/* Navigation Header */}
       <NavHeader />
       <div className="body-container">
+        {modalOpen && <div className="overlay" />}
         {/* Map Component with overlay button for adding documents */}
         <div className="map">
-          {
-            <MapComponent
-              documents={documents}
-              documentSelected={docSelected}
-              setSidebarOpen={setSidebarOpen}
-              setdocumentSelected={setDocSelected}
-            />
-          }
+          <MapComponent
+            documents={documents}
+            documentSelected={docSelected}
+            setSidebarOpen={setSidebarOpen}
+            setdocumentSelected={setDocSelected}
+          />
           {user && (
             <div className="button-overlay">
               <button
