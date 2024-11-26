@@ -25,7 +25,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     setModalOpen,
     handleEditPositionModeConfirm,
   } = useAppContext();
-  const { setCoordinates } = useDocumentFormContext();
+  const { setCoordinates, setIsSubmit } = useDocumentFormContext();
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
   const [markers, setMarkers] = useState<
@@ -56,6 +56,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         });
       }
     }
+    setIsSubmit(false);
   };
 
   useEffect(() => {

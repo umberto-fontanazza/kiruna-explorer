@@ -38,12 +38,14 @@ const Home: FC = (): JSX.Element => {
 
   useEffect(() => {
     if (docSelected?.id) {
-      const matchingDoc = documents.find((doc) => doc.id === docSelected.id);
-      if (
-        matchingDoc &&
-        JSON.stringify(matchingDoc) !== JSON.stringify(docSelected)
-      ) {
-        setDocSelected(matchingDoc);
+      try {
+        const fetchDocument = async () => {
+          const doc = await API.getDocumentById(docSelected.id);
+          setDocSelected(doc);
+        };
+        fetchDocument();
+      } catch (err) {
+        console.error(err);
       }
     }
   }, [documents]);

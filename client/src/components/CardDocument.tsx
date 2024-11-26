@@ -33,7 +33,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     setVisualLinks,
     setEditDocumentMode,
   } = useAppContext();
-  const { setDocumentToDelete } = usePopupContext();
+  const { setDocumentToDelete, setIsDeleted } = usePopupContext();
   const { setDocumentFormSelected, setCoordinates } = useDocumentFormContext();
 
   const handleDownload = async () => {
@@ -77,6 +77,12 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     if (props.document?.coordinates) {
       props.setMinimapCoord?.(props.document.coordinates);
     }
+  };
+
+  const handleDeleteButton = () => {
+    setIsPopupOpen(true);
+    setDocumentToDelete(props.document);
+    setIsDeleted(false);
   };
 
   return (
@@ -197,10 +203,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
           </button>
           <button
             className="btn-edit delete"
-            onClick={() => {
-              setIsPopupOpen(true);
-              setDocumentToDelete(props.document);
-            }}
+            onClick={() => handleDeleteButton()}
           >
             <span className="material-symbols-outlined ">delete</span>
           </button>
