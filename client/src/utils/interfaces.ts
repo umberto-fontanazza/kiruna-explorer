@@ -98,12 +98,14 @@ export enum ScaleType {
   BlueprintsOrEffect = "blueprints/effects",
   Text = "text",
   Ratio = "ratio",
+  Concept = "concept",
 }
 
 export const scaleTypeDisplay: { [key in ScaleType]: string } = {
   [ScaleType.BlueprintsOrEffect]: "Blueprints/effects",
   [ScaleType.Text]: "Text",
   [ScaleType.Ratio]: "Ratio",
+  [ScaleType.Concept]: "Concept",
 };
 
 export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
@@ -140,3 +142,10 @@ export const createDocumentStateFromExisting = (
   links: docSelected.links,
   coordinates: docSelected.coordinates,
 });
+
+export interface Filters {
+  documentType: DocumentType | undefined;
+  scaleType: ScaleType | undefined;
+  startDate: Dayjs | undefined;
+  endDate: Dayjs | undefined;
+}

@@ -3,13 +3,20 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { useEffect, useState } from "react";
 import API from "../API/API";
 import ControlledCarousel from "../components/CardCarousel";
+import FiltersList from "../components/FiltersList";
 import NavHeader from "../components/NavHeader";
 import "../styles/DocumentsList.scss";
-import { Document } from "../utils/interfaces";
+import { Document, Filters } from "../utils/interfaces";
 
 const DocumentsList = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [docSelected, setDocSelected] = useState<Document | null>(null);
+  const [filters, setFilters] = useState<Filters>({
+    documentType: undefined,
+    scaleType: undefined,
+    startDate: undefined,
+    endDate: undefined,
+  });
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -23,6 +30,18 @@ const DocumentsList = () => {
     fetchDocuments();
   }, []);
 
+  const handleFiltersSubmit = () => {
+    const fetchDocumentsFiltered = async (filters: Filters) => {
+      try {
+        // const documentsFiltered = API.getDocumentsFilterd(filters);
+        // setDocuments(documentsFiltered);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDocumentsFiltered(filters);
+  };
+
   return (
     <div id="document-list">
       <NavHeader />
@@ -35,7 +54,11 @@ const DocumentsList = () => {
               <span className="material-symbols-outlined">search</span>
             </button>
           </div>
-          <h2 className="filters">Qui ci saranno i filtri</h2>
+          <FiltersList
+            filters={filters}
+            setFilters={setFilters}
+            handleFilters={handleFiltersSubmit}
+          />
         </div>
         <ControlledCarousel documents={documents} />
       </div>
