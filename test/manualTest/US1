@@ -8,14 +8,14 @@
 - Precondition: Credentials for Urban Planner
 - Post condition: Logged in as Urban Planner, and redirected to the main page with all the features available for the Urban Planner.
 
-| Step |                                                                                                                            System                                                                                                                            |
-| :--: | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|  1   |                                                                                                               User click on the "Login" button                                                                                                               |
-|  2   |                                                        User is redirected to the [Login Page](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/test/screenshots/logIn_page.png)                                                         |
-|  3   |                                                                                                   User fill the fields with correct Username and Password                                                                                                    |
-|  4   |                                                                                                               User click on the "Login" button                                                                                                               |
-|  5   |                                                                                                   User is logged in, the user is serialized to the session                                                                                                   |
-|  6   | User is redirected to the [Main Page for UP](https://github.com/umberto-fontanazza/kiruna-explorer/blob/f6669d13bae7c058b4ddc285a9cc3c59be421437/test/screenshots/main_page_UP.png), with all actions available for the Urban Planner (e.g. Add, delete ...) |
+| Step |                                                                                                                         System                                                                                                                          |
+| :--: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|  1   |                                                                                                            User click on the "Login" button                                                                                                             |
+|  2   |                                                        User is redirected to the [Login Page](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/screenshots/logIn_page.png)                                                         |
+|  3   |                                                                                                 User fill the fields with correct Username and Password                                                                                                 |
+|  4   |                                                                                                            User click on the "Login" button                                                                                                             |
+|  5   |                                                                                                User is logged in, the user is serialized to the session                                                                                                 |
+|  6   | User is redirected to the [Main Page for UP](https://github.com/umberto-fontanazza/kiruna-explorer/blob/f6669d13bae7c058b4ddc285a9cc3c59be421437/screenshots/main_page_UP.png), with all actions available for the Urban Planner (e.g. Add, delete ...) |
 
 ### Scenario 1.2 - From the home page, click on log in, and fill the fields with incorrect Urban Planner credentials.
 
@@ -23,14 +23,14 @@
 - Precondition: Credentials for Urban Planner
 - Post condition: User is not logged in, email and/or password wrong.
 
-| Step |                                                                                                       System                                                                                                        |
-| :--: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|  1   |                                                                                          User click on the "Login" button                                                                                           |
-|  2   |                                    User is redirected to the [Login Page](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/test/screenshots/logIn_page.png)                                    |
-|  3   |                                                                              User fill the fields with incorrect Email and/or Password                                                                              |
-|  4   |                                                                                          User click on the "Login" button                                                                                           |
-|  5   | The system show to the user the error message ["Email and/or password wrong"](https://github.com/umberto-fontanazza/kiruna-explorer/blob/f6669d13bae7c058b4ddc285a9cc3c59be421437/test/screenshots/login_error.png) |
-|  6   |                                                                                 User is not logged in and remain on the login page                                                                                  |
+| Step |                                                                                      System                                                                                      |
+| :--: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|  1   |                                                                         User click on the "Login" button                                                                         |
+|  2   |                     User is redirected to the [Login Page](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/screenshots/logIn_page.png)                     |
+|  3   |                                                            User fill the fields with incorrect Email and/or Password                                                             |
+|  4   |                                                                         User click on the "Login" button                                                                         |
+|  5   | The system show to the user the error message ["Email and/or password wrong"](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/screenshots/login_error.png) |
+|  6   |                                                                User is not logged in and remain on the login page                                                                |
 
 ### Scenario 1.3 - From the home page, click on log in, and fill the fields but password or email are not filled
 
@@ -38,14 +38,14 @@
 - Precondition: Credentials for Urban Planner
 - Post condition: User is not logged in, email and/or password missing.
 
-| Step |                                                                                                          System                                                                                                           |
-| :--: | :-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
-|  1   |                                                                                             User click on the "Login" button                                                                                              |
-|  2   |                                       User is redirected to the [Login Page](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/test/screenshots/logIn_page.png)                                       |
-|  3   |                                                                                  User fill the fields with missing Email and/or Password                                                                                  |
-|  4   |                                                                                             User click on the "Login" button                                                                                              |
-|  5   | The system show to the user the warning message ["Please fill out this field"](https://github.com/umberto-fontanazza/kiruna-explorer/blob/f6669d13bae7c058b4ddc285a9cc3c59be421437/test/screenshots/login_incomplete.png) |
-|  6   |                                                                                    User is not logged in, and remain on the login page                                                                                    |
+| Step |                                                                                                        System                                                                                                        |
+| :--: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------: |
+|  1   |                                                                                           User click on the "Login" button                                                                                           |
+|  2   |                                       User is redirected to the [Login Page](https://github.com/umberto-fontanazza/kiruna-explorer/blob/manualTest/screenshots/logIn_page.png)                                       |
+|  3   |                                                                               User fill the fields with missing Email and/or Password                                                                                |
+|  4   |                                                                                           User click on the "Login" button                                                                                           |
+|  5   | The system show to the user the warning message ["Please fill out this field"](https://github.com/umberto-fontanazza/kiruna-explorer/blob/f6669d13bae7c058b4ddc285a9cc3c59be421437/screenshots/login_incomplete.png) |
+|  6   |                                                                                 User is not logged in, and remain on the login page                                                                                  |
 
 ### Scenario 1.4 - From the home page, click on log in, and register clicking in sign up for free
 
