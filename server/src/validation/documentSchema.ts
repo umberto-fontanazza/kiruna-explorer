@@ -40,6 +40,15 @@ const scale = z
     }
   });
 
+export const getQueryParameters = z
+  .object({
+    type: z.nativeEnum(DocumentType).optional(),
+    scaleType: z.nativeEnum(ScaleType).optional(),
+    maxIssuanceDate: z.string().date().optional(),
+    minIssuanceDate: z.string().date().optional(),
+  })
+  .strict();
+
 export type PostBody = z.infer<typeof postBody>;
 export const postBody = z
   .object({
