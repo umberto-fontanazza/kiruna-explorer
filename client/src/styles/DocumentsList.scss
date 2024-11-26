@@ -9,15 +9,74 @@ body {
     display: flex;
     flex-direction: column;
 
-    .title {
+    .header {
       display: flex;
-      justify-content: flex-start;
-      font-family: "SwedenSansBold", sans-serif;
-      margin: 1.5%;
-      font-size: 3rem;
-      font-weight: bold;
-      color: white;
-      text-align: center;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      .title {
+        font-family: "SwedenSansBold", sans-serif;
+        display: flex;
+        margin: 1.5%;
+        font-size: 3rem;
+        font-weight: bold;
+        color: white;
+        text-align: center;
+      }
+
+      .searchbar-container {
+        position: relative;
+        width: 30rem;
+        height: 2rem;
+        transition: transform 0.3s ease-in-out;
+      }
+
+      .searchbar {
+        width: 30rem;
+        height: 2rem;
+        padding: 0 3rem 0 1rem;
+        border-radius: 1rem;
+        border: none;
+        transition: transform 0.1s ease-in-out;
+        font-family: "SwedenSans", sans-serif;
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      .search-button {
+        position: absolute;
+        right: 0.2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 1.6rem;
+        width: 1.6rem;
+        border: none;
+        background-color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        .material-symbols-outlined {
+          font-size: 1.3rem;
+          color: Color.$first;
+        }
+      }
+
+      .filters {
+        font-family: "SwedenSansBold", sans-serif;
+        color: white;
+        margin: 1.5%;
+      }
     }
   }
+}
+.searchbar-container:focus-within {
+  transform: scale(1.2); /* Trasformazione quando l'input è in focus */
+  transition: all 0.3s ease-in-out;
 }

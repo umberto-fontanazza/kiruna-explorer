@@ -19,7 +19,7 @@ interface AppContextType {
   handleCancelPopup: () => void;
   handleEditPositionModeConfirm: (
     docSelected: Document,
-    newPos: Coordinates
+    newPos: Coordinates,
   ) => void;
 }
 
@@ -36,7 +36,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
 
   // Questo controlla solo il cambio di una scritta
   const [positionMode, setPositionMode] = useState<PositionMode>(
-    PositionMode.None
+    PositionMode.None,
   );
   const [visualLinks, setVisualLinks] = useState<boolean>(false);
 
@@ -51,7 +51,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
 
   const handleEditPositionModeConfirm = async (
     docSelected: Document,
-    newPos: Coordinates
+    newPos: Coordinates,
   ) => {
     if (docSelected) {
       try {

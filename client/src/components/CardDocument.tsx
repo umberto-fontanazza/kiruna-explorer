@@ -139,7 +139,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
           <span>
             {props.document?.links?.reduce(
               (acc: number, link: Link) => acc + link.linkTypes.length,
-              0
+              0,
             ) || 0}
           </span>
         </h4>

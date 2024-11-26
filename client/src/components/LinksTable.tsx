@@ -16,13 +16,13 @@ function LinksTable({ tableLinks, setTableLinks }: LinksTableProps) {
       acc[document.id] = document;
       return acc;
     },
-    {} as Record<string, Document>
+    {} as Record<string, Document>,
   );
 
   const handleRemove = (
     e: React.MouseEvent<HTMLButtonElement>,
     link: Link,
-    type: LinkType
+    type: LinkType,
   ) => {
     e.preventDefault();
     setTableLinks((prev: Link[]) => {
@@ -35,7 +35,7 @@ function LinksTable({ tableLinks, setTableLinks }: LinksTableProps) {
   const updateLink = (
     link: Link,
     linkToRemoveFrom: Link,
-    typeToRemove: LinkType
+    typeToRemove: LinkType,
   ): Link | null => {
     if (link === linkToRemoveFrom) {
       const updatedTypes = link.linkTypes.filter((t) => t !== typeToRemove);
@@ -93,7 +93,7 @@ function LinksTable({ tableLinks, setTableLinks }: LinksTableProps) {
         {tableLinks.map((link, index) =>
           Array.isArray(link.linkTypes) && link.linkTypes.length > 0
             ? link.linkTypes.map((type) => renderLinkRow(link, type, index))
-            : null
+            : null,
         )}
       </tbody>
     </table>

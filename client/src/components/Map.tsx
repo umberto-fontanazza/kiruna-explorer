@@ -26,8 +26,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     handleEditPositionModeConfirm,
   } = useAppContext();
   const { setCoordinates } = useDocumentFormContext();
-
-  const [center, setCenter] = useState(kirunaCoords);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
   const [markers, setMarkers] = useState<
@@ -73,7 +71,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   const createMarker = (
     doc: Document,
-    linked: boolean = false
+    linked: boolean = false,
   ): google.maps.marker.AdvancedMarkerElement => {
     const markerDivChild = document.createElement("div");
     const iconName = fromDocumentTypeToIcon.get(doc.type) as string;
@@ -130,7 +128,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       .filter((doc) => doc.coordinates)
       .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
       .map((doc) =>
-        createMarker(doc, visualLinks && doc.id !== documentSelected?.id)
+        createMarker(doc, visualLinks && doc.id !== documentSelected?.id),
       );
 
     clearMarkers();
@@ -158,7 +156,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
           const newZoom = Math.min(
             (currentZoom ?? 0) + 1,
-            (map.getZoom() ?? 0) + 2
+            (map.getZoom() ?? 0) + 2,
           ); // Set new zoom level, (default zooms is the maximum zoom level)
 
           map.fitBounds(cluster.bounds);
@@ -202,7 +200,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
           },
         }}
-        center={center}
+        center={kirunaCoords}
         onLoad={setMap}
       />
     </section>

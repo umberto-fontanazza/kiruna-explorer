@@ -16,7 +16,7 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
   const [selectedDocument, setSelectedDocument] = useState<Document>();
   const [type, setType] = useState(LinkType.Direct); // link type
   const [filteredSuggestions, setFilteredSuggestions] = useState<Document[]>(
-    []
+    [],
   );
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -37,7 +37,7 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
     setQuery(userInput);
 
     const filtered = searchableDocuments.filter((document) =>
-      document.title.toLowerCase().includes(userInput.toLowerCase())
+      document.title.toLowerCase().includes(userInput.toLowerCase()),
     );
     setFilteredSuggestions(filtered);
     setShowSuggestions(true);
@@ -58,7 +58,7 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
     if (selectedDocument?.id !== undefined && type !== undefined) {
       const targetDocumentId = selectedDocument.id;
       const target = tableLinks.find(
-        (link) => link.targetDocumentId === targetDocumentId
+        (link) => link.targetDocumentId === targetDocumentId,
       );
 
       if (target) {
@@ -72,7 +72,7 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
                 };
               }
             }
-            return link; // If the link is not the one to update, return it as it is
+            return link;
           });
 
           // Return the updated links
