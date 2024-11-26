@@ -38,7 +38,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
     longitude: -1,
   });
   const [searchableDocuments, setSearchableDocuments] = useState<Document[]>(
-    []
+    [],
   );
   const [documentFormSelected, setDocumentFormSelected] =
     useState<Document | null>(null);
@@ -54,7 +54,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
             await API.putLink(
               newDocument.id!,
               link.targetDocumentId,
-              link.linkTypes
+              link.linkTypes,
             );
           });
         } catch (err) {
@@ -72,7 +72,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
               doc.links = await API.getLinks(doc.id);
             }
           });
-        }
+        },
       );
     }
     setIsSubmit(true);

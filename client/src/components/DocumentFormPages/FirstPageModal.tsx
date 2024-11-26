@@ -46,7 +46,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
           stakeholders: checked
             ? [...(previousDoc.stakeholders ?? []), value]
             : previousDoc.stakeholders?.filter((sh) => sh != value) || [],
-        }) as Document
+        }) as Document,
     );
   };
   return (

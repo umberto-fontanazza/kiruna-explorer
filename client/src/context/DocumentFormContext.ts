@@ -5,7 +5,7 @@ export const useDocumentFormContext = () => {
   const context = useContext(DocumentFormContext);
   if (!context) {
     throw new Error(
-      "useDocumentFormContext must be used within a DocumentContextProvider"
+      "useDocumentFormContext must be used within a DocumentContextProvider",
     );
   }
   return context;

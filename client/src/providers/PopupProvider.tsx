@@ -16,12 +16,12 @@ interface PopupContextType {
 }
 
 export const PopupContext = createContext<PopupContextType | undefined>(
-  undefined
+  undefined,
 );
 
 export const PopupProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [documentToDelete, setDocumentToDelete] = useState<Document | null>(
-    null
+    null,
   );
   const [isDeleted, setIsDeleted] = useState<boolean>(false);
 
