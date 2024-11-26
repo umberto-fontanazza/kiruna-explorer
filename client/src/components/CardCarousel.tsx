@@ -25,21 +25,17 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
   const [docSelected, setDocSelected] = useState<Document | null>(null);
   const sliderRef = useRef<Slider>(null);
 
-  // Configurazione di Slider
   const settings = {
     dots: true,
     speed: 500,
     swipeToSlide: true,
     swipe: true,
     centerMode: true,
-    slidesToShow: 3, // Mostra 3 card
+    slidesToShow: 3,
   };
 
-  // Funzione per gestire il clic sulla card
   const handleCardClick = (doc: Document, index: number) => {
     setDocSelected(doc);
-
-    // Calcola l'indice per centrare la card selezionata
     const centerIndex = index;
     sliderRef.current?.slickGoTo(centerIndex);
   };
@@ -47,8 +43,6 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
   useEffect(() => {
     if (docSelected) {
       const index = documents.findIndex((doc) => doc.id === docSelected.id);
-
-      // Posiziona la card selezionata al centro
       sliderRef.current?.slickGoTo(index);
     }
   }, [docSelected, documents]);
