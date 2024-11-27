@@ -88,7 +88,8 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
           value={props.document.scale?.type ?? ""}
           onChange={(e) => {
             const scaleType = e.target.value;
-            const scaleRatio = scaleType === ScaleType.Ratio ? 1 : undefined;
+            const scaleRatio =
+              scaleType === ScaleType.ArchitecturalScale ? 1 : undefined;
             props.setDocument((prev) => ({
               ...prev,
               scale: {
@@ -111,7 +112,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
       </div>
 
       <div
-        className={`form-group ratio ${props.document.scale?.type === ScaleType.Ratio ? "" : "hidden"}`}
+        className={`form-group ratio ${props.document.scale?.type === ScaleType.ArchitecturalScale ? "" : "hidden"}`}
       >
         <label htmlFor="ratio" className="ratio">
           1:{" "}
@@ -130,7 +131,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
               },
             }))
           }
-          required={props.document.scale?.type === ScaleType.Ratio}
+          required={props.document.scale?.type === ScaleType.ArchitecturalScale}
         />
       </div>
 

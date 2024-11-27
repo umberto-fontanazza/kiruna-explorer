@@ -7,7 +7,7 @@ export enum ScaleType {
   BlueprintsOrEffect = "blueprints/effects",
   Concept = "concept",
   Text = "text",
-  Ratio = "ratio",
+  ArchitecturalScale = "architectural_scale",
 }
 
 export class Scale {

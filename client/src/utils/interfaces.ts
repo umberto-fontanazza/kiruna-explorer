@@ -90,7 +90,7 @@ export enum ScaleType {
   BlueprintsOrEffect = "blueprints/effects",
   Concept = "concept",
   Text = "text",
-  Ratio = "ratio",
+  ArchitecturalScale = "architectural_scale",
 }
 
 export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {

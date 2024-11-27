@@ -129,10 +129,10 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         Scale:&nbsp;
         <span>
           {props.document?.scale.type &&
-            props.document?.scale.type !== ScaleType.Ratio &&
+            props.document?.scale.type !== ScaleType.ArchitecturalScale &&
             capitalizeFirstLetter(props.document.scale.type)}
           {props.document?.scale.type &&
-            props.document?.scale.type === ScaleType.Ratio &&
+            props.document?.scale.type === ScaleType.ArchitecturalScale &&
             `1:${props.document.scale.ratio}`}
         </span>
       </h4>
