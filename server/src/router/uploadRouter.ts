@@ -64,6 +64,7 @@ uploadRouter.post(
 
 uploadRouter.patch(
   "/:id",
+  isPlanner,
   validateRequestParameters(idRequestParam),
   validateBody(patchBody),
   async (request: Request, response: Response, next: NextFunction) => {
