@@ -1,28 +1,43 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import API from "../API/API";
+import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/SearchBar.scss";
 import { Document, Link, LinkType } from "../utils/interfaces";
 
 interface SearchBarProps {
-  documents: Document[];
   tableLinks: Link[];
   setTableLinks: React.Dispatch<React.SetStateAction<Link[]>>;
 }
 
-function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
+function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
+  const { searchableDocuments, setSearchableDocuments } =
+    useDocumentFormContext();
   const [query, setQuery] = useState(""); // user input
   const [selectedDocument, setSelectedDocument] = useState<Document>();
   const [type, setType] = useState(LinkType.Direct); // link type
   const [filteredSuggestions, setFilteredSuggestions] = useState<Document[]>(
-    []
+    [],
   );
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const documents: Document[] = await API.getDocuments();
+        setSearchableDocuments(documents);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDocuments();
+  });
 
   const handleChange = (e: { target: { value: string } }) => {
     const userInput = e.target.value;
     setQuery(userInput);
 
-    const filtered = documents.filter((document) =>
-      document.title.toLowerCase().includes(userInput.toLowerCase())
+    const filtered = searchableDocuments.filter((document) =>
+      document.title.toLowerCase().includes(userInput.toLowerCase()),
     );
     setFilteredSuggestions(filtered);
     setShowSuggestions(true);
@@ -43,7 +58,7 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
     if (selectedDocument?.id !== undefined && type !== undefined) {
       const targetDocumentId = selectedDocument.id;
       const target = tableLinks.find(
-        (link) => link.targetDocumentId === targetDocumentId
+        (link) => link.targetDocumentId === targetDocumentId,
       );
 
       if (target) {
@@ -57,7 +72,7 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
                 };
               }
             }
-            return link; // If the link is not the one to update, return it as it is
+            return link;
           });
 
           // Return the updated links

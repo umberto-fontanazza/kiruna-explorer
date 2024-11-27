@@ -64,7 +64,7 @@ export const fromDocumentTypeToIcon = new Map<DocumentType | undefined, string>(
     [DocumentType.MaterialEffect, "construction"],
     [DocumentType.Prescriptive, "find_in_page"],
     [DocumentType.Technical, "settings"],
-  ]
+  ],
 );
 
 export enum Stakeholder {
@@ -112,7 +112,7 @@ export const documentFormDefaults: DocumentForm = {
 };
 
 export const createDocumentStateFromExisting = (
-  docSelected: Document
+  docSelected: Document,
 ): Document => ({
   id: docSelected.id,
   title: docSelected.title,

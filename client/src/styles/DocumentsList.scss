@@ -1,70 +1,97 @@
 @use "Color";
+
+body {
+  background: Color.$sidebar-background;
+}
+
 #document-list {
-  .title {
-    font-family: "SwedenSansBold", sans-serif;
-    margin: 1.5%;
-    font-size: 3rem;
-    font-weight: bold;
-    color: Color.$first;
-    text-align: center;
-  }
+  .doc-lists {
+    display: flex;
+    flex-direction: column;
 
-  .table-container {
-    overflow: hidden;
-    max-height: calc(80vh - 0.5vh);
-    overflow-y: auto;
-    border: 0.2rem solid #ddd;
+    .header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
 
-    .tableDocs {
-      width: 100%;
-      height: 100vh;
-      border-collapse: collapse;
-
-      thead {
+      .title {
+        font-family: "SwedenSansBold", sans-serif;
+        display: flex;
+        margin: 1.5%;
+        font-size: 3rem;
+        font-weight: bold;
         color: white;
-        font-size: 1.4rem;
-        background-color: Color.$first;
-        overflow: hidden;
-        position: sticky;
-        top: 0;
-        z-index: 1;
+        text-align: center;
+      }
 
-        th {
-          font-family: "SwedenSansBold", sans-serif;
+      .searchbar-container {
+        position: relative;
+        width: 30rem;
+        height: 2rem;
+        transition: transform 0.3s ease-in-out;
+      }
 
-          .sort-icon {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            width: 2ch;
-            height: 2ch;
-            border-radius: 100%;
-            margin-left: 20%;
-            margin-top: 10%;
-            &:hover {
-              background-color: Color.$first-hover;
-            }
-          }
+      .searchbar {
+        width: 30rem;
+        height: 2rem;
+        padding: 0 3rem 0 1rem;
+        border-radius: 1rem;
+        border: none;
+        transition: transform 0.1s ease-in-out;
+        font-family: "SwedenSans", sans-serif;
+
+        &:focus {
+          outline: none;
         }
       }
 
-      th,
-      td {
-        font-family: "SwedenSans", sans-serif;
-        border: 0.2rem solid #ddd;
-        text-align: center;
-        padding: 2rem;
+      .search-button {
+        position: absolute;
+        right: 0.2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 1.6rem;
+        width: 1.6rem;
+        border: none;
+        background-color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+
+        .material-symbols-outlined {
+          font-size: 1.3rem;
+          color: Color.$first;
+        }
       }
 
-      /* Optional: Aggiungi una separazione visibile tra le righe */
-      tr:nth-child(even) {
-        background-color: #f4f4f4; /* Colore di sfondo per le righe pari */
+      .filters {
+        font-family: "SwedenSansBold", sans-serif;
+        color: white;
+        margin: 1.5%;
       }
     }
   }
+}
 
-  .table-container > .tableDocs {
-    width: 100%;
+.slider-container {
+  .card-container {
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+    opacity: 0.5;
+    transform: scale(0.9);
+
+    &.selected {
+      opacity: 1;
+      transform: scale(1.0006);
+    }
   }
+}
+.searchbar-container:focus-within {
+  transform: scale(1.2); /* Trasformazione quando l'input è in focus */
+  transition: all 0.3s ease-in-out;
 }
