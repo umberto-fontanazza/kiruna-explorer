@@ -4,14 +4,13 @@ import {
   Document,
   DocumentForm,
   DocumentType,
-  documentTypeDisplay,
   Scale,
   ScaleType,
-  scaleTypeDisplay,
   Stakeholder,
 } from "../../utils/interfaces";
 
 import "../../styles/DocumentFormPagesStyles/FirstPageModal.scss";
+import { capitalizeFirstLetter } from "../../utils/utils";
 
 interface FirstPageModalProps {
   document: DocumentForm;
@@ -86,9 +85,11 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
         <label htmlFor="scale-type">Scale *</label>
         <select
           id="scale-type"
+          value={props.document.scale?.type ?? ""}
           onChange={(e) => {
             const scaleType = e.target.value;
-            const scaleRatio = scaleType === ScaleType.Ratio ? 1 : undefined;
+            const scaleRatio =
+              scaleType === ScaleType.ArchitecturalScale ? 1 : undefined;
             props.setDocument((prev) => ({
               ...prev,
               scale: {
@@ -102,16 +103,16 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
           <option disabled selected value="" hidden>
             Please select an option
           </option>
-          {Object.values(ScaleType).map((val) => (
-            <option key={val} value={val}>
-              {scaleTypeDisplay[val]}
+          {Object.values(ScaleType).map((scaleType) => (
+            <option key={scaleType} value={scaleType}>
+              {capitalizeFirstLetter(scaleType)}
             </option>
           ))}
         </select>
       </div>
 
       <div
-        className={`form-group ratio ${props.document.scale?.type === ScaleType.Ratio ? "" : "hidden"}`}
+        className={`form-group ratio ${props.document.scale?.type === ScaleType.ArchitecturalScale ? "" : "hidden"}`}
       >
         <label htmlFor="ratio" className="ratio">
           1:{" "}
@@ -130,7 +131,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
               },
             }))
           }
-          required={props.document.scale?.type === ScaleType.Ratio}
+          required={props.document.scale?.type === ScaleType.ArchitecturalScale}
         />
       </div>
 
@@ -165,7 +166,9 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
             Select type
           </option>
           {Object.values(DocumentType).map((value) => (
-            <option value={value}>{documentTypeDisplay[value]}</option>
+            <option value={value}>
+              {capitalizeFirstLetter(value).replace(/_/g, " ")}
+            </option>
           ))}
         </select>
       </div>

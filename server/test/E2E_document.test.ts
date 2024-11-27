@@ -197,7 +197,7 @@ describe("Testing story 1", () => {
         title: "New title",
         description: "This one will be tested for all fields",
         type: DocumentType.Design,
-        scale: { type: ScaleType.Ratio, ratio: 1 },
+        scale: { type: ScaleType.ArchitecturalScale, ratio: 1 },
       });
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });

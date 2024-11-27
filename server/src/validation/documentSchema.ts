@@ -22,19 +22,26 @@ const scale = z
   })
   .strict()
   .superRefine((data, ctx) => {
-    if (data.type === ScaleType.Ratio && data.ratio === undefined) {
+    if (
+      data.type === ScaleType.ArchitecturalScale &&
+      data.ratio === undefined
+    ) {
       ctx.addIssue({
         path: ["value"],
-        message: "scale.value is required when scale.type is Ratio",
+        message:
+          "scale.value is required when scale.type is 'architectural_scale'",
         code: z.ZodIssueCode.custom,
       });
     }
 
-    if (data.type !== ScaleType.Ratio && data.ratio !== undefined) {
+    if (
+      data.type !== ScaleType.ArchitecturalScale &&
+      data.ratio !== undefined
+    ) {
       ctx.addIssue({
         path: ["ratio"],
         message:
-          "scale.ratio should not be defined when scale.type is not Ratio",
+          "scale.ratio should not be defined when scale.type is not 'architectural_scale'",
         code: z.ZodIssueCode.custom,
       });
     }
