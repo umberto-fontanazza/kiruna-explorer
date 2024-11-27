@@ -18,10 +18,10 @@ const DocumentsList = () => {
     longitude: -1,
   });
   const [filters, setFilters] = useState<Filters>({
-    documentType: undefined,
+    type: undefined,
     scaleType: undefined,
-    startDate: undefined,
-    endDate: undefined,
+    maxIssuanceDate: undefined,
+    minIssuanceDate: undefined,
   });
   const { isDeleted } = usePopupContext();
   const { isSubmit } = useDocumentFormContext();
@@ -29,14 +29,14 @@ const DocumentsList = () => {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const documents: Document[] = await API.getDocuments();
+        const documents: Document[] = await API.getDocuments(filters);
         setDocuments(documents);
       } catch (err) {
         console.error(err);
       }
     };
     fetchDocuments();
-  }, [isDeleted, isSubmit]);
+  }, [isDeleted, isSubmit, filters]);
 
   const handleCloseMap = () => {
     setDocumentCoordinates({
@@ -45,17 +45,17 @@ const DocumentsList = () => {
     });
   };
 
-  const handleFiltersSubmit = () => {
-    const fetchDocumentsFiltered = async (filters: Filters) => {
-      try {
-        // const documentsFiltered = API.getDocumentsFilterd(filters);
-        // setDocuments(documentsFiltered);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchDocumentsFiltered(filters);
-  };
+  // const handleFiltersSubmit = () => {
+  //   const fetchDocumentsFiltered = async (filters: Filters) => {
+  //     try {
+  //       const documentsFiltered = await API.getDocuments(filters);
+  //       setDocuments(documentsFiltered);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+  //   fetchDocumentsFiltered(filters);
+  // };
 
   return (
     <div id="document-list">
@@ -69,11 +69,7 @@ const DocumentsList = () => {
               <span className="material-symbols-outlined">search</span>
             </button>
           </div>
-          <FiltersList
-            filters={filters}
-            setFilters={setFilters}
-            handleFilters={handleFiltersSubmit}
-          />
+          <FiltersList filters={filters} setFilters={setFilters} />
         </div>
         <ControlledCarousel
           documents={documents}

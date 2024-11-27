@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { Dispatch, FC, SetStateAction } from "react";
 import {
   DocumentType,
@@ -10,16 +11,24 @@ import {
 interface FiltersListProps {
   filters: Filters;
   setFilters: Dispatch<SetStateAction<Filters>>;
-  handleFilters: (filters: Filters) => void;
 }
 
-const FiltersList: FC<FiltersListProps> = () => {
+const FiltersList: FC<FiltersListProps> = ({ filters, setFilters }) => {
   return (
     <>
       <div className="filters">
         <div className="filter">
           Document Type
-          <select id="document-type" required>
+          <select
+            id="document-type"
+            required
+            onChange={(e) => {
+              setFilters((prev) => ({
+                ...prev,
+                type: e.target.value as DocumentType,
+              }));
+            }}
+          >
             <option disabled selected hidden value="">
               Select document type
             </option>
@@ -31,7 +40,14 @@ const FiltersList: FC<FiltersListProps> = () => {
         </div>
         <div className="filter">
           Scale Type
-          <select>
+          <select
+            onChange={(e) => {
+              setFilters((prev) => ({
+                ...prev,
+                scaleType: e.target.value as ScaleType,
+              }));
+            }}
+          >
             <option disabled selected hidden value="">
               Select scale type
             </option>
@@ -44,11 +60,31 @@ const FiltersList: FC<FiltersListProps> = () => {
         <div className="date-filter">
           <label>
             Start date:
-            <input type="date" />
+            <input
+              type="date"
+              onChange={(e) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  minIssuanceDate: e.target.value
+                    ? dayjs(e.target.value)
+                    : undefined,
+                }));
+              }}
+            />
           </label>
           <label>
             End date:
-            <input type="date" />
+            <input
+              type="date"
+              onChange={(e) => {
+                setFilters((prev) => ({
+                  ...prev,
+                  maxIssuanceDate: e.target.value
+                    ? dayjs(e.target.value)
+                    : undefined,
+                }));
+              }}
+            />
           </label>
           <button>Filter</button>
         </div>

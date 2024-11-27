@@ -57,6 +57,14 @@ export enum DocumentType {
   Technical = "technical",
 }
 
+export const documentTypeDisplay: { [key in DocumentType]: string } = {
+  [DocumentType.Design]: "Design",
+  [DocumentType.Informative]: "Informative",
+  [DocumentType.MaterialEffect]: "Material effect",
+  [DocumentType.Prescriptive]: "Prescriptive",
+  [DocumentType.Technical]: "Technical",
+};
+
 export const fromDocumentTypeToIcon = new Map<DocumentType | undefined, string>(
   [
     [DocumentType.Design, "design_services"],
@@ -87,17 +95,17 @@ export interface Scale {
 }
 
 export enum ScaleType {
+  ArchitecturalScale = "architectural_scale",
   BlueprintsOrEffect = "blueprints/effects",
   Concept = "concept",
   Text = "text",
-  ArchitecturalScale = "architectural_scale",
 }
 
 export const scaleTypeDisplay: { [key in ScaleType]: string } = {
   [ScaleType.BlueprintsOrEffect]: "Blueprints/effects",
   [ScaleType.Text]: "Text",
   [ScaleType.Concept]: "Concept",
-  [ScaleType.ArchitecturalScale]: "architectural_scale",
+  [ScaleType.ArchitecturalScale]: "Architectural Scale",
 };
 
 export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
@@ -136,8 +144,8 @@ export const createDocumentStateFromExisting = (
 });
 
 export interface Filters {
-  documentType: DocumentType | undefined;
+  type: DocumentType | undefined;
   scaleType: ScaleType | undefined;
-  startDate: Dayjs | undefined;
-  endDate: Dayjs | undefined;
+  maxIssuanceDate: Dayjs | undefined;
+  minIssuanceDate: Dayjs | undefined;
 }
