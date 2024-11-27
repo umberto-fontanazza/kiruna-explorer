@@ -39,3 +39,12 @@ export class Polygon {
 
   toResponseBody = (): Coordinates[] => this.vertices;
 }
+
+export const _ = async () => {
+  return await Polygon.insert([
+    { latitude: 67.85584273627312, longitude: 20.22534124638123 },
+    { latitude: 67.85971234872345, longitude: 20.21344576372931 },
+    { latitude: 67.84217863458723, longitude: 20.24528734962184 },
+    { latitude: 67.83997453827193, longitude: 20.23000083719327 },
+  ]);
+};

@@ -26,7 +26,7 @@ export class Area {
       );
       const excludeSql = excludeP.map((_, i) => `$${i + 1}`).join(", ");
       const result = await client.query(
-        `INSERT INTO area(include_id, exclude_ids) VALUES($1, ${excludeSql}) RETURNING id;`,
+        `INSERT INTO area(include_id, exclude_ids) VALUES($1, {${excludeSql}}) RETURNING id;`,
         [includeP.id, ...excludeP.map((p) => p.id)],
       );
       const areaId = result.rows[0].id;
