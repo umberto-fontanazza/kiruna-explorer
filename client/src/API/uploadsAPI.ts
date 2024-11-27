@@ -1,10 +1,10 @@
-import { UploadType, UploadedFile } from "../utils/interfaces";
+import { Upload, UploadType } from "../utils/interfaces";
 import { baseURL } from "./API";
 
 async function getUploads(
   documentId: number,
   file?: string,
-): Promise<UploadedFile[]> {
+): Promise<Upload[]> {
   const requestBody = { documentId: documentId, file: file };
   const response = await fetch(baseURL + `/uploads`, {
     method: "GET",
@@ -16,24 +16,24 @@ async function getUploads(
   if (!response.ok) {
     throw new Error("Error in fetching uploads");
   }
-  const data: UploadedFile[] = await response.json();
+  const data: Upload[] = await response.json();
   return data;
 }
 
-async function getOriginalResource(id: number) {
-  const response = await fetch(baseURL + `/uploads/${id}`);
+async function getUploadById(uploadId: number) {
+  const response = await fetch(baseURL + `/uploads/${uploadId}`);
   if (!response.ok) {
-    throw new Error("Error in fetching document original resource");
+    throw new Error("Error in fetching upload by id");
   }
-  const { title, type, file } = await response.json();
-  return { title, type, file };
+  const file: Upload = await response.json();
+  return file;
 }
 
-async function uploadFile(
-  documentsIds: number[],
+async function addUpload(
   title: string,
   type: UploadType,
-  file: any,
+  file: string,
+  documentsIds: number[],
 ) {
   const requestBody = {
     title: title,
@@ -50,8 +50,46 @@ async function uploadFile(
     body: JSON.stringify(requestBody),
   });
   if (!response.ok) {
-    throw new Error("Error creating document");
+    throw new Error("Error creating upload");
   }
   const { id } = await response.json();
   return id;
 }
+
+async function editUpload(
+  uploadId: number,
+  title?: string,
+  bindDocumentIds?: number[],
+  decoupleDocumentIds?: number[],
+) {
+  const requestBody = { title, bindDocumentIds, decoupleDocumentIds };
+  const response = await fetch(baseURL + `/uploads/${uploadId}`, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(requestBody),
+  });
+  if (!response.ok) {
+    throw new Error("Error creating upload");
+  }
+}
+
+async function deleteUpload(uploadId: number): Promise<void> {
+  const response = await fetch(baseURL + `/uploads/${uploadId}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    throw new Error("Something went wrong deleting the Upload file");
+  }
+}
+
+export const uploadAPI = {
+  getUploads,
+  getUploadById,
+  addUpload,
+  editUpload,
+  deleteUpload,
+};

@@ -40,7 +40,7 @@ export interface Scale {
   ratio?: number;
 }
 
-export interface UploadedFile {
+export interface Upload {
   id: number;
   title: string;
   type: UploadType;
