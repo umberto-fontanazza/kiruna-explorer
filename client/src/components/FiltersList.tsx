@@ -86,7 +86,6 @@ const FiltersList: FC<FiltersListProps> = ({ filters, setFilters }) => {
               }}
             />
           </label>
-          <button>Filter</button>
         </div>
       </div>
     </>
