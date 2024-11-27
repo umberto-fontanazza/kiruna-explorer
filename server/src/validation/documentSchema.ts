@@ -69,7 +69,10 @@ export const postBody = z
     area: areaSchema.optional(),
     issuanceDate: z.string().date().optional(),
   })
-  .strict();
+  .strict()
+  .refine((body) => !(body.coordinates && body.area), {
+    message: "Either provide coordinates or an area",
+  });
 
 export type PatchBody = z.infer<typeof patchBody>;
 export const patchBody = z
@@ -83,4 +86,7 @@ export const patchBody = z
     area: areaSchema.optional(),
     issuanceDate: z.string().date().optional(),
   })
-  .strict();
+  .strict()
+  .refine((body) => !(body.coordinates && body.area), {
+    message: "Either provide coordinates or an area",
+  });
