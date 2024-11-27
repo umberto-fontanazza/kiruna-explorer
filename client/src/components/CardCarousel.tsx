@@ -26,6 +26,7 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
   const sliderRef = useRef<Slider>(null);
 
   const settings = {
+    infinite: false,
     dots: true,
     speed: 500,
     swipeToSlide: true,

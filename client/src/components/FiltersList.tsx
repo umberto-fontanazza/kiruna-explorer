@@ -1,5 +1,5 @@
-import dayjs from "dayjs";
 import { Dispatch, FC, SetStateAction } from "react";
+import "../styles/FiltersList.scss";
 import {
   DocumentType,
   documentTypeDisplay,
@@ -7,6 +7,7 @@ import {
   ScaleType,
   scaleTypeDisplay,
 } from "../utils/interfaces";
+import Datepick from "./DatePick";
 
 interface FiltersListProps {
   filters: Filters;
@@ -15,50 +16,49 @@ interface FiltersListProps {
 
 const FiltersList: FC<FiltersListProps> = ({ filters, setFilters }) => {
   return (
-    <>
-      <div className="filters">
-        <div className="filter">
-          Document Type
-          <select
-            id="document-type"
-            required
-            onChange={(e) => {
-              setFilters((prev) => ({
-                ...prev,
-                type: e.target.value as DocumentType,
-              }));
-            }}
-          >
-            <option disabled selected hidden value="">
-              Select document type
-            </option>
-            {Object.values(DocumentType).map((value) => (
-              <option value={value}>{documentTypeDisplay[value]}</option>
-            ))}
-            <option value={""}>No filter</option>
-          </select>
-        </div>
-        <div className="filter">
-          Scale Type
-          <select
-            onChange={(e) => {
-              setFilters((prev) => ({
-                ...prev,
-                scaleType: e.target.value as ScaleType,
-              }));
-            }}
-          >
-            <option disabled selected hidden value="">
-              Select scale type
-            </option>
-            {Object.values(ScaleType).map((value) => (
-              <option value={value}>{scaleTypeDisplay[value]}</option>
-            ))}
-            <option value={""}>No filter</option>
-          </select>
-        </div>
-        <div className="date-filter">
-          <label>
+    <div className="filters">
+      <div className="filter">
+        <select
+          id="document-type"
+          required
+          onChange={(e) => {
+            setFilters((prev) => ({
+              ...prev,
+              type: e.target.value as DocumentType,
+            }));
+          }}
+        >
+          <option disabled selected hidden value="">
+            Select document type
+          </option>
+          {Object.values(DocumentType).map((value) => (
+            <option value={value}>{documentTypeDisplay[value]}</option>
+          ))}
+          <option value={""}>No filter</option>
+        </select>
+      </div>
+      <div className="filter">
+        <select
+          id="scale-type"
+          onChange={(e) => {
+            setFilters((prev) => ({
+              ...prev,
+              scaleType: e.target.value as ScaleType,
+            }));
+          }}
+        >
+          <option disabled selected hidden value="">
+            Select scale type
+          </option>
+          {Object.values(ScaleType).map((value) => (
+            <option value={value}>{scaleTypeDisplay[value]}</option>
+          ))}
+          <option value={""}>No filter</option>
+        </select>
+      </div>
+      <div className="date-filter">
+        <Datepick />
+        {/* <label>
             Start date:
             <input
               type="date"
@@ -85,10 +85,9 @@ const FiltersList: FC<FiltersListProps> = ({ filters, setFilters }) => {
                 }));
               }}
             />
-          </label>
-        </div>
+          </label> */}
       </div>
-    </>
+    </div>
   );
 };
 
