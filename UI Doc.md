@@ -5,4 +5,5 @@
 3.put the map under the document list table (maybe it helps better)
 
 4.put the filter for the icons that are shown in the document list
-put the add docs under the document list
+
+![Figma Prototype for Document List Page](client/public/1.png)
