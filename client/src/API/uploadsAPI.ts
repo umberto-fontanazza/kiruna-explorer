@@ -20,7 +20,7 @@ async function getUploads(
   return data;
 }
 
-async function getUploadById(uploadId: number) {
+async function getUploadById(uploadId: number): Promise<Upload> {
   const response = await fetch(baseURL + `/uploads/${uploadId}`);
   if (!response.ok) {
     throw new Error("Error in fetching upload by id");
@@ -34,7 +34,7 @@ async function addUpload(
   type: UploadType,
   file: string,
   documentsIds: number[],
-) {
+): Promise<number> {
   const requestBody = {
     title: title,
     type: type,
@@ -61,7 +61,7 @@ async function editUpload(
   title?: string,
   bindDocumentIds?: number[],
   decoupleDocumentIds?: number[],
-) {
+): Promise<void> {
   const requestBody = { title, bindDocumentIds, decoupleDocumentIds };
   const response = await fetch(baseURL + `/uploads/${uploadId}`, {
     method: "POST",
