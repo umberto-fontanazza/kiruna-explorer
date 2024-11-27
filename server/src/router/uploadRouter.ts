@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
-import { isPlanner } from "../middleware/auth";
+import { isLoggedIn, isPlanner } from "../middleware/auth";
 import {
   validateBody,
   validateQueryParameters,
@@ -50,6 +50,7 @@ uploadRouter.get(
 
 uploadRouter.post(
   "/",
+  isLoggedIn,
   isPlanner,
   validateBody(postBody),
   async (request: Request, response: Response, next: NextFunction) => {
@@ -64,6 +65,7 @@ uploadRouter.post(
 
 uploadRouter.patch(
   "/:id",
+  isLoggedIn,
   isPlanner,
   validateRequestParameters(idRequestParam),
   validateBody(patchBody),
@@ -81,6 +83,7 @@ uploadRouter.patch(
 
 uploadRouter.delete(
   "/:id",
+  isLoggedIn,
   isPlanner,
   validateRequestParameters(idRequestParam),
   async (request: Request, response: Response, next: NextFunction) => {
