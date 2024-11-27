@@ -7,13 +7,12 @@ import "../styles/CardDocument.scss";
 import {
   Coordinates,
   Document,
-  documentTypeDisplay,
   fromDocumentTypeToIcon,
   Link,
   ScaleType,
-  scaleTypeDisplay,
   stakeholderDisplay,
 } from "../utils/interfaces";
+import { capitalizeFirstLetter } from "../utils/utils";
 
 interface CardDocumentProps {
   document: Document | null;
@@ -136,10 +135,13 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
           Scale:&nbsp;
           <span>
             {props.document?.scale.type &&
-              props.document?.scale.type !== ScaleType.Ratio &&
-              scaleTypeDisplay[props.document.scale.type]}
+              props.document?.scale.type !== ScaleType.ArchitecturalScale &&
+              capitalizeFirstLetter(props.document.scale.type).replace(
+                /_/g,
+                " ",
+              )}
             {props.document?.scale.type &&
-              props.document?.scale.type === ScaleType.Ratio &&
+              props.document?.scale.type === ScaleType.ArchitecturalScale &&
               `1:${props.document.scale.ratio}`}
           </span>
         </h4>
@@ -155,7 +157,8 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         <h4>
           Type:{" "}
           <span>
-            {props.document?.type && documentTypeDisplay[props.document?.type]}
+            {props.document?.type &&
+              capitalizeFirstLetter(props.document?.type).replace(/_/g, " ")}
           </span>
         </h4>
         <div className="connection-group">

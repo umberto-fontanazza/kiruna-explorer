@@ -4,14 +4,13 @@ import {
   Document,
   DocumentForm,
   DocumentType,
-  documentTypeDisplay,
   Scale,
   ScaleType,
-  scaleTypeDisplay,
   Stakeholder,
 } from "../../utils/interfaces";
 
 import "../../styles/DocumentFormPagesStyles/FirstPageModal.scss";
+import { capitalizeFirstLetter } from "../../utils/utils";
 
 interface FirstPageModalProps {
   document: DocumentForm;
@@ -90,10 +89,11 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
             <select
               className="scale-type"
               id="scale-type"
+              value={props.document.scale?.type}
               onChange={(e) => {
                 const scaleType = e.target.value;
                 const scaleRatio =
-                  scaleType === ScaleType.Ratio ? 1 : undefined;
+                  scaleType === ScaleType.ArchitecturalScale ? 1 : undefined;
                 props.setDocument((prev) => ({
                   ...prev,
                   scale: {
@@ -109,12 +109,12 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
               </option>
               {Object.values(ScaleType).map((val) => (
                 <option key={val} value={val}>
-                  {scaleTypeDisplay[val]}
+                  {capitalizeFirstLetter(val).replace(/_/g, " ")}
                 </option>
               ))}
             </select>
             <div
-              className={`ratio ${props.document.scale?.type === ScaleType.Ratio ? "" : "hidden"}`}
+              className={`ratio ${props.document.scale?.type === ScaleType.ArchitecturalScale ? "" : "hidden"}`}
             >
               <label htmlFor="ratio">1: </label>
               <input
@@ -131,7 +131,9 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
                     },
                   }))
                 }
-                required={props.document.scale?.type === ScaleType.Ratio}
+                required={
+                  props.document.scale?.type === ScaleType.ArchitecturalScale
+                }
               />
             </div>
           </div>
@@ -145,7 +147,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
               type="date"
               value={
                 props.document.issuanceDate
-                  ? props.document.issuanceDate.format("YYYY-MM-DD")
+                  ? props.document.issuanceDate?.format("YYYY-MM-DD")
                   : ""
               }
               onChange={onDateChange}
@@ -169,7 +171,9 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
                 Select type
               </option>
               {Object.values(DocumentType).map((value) => (
-                <option value={value}>{documentTypeDisplay[value]}</option>
+                <option value={value}>
+                  {capitalizeFirstLetter(value).replace(/_/, " ")}
+                </option>
               ))}
             </select>
           </div>
@@ -177,7 +181,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
 
         <div className="form-group stakeholders">
           <label>Stakeholders *</label>
-          <div className="checkbox-group stakeholders">
+          <div className="checkbox-group">
             {stakeholdersOptions.map((option) => (
               <label key={option.value} className="checkbox-label">
                 <input

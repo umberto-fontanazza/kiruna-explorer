@@ -61,6 +61,10 @@ form.document.modal {
     justify-content: center;
     align-items: center;
     gap: 1rem;
+
+    h2 {
+      text-align: center;
+    }
   }
 
   .form-content {
@@ -74,6 +78,16 @@ form.document.modal {
       display: flex;
       flex-direction: column;
       gap: 0.3rem;
+
+      input,
+      textarea,
+      select {
+        outline-color: Color.$first;
+      }
+
+      textarea {
+        resize: none;
+      }
     }
 
     .scale-group {
@@ -94,6 +108,10 @@ form.document.modal {
           width: 100%;
         }
       }
+    }
+
+    .issuance-date input {
+      cursor: pointer;
     }
 
     .form-row {
@@ -117,6 +135,14 @@ form.document.modal {
     }
 
     .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      row-gap: 0.5rem;
+
+      label {
+        width: 48%;
+      }
     }
 
     input[type="checkbox"] {

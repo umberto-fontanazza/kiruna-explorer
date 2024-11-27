@@ -57,14 +57,6 @@ export enum DocumentType {
   Technical = "technical",
 }
 
-export const documentTypeDisplay: { [key in DocumentType]: string } = {
-  [DocumentType.Design]: "Design",
-  [DocumentType.Informative]: "Informative",
-  [DocumentType.MaterialEffect]: "Material effect",
-  [DocumentType.Prescriptive]: "Prescriptive",
-  [DocumentType.Technical]: "Technical",
-};
-
 export const fromDocumentTypeToIcon = new Map<DocumentType | undefined, string>(
   [
     [DocumentType.Design, "design_services"],
@@ -95,16 +87,11 @@ export interface Scale {
 }
 
 export enum ScaleType {
+  ArchitecturalScale = "architectural_scale",
   BlueprintsOrEffect = "blueprints/effects",
+  Concept = "concept",
   Text = "text",
-  Ratio = "ratio",
 }
-
-export const scaleTypeDisplay: { [key in ScaleType]: string } = {
-  [ScaleType.BlueprintsOrEffect]: "Blueprints/effects",
-  [ScaleType.Text]: "Text",
-  [ScaleType.Ratio]: "Ratio",
-};
 
 export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
   id: number | null;
