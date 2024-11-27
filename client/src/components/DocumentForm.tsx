@@ -81,9 +81,14 @@ const DocumentForm = () => {
         <img src="/x.png" alt="Close" />
       </button>
 
-      <h2>{document.id ? "Update Document" : "New Document Registration"}</h2>
+      <div className="form-header">
+        <h2 className="form-title">
+          {document.id ? "Update Document" : "New Document Registration"}
+        </h2>
 
-      <ProgressBar currentPage={page} />
+        <ProgressBar currentPage={page} />
+      </div>
+
       {page === 1 && (
         <FirstPageModal document={document} setDocument={setDocument} />
       )}

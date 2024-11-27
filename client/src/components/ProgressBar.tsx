@@ -22,7 +22,6 @@ const ProgressBar: FC<ProgressBarProps> = ({ currentPage }) => {
         >
           <div className="circle">{step.number}</div>
           <span className="label">{step.label}</span>
-          {index < steps.length - 1 && <div className="line"></div>}
         </div>
       ))}
     </div>
