@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { DocumentType, Stakeholder } from "../model/document";
 import { ScaleType } from "../model/scale";
+import { areaSchema } from "./areaSchema";
 
 export type Coordinates = z.infer<typeof coordinatesSchema>;
 export const coordinatesSchema = z
@@ -65,6 +66,7 @@ export const postBody = z
     scale,
     stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
     coordinates: coordinatesSchema.optional(),
+    area: areaSchema.optional(),
     issuanceDate: z.string().date().optional(),
   })
   .strict();
@@ -78,6 +80,7 @@ export const patchBody = z
     scale: scale.optional(),
     stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
     coordinates: coordinatesSchema.optional(),
+    area: areaSchema.optional(),
     issuanceDate: z.string().date().optional(),
   })
   .strict();
