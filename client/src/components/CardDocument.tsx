@@ -4,15 +4,14 @@ import { authContext } from "../context/auth";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/CardDocument.scss";
+import { Document, Link, ScaleType } from "../utils/interfaces";
+
 import {
-  Document,
   documentTypeDisplay,
   fromDocumentTypeToIcon,
-  Link,
-  ScaleType,
   scaleTypeDisplay,
   stakeholderDisplay,
-} from "../utils/interfaces";
+} from "../utils/display";
 
 interface CardDocumentProps {
   document: Document | null;
