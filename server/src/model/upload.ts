@@ -126,5 +126,9 @@ export class Upload {
     });
   }
 
-  toResponseBody = () => ({ ...this, file: this.file?.toString("base64") });
+  toResponseBody = (omitId = false) => ({
+    ...this,
+    id: omitId ? undefined : this.id,
+    file: this.file?.toString("base64"),
+  });
 }
