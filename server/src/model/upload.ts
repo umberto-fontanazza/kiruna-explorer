@@ -39,9 +39,8 @@ export class Upload {
     title: string,
     type: UploadType,
     file: Buffer,
-    bindedDocumentIds: number[],
+    bindedDocumentIds: number[] = [],
   ): Promise<Upload> {
-    assert(bindedDocumentIds.length >= 1);
     const uploadId = await Database.withTransaction(async (client) => {
       const result = await client.query(
         "INSERT INTO upload(title, type, file) VALUES($1, $2, $3) RETURNING id;",
