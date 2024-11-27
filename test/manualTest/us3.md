@@ -19,7 +19,7 @@
 
 - Type of user: Urban Planner
 - Precondition: User is logged in as User is on the form "Add new Document" [Scenario 2.1 User Story 1]
-- Post condition: A form for entering the details of the new document is displayed
+- Post condition: A form for entering the details of the add links to document is displayed
 
 | Step |                                         System                                          |
 | :--: | :-------------------------------------------------------------------------------------: |
@@ -37,7 +37,7 @@
 
 - Type of user: Urban Planner
 - Precondition: User is logged in as User is on the form "Add new Document" [Scenario 2.1 User Story 1]
-- Post condition: A form for entering the details of the new document is displayed
+- Post condition: An error is displayed, informing the user that has to insert correct data
 
 | Step |                                         System                                          |
 | :--: | :-------------------------------------------------------------------------------------: |
