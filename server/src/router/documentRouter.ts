@@ -9,6 +9,7 @@ import {
   validateQueryParameters,
   validateRequestParameters,
 } from "../middleware/validation";
+import { Area } from "../model/area";
 import { Document, DocumentType } from "../model/document";
 import { Scale, ScaleType } from "../model/scale";
 import {
@@ -87,6 +88,7 @@ documentRouter.post(
       scale,
       stakeholders,
       coordinates,
+      area,
       issuanceDate,
     } = request.body as PostBody;
     const insertedDocument = await Document.insert(
@@ -96,6 +98,7 @@ documentRouter.post(
       new Scale(scale.type, scale.ratio),
       stakeholders,
       coordinates,
+      area && (await Area.insert(area)),
       issuanceDate ? dayjs(issuanceDate, "YYYY-MM-DD", true) : undefined,
     );
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });

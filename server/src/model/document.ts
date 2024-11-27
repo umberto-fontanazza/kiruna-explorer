@@ -3,6 +3,7 @@ import dayjs, { Dayjs } from "dayjs";
 import { Database } from "../database";
 import { DocumentNotFound } from "../error/documentError";
 import { Coordinates } from "../validation/documentSchema";
+import { Area } from "./area";
 import { Link, LinkResponseBody, LinkType } from "./link";
 import { Scale, ScaleRow, ScaleType } from "./scale";
 
@@ -166,13 +167,14 @@ export class Document {
     description: string,
     type: DocumentType,
     scale: Scale,
-    stakeholders: Stakeholder[] | undefined = undefined,
-    coordinates: Coordinates | undefined = undefined,
-    issuanceDate: Dayjs | undefined = undefined,
+    stakeholders?: Stakeholder[],
+    coordinates?: Coordinates,
+    area?: Area,
+    issuanceDate?: Dayjs,
   ): Promise<Document> {
     const scaleRow: ScaleRow = scale.intoDatabaseRow();
     const result = await Database.query(
-      "INSERT INTO document(title, description, type, scale_type, scale_ratio, stakeholders, coordinates, issuance_date) VALUES($1, $2, $3, $4, $5, $6, ST_Point($7, $8)::geography, $9) RETURNING id;",
+      "INSERT INTO document(title, description, type, scale_type, scale_ratio, stakeholders, coordinates, area_id, issuance_date) VALUES($1, $2, $3, $4, $5, $6, ST_Point($7, $8)::geography, $9, $10) RETURNING id;",
       [
         title,
         description,
@@ -182,6 +184,7 @@ export class Document {
         stakeholders || null,
         coordinates?.longitude || null,
         coordinates?.latitude || null,
+        area?.id || null,
         issuanceDate?.toDate() || null,
       ],
     );
