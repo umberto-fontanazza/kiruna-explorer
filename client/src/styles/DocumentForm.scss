@@ -17,6 +17,7 @@ form.document.modal {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: $column-gap;
+  z-index: 1000;
 
   button.close {
     position: absolute;
