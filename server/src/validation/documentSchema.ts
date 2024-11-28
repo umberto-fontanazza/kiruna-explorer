@@ -2,14 +2,7 @@ import { z } from "zod";
 import { DocumentType, Stakeholder } from "../model/document";
 import { ScaleType } from "../model/scale";
 import { areaSchema } from "./areaSchema";
-
-export type Coordinates = z.infer<typeof coordinatesSchema>;
-export const coordinatesSchema = z
-  .object({
-    latitude: z.number().min(-90).max(90),
-    longitude: z.number().min(-180).max(180),
-  })
-  .strict();
+import { coordinatesSchema } from "./coordinatesSchema";
 
 export const idRequestParam = z.object({
   id: z.coerce.number().int().positive(),

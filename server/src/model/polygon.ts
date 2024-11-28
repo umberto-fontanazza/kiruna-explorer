@@ -1,6 +1,6 @@
 import { PoolClient } from "pg";
 import { Database } from "../database";
-import { Coordinates } from "../validation/documentSchema";
+import { Coordinates } from "../validation/coordinatesSchema";
 import { PolygonBody } from "../validation/polygonSchema";
 
 export class Polygon {

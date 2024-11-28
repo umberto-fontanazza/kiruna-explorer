@@ -2,7 +2,7 @@ import { strict as assert } from "assert";
 import dayjs, { Dayjs } from "dayjs";
 import { Database } from "../database";
 import { DocumentNotFound } from "../error/documentError";
-import { Coordinates } from "../validation/documentSchema";
+import { Coordinates } from "../validation/coordinatesSchema";
 import { Area } from "./area";
 import { Link, LinkResponseBody, LinkType } from "./link";
 import { Scale, ScaleRow, ScaleType } from "./scale";
