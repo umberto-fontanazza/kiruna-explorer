@@ -72,9 +72,10 @@ export enum LinkType {
 }
 
 export enum ScaleType {
+  ArchitecturalScale = "architectural_scale",
   BlueprintsOrEffect = "blueprints/effects",
+  Concept = "concept",
   Text = "text",
-  Ratio = "ratio",
 }
 
 export enum Stakeholder {
@@ -124,3 +125,10 @@ export const createDocumentStateFromExisting = (
   links: docSelected.links,
   coordinates: docSelected.coordinates,
 });
+
+export interface Filters {
+  type: DocumentType | undefined;
+  scaleType: ScaleType | undefined;
+  maxIssuanceDate: Dayjs | undefined;
+  minIssuanceDate: Dayjs | undefined;
+}

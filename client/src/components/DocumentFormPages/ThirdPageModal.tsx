@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import "../../styles/DocumentFormPagesStyles/ThirdPageModal.scss";
 import { DocumentForm } from "../../utils/interfaces";
 
 interface ThirdPageModalProps {
   onSubmit: (ev: React.FormEvent) => void;
   document: DocumentForm;
+  goBack: Dispatch<SetStateAction<number>>;
 }
 
 const ThirdPageModal: React.FC<ThirdPageModalProps> = (props) => {
@@ -75,10 +76,14 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = (props) => {
         </div>
       )}
       <div className="actions">
-        <button className="back" onClick={(e) => props.onSubmit(e)}>
+        <button className="back" onClick={() => props.goBack((p) => p - 1)}>
           Back
         </button>
-        <button className="primary" type="submit">
+        <button
+          className="primary"
+          type="button"
+          onClick={(e) => props.onSubmit(e)}
+        >
           {props.document.id ? "Update Document" : "Add Document"}
         </button>
       </div>

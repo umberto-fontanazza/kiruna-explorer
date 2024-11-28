@@ -3,25 +3,59 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { useEffect, useState } from "react";
 import API from "../API/API";
 import ControlledCarousel from "../components/CardCarousel";
+import FiltersList from "../components/FiltersList";
+import Minimap from "../components/MapComponents/Minimap";
 import NavHeader from "../components/NavHeader";
+import { useDocumentFormContext } from "../context/DocumentFormContext";
+import { usePopupContext } from "../context/PopupContext";
 import "../styles/DocumentsList.scss";
-import { Document } from "../utils/interfaces";
+import { Coordinates, Document, Filters } from "../utils/interfaces";
 
 const DocumentsList = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [docSelected, setDocSelected] = useState<Document | null>(null);
+  const [documentCoordinates, setDocumentCoordinates] = useState<Coordinates>({
+    latitude: -1,
+    longitude: -1,
+  });
+  const [filters, setFilters] = useState<Filters>({
+    type: undefined,
+    scaleType: undefined,
+    maxIssuanceDate: undefined,
+    minIssuanceDate: undefined,
+  });
+  const { isDeleted } = usePopupContext();
+  const { isSubmit } = useDocumentFormContext();
 
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const documents: Document[] = await API.getDocuments();
+        const documents: Document[] = await API.getDocuments(filters);
         setDocuments(documents);
       } catch (err) {
         console.error(err);
       }
     };
     fetchDocuments();
-  }, []);
+  }, [isDeleted, isSubmit, filters]);
+
+  const handleCloseMap = () => {
+    setDocumentCoordinates({
+      latitude: -1,
+      longitude: -1,
+    });
+  };
+
+  // const handleFiltersSubmit = () => {
+  //   const fetchDocumentsFiltered = async (filters: Filters) => {
+  //     try {
+  //       const documentsFiltered = await API.getDocuments(filters);
+  //       setDocuments(documentsFiltered);
+  //     } catch (err) {
+  //       console.error(err);
+  //     }
+  //   };
+  //   fetchDocumentsFiltered(filters);
+  // };
 
   return (
     <div id="document-list">
@@ -35,10 +69,19 @@ const DocumentsList = () => {
               <span className="material-symbols-outlined">search</span>
             </button>
           </div>
-          <h2 className="filters">Qui ci saranno i filtri</h2>
+          <FiltersList filters={filters} setFilters={setFilters} />
         </div>
-        <ControlledCarousel documents={documents} />
+        <ControlledCarousel
+          documents={documents}
+          setCoordinates={setDocumentCoordinates}
+        />
       </div>
+      {documentCoordinates && documentCoordinates.latitude !== -1 && (
+        <Minimap
+          coordinates={documentCoordinates}
+          onClose={() => handleCloseMap()}
+        />
+      )}
     </div>
   );
 };

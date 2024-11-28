@@ -1,23 +1,21 @@
-import { FC, useContext } from "react";
+import { Dispatch, FC, SetStateAction, useContext } from "react";
 import { useAppContext } from "../context/appContext";
 import { authContext } from "../context/auth";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/CardDocument.scss";
-import { Document, Link, ScaleType } from "../utils/interfaces";
 
-import {
-  documentTypeDisplay,
-  fromDocumentTypeToIcon,
-  scaleTypeDisplay,
-  stakeholderDisplay,
-} from "../utils/display";
+import { fromDocumentTypeToIcon, stakeholderDisplay } from "../utils/display";
+
+import { Coordinates, Document, Link, ScaleType } from "../utils/interfaces";
+import { capitalizeFirstLetter } from "../utils/utils";
 
 interface CardDocumentProps {
   document: Document | null;
-  toEdit: () => void;
   toEditPos: () => void;
   showMapButton: boolean;
+  isDocSelected: boolean;
+  setMinimapCoord: Dispatch<SetStateAction<Coordinates>> | null;
 }
 
 const CardDocument: FC<CardDocumentProps> = (props) => {
@@ -29,7 +27,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     setVisualLinks,
     setEditDocumentMode,
   } = useAppContext();
-  const { setDocumentToDelete } = usePopupContext();
+  const { setDocumentToDelete, setIsDeleted } = usePopupContext();
   const { setDocumentFormSelected, setCoordinates } = useDocumentFormContext();
 
   const handleDownload = async () => {
@@ -69,6 +67,18 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     }
   };
 
+  const getDocumentCoordinates = () => {
+    if (props.document?.coordinates) {
+      props.setMinimapCoord?.(props.document.coordinates);
+    }
+  };
+
+  const handleDeleteButton = () => {
+    setIsPopupOpen(true);
+    setDocumentToDelete(props.document);
+    setIsDeleted(false);
+  };
+
   return (
     <div className="content">
       <div className="header">
@@ -77,16 +87,21 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         >
           {fromDocumentTypeToIcon.get(props.document?.type)}
         </span>
-        <div className="header-btns">
-          {props.showMapButton && (
-            <button className="btn-map" onClick={handleDownload}>
-              <span className="material-symbols-outlined">map</span>
+        {props.isDocSelected && (
+          <div className="header-btns">
+            {props.showMapButton && (
+              <button
+                className="btn-map"
+                onClick={() => getDocumentCoordinates()}
+              >
+                <span className="material-symbols-outlined">map</span>
+              </button>
+            )}
+            <button className="btn-download" onClick={handleDownload}>
+              <span className="material-symbols-outlined">file_save</span>
             </button>
-          )}
-          <button className="btn-download" onClick={handleDownload}>
-            <span className="material-symbols-outlined">file_save</span>
-          </button>
-        </div>
+          </div>
+        )}
       </div>
 
       <hr />
@@ -110,10 +125,10 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         Scale:&nbsp;
         <span>
           {props.document?.scale.type &&
-            props.document?.scale.type !== ScaleType.Ratio &&
-            scaleTypeDisplay[props.document.scale.type]}
+            props.document?.scale.type !== ScaleType.ArchitecturalScale &&
+            capitalizeFirstLetter(props.document.scale.type)}
           {props.document?.scale.type &&
-            props.document?.scale.type === ScaleType.Ratio &&
+            props.document?.scale.type === ScaleType.ArchitecturalScale &&
             `1:${props.document.scale.ratio}`}
         </span>
       </h4>
@@ -129,7 +144,8 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
       <h4>
         Type:{" "}
         <span>
-          {props.document?.type && documentTypeDisplay[props.document?.type]}
+          {props.document?.type &&
+            capitalizeFirstLetter(props.document?.type).replace(/_/g, " ")}
         </span>
       </h4>
       <div className="connection-group">
@@ -157,7 +173,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
           </button>
         )}
       </div>
-      {user && (
+      {user && props.isDocSelected && (
         <div className="btn-group">
           <button
             className="btn-edit"
@@ -182,10 +198,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
           </button>
           <button
             className="btn-edit delete"
-            onClick={() => {
-              setIsPopupOpen(true);
-              setDocumentToDelete(props.document);
-            }}
+            onClick={() => handleDeleteButton()}
           >
             <span className="material-symbols-outlined ">delete</span>
           </button>
