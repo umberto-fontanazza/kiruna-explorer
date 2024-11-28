@@ -10,11 +10,10 @@ import {
 import Datepick from "./DatePick";
 
 interface FiltersListProps {
-  filters: Filters;
   setFilters: Dispatch<SetStateAction<Filters>>;
 }
 
-const FiltersList: FC<FiltersListProps> = ({ filters, setFilters }) => {
+const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
   return (
     <div className="filters">
       <div className="filter">
@@ -57,7 +56,7 @@ const FiltersList: FC<FiltersListProps> = ({ filters, setFilters }) => {
         </select>
       </div>
       <div className="date-filter">
-        <Datepick />
+        <Datepick setFilters={setFilters} />
         {/* <label>
             Start date:
             <input
