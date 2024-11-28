@@ -15,5 +15,9 @@
       height: 3vh;
       border-radius: 1rem;
     }
+
+    select {
+      color: Color.$first;
+    }
   }
 }

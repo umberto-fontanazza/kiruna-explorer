@@ -24,7 +24,7 @@ body {
         font-weight: bold;
         color: white;
         text-align: center;
-        width: 30vw;
+        width: 18vw;
       }
 
       .searchbar-container {
@@ -94,6 +94,6 @@ body {
   }
 }
 .searchbar-container:focus-within {
-  transform: scale(1.2); /* Trasformazione quando l'input è in focus */
+  transform: scale(1.1);
   transition: all 0.3s ease-in-out;
 }

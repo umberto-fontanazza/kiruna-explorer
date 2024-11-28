@@ -45,18 +45,6 @@ const DocumentsList = () => {
     });
   };
 
-  // const handleFiltersSubmit = () => {
-  //   const fetchDocumentsFiltered = async (filters: Filters) => {
-  //     try {
-  //       const documentsFiltered = await API.getDocuments(filters);
-  //       setDocuments(documentsFiltered);
-  //     } catch (err) {
-  //       console.error(err);
-  //     }
-  //   };
-  //   fetchDocumentsFiltered(filters);
-  // };
-
   return (
     <div id="document-list">
       <NavHeader />
@@ -69,7 +57,7 @@ const DocumentsList = () => {
               <span className="material-symbols-outlined">search</span>
             </button>
           </div>
-          <FiltersList filters={filters} setFilters={setFilters} />
+          <FiltersList setFilters={setFilters} />
         </div>
         <ControlledCarousel
           documents={documents}
