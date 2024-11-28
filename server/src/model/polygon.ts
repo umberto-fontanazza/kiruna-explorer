@@ -22,6 +22,14 @@ export class Polygon {
     this._vertices = vertices;
   }
 
+  static async get(id: number): Promise<Polygon> {
+    const result = await Database.query(
+      "SELECT ST_X(v::geometry) as latitude, ST_Y(v::geometry) as longitude FROM polygon, UNNEST(vertices) as v WHERE id = $1",
+      [id],
+    );
+    return new Polygon(id, result.rows);
+  }
+
   static async insert(
     body: PolygonBody,
     client?: PoolClient,
@@ -36,6 +44,10 @@ export class Polygon {
     const result = await (client ?? Database).query(sql, args);
     const id: number = result.rows[0].id;
     return new Polygon(id, body);
+  }
+
+  static async delete(id: number): Promise<void> {
+    await Database.query("DELETE FROM polygon WHERE id = $1", [id]);
   }
 
   toResponseBody = (): Coordinates[] => this.vertices;
