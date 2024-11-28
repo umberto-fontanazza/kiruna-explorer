@@ -24,9 +24,9 @@ export class Area {
       const excludeP: Polygon[] = await Promise.all(
         exclude.map(async (poly) => await Polygon.insert(poly, client)),
       );
-      const excludeSql = excludeP.map((_, i) => `$${i + 2}`).join(", ");
+      const excludeSql = excludeP.map((_, i) => `$${i + 2}::int`).join(", ");
       const result = await client.query(
-        `INSERT INTO area(include_id, exclude_ids) VALUES($1, {${excludeSql}}) RETURNING id;`,
+        `INSERT INTO area(include_polygon_id, exclude_polygon_ids) VALUES($1, ARRAY[${excludeSql}]) RETURNING id;`,
         [includeP.id, ...excludeP.map((p) => p.id)],
       );
       const areaId = result.rows[0].id;
