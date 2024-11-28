@@ -1,7 +1,7 @@
 @use "Color";
 
 body {
-  background: Color.$sidebar-background;
+  background: linear-gradient(#005293, #005293, #005293, #005293, #fecb00);
 }
 
 #document-list {

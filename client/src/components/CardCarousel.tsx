@@ -1,14 +1,9 @@
-import {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick-theme.css";
-import "slick-carousel/slick/slick.css";
+import { Dispatch, FC, SetStateAction, useRef, useState } from "react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
 import "../styles/CardCarousel.scss";
 import { Coordinates, Document } from "../utils/interfaces";
 import CardDocument from "./CardDocument";
@@ -23,57 +18,55 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
   setCoordinates,
 }) => {
   const [docSelected, setDocSelected] = useState<Document | null>(null);
-  const sliderRef = useRef<Slider>(null);
-
-  const settings = {
-    infinite: false,
-    dots: true,
-    speed: 500,
-    swipeToSlide: true,
-    swipe: true,
-    centerMode: true,
-    slidesToShow: 3,
-  };
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const swiperRef = useRef<any>(null);
 
   const handleCardClick = (doc: Document, index: number) => {
     setDocSelected(doc);
-    const centerIndex = index;
-    sliderRef.current?.slickGoTo(centerIndex);
+    swiperRef.current?.swiper.slideTo(index);
   };
-
-  useEffect(() => {
-    if (docSelected) {
-      const index = documents.findIndex((doc) => doc.id === docSelected.id);
-      sliderRef.current?.slickGoTo(index);
-    }
-  }, [docSelected, documents]);
 
   return (
     <div className="slider-container">
-      <Slider ref={sliderRef} {...settings}>
+      <Swiper
+        ref={swiperRef}
+        grabCursor={true}
+        centeredSlides={true}
+        slidesPerView={"auto"}
+        spaceBetween={10}
+        pagination={{
+          clickable: true,
+        }}
+        navigation={true}
+        modules={[Pagination, Navigation]}
+        className="mySwiper"
+      >
         {documents.map((doc, index) => (
-          <div
-            key={doc.id}
-            className={`card-container ${docSelected?.id === doc.id ? "selected" : ""}`}
-            role="button"
-            tabIndex={0}
-            onClick={() => handleCardClick(doc, index)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                handleCardClick(doc, index);
-              }
-            }}
-          >
-            <CardDocument
-              document={doc}
-              toEditPos={() => {}}
-              showMapButton={true}
-              isDocSelected={docSelected?.id === doc.id}
-              setMinimapCoord={setCoordinates}
-            />
-          </div>
+          <SwiperSlide key={doc.id}>
+            <div
+              className={`card-container ${
+                docSelected?.id === doc.id ? "selected" : ""
+              }`}
+              role="button"
+              tabIndex={0}
+              onClick={() => handleCardClick(doc, index)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  handleCardClick(doc, index);
+                }
+              }}
+            >
+              <CardDocument
+                document={doc}
+                toEditPos={() => {}}
+                showMapButton={true}
+                isDocSelected={docSelected?.id === doc.id}
+                setMinimapCoord={setCoordinates}
+              />
+            </div>
+          </SwiperSlide>
         ))}
-      </Slider>
+      </Swiper>
     </div>
   );
 };

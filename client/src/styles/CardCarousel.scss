@@ -1,6 +1,13 @@
 @use "Color";
 
-.slick-dots li.slick-active button:before,
-.slick-dots li button:before {
-  color: Color.$first;
+.swiper {
+  width: 100%;
+  height: 80vh;
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 500px;
+  height: 60vh;
 }
