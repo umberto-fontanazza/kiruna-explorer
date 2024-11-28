@@ -3,6 +3,7 @@ import API from "../API/API";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/SearchBar.scss";
 import { Document, Link, LinkType } from "../utils/interfaces";
+import { capitalizeFirstLetter } from "../utils/utils";
 
 interface SearchBarProps {
   tableLinks: Link[];
@@ -30,7 +31,7 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
       }
     };
     fetchDocuments();
-  });
+  }, []);
 
   const handleChange = (e: { target: { value: string } }) => {
     const userInput = e.target.value;
@@ -130,10 +131,11 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
           setType(e.target.value as LinkType);
         }}
       >
-        <option value={LinkType.Direct}>Direct</option>
-        <option value={LinkType.Collateral}>Collateral</option>
-        <option value={LinkType.Projection}>Projection</option>
-        <option value={LinkType.Update}>Update</option>
+        {Object.values(LinkType).map((linkType) => (
+          <option key={linkType} value={linkType}>
+            {capitalizeFirstLetter(linkType)}
+          </option>
+        ))}
       </select>
       <button className="add-link-button" onClick={(e) => handleAddLink(e)}>
         Add Link

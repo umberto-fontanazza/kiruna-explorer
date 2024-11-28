@@ -171,7 +171,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
                 Select type
               </option>
               {Object.values(DocumentType).map((value) => (
-                <option value={value}>
+                <option key={value} value={value}>
                   {capitalizeFirstLetter(value).replace(/_/, " ")}
                 </option>
               ))}

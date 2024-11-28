@@ -14,23 +14,24 @@ interface SecondPageModalProps {
 const SecondPageModal: FC<SecondPageModalProps> = (props) => {
   return (
     <>
-      {props.tableLinks.length > 0 ? (
-        <LinksTable
+      <div className="form-content">
+        {props.tableLinks.length > 0 ? (
+          <LinksTable
+            tableLinks={props.tableLinks}
+            setTableLinks={props.setTableLinks}
+          />
+        ) : (
+          <p>
+            If you need to add links to other documents, please use the search
+            bar below.
+          </p>
+        )}
+
+        <SearchBar
           tableLinks={props.tableLinks}
           setTableLinks={props.setTableLinks}
         />
-      ) : (
-        <p>
-          If you need to add links to other documents, please use the search bar
-          below.
-        </p>
-      )}
-
-      <SearchBar
-        tableLinks={props.tableLinks}
-        setTableLinks={props.setTableLinks}
-      />
-
+      </div>
       <div className="actions">
         <button className="back" onClick={() => props.goBack((p) => p - 1)}>
           Back

@@ -79,6 +79,11 @@ form.document.modal {
       flex-direction: column;
       gap: 0.3rem;
 
+      label {
+        color: Color.$first;
+        font-size: 1.3rem;
+      }
+
       input,
       textarea,
       select {
@@ -123,11 +128,6 @@ form.document.modal {
       }
     }
 
-    label {
-      color: Color.$first;
-      font-size: 1.3rem;
-    }
-
     input:not([type="checkbox"]),
     textarea,
     select {
@@ -156,34 +156,6 @@ form.document.modal {
     &:hover {
       background-color: Color.$first-hover;
       transform: scale(1.005);
-    }
-  }
-}
-
-form.document.page-2 {
-  .actions,
-  table.links,
-  p,
-  .search-bar {
-    grid-column: 1 / span 2;
-  }
-
-  .search-bar {
-    align-self: flex-end;
-  }
-
-  .actions {
-    display: flex;
-    gap: 1ch;
-    align-self: flex-end;
-
-    button {
-      flex: 1;
-    }
-    .primary {
-      &:hover {
-        background-color: Color.$first-hover;
-      }
     }
   }
 }
