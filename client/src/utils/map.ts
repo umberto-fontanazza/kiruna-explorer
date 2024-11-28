@@ -16,7 +16,7 @@ export const mapOptions = {
   mapId: "group_15",
   mapTypeControl: false,
   mapTypeControlOptions: {
-    mapTypeIds: ["roadmap", "satellite", "hybrid", "terrain"],
+    mapTypeIds: ["satellite", "roadmap", "hybrid", "terrain"],
   },
   minZoom: 11,
   maxZoom: 20,

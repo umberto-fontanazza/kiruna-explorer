@@ -89,7 +89,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
             <select
               className="scale-type"
               id="scale-type"
-              value={props.document.scale?.type}
+              value={props.document.scale?.type || ""}
               onChange={(e) => {
                 const scaleType = e.target.value;
                 const scaleRatio =
@@ -104,7 +104,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
               }}
               required
             >
-              <option disabled selected value="" hidden>
+              <option disabled value="" hidden>
                 Please select an option
               </option>
               {Object.values(ScaleType).map((val) => (
@@ -158,7 +158,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
             <label htmlFor="document-type">Type *</label>
             <select
               id="document-type"
-              value={props.document.type ?? ""}
+              value={props.document.type || ""}
               onChange={(e) =>
                 props.setDocument((prev) => ({
                   ...prev,
@@ -167,7 +167,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
               }
               required
             >
-              <option disabled selected hidden value="">
+              <option disabled hidden value="">
                 Select type
               </option>
               {Object.values(DocumentType).map((value) => (
@@ -201,7 +201,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
             <label>Latitude *</label>
             <input
               type="number"
-              id="no-spin"
+              id="latitude"
               step="0.00000000000001"
               name="latitude"
               min="-90"
@@ -230,7 +230,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
               lang="en"
               type="number"
               step="0.00000000000001"
-              id="no-spin"
+              id="longitude"
               name="longitude"
               min="-180"
               max="180"

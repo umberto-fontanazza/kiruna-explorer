@@ -15,10 +15,8 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
     useDocumentFormContext();
   const [query, setQuery] = useState(""); // user input
   const [selectedDocument, setSelectedDocument] = useState<Document>();
-  const [type, setType] = useState(LinkType.Direct); // link type
-  const [filteredSuggestions, setFilteredSuggestions] = useState<Document[]>(
-    [],
-  );
+  const [linkType, setLinkType] = useState(LinkType.Direct); // default link type
+  const [filteredDocuments, setFilteredDocuments] = useState<Document[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
