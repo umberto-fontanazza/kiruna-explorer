@@ -5,9 +5,14 @@ import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/CardDocument.scss";
 
-import { fromDocumentTypeToIcon, stakeholderDisplay } from "../utils/display";
-
-import { Coordinates, Document, Link, ScaleType } from "../utils/interfaces";
+import API from "../API/API";
+import {
+  Coordinates,
+  Document,
+  Link,
+  ScaleType,
+  fromDocumentTypeToIcon,
+} from "../utils/interfaces";
 import { capitalizeFirstLetter } from "../utils/utils";
 
 interface CardDocumentProps {
@@ -32,16 +37,25 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
 
   const handleDownload = async () => {
     try {
-      // Simuliamo un file JSON come risposta API
-      const simulatedFileContent = JSON.stringify({
-        id: "12345",
-        name: "Test Document",
-        content: "Questo è un file di prova per il download.",
-      });
+      if (!props.document) {
+        throw new Error("Document is null");
+      }
 
-      // Creiamo un Blob con il contenuto simulato
-      const blob = new Blob([simulatedFileContent], {
-        type: "application/json",
+      const response = await API.getUploads(props.document.id, "include");
+
+      // Log per vedere cosa contiene la risposta
+      console.log("API Response:", response);
+
+      if (!response || !response[0].file || !response[0].file.data) {
+        throw new Error("File content is missing in response");
+      }
+
+      // Estrai l'array di byte direttamente dalla risposta
+      const byteArray = response[0].file.data;
+
+      // Crea un Blob direttamente dall'array di byte
+      const blob = new Blob([new Uint8Array(byteArray)], {
+        type: "application/octet-stream", // Tipo MIME generico, può essere cambiato se conosci il tipo esatto
       });
 
       // Crea un URL temporaneo per il Blob
@@ -52,18 +66,16 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
       a.href = url;
 
       // Nome del file per il download
-      a.download = "documento-di-prova.json";
+      a.download = response[0].title + ".dat"; // Personalizza il nome del file
 
       // Simula il click per avviare il download
       a.click();
 
       // Libera la memoria per l'URL creato
       window.URL.revokeObjectURL(url);
-
-      console.log("Download completato con successo!");
     } catch (error) {
-      console.error("Errore durante il download:", error);
-      alert("Si è verificato un errore durante il download del file.");
+      console.error("Download error:", error);
+      alert(`Error during the download.`);
     }
   };
 
@@ -93,11 +105,16 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
               <button
                 className="btn-map"
                 onClick={() => getDocumentCoordinates()}
+                title="Show on the map"
               >
                 <span className="material-symbols-outlined">map</span>
               </button>
             )}
-            <button className="btn-download" onClick={handleDownload}>
+            <button
+              className="btn-download"
+              onClick={handleDownload}
+              title="Download original resources"
+            >
               <span className="material-symbols-outlined">file_save</span>
             </button>
           </div>
@@ -113,7 +130,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         {props.document?.stakeholders ? (
           props.document?.stakeholders?.map((s, index, arr) => (
             <span key={`${props.document?.id}-${index}`}>
-              {stakeholderDisplay[s]}
+              {capitalizeFirstLetter(s)}
               {index < arr.length - 1 ? ", " : ""}
             </span>
           ))
@@ -185,6 +202,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
                 setCoordinates(props.document.coordinates);
               }
             }}
+            title="Edit Document"
           >
             <span className="material-symbols-outlined">edit_document</span>
           </button>
@@ -193,12 +211,14 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
             onClick={() => {
               props.toEditPos();
             }}
+            title="Edit Coordinates"
           >
             <span className="material-symbols-outlined">edit_location</span>
           </button>
           <button
             className="btn-edit delete"
             onClick={() => handleDeleteButton()}
+            title="Delete Document"
           >
             <span className="material-symbols-outlined ">delete</span>
           </button>

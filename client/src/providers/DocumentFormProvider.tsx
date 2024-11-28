@@ -12,6 +12,7 @@ import {
   Document,
   DocumentForm,
   LinkType,
+  UploadType,
 } from "../utils/interfaces";
 
 interface DocumentFormContextType {
@@ -23,7 +24,7 @@ interface DocumentFormContextType {
   setSearchableDocuments: Dispatch<SetStateAction<Document[]>>;
   setDocumentFormSelected: Dispatch<SetStateAction<Document | null>>;
   setIsSubmit: Dispatch<SetStateAction<boolean>>;
-  handleAddNewDocument: (newDocument: DocumentForm) => void;
+  handleAddNewDocument: (newDocument: DocumentForm, file: string) => void;
 }
 
 export const DocumentFormContext = createContext<
@@ -45,7 +46,10 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
 
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
-  const handleAddNewDocument = async (newDocument: DocumentForm) => {
+  const handleAddNewDocument = async (
+    newDocument: DocumentForm,
+    file: string,
+  ) => {
     if (newDocument.id) {
       const fetchUpdate = async () => {
         try {
@@ -74,10 +78,17 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
           });
         },
       );
+      await API.addUpload(
+        "Original resource upload test",
+        UploadType.OriginalResource,
+        file,
+        [id],
+      );
     }
     setIsSubmit(true);
     setDocumentFormSelected(null);
   };
+
   return (
     <DocumentFormContext.Provider
       value={{

@@ -1,19 +1,13 @@
 import dayjs from "dayjs";
 import { Dispatch, FC, SetStateAction } from "react";
-import {
-  DocumentType,
-  documentTypeDisplay,
-  Filters,
-  ScaleType,
-  scaleTypeDisplay,
-} from "../utils/interfaces";
+import { DocumentType, Filters, ScaleType } from "../utils/interfaces";
+import { capitalizeFirstLetter } from "../utils/utils";
 
 interface FiltersListProps {
-  filters: Filters;
   setFilters: Dispatch<SetStateAction<Filters>>;
 }
 
-const FiltersList: FC<FiltersListProps> = ({ filters, setFilters }) => {
+const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
   return (
     <>
       <div className="filters">
@@ -33,7 +27,7 @@ const FiltersList: FC<FiltersListProps> = ({ filters, setFilters }) => {
               Select document type
             </option>
             {Object.values(DocumentType).map((value) => (
-              <option value={value}>{documentTypeDisplay[value]}</option>
+              <option value={value}>{capitalizeFirstLetter(value)}</option>
             ))}
             <option value={""}>No filter</option>
           </select>
@@ -52,7 +46,7 @@ const FiltersList: FC<FiltersListProps> = ({ filters, setFilters }) => {
               Select scale type
             </option>
             {Object.values(ScaleType).map((value) => (
-              <option value={value}>{scaleTypeDisplay[value]}</option>
+              <option value={value}>{capitalizeFirstLetter(value)}</option>
             ))}
             <option value={""}>No filter</option>
           </select>

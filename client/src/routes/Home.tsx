@@ -83,7 +83,7 @@ const Home: FC = (): JSX.Element => {
         <div className="map">
           <MapComponent
             documents={documents}
-            documentSelected={docSelected}
+            docSelected={docSelected}
             setSidebarOpen={setSidebarOpen}
             setdocumentSelected={setDocSelected}
           />

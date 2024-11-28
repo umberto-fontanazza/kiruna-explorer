@@ -9,8 +9,6 @@ import {
   Stakeholder,
 } from "../../utils/interfaces";
 
-import { documentTypeDisplay, scaleTypeDisplay } from "../../utils/display";
-
 import "../../styles/DocumentFormPagesStyles/FirstPageModal.scss";
 import { capitalizeFirstLetter } from "../../utils/utils";
 

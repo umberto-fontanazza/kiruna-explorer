@@ -1,20 +1,48 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
+import { useDocumentFormContext } from "../../context/DocumentFormContext";
+import { useAppContext } from "../../context/appContext";
 import "../../styles/DocumentFormPagesStyles/ThirdPageModal.scss";
-import { DocumentForm } from "../../utils/interfaces";
+import {
+  DocumentForm,
+  documentFormDefaults,
+  Link,
+} from "../../utils/interfaces";
+import { PositionMode } from "../../utils/modes";
 
 interface ThirdPageModalProps {
-  onSubmit: (ev: React.FormEvent) => void;
-  document: DocumentForm;
+  doc: DocumentForm;
+  tableLinks: Link[];
   goBack: Dispatch<SetStateAction<number>>;
+  setDocument: Dispatch<SetStateAction<DocumentForm>>;
+  setPage: Dispatch<SetStateAction<number>>;
 }
 
-const ThirdPageModal: React.FC<ThirdPageModalProps> = (props) => {
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
+  doc,
+  tableLinks,
+  setDocument,
+  goBack,
+  setPage,
+}) => {
+  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
 
+  const { setModalOpen, setPositionMode } = useAppContext();
+  const { handleAddNewDocument } = useDocumentFormContext();
+
   const handleFileUpload = (file: File) => {
-    setUploadedFile(file);
-    console.log("File uploaded:", file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64String = reader.result?.toString().split(",")[1];
+      if (base64String) {
+        setUploadedFile(base64String);
+        console.log("File uploaded and converted to Base64:", base64String);
+      }
+    };
+    reader.onerror = (error) => {
+      console.error("Error converting file to Base64:", error);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -39,7 +67,6 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = (props) => {
   };
 
   const handleButtonClick = () => {
-    // Simula un clic su un elemento input nascosto per aprire il file picker
     const input = document.createElement("input");
     input.type = "file";
     input.onchange = (e: Event) => {
@@ -49,6 +76,27 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = (props) => {
       }
     };
     input.click();
+  };
+
+  const handleFormSubmit = (ev: React.FormEvent) => {
+    ev.preventDefault();
+    if (uploadedFile) {
+      handleAddNewDocument(
+        {
+          ...doc,
+          links: tableLinks,
+        },
+        uploadedFile,
+      );
+      resetForm();
+    }
+  };
+
+  const resetForm = () => {
+    setDocument(documentFormDefaults);
+    setPage(1);
+    setPositionMode(PositionMode.None);
+    setModalOpen(false);
   };
 
   return (
@@ -72,19 +120,20 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = (props) => {
 
       {uploadedFile && (
         <div className="uploaded-file">
-          <strong>Uploaded File:</strong> {uploadedFile.name}
+          <strong>Uploaded File (Base64):</strong>{" "}
+          {uploadedFile.substring(0, 30)}...
         </div>
       )}
       <div className="actions">
-        <button className="back" onClick={() => props.goBack((p) => p - 1)}>
+        <button className="back" onClick={() => goBack((p) => p - 1)}>
           Back
         </button>
         <button
           className="primary"
           type="button"
-          onClick={(e) => props.onSubmit(e)}
+          onClick={(e) => handleFormSubmit(e)}
         >
-          {props.document.id ? "Update Document" : "Add Document"}
+          {doc.id ? "Update Document" : "Add Document"}
         </button>
       </div>
     </div>

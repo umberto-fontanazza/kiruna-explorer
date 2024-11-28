@@ -4,22 +4,20 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/Map.scss";
-import { fromDocumentTypeToIcon } from "../../utils/display";
-import { Document, Link } from "../../utils/interfaces";
+import { Document, Link, fromDocumentTypeToIcon } from "../../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
 import { PositionMode } from "../../utils/modes";
 import MapTypeSelector from "../MapTypeSelector";
 
 interface MapComponentProps {
   documents: Document[];
-  documentSelected: Document | null;
+  docSelected: Document | null;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
   setdocumentSelected: Dispatch<SetStateAction<Document | null>>;
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
-  const { documents, documentSelected, setSidebarOpen, setdocumentSelected } =
-    props;
+  const { documents, docSelected, setSidebarOpen, setdocumentSelected } = props;
   const {
     visualLinks,
     positionMode,
@@ -51,9 +49,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       // Insert Document Position flow
       setdocumentSelected(null);
       setModalOpen(true);
-    } else if (positionMode === PositionMode.Update && documentSelected) {
+    } else if (positionMode === PositionMode.Update && docSelected) {
       // Edit Document Position Flow
-      handleEditPositionModeConfirm(documentSelected, {
+      handleEditPositionModeConfirm(docSelected, {
         latitude: lat,
         longitude: lng,
       });
@@ -112,8 +110,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
-      documentSelected?.links?.map((link: Link) => link.targetDocumentId) ?? [];
-    if (doc.id === documentSelected?.id) return true;
+      docSelected?.links?.map((link: Link) => link.targetDocumentId) ?? [];
+    if (doc.id === docSelected?.id) return true;
     if (linkedIDs.includes(doc.id)) return true;
     return false;
   };
@@ -132,7 +130,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       .filter((doc) => doc.coordinates)
       .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
       .map((doc) =>
-        createMarker(doc, visualLinks && doc.id !== documentSelected?.id),
+        createMarker(doc, visualLinks && doc.id !== docSelected?.id),
       );
 
     clearMarkers();

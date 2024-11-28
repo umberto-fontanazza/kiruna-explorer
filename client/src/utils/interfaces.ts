@@ -26,6 +26,13 @@ export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
   type: DocumentType | null;
 }
 
+export interface Filters {
+  type: DocumentType | undefined;
+  scaleType: ScaleType | undefined;
+  maxIssuanceDate: Dayjs | undefined;
+  minIssuanceDate: Dayjs | undefined;
+}
+
 export interface Link {
   targetDocumentId: number;
   linkTypes: LinkType[];
@@ -44,7 +51,7 @@ export interface Upload {
   id: number;
   title: string;
   type: UploadType;
-  file: string;
+  file: { type: string; data: number[] };
 }
 
 export interface User {
@@ -126,9 +133,12 @@ export const createDocumentStateFromExisting = (
   coordinates: docSelected.coordinates,
 });
 
-export interface Filters {
-  type: DocumentType | undefined;
-  scaleType: ScaleType | undefined;
-  maxIssuanceDate: Dayjs | undefined;
-  minIssuanceDate: Dayjs | undefined;
-}
+export const fromDocumentTypeToIcon = new Map<DocumentType | undefined, string>(
+  [
+    [DocumentType.Design, "design_services"],
+    [DocumentType.Informative, "info"],
+    [DocumentType.MaterialEffect, "construction"],
+    [DocumentType.Prescriptive, "find_in_page"],
+    [DocumentType.Technical, "settings"],
+  ],
+);

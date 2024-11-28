@@ -7,7 +7,6 @@ import {
   DocumentForm as DocumentFormType,
   Link,
 } from "../utils/interfaces";
-import { PositionMode } from "../utils/modes";
 import FirstPageModal from "./DocumentFormPages/FirstPageModal";
 import SecondPageModal from "./DocumentFormPages/SecondPageModal";
 import ThirdPageModal from "./DocumentFormPages/ThirdPageModal";
@@ -37,22 +36,6 @@ const DocumentForm = () => {
       },
     }));
   }, [coordinates]);
-
-  const handleFormSubmit = (ev: React.FormEvent) => {
-    ev.preventDefault();
-    handleAddNewDocument({
-      ...document,
-      links: tableLinks,
-    });
-    resetForm();
-  };
-
-  const resetForm = () => {
-    setDocument(documentFormDefaults);
-    setPage(1);
-    setPositionMode(PositionMode.None);
-    setModalOpen(false);
-  };
 
   return (
     <form
@@ -97,8 +80,11 @@ const DocumentForm = () => {
       )}
       {page === 3 && (
         <ThirdPageModal
-          document={document}
-          onSubmit={handleFormSubmit}
+          doc={document}
+          tableLinks={tableLinks}
+          setDocument={setDocument}
+          setPage={setPage}
+          //onSubmit={handleFormSubmit}
           goBack={setPage}
         />
       )}

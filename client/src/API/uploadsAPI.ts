@@ -5,18 +5,20 @@ async function getUploads(
   documentId: number,
   file?: string,
 ): Promise<Upload[]> {
-  const requestBody = { documentId: documentId, file: file };
-  const response = await fetch(baseURL + `/uploads`, {
+  const params = new URLSearchParams();
+  params.append("documentId", documentId.toString());
+  if (file) params.append("file", file);
+  const response = await fetch(baseURL + `/uploads?` + params.toString(), {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(requestBody),
   });
   if (!response.ok) {
     throw new Error("Error in fetching uploads");
   }
   const data: Upload[] = await response.json();
+  console.log("Response from API: " + JSON.stringify(data));
   return data;
 }
 
@@ -38,9 +40,10 @@ async function addUpload(
   const requestBody = {
     title: title,
     type: type,
+    documentIds: documentsIds,
     file: file,
-    documentsIds: documentsIds,
   };
+  console.log(JSON.stringify(requestBody));
   const response = await fetch(baseURL + `/uploads`, {
     method: "POST",
     credentials: "include",
@@ -53,6 +56,7 @@ async function addUpload(
     throw new Error("Error creating upload");
   }
   const { id } = await response.json();
+  console.log("Original resource uploaded correctly, return id: " + id);
   return id;
 }
 
