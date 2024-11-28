@@ -1,0 +1,23 @@
+@use "Color";
+
+.filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40vw;
+  gap: 1rem;
+
+  .filter {
+    display: flex;
+
+    #document-type,
+    #scale-type {
+      height: 3vh;
+      border-radius: 1rem;
+    }
+
+    select {
+      color: Color.$first;
+    }
+  }
+}

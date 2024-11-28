@@ -1,7 +1,8 @@
-import dayjs from "dayjs";
 import { Dispatch, FC, SetStateAction } from "react";
+import "../styles/FiltersList.scss";
 import { DocumentType, Filters, ScaleType } from "../utils/interfaces";
 import { capitalizeFirstLetter } from "../utils/utils";
+import Datepick from "./DatePick";
 
 interface FiltersListProps {
   setFilters: Dispatch<SetStateAction<Filters>>;
@@ -52,6 +53,9 @@ const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
           </select>
         </div>
         <div className="date-filter">
+          <Datepick setFilters={setFilters} />
+          {/* <label>
+        <div className="date-filter">
           <label>
             Start date:
             <input
@@ -79,7 +83,7 @@ const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
                 }));
               }}
             />
-          </label>
+          </label> */}
         </div>
       </div>
     </>
