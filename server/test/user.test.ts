@@ -37,7 +37,7 @@ describe("User class", () => {
 
       (Database.query as jest.Mock).mockResolvedValue({ rows: [] });
 
-      const password = "password123";
+      const password = process.env.USER_PASSWORD || "defaultPassword";
 
       await mockUser.insert(password);
 
@@ -55,7 +55,7 @@ describe("User class", () => {
     });
 
     it("should throw an error if the database query fails", async () => {
-      const password = "password123";
+      const password = process.env.USER_PASSWORD || "defaultPassword";
 
       (Database.query as jest.Mock).mockRejectedValue(
         new Error("Database error"),
@@ -74,7 +74,7 @@ describe("User class", () => {
             name: mockUser.name,
             surname: mockUser.surname,
             role: mockUser.role,
-            password_hash: "hashedPassword",
+            password_hash: process.env.USER_HASHED_PASSWORD,
           },
         ],
       };
@@ -84,14 +84,18 @@ describe("User class", () => {
       const compareSpy = jest.spyOn(bcrypt, "compare") as jest.Mock;
       compareSpy.mockResolvedValue(true);
 
-      const result = await User.login(mockUser.email, "password123");
+      const password = process.env.USER_PASSWORD || "defaultPassword";
+      const result = await User.login(mockUser.email, password);
 
       expect(result).toEqual(mockUser);
       expect(Database.query).toHaveBeenCalledWith(
         `SELECT * FROM "user" WHERE email = $1`,
         [mockUser.email],
       );
-      expect(compareSpy).toHaveBeenCalledWith("password123", "hashedPassword");
+      expect(compareSpy).toHaveBeenCalledWith(
+        process.env.USER_PASSWORD,
+        process.env.USER_HASHED_PASSWORD,
+      );
     });
 
     it("should return false if the email is not found", async () => {
@@ -99,7 +103,9 @@ describe("User class", () => {
 
       (Database.query as jest.Mock).mockResolvedValue(mockDbResult);
 
-      const result = await User.login(mockUser.email, "password123");
+      const password = process.env.USER_PASSWORD || "defaultPassword";
+
+      const result = await User.login(mockUser.email, password);
 
       expect(result).toBe(false);
     });
@@ -112,7 +118,7 @@ describe("User class", () => {
             name: mockUser.name,
             surname: mockUser.surname,
             role: mockUser.role,
-            password_hash: "hashedPassword",
+            password_hash: process.env.USER_HASHED_PASSWORD,
           },
         ],
       };
@@ -132,7 +138,9 @@ describe("User class", () => {
         new Error("Database error"),
       );
 
-      await expect(User.login(mockUser.email, "password123")).rejects.toThrow(
+      const password = process.env.USER_PASSWORD || "defaultPassword";
+
+      await expect(User.login(mockUser.email, password)).rejects.toThrow(
         "Database error",
       );
     });
@@ -147,7 +155,7 @@ describe("User class", () => {
             name: mockUser.name,
             surname: mockUser.surname,
             role: mockUser.role,
-            password_hash: "hashedPassword",
+            password_hash: process.env.USER_HASHED_PASSWORD,
           },
         ],
       };
