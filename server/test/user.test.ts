@@ -1,8 +1,8 @@
-import { User, UserRole } from "../src/model/user";
+import bcrypt from "bcrypt";
+import * as dotenv from "dotenv";
 import { Database } from "../src/database";
-import crypto from "crypto";
+import { User, UserRole } from "../src/model/user";
 
-import dotenv from "dotenv";
 dotenv.config();
 
 jest.mock("../src/database", () => ({
@@ -11,141 +11,176 @@ jest.mock("../src/database", () => ({
   },
 }));
 
-jest.mock("crypto", () => ({
-  randomBytes: jest.fn(() => Buffer.from("randomsalt")),
-  scrypt: jest.fn((password, salt, keylen, callback) => {
-    callback(null, Buffer.from("hashedpassword"));
-  }),
-  timingSafeEqual: jest.fn((a, b) => {
-    return a.toString() === b.toString();
-  }),
-}));
+describe("User class", () => {
+  const mockUserData = {
+    email: process.env.USER_EMAIL || "default@example.com",
+    name: process.env.USER_NAME || "Default Name",
+    surname: process.env.USER_SURNAME || "Default Surname",
+    role: UserRole.UrbanPlanner,
+  };
 
-describe("User Class", () => {
-  const testUser = new User(
-    process.env.TEST_EMAIL,
-    process.env.TEST_NAME,
-    process.env.TEST_SURNAME,
-    UserRole.Planner,
+  const mockUser = new User(
+    mockUserData.email,
+    mockUserData.name,
+    mockUserData.surname,
+    mockUserData.role,
   );
-  const testPassword = process.env.TEST_PASSWORD;
 
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe("insert()", () => {
+  describe("insert", () => {
     it("should insert a user into the database with a hashed password", async () => {
-      (Database.query as jest.Mock).mockResolvedValueOnce({ rows: [] });
+      const hashSpy = jest.spyOn(bcrypt, "hash") as jest.Mock;
+      hashSpy.mockResolvedValue("hashedPassword");
 
-      await testUser.insert(testPassword);
+      (Database.query as jest.Mock).mockResolvedValue({ rows: [] });
 
+      const password = "password123";
+
+      await mockUser.insert(password);
+
+      expect(hashSpy).toHaveBeenCalledWith(password, expect.any(String));
       expect(Database.query).toHaveBeenCalledWith(
-        expect.stringContaining('INSERT INTO "user"'),
-        expect.arrayContaining([
-          process.env.TEST_EMAIL,
-          process.env.TEST_NAME,
-          process.env.TEST_SURNAME,
-          expect.any(Buffer),
-          expect.any(Buffer),
-          UserRole.Planner,
-        ]),
+        `INSERT INTO "user" (email, name, surname, password_hash, role) VALUES ($1, $2, $3, $4, $5)`,
+        [
+          mockUser.email,
+          mockUser.name,
+          mockUser.surname,
+          "hashedPassword",
+          mockUser.role,
+        ],
       );
     });
 
-    it("should throw an error if insertion fails", async () => {
-      (Database.query as jest.Mock).mockRejectedValueOnce(
+    it("should throw an error if the database query fails", async () => {
+      const password = "password123";
+
+      (Database.query as jest.Mock).mockRejectedValue(
         new Error("Database error"),
       );
-      await expect(testUser.insert(testPassword)).rejects.toThrow(
+
+      await expect(mockUser.insert(password)).rejects.toThrow("Database error");
+    });
+  });
+
+  describe("login", () => {
+    it("should return a user if credentials are correct", async () => {
+      const mockDbResult = {
+        rows: [
+          {
+            email: mockUser.email,
+            name: mockUser.name,
+            surname: mockUser.surname,
+            role: mockUser.role,
+            password_hash: "hashedPassword",
+          },
+        ],
+      };
+
+      (Database.query as jest.Mock).mockResolvedValue(mockDbResult);
+
+      const compareSpy = jest.spyOn(bcrypt, "compare") as jest.Mock;
+      compareSpy.mockResolvedValue(true);
+
+      const result = await User.login(mockUser.email, "password123");
+
+      expect(result).toEqual(mockUser);
+      expect(Database.query).toHaveBeenCalledWith(
+        `SELECT * FROM "user" WHERE email = $1`,
+        [mockUser.email],
+      );
+      expect(compareSpy).toHaveBeenCalledWith("password123", "hashedPassword");
+    });
+
+    it("should return false if the email is not found", async () => {
+      const mockDbResult = { rows: [] };
+
+      (Database.query as jest.Mock).mockResolvedValue(mockDbResult);
+
+      const result = await User.login(mockUser.email, "password123");
+
+      expect(result).toBe(false);
+    });
+
+    it("should return false if the password is incorrect", async () => {
+      const mockDbResult = {
+        rows: [
+          {
+            email: mockUser.email,
+            name: mockUser.name,
+            surname: mockUser.surname,
+            role: mockUser.role,
+            password_hash: "hashedPassword",
+          },
+        ],
+      };
+
+      (Database.query as jest.Mock).mockResolvedValue(mockDbResult);
+
+      const compareSpy = jest.spyOn(bcrypt, "compare") as jest.Mock;
+      compareSpy.mockResolvedValue(false);
+
+      const result = await User.login(mockUser.email, "wrongPassword");
+
+      expect(result).toBe(false);
+    });
+
+    it("should throw an error if the database query fails", async () => {
+      (Database.query as jest.Mock).mockRejectedValue(
+        new Error("Database error"),
+      );
+
+      await expect(User.login(mockUser.email, "password123")).rejects.toThrow(
         "Database error",
       );
     });
   });
 
-  describe("login()", () => {
-    it("should return a User object if login is successful", async () => {
-      const dbUserRow = {
-        email: process.env.TEST_EMAIL,
-        name: process.env.TEST_NAME,
-        surname: process.env.TEST_SURNAME,
-        role: UserRole.Planner.toString(),
-        salt: Buffer.from("randomsalt"),
-        password_hash: Buffer.from("hashedpassword"),
+  describe("getByEmail", () => {
+    it("should return a user if found", async () => {
+      const mockDbResult = {
+        rows: [
+          {
+            email: mockUser.email,
+            name: mockUser.name,
+            surname: mockUser.surname,
+            role: mockUser.role,
+            password_hash: "hashedPassword",
+          },
+        ],
       };
-      (Database.query as jest.Mock).mockResolvedValueOnce({
-        rows: [dbUserRow],
-      });
 
-      const user = await User.login("test@example.com", testPassword);
+      (Database.query as jest.Mock).mockResolvedValue(mockDbResult);
 
-      expect(user).toBeInstanceOf(User);
-      // expect(user?.email).toBe("test@example.com");
+      const result = await User.getByEmail(mockUser.email);
+
+      expect(result).toEqual(mockUser);
+      expect(Database.query).toHaveBeenCalledWith(
+        `SELECT * FROM "user" WHERE email = $1`,
+        [mockUser.email],
+      );
     });
 
-    it("should return false if login fails due to incorrect password", async () => {
-      const dbUserRow = {
-        pemail: process.env.TEST_EMAIL,
-        name: process.env.TEST_NAME,
-        surname: process.env.TEST_SURNAME,
-        role: UserRole.Planner.toString(),
-        salt: Buffer.from("randomsalt"),
-        password_hash: Buffer.from("wronghashedpassword"),
-      };
-      (Database.query as jest.Mock).mockResolvedValueOnce({
-        rows: [dbUserRow],
-      });
+    it("should return undefined if the user is not found", async () => {
+      const mockDbResult = { rows: [] };
 
-      const user = await User.login("test@example.com", "wrongpassword");
+      (Database.query as jest.Mock).mockResolvedValue(mockDbResult);
 
-      expect(user).toBe(false);
+      const result = await User.getByEmail(mockUser.email);
+
+      expect(result).toBeUndefined();
     });
 
-    it("should return false if user does not exist in the database", async () => {
-      (Database.query as jest.Mock).mockResolvedValueOnce({ rows: [] });
-
-      const user = await User.login("nonexistent@example.com", testPassword);
-
-      expect(user).toBe(false);
-    });
-
-    it("should throw an error if there is an issue with hashing the password", async () => {
-      (crypto.scrypt as jest.Mock).mockImplementationOnce(
-        (password, salt, keylen, callback) => {
-          callback(new Error("Hashing error"), null);
-        },
+    it("should throw an error if the database query fails", async () => {
+      (Database.query as jest.Mock).mockRejectedValue(
+        new Error("Database error"),
       );
 
-      await expect(
-        User.login(process.env.TEST_EMAIL, testPassword),
-      ).rejects.toThrow("Hashing error");
-    });
-  });
-
-  describe("getByEmail()", () => {
-    it("should return a user by email", async () => {
-      const dbUserRow = {
-        email: process.env.TEST_EMAIL,
-        name: process.env.TEST_NAME,
-        surname: process.env.TEST_SURNAME,
-        role: UserRole.Planner.toString(),
-      };
-      (Database.query as jest.Mock).mockResolvedValueOnce({
-        rows: [dbUserRow],
-      });
-
-      const user = await User.getByEmail(process.env.TEST_EMAIL);
-
-      expect(user).toBeInstanceOf(User);
-      expect(user?.email).toBe(process.env.TEST_EMAIL);
-    });
-
-    it("should return undefined if no user is found", async () => {
-      (Database.query as jest.Mock).mockResolvedValueOnce({ rows: [] });
-
-      const user = await User.getByEmail(process.env.TEST_NONEXISTENCE_EMAIL);
-
-      expect(user).toBeUndefined();
+      await expect(User.getByEmail(mockUser.email)).rejects.toThrow(
+        "Database error",
+      );
     });
   });
 });
