@@ -13,6 +13,7 @@ const NavHeader: FC = (): JSX.Element => {
         <span className="brand">Kiruna eXplorer.</span>
         <button onClick={() => navigate("/home")}>Map</button>
         <button onClick={() => navigate("/documents")}>Documents</button>
+        <button onClick={() => navigate("/uploads")}>Uploads</button>
       </div>
       <div className={`${user ? "logged-in" : ""}`}>
         {user ? <span className="user-name">Hi {user.name}!</span> : null}
