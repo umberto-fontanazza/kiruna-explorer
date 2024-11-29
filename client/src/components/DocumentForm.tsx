@@ -67,7 +67,6 @@ const DocumentForm = () => {
         } else if (page === 2) {
           setPage(3);
         } else {
-          console.log("aaaa");
           handleFormSubmit(ev);
         }
       }}

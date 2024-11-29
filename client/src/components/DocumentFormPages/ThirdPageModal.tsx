@@ -24,7 +24,6 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
       const base64String = reader.result?.toString().split(",")[1];
       if (base64String) {
         setFileToUpload(base64String);
-        console.log("File uploaded and converted to Base64:", base64String);
       }
     };
     reader.onerror = (error) => {

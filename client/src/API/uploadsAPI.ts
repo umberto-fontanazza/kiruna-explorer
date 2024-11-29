@@ -18,7 +18,6 @@ async function getUploads(
     throw new Error("Error in fetching uploads");
   }
   const data: Upload[] = await response.json();
-  console.log("Response from API: " + JSON.stringify(data));
   return data;
 }
 
@@ -43,7 +42,6 @@ async function addUpload(
     documentIds: documentsIds,
     file: file,
   };
-  console.log(JSON.stringify(requestBody));
   const response = await fetch(baseURL + `/uploads`, {
     method: "POST",
     credentials: "include",
@@ -56,7 +54,6 @@ async function addUpload(
     throw new Error("Error creating upload");
   }
   const { id } = await response.json();
-  console.log("Original resource uploaded correctly, return id: " + id);
   return id;
 }
 

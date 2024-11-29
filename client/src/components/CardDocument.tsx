@@ -44,9 +44,6 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
 
       const response = await API.getUploads(props.document.id, "include");
 
-      // Log per vedere cosa contiene la risposta
-      console.log("API Response:", response);
-
       if (!response || !response[0].file || !response[0].file.data) {
         throw new Error("File content is missing in response");
       }
