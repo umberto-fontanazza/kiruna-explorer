@@ -3,7 +3,7 @@ import { StatusCodes } from "http-status-codes";
 import passport from "passport";
 import request from "supertest";
 import app from "../src/app";
-const { User } = require("../src/model/user");
+import { User } from "../src/model/user";
 
 dotenv.config();
 
@@ -37,7 +37,7 @@ describe("sessionRouter", () => {
 
   describe("POST /sessions", () => {
     it("should successfully authenticate and log in a user", async () => {
-      User.login.mockResolvedValue(mockUser);
+      (User.login as jest.Mock).mockResolvedValue(mockUser);
 
       const body = {
         email: process.env.SESSION_EMAIL,
@@ -53,7 +53,7 @@ describe("sessionRouter", () => {
     });
 
     it("should return UNAUTHORIZED if authentication fails", async () => {
-      User.login.mockResolvedValue(null);
+      (User.login as jest.Mock).mockResolvedValue(null);
 
       const body = {
         email: process.env.SESSION_EMAIL,
@@ -69,7 +69,7 @@ describe("sessionRouter", () => {
 
   describe("GET /sessions/current", () => {
     it("should return the current logged-in user", async () => {
-      User.getByEmail.mockResolvedValue(mockUser);
+      (User.getByEmail as jest.Mock).mockResolvedValue(mockUser);
 
       const response = await request(app)
         .get("/sessions/current")
@@ -87,7 +87,9 @@ describe("sessionRouter", () => {
     });
 
     it("should handle server errors during session retrieval", async () => {
-      User.getByEmail.mockRejectedValue(new Error("Database error"));
+      (User.getByEmail as jest.Mock).mockRejectedValue(
+        new Error("Database error"),
+      );
 
       const response = await request(app)
         .get("/sessions/current")
