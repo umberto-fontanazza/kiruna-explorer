@@ -1,6 +1,6 @@
 import { FC, useContext, useEffect, useState } from "react";
 import API from "../API/API";
-import MapComponent from "../components/Map";
+import MapComponent from "../components/MapComponents/Map";
 import NavHeader from "../components/NavHeader";
 import Sidebar from "../components/Sidebar";
 import { useAppContext } from "../context/appContext";
@@ -13,8 +13,12 @@ import { PositionMode } from "../utils/modes";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
-  const { positionMode, setPositionMode, handleEditPositionModeConfirm } =
-    useAppContext();
+  const {
+    positionMode,
+    modalOpen,
+    setPositionMode,
+    handleEditPositionModeConfirm,
+  } = useAppContext();
   const { isDeleted } = usePopupContext();
   const { isSubmit } = useDocumentFormContext();
 
@@ -37,15 +41,18 @@ const Home: FC = (): JSX.Element => {
   }, [isDeleted, isSubmit, handleEditPositionModeConfirm]);
 
   useEffect(() => {
-    if (docSelected?.id) {
-      const matchingDoc = documents.find((doc) => doc.id === docSelected.id);
-      if (
-        matchingDoc &&
-        JSON.stringify(matchingDoc) !== JSON.stringify(docSelected)
-      ) {
-        setDocSelected(matchingDoc);
+    const fetchDocument = async () => {
+      if (docSelected?.id) {
+        try {
+          const doc = await API.getDocumentById(docSelected.id);
+          setDocSelected(doc);
+        } catch (err) {
+          console.error(err);
+        }
       }
-    }
+    };
+
+    fetchDocument();
   }, [documents]);
 
   // Handle Add Document button click to open modal
@@ -71,16 +78,15 @@ const Home: FC = (): JSX.Element => {
       {/* Navigation Header */}
       <NavHeader />
       <div className="body-container">
+        {modalOpen && <div className="overlay" />}
         {/* Map Component with overlay button for adding documents */}
         <div className="map">
-          {
-            <MapComponent
-              documents={documents}
-              documentSelected={docSelected}
-              setSidebarOpen={setSidebarOpen}
-              setdocumentSelected={setDocSelected}
-            />
-          }
+          <MapComponent
+            documents={documents}
+            documentSelected={docSelected}
+            setSidebarOpen={setSidebarOpen}
+            setdocumentSelected={setDocSelected}
+          />
           {user && (
             <div className="button-overlay">
               <button
