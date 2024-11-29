@@ -9,6 +9,7 @@ import API from "../API/API";
 import {
   Coordinates,
   Document,
+  DocumentForm,
   Link,
   ScaleType,
   fromDocumentTypeToIcon,
@@ -82,6 +83,15 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   const getDocumentCoordinates = () => {
     if (props.document?.coordinates) {
       props.setMinimapCoord?.(props.document.coordinates);
+    }
+  };
+
+  const handleEditButton = () => {
+    setEditDocumentMode(true);
+    setModalOpen(true);
+    setDocumentFormSelected(props.document as DocumentForm);
+    if (props.document?.coordinates) {
+      setCoordinates(props.document.coordinates);
     }
   };
 
@@ -194,14 +204,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         <div className="btn-group">
           <button
             className="btn-edit"
-            onClick={() => {
-              setEditDocumentMode(true);
-              setModalOpen(true);
-              setDocumentFormSelected(props.document);
-              if (props.document?.coordinates) {
-                setCoordinates(props.document.coordinates);
-              }
-            }}
+            onClick={() => handleEditButton()}
             title="Edit Document"
           >
             <span className="material-symbols-outlined">edit_document</span>

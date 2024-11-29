@@ -172,7 +172,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     return () => {
       markerCluster.clearMarkers();
     };
-  }, [isLoaded, map, props]);
+  }, [isLoaded, map, documents]);
 
   return isLoaded ? (
     <section id="map">

@@ -42,7 +42,8 @@ const Home: FC = (): JSX.Element => {
 
   useEffect(() => {
     const fetchDocument = async () => {
-      if (docSelected?.id) {
+      if (docSelected?.id && !isDeleted) {
+        // ho aggiunto isDeleted per eliminare lo sfarfallio ed una chiamata inutile al server
         try {
           const doc = await API.getDocumentById(docSelected.id);
           setDocSelected(doc);

@@ -13,7 +13,6 @@ const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
     <>
       <div className="filters">
         <div className="filter">
-          Document Type
           <select
             id="document-type"
             required
@@ -34,8 +33,8 @@ const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
           </select>
         </div>
         <div className="filter">
-          Scale Type
           <select
+            id="scale-type"
             onChange={(e) => {
               setFilters((prev) => ({
                 ...prev,
@@ -54,36 +53,6 @@ const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
         </div>
         <div className="date-filter">
           <Datepick setFilters={setFilters} />
-          {/* <label>
-        <div className="date-filter">
-          <label>
-            Start date:
-            <input
-              type="date"
-              onChange={(e) => {
-                setFilters((prev) => ({
-                  ...prev,
-                  minIssuanceDate: e.target.value
-                    ? dayjs(e.target.value)
-                    : undefined,
-                }));
-              }}
-            />
-          </label>
-          <label>
-            End date:
-            <input
-              type="date"
-              onChange={(e) => {
-                setFilters((prev) => ({
-                  ...prev,
-                  maxIssuanceDate: e.target.value
-                    ? dayjs(e.target.value)
-                    : undefined,
-                }));
-              }}
-            />
-          </label> */}
         </div>
       </div>
     </>
