@@ -1,20 +1,20 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import "../../styles/DocumentFormPagesStyles/ThirdPageModal.scss";
-import { DocumentForm, Link } from "../../utils/interfaces";
+import { DocumentForm, Link, UploadForm } from "../../utils/interfaces";
 
 interface ThirdPageModalProps {
   documentForm: DocumentForm;
-  fileToUpload: string | null;
+  filesToUpload: UploadForm[] | null;
   tableLinks: Link[];
   goBack: Dispatch<SetStateAction<number>>;
-  setFileToUpload: Dispatch<SetStateAction<string | null>>;
+  setFilesToUpload: Dispatch<SetStateAction<UploadForm[] | null>>;
 }
 
 const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
-  fileToUpload,
   documentForm,
   goBack,
-  setFileToUpload,
+  filesToUpload,
+  setFilesToUpload,
 }) => {
   const [dragActive, setDragActive] = useState(false);
 
@@ -23,7 +23,11 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
     reader.onload = () => {
       const base64String = reader.result?.toString().split(",")[1];
       if (base64String) {
-        setFileToUpload(base64String);
+        const defaultTitle = file.name;
+        setFilesToUpload((prev) => [
+          ...(prev || []),
+          { title: defaultTitle, data: base64String },
+        ]);
       }
     };
     reader.onerror = (error) => {
@@ -65,9 +69,22 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
     input.click();
   };
 
+  const handleRemoveFile = (index: number) => {
+    setFilesToUpload((prev) => prev?.filter((_, i) => i !== index) || null);
+  };
+
+  const handleEditTitle = (index: number, newTitle: string) => {
+    setFilesToUpload(
+      (prev) =>
+        prev?.map((file, i) =>
+          i === index ? { ...file, title: newTitle } : file,
+        ) || null,
+    );
+  };
+
   return (
     <div className="third-page">
-      <h2>Upload File</h2>
+      <h2>Upload Files</h2>
       <div
         className="upload-box"
         onDragOver={handleDragOver}
@@ -84,12 +101,33 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
         </button>
       </div>
 
-      {fileToUpload && (
-        <div className="uploaded-file">
-          <strong>Uploaded File (Base64):</strong>{" "}
-          {fileToUpload.substring(0, 30)}...
+      {filesToUpload && filesToUpload.length > 0 && (
+        <div className="uploaded-files">
+          <h3>Uploaded Files:</h3>
+          <ul>
+            {filesToUpload.map((file, index) => (
+              <li key={index} className="uploaded-file-item">
+                <strong>Title:</strong>{" "}
+                <input
+                  type="text"
+                  value={file.title}
+                  onChange={(e) => handleEditTitle(index, e.target.value)}
+                  placeholder="Edit file title"
+                />
+                <br />
+                <strong>Base64:</strong> {file.data.substring(0, 30)}...{" "}
+                <button
+                  className="remove-btn"
+                  onClick={() => handleRemoveFile(index)}
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
+
       <div className="actions">
         <button className="back" onClick={() => goBack((p) => p - 1)}>
           Back

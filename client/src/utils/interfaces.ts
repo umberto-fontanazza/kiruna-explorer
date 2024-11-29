@@ -54,6 +54,11 @@ export interface Upload {
   file: { type: string; data: number[] };
 }
 
+export interface UploadForm {
+  title: string;
+  data: string;
+}
+
 export interface User {
   email: string;
   name: string;

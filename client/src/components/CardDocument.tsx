@@ -12,6 +12,7 @@ import {
   DocumentForm,
   Link,
   ScaleType,
+  Upload,
   fromDocumentTypeToIcon,
 } from "../utils/interfaces";
 import { capitalizeFirstLetter } from "../utils/utils";
@@ -42,35 +43,28 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         throw new Error("Document is null");
       }
 
-      const response = await API.getUploads(props.document.id, "include");
+      const response: Upload[] = await API.getUploads(
+        props.document.id,
+        "include",
+      );
 
       if (!response || !response[0].file || !response[0].file.data) {
         throw new Error("File content is missing in response");
       }
 
-      // Estrai l'array di byte direttamente dalla risposta
-      const byteArray = response[0].file.data;
+      let blob: Blob | null = null;
+      response.forEach((upload) => {
+        blob = new Blob([new Uint8Array(upload.file.data)], {
+          type: "application/octet-stream", // Tipo MIME generico, può essere cambiato se conosci il tipo esatto
+        });
 
-      // Crea un Blob direttamente dall'array di byte
-      const blob = new Blob([new Uint8Array(byteArray)], {
-        type: "application/octet-stream", // Tipo MIME generico, può essere cambiato se conosci il tipo esatto
+        const url = window.URL.createObjectURL(blob); // temporaneous URL for the blob
+        const a = document.createElement("a"); // Create invisible element <a> to start download
+        a.href = url;
+        a.download = upload.title + ".dat"; // File name TODO: set extension according to file type
+        a.click(); // Click on <a> to start download
+        window.URL.revokeObjectURL(url); // Free memory
       });
-
-      // Crea un URL temporaneo per il Blob
-      const url = window.URL.createObjectURL(blob);
-
-      // Crea un elemento <a> invisibile per avviare il download
-      const a = document.createElement("a");
-      a.href = url;
-
-      // Nome del file per il download
-      a.download = response[0].title + ".dat"; // Personalizza il nome del file
-
-      // Simula il click per avviare il download
-      a.click();
-
-      // Libera la memoria per l'URL creato
-      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Download error:", error);
       alert(`Error during the download.`);
