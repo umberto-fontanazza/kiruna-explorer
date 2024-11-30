@@ -18,7 +18,9 @@ export class Area {
     const sql = `SELECT id, include_polygon_id as include, exclude_polygon_ids as exclude FROM area WHERE id = $1`;
     const result = await Database.query(sql, [id]);
     const { include, exclude } = result.rows[0];
-    const polygons = await Polygon.getMany([include, ...exclude]);
+    const polygons = (await Polygon.getMany([include, ...exclude])).sort(
+      (p1, p2) => p1.id - p2.id,
+    );
     return new Area(
       id,
       polygons.filter((p) => p.id === include)[0],

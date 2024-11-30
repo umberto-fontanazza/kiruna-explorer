@@ -98,5 +98,12 @@ describe("Testing areas for document router", () => {
     const { include, exclude } = area;
     expect(include).toBeDefined();
     expect(exclude).toBeDefined();
+    expect(JSON.stringify(area)).toStrictEqual(JSON.stringify(validAreaBody));
+    expect(JSON.stringify(include)).toStrictEqual(
+      JSON.stringify(validAreaBody.include),
+    );
+    expect(JSON.stringify(exclude)).toStrictEqual(
+      JSON.stringify(validAreaBody.exclude),
+    );
   });
 });
