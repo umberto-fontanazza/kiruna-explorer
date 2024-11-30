@@ -14,6 +14,18 @@ export class Area {
     this.exclude = exclude;
   }
 
+  static async get(id: number): Promise<Area> {
+    const sql = `SELECT id, include_polygon_id as include, exclude_polygon_ids as exclude FROM area WHERE id = $1`;
+    const result = await Database.query(sql, [id]);
+    const { include, exclude } = result.rows[0];
+    const polygons = await Polygon.getMany([include, ...exclude]);
+    return new Area(
+      id,
+      polygons.filter((p) => p.id === include)[0],
+      polygons.filter((p) => p.id !== include),
+    );
+  }
+
   static async insert(body: AreaBody): Promise<Area> {
     const {
       include,
