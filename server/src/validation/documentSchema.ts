@@ -64,7 +64,7 @@ export const postBody = z
   })
   .strict()
   .refine((body) => !(body.coordinates && body.area), {
-    message: "Either provide coordinates or an area",
+    message: "Area and coordinates are mutually exclusive",
   });
 
 export type PatchBody = z.infer<typeof patchBody>;
@@ -81,5 +81,5 @@ export const patchBody = z
   })
   .strict()
   .refine((body) => !(body.coordinates && body.area), {
-    message: "Either provide coordinates or an area",
+    message: "Area and coordinates are mutually exclusive",
   });
