@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import API from "../API/API";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/SearchBar.scss";
 import { Document, Link, LinkType } from "../utils/interfaces";
 import { capitalizeFirstLetter } from "../utils/utils";
-
 interface SearchBarProps {
   tableLinks: Link[];
   setTableLinks: React.Dispatch<React.SetStateAction<Link[]>>;
@@ -37,10 +36,24 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
     const userInput = e.target.value;
     setQuery(userInput);
 
-    const filtered = searchableDocuments.filter((document) =>
-      document.title.toLowerCase().includes(userInput.toLowerCase()),
-    );
-    setFilteredSuggestions(filtered);
+    if (userInput.length >= 2) {
+      const lowerCaseQuery = userInput.toLowerCase();
+
+      const startsWithQuery = searchableDocuments.filter((doc) =>
+        doc.title.toLowerCase().startsWith(lowerCaseQuery),
+      );
+
+      const containsQuery = searchableDocuments.filter(
+        (doc) =>
+          !startsWithQuery.includes(doc) &&
+          doc.title.toLowerCase().includes(lowerCaseQuery),
+      );
+
+      setFilteredSuggestions([...startsWithQuery, ...containsQuery]);
+    } else {
+      setFilteredSuggestions([]);
+    }
+
     setShowSuggestions(true);
   };
 
@@ -113,9 +126,7 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
         )}
         <select
           className="search-link-type"
-          onChange={(e) => {
-            setLinkType(e.target.value as LinkType);
-          }}
+          onChange={(e) => setLinkType(e.target.value as LinkType)}
         >
           {Object.values(LinkType).map((linkType) => (
             <option key={linkType} value={linkType}>
