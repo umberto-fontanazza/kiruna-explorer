@@ -2,6 +2,7 @@ import { SetStateAction } from "react";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/LinksTable.scss";
 import { Document, Link, LinkType } from "../utils/interfaces";
+import { capitalizeFirstLetter } from "../utils/utils";
 
 interface LinksTableProps {
   tableLinks: Link[];
@@ -65,7 +66,7 @@ function LinksTable({ tableLinks, setTableLinks }: LinksTableProps) {
         </td>
         <td className="doc-title">{document.title}</td>
         <td>
-          <span className="link-type">{type}</span>
+          <span className="link-type">{capitalizeFirstLetter(type)}</span>
         </td>
         <td>
           <button
@@ -83,10 +84,10 @@ function LinksTable({ tableLinks, setTableLinks }: LinksTableProps) {
     <table className="links links-table">
       <thead>
         <tr>
-          <th>Icon</th>
-          <th>Title</th>
-          <th>Link Type</th>
-          <th>Actions</th>
+          <th>ICON</th>
+          <th>TITLE</th>
+          <th>LINK TYPE</th>
+          <th>ACTIONS</th>
         </tr>
       </thead>
       <tbody>

@@ -13,6 +13,7 @@ import {
   Link,
   ScaleType,
   fromDocumentTypeToIcon,
+  stakeholdersOptions,
 } from "../utils/interfaces";
 import { capitalizeFirstLetter } from "../utils/utils";
 
@@ -100,130 +101,148 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
 
   return (
     <div className="content">
-      <div className="header">
-        <span
-          className={`material-symbols-outlined color-${fromDocumentTypeToIcon.get(props.document?.type)} size`}
-        >
-          {fromDocumentTypeToIcon.get(props.document?.type)}
-        </span>
-        {props.isDocSelected && (
-          <div className="header-btns">
-            {props.showMapButton && (
+      <div className="header-section">
+        <div className="header-content">
+          <span
+            className={`material-symbols-outlined color-${fromDocumentTypeToIcon.get(props.document?.type)} size`}
+          >
+            {fromDocumentTypeToIcon.get(props.document?.type)}
+          </span>
+          {props.isDocSelected && (
+            <div className="header-btns">
+              {props.showMapButton && (
+                <button
+                  className="btn-map"
+                  onClick={() => getDocumentCoordinates()}
+                  title="Show on the map"
+                >
+                  <span className="material-symbols-outlined">map</span>
+                </button>
+              )}
               <button
-                className="btn-map"
-                onClick={() => getDocumentCoordinates()}
-                title="Show on the map"
+                className="btn-download"
+                onClick={handleDownload}
+                title="Download original resources"
               >
-                <span className="material-symbols-outlined">map</span>
+                <span className="material-symbols-outlined">file_save</span>
               </button>
-            )}
+            </div>
+          )}
+        </div>
+        <hr />
+      </div>
+
+      <div className="middle-section">
+        <h3>{props.document?.title}</h3>
+        <p>{props.document?.description}</p>
+      </div>
+
+      <div className="bottom-section">
+        <hr />
+        <h4>
+          Stakeholders:&nbsp;
+          {props.document?.stakeholders &&
+          props.document.stakeholders.length > 0 ? (
+            props.document.stakeholders.map((s, index, arr) => {
+              const stakeholderOption = stakeholdersOptions.find(
+                (option) => option.value === s,
+              );
+              return (
+                <span key={`${props.document?.id}-${index}`}>
+                  {stakeholderOption
+                    ? stakeholderOption.label
+                    : capitalizeFirstLetter(s)}
+                  {index < arr.length - 1 ? ", " : ""}
+                </span>
+              );
+            })
+          ) : (
+            <span>elle</span>
+          )}
+        </h4>
+        <h4>
+          Scale:&nbsp;
+          <span>
+            {props.document?.scale.type &&
+              props.document?.scale.type !== ScaleType.ArchitecturalScale &&
+              capitalizeFirstLetter(props.document.scale.type).replace(
+                /_/g,
+                " ",
+              )}
+            {props.document?.scale.type &&
+              props.document?.scale.type === ScaleType.ArchitecturalScale &&
+              `1:${props.document.scale.ratio}`}
+          </span>
+        </h4>
+
+        <h4>
+          Issuance Date:&nbsp;
+          <span>
+            {props.document?.issuanceDate?.isValid()
+              ? props.document?.issuanceDate?.format("MMMM D, YYYY")
+              : "-"}
+          </span>
+        </h4>
+        <h4>
+          Type:{" "}
+          <span>
+            {props.document?.type &&
+              capitalizeFirstLetter(props.document?.type).replace(/_/g, " ")}
+          </span>
+        </h4>
+        <div className="connection-group">
+          <h4>
+            Links:&nbsp;
+            <span>
+              {props.document?.links?.reduce(
+                (acc: number, link: Link) => acc + link.linkTypes.length,
+                0,
+              ) || 0}
+            </span>
+          </h4>
+          {props.document?.links && props.document?.links.length > 0 && (
             <button
-              className="btn-download"
-              onClick={handleDownload}
-              title="Download original resources"
+              className={`see-links ${visualLinks ? "fill" : "no-fill"}`}
+              onClick={() =>
+                visualLinks ? setVisualLinks(false) : setVisualLinks(true)
+              }
             >
-              <span className="material-symbols-outlined">file_save</span>
+              <span
+                className={`material-symbols-outlined dark ${visualLinks ? "fill" : "no-fill"}`}
+              >
+                visibility
+              </span>
+            </button>
+          )}
+        </div>
+        {user && props.isDocSelected && (
+          <div className="btn-group">
+            <button
+              className="btn-edit"
+              onClick={() => handleEditButton()}
+              title="Edit Document"
+            >
+              <span className="material-symbols-outlined">edit_document</span>
+            </button>
+            <button
+              className="btn-edit pos"
+              onClick={() => {
+                props.toEditPos();
+              }}
+              title="Edit Coordinates"
+            >
+              <span className="material-symbols-outlined">edit_location</span>
+            </button>
+            <button
+              className="btn-edit delete"
+              onClick={() => handleDeleteButton()}
+              title="Delete Document"
+            >
+              <span className="material-symbols-outlined ">delete</span>
             </button>
           </div>
         )}
       </div>
-
-      <hr />
-      <h3>{props.document?.title}</h3>
-      <p>{props.document?.description}</p>
-      <hr />
-      <h4>
-        Stakeholders:&nbsp;
-        {props.document?.stakeholders ? (
-          props.document?.stakeholders?.map((s, index, arr) => (
-            <span key={`${props.document?.id}-${index}`}>
-              {capitalizeFirstLetter(s)}
-              {index < arr.length - 1 ? ", " : ""}
-            </span>
-          ))
-        ) : (
-          <span>-</span>
-        )}
-      </h4>
-      <h4>
-        Scale:&nbsp;
-        <span>
-          {props.document?.scale.type &&
-            props.document?.scale.type !== ScaleType.ArchitecturalScale &&
-            capitalizeFirstLetter(props.document.scale.type)}
-          {props.document?.scale.type &&
-            props.document?.scale.type === ScaleType.ArchitecturalScale &&
-            `1:${props.document.scale.ratio}`}
-        </span>
-      </h4>
-
-      <h4>
-        Issuance Date:&nbsp;
-        <span>
-          {props.document?.issuanceDate?.isValid()
-            ? props.document?.issuanceDate?.format("MMMM D, YYYY")
-            : "-"}
-        </span>
-      </h4>
-      <h4>
-        Type:{" "}
-        <span>
-          {props.document?.type &&
-            capitalizeFirstLetter(props.document?.type).replace(/_/g, " ")}
-        </span>
-      </h4>
-      <div className="connection-group">
-        <h4>
-          Links:&nbsp;
-          <span>
-            {props.document?.links?.reduce(
-              (acc: number, link: Link) => acc + link.linkTypes.length,
-              0,
-            ) || 0}
-          </span>
-        </h4>
-        {props.document?.links && props.document?.links.length > 0 && (
-          <button
-            className={`see-links ${visualLinks ? "fill" : "no-fill"}`}
-            onClick={() =>
-              visualLinks ? setVisualLinks(false) : setVisualLinks(true)
-            }
-          >
-            <span
-              className={`material-symbols-outlined dark ${visualLinks ? "fill" : "no-fill"}`}
-            >
-              visibility
-            </span>
-          </button>
-        )}
-      </div>
-      {user && props.isDocSelected && (
-        <div className="btn-group">
-          <button
-            className="btn-edit"
-            onClick={() => handleEditButton()}
-            title="Edit Document"
-          >
-            <span className="material-symbols-outlined">edit_document</span>
-          </button>
-          <button
-            className="btn-edit pos"
-            onClick={() => {
-              props.toEditPos();
-            }}
-            title="Edit Coordinates"
-          >
-            <span className="material-symbols-outlined">edit_location</span>
-          </button>
-          <button
-            className="btn-edit delete"
-            onClick={() => handleDeleteButton()}
-            title="Delete Document"
-          >
-            <span className="material-symbols-outlined ">delete</span>
-          </button>
-        </div>
-      )}
     </div>
   );
 };

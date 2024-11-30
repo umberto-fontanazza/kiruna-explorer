@@ -1,22 +1,21 @@
 @use "Color";
 
-$column-gap: 2ch;
-
 form.document.modal {
   font-family: "SwedenSans", sans-serif;
   position: absolute;
   background-color: Color.$third;
-  top: 11vh;
+  top: 0;
+  bottom: 0;
   left: 0;
   right: 0;
-  margin-inline: auto;
-  height: 82%;
+  margin: auto;
+  height: 85%;
   width: 38vw;
   border-radius: 1rem;
   padding: 2em;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: $column-gap;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
   z-index: 1000;
 
   button.close {
@@ -35,7 +34,8 @@ form.document.modal {
     align-items: center;
 
     img {
-      width: 70%;
+      height: 3vh;
+      transform: scale(0.9);
     }
 
     &:hover {
@@ -43,47 +43,111 @@ form.document.modal {
     }
   }
 
-  .progress-bar,
-  .form-group.title,
-  .form-group.description,
-  .form-group.stakeholders,
-  button[type="submit"],
   h2 {
-    grid-column: 1 / span 2;
+    font-size: 3vmin;
   }
 
   h2,
   label {
     font-family: "SwedenSansBold", sans-serif;
     color: Color.$first;
+    margin: 0;
   }
 
-  .form-group {
+  .form-header {
+    height: 20%;
     display: flex;
     flex-direction: column;
-    > label {
-      margin-bottom: 0.2em;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    h2 {
+      text-align: center;
     }
   }
 
-  label {
-    color: Color.$first;
-  }
+  .form-content {
+    height: 70%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
 
-  input:not([type="checkbox"]),
-  textarea,
-  select {
-    padding: 0.4em 2ch;
-  }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
 
-  .checkbox-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    column-gap: $column-gap;
-  }
+      label {
+        color: Color.$first;
+        font-size: 1.3rem;
+      }
 
-  input[type="checkbox"] {
-    margin-right: 0.8ch;
+      input,
+      textarea,
+      select {
+        outline-color: Color.$first;
+      }
+
+      textarea {
+        resize: none;
+      }
+    }
+
+    .scale-group {
+      display: flex;
+      justify-content: space-between;
+
+      > * {
+        width: 48%;
+      }
+
+      .ratio {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        gap: 0.5rem;
+
+        input {
+          width: 100%;
+        }
+      }
+    }
+
+    .issuance-date input {
+      cursor: pointer;
+    }
+
+    .form-row {
+      display: flex;
+      justify-content: space-between;
+
+      > * {
+        width: 48%;
+      }
+    }
+
+    input:not([type="checkbox"]),
+    textarea,
+    select {
+      padding: 0.4em 1ch;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      row-gap: 0.5rem;
+
+      label {
+        width: 48%;
+      }
+    }
+
+    input[type="checkbox"] {
+      margin-right: 0.8ch;
+    }
   }
 
   button[type="submit"] {
@@ -96,30 +160,13 @@ form.document.modal {
   }
 }
 
-form.document.page-2 {
-  .actions,
-  table.links,
-  p,
-  .search-bar {
-    grid-column: 1 / span 2;
-  }
+.page-2 .form-content {
+  justify-content: space-around !important;
 
-  .search-bar {
-    align-self: flex-end;
-  }
-
-  .actions {
-    display: flex;
-    gap: 1ch;
-    align-self: flex-end;
-
-    button {
-      flex: 1;
-    }
-    .primary {
-      &:hover {
-        background-color: Color.$first-hover;
-      }
-    }
+  p {
+    font-family: "SwedenSansBold", sans-serif;
+    color: Color.$first;
+    font-size: 1.2rem;
+    text-align: center;
   }
 }

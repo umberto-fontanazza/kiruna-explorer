@@ -19,17 +19,18 @@ const SecondPageModal: FC<SecondPageModalProps> = ({
 }) => {
   return (
     <>
-      {tableLinks.length > 0 ? (
-        <LinksTable tableLinks={tableLinks} setTableLinks={setTableLinks} />
-      ) : (
-        <p>
-          If you need to add links to other documents, please use the search bar
-          below.
-        </p>
-      )}
+      <div className="form-content">
+        {tableLinks.length > 0 ? (
+          <LinksTable tableLinks={tableLinks} setTableLinks={setTableLinks} />
+        ) : (
+          <p>
+            If you need to add links to other documents, please use the search
+            bar below.
+          </p>
+        )}
 
-      <SearchBar tableLinks={tableLinks} setTableLinks={setTableLinks} />
-
+        <SearchBar tableLinks={tableLinks} setTableLinks={setTableLinks} />
+      </div>
       <div className="actions">
         <button className="back" onClick={() => goBack((p) => p - 1)}>
           Back
