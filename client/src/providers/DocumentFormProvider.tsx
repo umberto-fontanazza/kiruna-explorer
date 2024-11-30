@@ -72,7 +72,6 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
       newDocument.links?.forEach(
         async (link: { targetDocumentId: number; linkTypes: LinkType[] }) => {
           await API.putLink(link.targetDocumentId, id, link.linkTypes);
-          console.log("elle", searchableDocuments);
           searchableDocuments.map(async (doc) => {
             if (doc.id === link.targetDocumentId) {
               doc.links = await API.getLinks(doc.id);

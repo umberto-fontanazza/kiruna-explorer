@@ -10,7 +10,6 @@ const createValidator =
   (targetExtractor = (request: Request) => request.body) =>
   (schema: z.Schema) =>
   (request: Request, response: Response, nextFunction: NextFunction) => {
-    console.log(schema.safeParse(targetExtractor(request)).error);
     const { success } = schema.safeParse(targetExtractor(request));
     if (success) {
       nextFunction();

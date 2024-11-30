@@ -99,8 +99,6 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     setIsDeleted(false);
   };
 
-  console.log(props.document?.stakeholders);
-
   return (
     <div className="content">
       <div className="header-section">
