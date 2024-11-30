@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
-import { isPlanner } from "../middleware/auth";
+import { isLoggedIn, isPlanner } from "../middleware/auth";
 import {
   validateBody,
   validateQueryParameters,
@@ -27,7 +27,9 @@ uploadRouter.get(
     const documentId = Number(request.query.documentId);
     const includeFile = request.query.file === "include";
     const uploads = await Upload.fromDocumentAll(documentId, includeFile);
-    response.status(StatusCodes.OK).send(uploads);
+    response
+      .status(StatusCodes.OK)
+      .send(uploads.map((u) => u.toResponseBody()));
     next();
   },
 );
@@ -41,13 +43,14 @@ uploadRouter.get(
     const bindDocuments = query?.bindedDocumentIds === "include";
     const uploadId = Number(request.params.id);
     const upload = await Upload.get(uploadId, bindDocuments, true);
-    response.status(StatusCodes.OK).send(upload.toResponseBody());
+    response.status(StatusCodes.OK).send(upload.toResponseBody(true));
     next();
   },
 );
 
 uploadRouter.post(
   "/",
+  isLoggedIn,
   isPlanner,
   validateBody(postBody),
   async (request: Request, response: Response, next: NextFunction) => {
@@ -62,6 +65,8 @@ uploadRouter.post(
 
 uploadRouter.patch(
   "/:id",
+  isLoggedIn,
+  isPlanner,
   validateRequestParameters(idRequestParam),
   validateBody(patchBody),
   async (request: Request, response: Response, next: NextFunction) => {
@@ -78,6 +83,7 @@ uploadRouter.patch(
 
 uploadRouter.delete(
   "/:id",
+  isLoggedIn,
   isPlanner,
   validateRequestParameters(idRequestParam),
   async (request: Request, response: Response, next: NextFunction) => {

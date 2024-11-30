@@ -96,6 +96,8 @@ textarea {
 button {
   font-family: "SwedenSansBold", sans-serif;
   padding: 0.8em;
+  transition: 350ms ease;
+  border-radius: 0.5em;
 
   &.primary {
     border: none;
@@ -103,9 +105,16 @@ button {
     background-color: Color.$first;
   }
 
-  transition: 350ms ease;
-  border-radius: 0.5em;
   &:hover {
     transform: scale(1.02);
   }
+
+  &:active {
+    transform: scale(0.98);
+    filter: brightness(0.8);
+  }
+}
+
+select {
+  cursor: pointer;
 }

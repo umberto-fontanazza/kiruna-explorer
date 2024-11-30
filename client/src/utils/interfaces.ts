@@ -97,9 +97,22 @@ export enum Stakeholder {
   WhiteArkitekter = "white_arkitekter",
 }
 
+export const stakeholdersOptions = [
+  { value: Stakeholder.Lkab, label: "LKAB" },
+  { value: Stakeholder.KirunaKommun, label: "Kiruna kommun" },
+  { value: Stakeholder.Residents, label: "Residents" },
+  { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
+];
+
 export enum UploadType {
   OriginalResource = "original_resource",
   Attachment = "attachment",
+}
+
+export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
+  id: number | null;
+  scale: Scale | null;
+  type: DocumentType | null;
 }
 
 export enum UserRole {
