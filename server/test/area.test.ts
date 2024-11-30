@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import request from "supertest";
 import app from "../src/app";
 import { Database } from "../src/database";
-import { DocumentType } from "../src/model/document";
+import { Document, DocumentType } from "../src/model/document";
 import { ScaleType } from "../src/model/scale";
 import { loginAsPlanner } from "./utils";
 
@@ -47,6 +47,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  await Document.delete(documentId);
   await Database.disconnect();
 });
 
