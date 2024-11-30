@@ -6,28 +6,24 @@ import {
   DocumentType,
   Scale,
   ScaleType,
-  Stakeholder,
+  stakeholdersOptions,
 } from "../../utils/interfaces";
 
 import "../../styles/DocumentFormPagesStyles/FirstPageModal.scss";
 import { capitalizeFirstLetter } from "../../utils/utils";
 
 interface FirstPageModalProps {
-  document: DocumentForm;
-  setDocument: Dispatch<SetStateAction<DocumentForm>>;
+  documentForm: DocumentForm;
+  setDocumentForm: Dispatch<SetStateAction<DocumentForm>>;
 }
 
-const stakeholdersOptions = [
-  { value: Stakeholder.Lkab, label: "LKAB" },
-  { value: Stakeholder.KirunaKommun, label: "Kiruna kommun" },
-  { value: Stakeholder.Residents, label: "Residents" },
-  { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
-];
-
-const FirstPageModal: FC<FirstPageModalProps> = (props) => {
+const FirstPageModal: FC<FirstPageModalProps> = ({
+  documentForm,
+  setDocumentForm,
+}) => {
   const onDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    props.setDocument((prev) => ({
+    setDocumentForm((prev) => ({
       ...prev,
       issuanceDate: value ? dayjs(value) : (prev.issuanceDate ?? undefined),
     }));
@@ -38,7 +34,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
   }) => {
     const { value, checked } = event.target;
 
-    props.setDocument(
+    setDocumentForm(
       (previousDoc) =>
         ({
           ...previousDoc,
@@ -57,9 +53,9 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
             id="title"
             type="text"
             placeholder="Enter Document Title"
-            value={props.document.title}
+            value={documentForm.title}
             onChange={(e) =>
-              props.setDocument((prev) => ({ ...prev, title: e.target.value }))
+              setDocumentForm((prev) => ({ ...prev, title: e.target.value }))
             }
             required
             className="input-title"
@@ -70,10 +66,10 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
           <label htmlFor="description">Description *</label>
           <textarea
             id="description"
-            value={props.document.description || ""}
+            value={documentForm.description || ""}
             placeholder="Enter Document Description"
             onChange={(e) =>
-              props.setDocument((prev) => ({
+              setDocumentForm((prev) => ({
                 ...prev,
                 description: e.target.value,
               }))
@@ -89,12 +85,12 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
             <select
               className="scale-type"
               id="scale-type"
-              value={props.document.scale?.type || ""}
+              value={documentForm.scale?.type || ""}
               onChange={(e) => {
                 const scaleType = e.target.value;
                 const scaleRatio =
                   scaleType === ScaleType.ArchitecturalScale ? 1 : undefined;
-                props.setDocument((prev) => ({
+                setDocumentForm((prev) => ({
                   ...prev,
                   scale: {
                     type: scaleType as ScaleType,
@@ -114,16 +110,16 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
               ))}
             </select>
             <div
-              className={`ratio ${props.document.scale?.type === ScaleType.ArchitecturalScale ? "" : "hidden"}`}
+              className={`ratio ${documentForm.scale?.type === ScaleType.ArchitecturalScale ? "" : "hidden"}`}
             >
               <label htmlFor="ratio">1: </label>
               <input
                 id="ratio"
                 type="number"
                 min="1"
-                value={props.document.scale?.ratio}
+                value={documentForm.scale?.ratio}
                 onChange={(e) =>
-                  props.setDocument((prev) => ({
+                  setDocumentForm((prev) => ({
                     ...prev,
                     scale: {
                       ...(prev.scale as Scale),
@@ -132,7 +128,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
                   }))
                 }
                 required={
-                  props.document.scale?.type === ScaleType.ArchitecturalScale
+                  documentForm.scale?.type === ScaleType.ArchitecturalScale
                 }
               />
             </div>
@@ -146,8 +142,8 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
               id="issuance-date"
               type="date"
               value={
-                props.document.issuanceDate
-                  ? props.document.issuanceDate?.format("YYYY-MM-DD")
+                documentForm.issuanceDate
+                  ? documentForm.issuanceDate?.format("YYYY-MM-DD")
                   : ""
               }
               onChange={onDateChange}
@@ -158,9 +154,9 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
             <label htmlFor="document-type">Type *</label>
             <select
               id="document-type"
-              value={props.document.type || ""}
+              value={documentForm.type || ""}
               onChange={(e) =>
-                props.setDocument((prev) => ({
+                setDocumentForm((prev) => ({
                   ...prev,
                   type: e.target.value as DocumentType,
                 }))
@@ -187,7 +183,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
                 <input
                   type="checkbox"
                   value={option.value}
-                  checked={props.document.stakeholders?.includes(option.value)}
+                  checked={documentForm.stakeholders?.includes(option.value)}
                   onChange={onCheckboxChange}
                 />
                 {option.label}
@@ -207,12 +203,12 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
               min="-90"
               max="90"
               value={
-                props.document.coordinates?.latitude !== null
-                  ? props.document.coordinates?.latitude
+                documentForm.coordinates?.latitude !== null
+                  ? documentForm.coordinates?.latitude
                   : ""
               }
               onChange={(e) =>
-                props.setDocument((prev: DocumentForm) => ({
+                setDocumentForm((prev: DocumentForm) => ({
                   ...prev,
                   coordinates: {
                     latitude: Number(e.target.value),
@@ -235,12 +231,12 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
               min="-180"
               max="180"
               value={
-                props.document.coordinates?.longitude !== null
-                  ? props.document.coordinates?.longitude
+                documentForm.coordinates?.longitude !== null
+                  ? documentForm.coordinates?.longitude
                   : ""
               }
               onChange={(e) => {
-                props.setDocument((prev) => ({
+                setDocumentForm((prev) => ({
                   ...prev,
                   coordinates: {
                     latitude: prev.coordinates?.latitude ?? 0,
@@ -254,11 +250,7 @@ const FirstPageModal: FC<FirstPageModalProps> = (props) => {
         </div>
       </div>
 
-      <button
-        className="primary"
-        type="submit"
-        // onClick={() => setPage((p) => p + 1)}
-      >
+      <button className="primary" type="submit">
         Continue
       </button>
     </>

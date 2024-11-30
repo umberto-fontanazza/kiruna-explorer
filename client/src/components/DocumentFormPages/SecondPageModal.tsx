@@ -5,21 +5,23 @@ import LinksTable from "../LinksTable";
 import SearchBar from "../SearchBar";
 
 interface SecondPageModalProps {
-  document: DocumentForm;
+  documentForm: DocumentForm;
   tableLinks: Link[];
   setTableLinks: Dispatch<SetStateAction<Link[]>>;
   goBack: Dispatch<SetStateAction<number>>;
 }
 
-const SecondPageModal: FC<SecondPageModalProps> = (props) => {
+const SecondPageModal: FC<SecondPageModalProps> = ({
+  documentForm,
+  tableLinks,
+  setTableLinks,
+  goBack,
+}) => {
   return (
     <>
       <div className="form-content">
-        {props.tableLinks.length > 0 ? (
-          <LinksTable
-            tableLinks={props.tableLinks}
-            setTableLinks={props.setTableLinks}
-          />
+        {tableLinks.length > 0 ? (
+          <LinksTable tableLinks={tableLinks} setTableLinks={setTableLinks} />
         ) : (
           <p>
             If you need to add links to other documents, please use the search
@@ -27,17 +29,14 @@ const SecondPageModal: FC<SecondPageModalProps> = (props) => {
           </p>
         )}
 
-        <SearchBar
-          tableLinks={props.tableLinks}
-          setTableLinks={props.setTableLinks}
-        />
+        <SearchBar tableLinks={tableLinks} setTableLinks={setTableLinks} />
       </div>
       <div className="actions">
-        <button className="back" onClick={() => props.goBack((p) => p - 1)}>
+        <button className="back" onClick={() => goBack((p) => p - 1)}>
           Back
         </button>
         <button className="primary" type="submit">
-          {props.document.id ? "Update Document" : "Add Document"}
+          {documentForm.id ? "Update Document" : "Add Document"}
         </button>
       </div>
     </>

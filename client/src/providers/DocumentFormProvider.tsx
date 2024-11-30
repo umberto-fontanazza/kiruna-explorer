@@ -11,19 +11,21 @@ import {
   Coordinates,
   Document,
   DocumentForm,
+  documentFormDefaults,
   LinkType,
+  UploadType,
 } from "../utils/interfaces";
 
 interface DocumentFormContextType {
   coordinates: Coordinates;
   searchableDocuments: Document[];
-  documentFormSelected: Document | null;
+  documentFormSelected: DocumentForm;
   isSubmit: boolean;
   setCoordinates: Dispatch<SetStateAction<Coordinates>>;
   setSearchableDocuments: Dispatch<SetStateAction<Document[]>>;
-  setDocumentFormSelected: Dispatch<SetStateAction<Document | null>>;
+  setDocumentFormSelected: Dispatch<SetStateAction<DocumentForm>>;
   setIsSubmit: Dispatch<SetStateAction<boolean>>;
-  handleAddNewDocument: (newDocument: DocumentForm) => void;
+  handleAddNewDocument: (newDocument: DocumentForm, file: string) => void;
 }
 
 export const DocumentFormContext = createContext<
@@ -41,11 +43,14 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
     [],
   );
   const [documentFormSelected, setDocumentFormSelected] =
-    useState<Document | null>(null);
+    useState<DocumentForm>(documentFormDefaults);
 
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
-  const handleAddNewDocument = async (newDocument: DocumentForm) => {
+  const handleAddNewDocument = async (
+    newDocument: DocumentForm,
+    file?: string,
+  ) => {
     if (newDocument.id) {
       const fetchUpdate = async () => {
         try {
@@ -75,10 +80,19 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
           });
         },
       );
+      if (file) {
+        await API.addUpload(
+          "Original resource upload test",
+          UploadType.OriginalResource,
+          file,
+          [id],
+        );
+      }
     }
     setIsSubmit(true);
-    setDocumentFormSelected(null);
+    setDocumentFormSelected(documentFormDefaults);
   };
+
   return (
     <DocumentFormContext.Provider
       value={{
