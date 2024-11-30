@@ -8,12 +8,18 @@
   // Example:
   "Express async middleware": {
     "scope": "typescript",
-    "prefix": "async middleware",
+    "prefix": "!async middleware",
     "body": [
       "async (request: Request, response: Response, next: NextFunction) => {",
-      "response.send({ message: \"To be implemented\"})",
+      "response.send({ message: \"To be implemented\"}) //TODO: implement",
       "}",
     ],
     "description": "Define a new middleware",
+  },
+  "Unimplemented error": {
+    "scope": "typescript",
+    "prefix": "!unimplemented",
+    "body": ["throw new Error(\"Unimplemented!\"); //TODO: implement"],
+    "description": "Unimplemented placeholder",
   },
 }
