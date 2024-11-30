@@ -23,7 +23,7 @@ export class Polygon {
   }
 
   static async getMany(ids: number[]): Promise<Polygon[]> {
-    const sql = `SELECT id, array_agg(ARRAY[ST_X(v::geometry), ST_Y(v::geometry)]) as coordinates
+    const sql = `SELECT id, array_agg(ARRAY[ST_Y(v::geometry), ST_X(v::geometry)]) as coordinates
     FROM polygon, unnest(vertices) as v 
     WHERE id = ANY($1) 
     GROUP BY id;`;
@@ -42,7 +42,7 @@ export class Polygon {
 
   static async get(id: number): Promise<Polygon> {
     const result = await Database.query(
-      "SELECT ST_X(v::geometry) as latitude, ST_Y(v::geometry) as longitude FROM polygon, UNNEST(vertices) as v WHERE id = $1",
+      "SELECT ST_Y(v::geometry) as latitude, ST_X(v::geometry) as longitude FROM polygon, UNNEST(vertices) as v WHERE id = $1",
       [id],
     );
     return new Polygon(id, result.rows);
