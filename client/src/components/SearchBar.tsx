@@ -106,7 +106,13 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
           <img
             src="x-black.png"
             className="search-icon-x"
+            alt="Clear search"
             onClick={() => setQuery("")}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                setQuery("");
+              }
+            }}
           />
         </div>
         {showSuggestions && filteredSuggestions.length > 0 && (
