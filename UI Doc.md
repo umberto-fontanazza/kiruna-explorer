@@ -28,6 +28,7 @@ Ensure the sidebar is non-intrusive and easy to navigate.
 Use simple, minimalistic UI for a clean looks.
 
 "UI Documentation for Uploads Page"
+![Figma Prototype for Uploads Page](client/public/22.png)
 Overview:
 The uploads page allows users to view and manage uploaded documents efficiently. It features a table displaying key file details and action icons for quick operations.
 
