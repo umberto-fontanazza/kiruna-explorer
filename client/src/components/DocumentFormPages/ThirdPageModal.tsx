@@ -1,20 +1,35 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import "../../styles/DocumentFormPagesStyles/ThirdPageModal.scss";
-import { DocumentForm } from "../../utils/interfaces";
+import { DocumentForm, Link } from "../../utils/interfaces";
 
 interface ThirdPageModalProps {
-  onSubmit: (ev: React.FormEvent) => void;
-  document: DocumentForm;
+  documentForm: DocumentForm;
+  fileToUpload: string | null;
+  tableLinks: Link[];
   goBack: Dispatch<SetStateAction<number>>;
+  setFileToUpload: Dispatch<SetStateAction<string | null>>;
 }
 
-const ThirdPageModal: React.FC<ThirdPageModalProps> = (props) => {
-  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
+  fileToUpload,
+  documentForm,
+  goBack,
+  setFileToUpload,
+}) => {
   const [dragActive, setDragActive] = useState(false);
 
   const handleFileUpload = (file: File) => {
-    setUploadedFile(file);
-    console.log("File uploaded:", file);
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64String = reader.result?.toString().split(",")[1];
+      if (base64String) {
+        setFileToUpload(base64String);
+      }
+    };
+    reader.onerror = (error) => {
+      console.error("Error converting file to Base64:", error);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -39,7 +54,6 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = (props) => {
   };
 
   const handleButtonClick = () => {
-    // Simula un clic su un elemento input nascosto per aprire il file picker
     const input = document.createElement("input");
     input.type = "file";
     input.onchange = (e: Event) => {
@@ -70,21 +84,18 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = (props) => {
         </button>
       </div>
 
-      {uploadedFile && (
+      {fileToUpload && (
         <div className="uploaded-file">
-          <strong>Uploaded File:</strong> {uploadedFile.name}
+          <strong>Uploaded File (Base64):</strong>{" "}
+          {fileToUpload.substring(0, 30)}...
         </div>
       )}
       <div className="actions">
-        <button className="back" onClick={() => props.goBack((p) => p - 1)}>
+        <button className="back" onClick={() => goBack((p) => p - 1)}>
           Back
         </button>
-        <button
-          className="primary"
-          type="button"
-          onClick={(e) => props.onSubmit(e)}
-        >
-          {props.document.id ? "Update Document" : "Add Document"}
+        <button className="primary" type="submit">
+          {documentForm.id ? "Update Document" : "Add Document"}
         </button>
       </div>
     </div>

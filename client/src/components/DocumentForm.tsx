@@ -2,11 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/DocumentForm.scss";
-import {
-  documentFormDefaults,
-  DocumentForm as DocumentFormType,
-  Link,
-} from "../utils/interfaces";
+import { documentFormDefaults, Link } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
 import FirstPageModal from "./DocumentFormPages/FirstPageModal";
 import SecondPageModal from "./DocumentFormPages/SecondPageModal";
@@ -23,13 +19,13 @@ const DocumentForm = () => {
     handleAddNewDocument,
   } = useDocumentFormContext();
   const [page, setPage] = useState<number>(1);
-  const [document, setDocument] = useState<DocumentFormType>(
-    documentFormSelected || { ...documentFormDefaults },
+  const [tableLinks, setTableLinks] = useState<Link[]>(
+    documentFormSelected?.links || [],
   );
-  const [tableLinks, setTableLinks] = useState<Link[]>(document?.links || []);
+  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
 
   useEffect(() => {
-    setDocument((prev) => ({
+    setDocumentFormSelected((prev) => ({
       ...prev,
       coordinates: {
         latitude: coordinates.latitude,
@@ -40,17 +36,24 @@ const DocumentForm = () => {
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-    handleAddNewDocument({
-      ...document,
-      links: tableLinks,
-    });
-    resetForm();
+    handleAddNewDocument(
+      {
+        ...documentFormSelected,
+        links: tableLinks,
+      },
+      uploadedFile ?? "",
+    );
+    resetForm(false);
   };
 
-  const resetForm = () => {
-    setDocument(documentFormDefaults);
+  const resetForm = (isClosed: boolean) => {
+    setDocumentFormSelected(documentFormDefaults);
     setPage(1);
-    setPositionMode(PositionMode.None);
+    if (isClosed) {
+      setEditDocumentMode(false);
+    } else {
+      setPositionMode(PositionMode.None);
+    }
     setModalOpen(false);
   };
 
@@ -60,36 +63,34 @@ const DocumentForm = () => {
       onSubmit={(ev) => {
         ev.preventDefault();
         if (page === 1) {
-          // Passa alla pagina successiva solo se la validazione è passata
           setPage(2);
-        }
-        if (page === 2) {
+        } else if (page === 2) {
           setPage(3);
+        } else {
+          handleFormSubmit(ev);
         }
       }}
     >
-      <button
-        className="close"
-        onClick={() => {
-          setDocument(documentFormDefaults);
-          setPage(1);
-          setModalOpen(false);
-          setEditDocumentMode(false);
-          setDocumentFormSelected(null);
-        }}
-      >
+      <button className="close" onClick={() => resetForm(true)}>
         <img src="/x.png" alt="Close" />
       </button>
 
-      <h2>{document.id ? "Update Document" : "New Document Registration"}</h2>
+      <h2>
+        {documentFormSelected.id
+          ? "Update Document"
+          : "New Document Registration"}
+      </h2>
 
       <ProgressBar currentPage={page} />
       {page === 1 && (
-        <FirstPageModal document={document} setDocument={setDocument} />
+        <FirstPageModal
+          documentForm={documentFormSelected}
+          setDocumentForm={setDocumentFormSelected}
+        />
       )}
       {page === 2 && (
         <SecondPageModal
-          document={document}
+          documentForm={documentFormSelected}
           tableLinks={tableLinks}
           setTableLinks={setTableLinks}
           goBack={setPage}
@@ -97,9 +98,11 @@ const DocumentForm = () => {
       )}
       {page === 3 && (
         <ThirdPageModal
-          document={document}
-          onSubmit={handleFormSubmit}
+          documentForm={documentFormSelected}
+          tableLinks={tableLinks}
+          fileToUpload={uploadedFile}
           goBack={setPage}
+          setFileToUpload={setUploadedFile}
         />
       )}
     </form>

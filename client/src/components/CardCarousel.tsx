@@ -9,7 +9,7 @@ import { Coordinates, Document } from "../utils/interfaces";
 import CardDocument from "./CardDocument";
 
 interface CardCarouselProps {
-  documents: Document[];
+  documents: Document[] | null;
   setCoordinates: Dispatch<SetStateAction<Coordinates>>;
 }
 
@@ -28,45 +28,49 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
 
   return (
     <div className="slider-container">
-      <Swiper
-        ref={swiperRef}
-        grabCursor={true}
-        centeredSlides={true}
-        slidesPerView={"auto"}
-        spaceBetween={10}
-        pagination={{
-          clickable: true,
-        }}
-        navigation={true}
-        modules={[Pagination, Navigation]}
-        className="mySwiper"
-      >
-        {documents.map((doc, index) => (
-          <SwiperSlide key={doc.id}>
-            <div
-              className={`card-container ${
-                docSelected?.id === doc.id ? "selected" : ""
-              }`}
-              role="button"
-              tabIndex={0}
-              onClick={() => handleCardClick(doc, index)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  handleCardClick(doc, index);
-                }
-              }}
-            >
-              <CardDocument
-                document={doc}
-                toEditPos={() => {}}
-                showMapButton={true}
-                isDocSelected={docSelected?.id === doc.id}
-                setMinimapCoord={setCoordinates}
-              />
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
+      {documents && documents?.length ? (
+        <Swiper
+          ref={swiperRef}
+          grabCursor={true}
+          centeredSlides={true}
+          slidesPerView={"auto"}
+          spaceBetween={10}
+          pagination={{
+            clickable: true,
+          }}
+          navigation={true}
+          modules={[Pagination, Navigation]}
+          className="mySwiper"
+        >
+          {documents.map((doc, index) => (
+            <SwiperSlide key={doc.id}>
+              <div
+                className={`card-container ${
+                  docSelected?.id === doc.id ? "selected" : ""
+                }`}
+                role="button"
+                tabIndex={0}
+                onClick={() => handleCardClick(doc, index)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleCardClick(doc, index);
+                  }
+                }}
+              >
+                <CardDocument
+                  document={doc}
+                  toEditPos={() => {}}
+                  showMapButton={true}
+                  isDocSelected={docSelected?.id === doc.id}
+                  setMinimapCoord={setCoordinates}
+                />
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      ) : (
+        <h1 className="not-found">Documents not found...</h1>
+      )}
     </div>
   );
 };
