@@ -12,7 +12,7 @@ export const postBody = z
   .object({
     title: z.string(),
     type: z.nativeEnum(UploadType),
-    documentIds: z.array(z.number().min(1)).nonempty(),
+    documentIds: z.array(z.number().min(1)).nonempty().optional(),
     file: z.string(),
   })
   .strict();
