@@ -41,11 +41,7 @@ export class Polygon {
   }
 
   static async get(id: number): Promise<Polygon> {
-    const result = await Database.query(
-      "SELECT ST_Y(v::geometry) as latitude, ST_X(v::geometry) as longitude FROM polygon, UNNEST(vertices) as v WHERE id = $1",
-      [id],
-    );
-    return new Polygon(id, result.rows);
+    return (await Polygon.getMany([id]))[0];
   }
 
   static async insert(
