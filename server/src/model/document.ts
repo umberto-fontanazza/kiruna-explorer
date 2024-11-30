@@ -16,6 +16,7 @@ type DocumentDbRow = {
   scale_ratio: number;
   stakeholders: Stakeholder[];
   coordinates: Coordinates;
+  area_id: number | null;
   issuance_date: Date;
   links: Record<string, LinkType[]>;
 };
@@ -79,6 +80,7 @@ export class Document {
   scale: Scale;
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
+  area?: Area;
   issuanceDate?: Dayjs;
   links?: LinkResponseBody[];
 
@@ -88,10 +90,11 @@ export class Document {
     description: string,
     type: DocumentType,
     scale: Scale,
-    stakeholders: Stakeholder[] | undefined = undefined,
-    coordinates: Coordinates | undefined = undefined,
-    issuanceDate: Dayjs | undefined = undefined,
-    links: LinkResponseBody[] | undefined = undefined,
+    stakeholders?: Stakeholder[],
+    coordinates?: Coordinates,
+    area?: Area,
+    issuanceDate?: Dayjs,
+    links?: LinkResponseBody[],
   ) {
     this.id = id;
     this.title = title;
@@ -100,11 +103,14 @@ export class Document {
     this.scale = scale;
     this.stakeholders = stakeholders;
     this.coordinates = coordinates;
+    this.area = area;
     this.issuanceDate = issuanceDate;
     this.links = links;
   }
 
-  private static fromDatabaseRow(dbRow: DocumentDbRow): Document {
+  private static async fromDatabaseRow(
+    dbRow: DocumentDbRow,
+  ): Promise<Document> {
     const {
       id,
       title,
@@ -114,6 +120,7 @@ export class Document {
       scale_ratio,
       stakeholders,
       coordinates,
+      area_id,
       issuance_date,
       links,
     } = dbRow;
@@ -128,6 +135,10 @@ export class Document {
       scale_ratio,
     } as ScaleRow);
 
+    const checkedCoordinates =
+      coordinates.latitude && coordinates.longitude && coordinates;
+    const area = area_id !== null && (await Area.get(area_id));
+
     return new Document(
       id,
       title,
@@ -135,7 +146,8 @@ export class Document {
       type,
       scale,
       stakeholders || undefined,
-      coordinates || undefined,
+      checkedCoordinates || undefined,
+      area || undefined,
       dayjs(issuance_date) || undefined,
       Link.fromJsonbField(links),
     );
@@ -226,7 +238,9 @@ export class Document {
         AS coordinates
         FROM document ${someFilters ? sqlWhere : ""};`;
     const result = await Database.query(sql, sqlWhereArgs);
-    return result.rows.map((row) => Document.fromDatabaseRow(row));
+    return await Promise.all(
+      result.rows.map(async (row) => await Document.fromDatabaseRow(row)),
+    );
   }
 
   static async get(id: number): Promise<Document> {
@@ -249,6 +263,7 @@ export class Document {
   toResponseBody() {
     return {
       ...this,
+      area: this.area?.toResponseBody(),
       issuanceDate: this.issuanceDate?.format("YYYY-MM-DD") || undefined,
     };
   }
