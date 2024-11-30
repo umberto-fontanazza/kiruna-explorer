@@ -22,6 +22,24 @@ export class Polygon {
     this._vertices = vertices;
   }
 
+  static async getMany(ids: number[]): Promise<Polygon[]> {
+    const sql = `SELECT id, array_agg(ARRAY[ST_X(v::geometry), ST_Y(v::geometry)]) as coordinates
+    FROM polygon, unnest(vertices) as v 
+    WHERE id = ANY($1) 
+    GROUP BY id;`;
+    const { rows: polyRows } = await Database.query(sql, [ids]);
+    return polyRows.map(
+      (row) =>
+        new Polygon(
+          row.id,
+          row.coordinates.map((arr: number[][]) => ({
+            latitude: arr[0],
+            longitude: arr[1],
+          })),
+        ),
+    );
+  }
+
   static async get(id: number): Promise<Polygon> {
     const result = await Database.query(
       "SELECT ST_X(v::geometry) as latitude, ST_Y(v::geometry) as longitude FROM polygon, UNNEST(vertices) as v WHERE id = $1",
