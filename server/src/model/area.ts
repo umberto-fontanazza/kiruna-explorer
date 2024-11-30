@@ -46,6 +46,18 @@ export class Area {
     });
   }
 
+  async delete(): Promise<void> {
+    await Database.withTransaction(async (client) => {
+      await Polygon.delete(this.include.id);
+      this.exclude
+        .map((p) => p.id)
+        .forEach(async (id) => {
+          await Polygon.delete(id);
+        });
+      client.query("DELETE FROM area WHERE id = $1", [this.id]);
+    });
+  }
+
   toResponseBody = () => ({
     include: this.include.toResponseBody(),
     exclude: this.exclude.map((poly) => poly.toResponseBody()),

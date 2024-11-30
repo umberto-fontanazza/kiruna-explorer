@@ -64,8 +64,8 @@ export class Polygon {
     return new Polygon(id, body);
   }
 
-  static async delete(id: number): Promise<void> {
-    await Database.query("DELETE FROM polygon WHERE id = $1", [id]);
+  static async delete(id: number, client?: PoolClient): Promise<void> {
+    await (client ?? Database).query("DELETE FROM polygon WHERE id = $1", [id]);
   }
 
   toResponseBody = (): Coordinates[] => this.vertices;
