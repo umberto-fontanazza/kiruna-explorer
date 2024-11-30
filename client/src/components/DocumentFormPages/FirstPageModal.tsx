@@ -9,7 +9,6 @@ import {
   stakeholdersOptions,
 } from "../../utils/interfaces";
 
-import "../../styles/DocumentFormPagesStyles/FirstPageModal.scss";
 import { capitalizeFirstLetter } from "../../utils/utils";
 
 interface FirstPageModalProps {
