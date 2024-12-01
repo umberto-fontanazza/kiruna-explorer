@@ -51,23 +51,8 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
     newDocument: DocumentForm,
     file?: string,
   ) => {
-    if (newDocument.id) {
-      const fetchUpdate = async () => {
-        try {
-          await API.updateDocument(newDocument as Document);
-          newDocument.links?.map(async (link: any) => {
-            await API.putLink(
-              newDocument.id!,
-              link.targetDocumentId,
-              link.linkTypes,
-            );
-          });
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      await fetchUpdate();
-    } else {
+    // Add document
+    if (!newDocument.id) {
       const id = await API.addDocument(newDocument as Document);
       newDocument.links?.forEach(
         async (link: { targetDocumentId: number; linkTypes: LinkType[] }) => {
@@ -88,6 +73,26 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
         );
       }
     }
+
+    // Update document
+    if (newDocument.id) {
+      const fetchUpdate = async () => {
+        try {
+          await API.updateDocument(newDocument as Document);
+          newDocument.links?.map(async (link: any) => {
+            await API.putLink(
+              newDocument.id!,
+              link.targetDocumentId,
+              link.linkTypes,
+            );
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      await fetchUpdate();
+    }
+
     setIsSubmit(true);
     setDocumentFormSelected(documentFormDefaults);
   };
