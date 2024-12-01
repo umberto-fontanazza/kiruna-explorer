@@ -39,15 +39,17 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
     if (userInput.length >= 2) {
       const lowerCaseQuery = userInput.toLowerCase();
 
-      const matchesQuery = searchableDocuments.filter((doc) => {
-        const titleWords = doc.title.toLowerCase().split(/\s+/);
+      const matchesQuery = searchableDocuments
+        .filter((doc) => {
+          const titleWords = doc.title.toLowerCase().split(/\s+/);
 
-        return lowerCaseQuery
-          .split(/\s+/)
-          .every((queryPart) =>
-            titleWords.some((titleWord) => titleWord.startsWith(queryPart)),
-          );
-      });
+          return lowerCaseQuery
+            .split(/\s+/)
+            .every((queryPart) =>
+              titleWords.some((titleWord) => titleWord.startsWith(queryPart)),
+            );
+        })
+        .sort((a, b) => a.title.localeCompare(b.title));
 
       setFilteredSuggestions(matchesQuery);
     } else {
