@@ -81,7 +81,7 @@ const Home: FC = (): JSX.Element => {
       <div className="body-container">
         {modalOpen && <div className="overlay" />}
         {/* Map Component with overlay button for adding documents */}
-        <div className="map">
+        <div className={`map ${sidebarOpen ? "with-sidebar" : ""}`}>
           <MapComponent
             documents={documents}
             docSelected={docSelected}

@@ -22,6 +22,11 @@
     width: 100%;
     height: 92vh;
     position: relative;
+    transition: width 0.3s linear;
+
+    &.with-sidebar {
+      width: 70%;
+    }
 
     .button-overlay {
       position: absolute;
