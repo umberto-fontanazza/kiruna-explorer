@@ -9,6 +9,7 @@
 ![Figma Prototype for Document List Page](client/public/1.png)
 
 "UI Documentation for Handling Documents in the Same Spot"
+![Figma Prototype for Handling Documents in the Same Spot](client/public/55.png)
 
 Purpose:
 This feature allows users to manage multiple documents efficiently in one location.
