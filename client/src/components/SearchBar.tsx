@@ -60,6 +60,10 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
     setShowSuggestions(false);
   };
 
+  useEffect(() => {
+    console.log(tableLinks);
+  }, [tableLinks]);
+
   const handleAddLink = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (selectedDocument?.id && linkType) {
@@ -68,18 +72,19 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
         (link) => link.targetDocumentId === targetDocumentId,
       );
 
-      if (existingLink) {
-        setTableLinks((prev) =>
-          prev.map((link) =>
-            link.targetDocumentId === targetDocumentId &&
-            !link.linkTypes.includes(linkType)
-              ? { ...link, linkTypes: [...link.linkTypes, linkType] }
-              : link,
+      if (!existingLink?.linkTypes.includes(linkType)) {
+        setTableLinks((oldTableLinks) =>
+          oldTableLinks.map((tableLink) =>
+            tableLink.targetDocumentId === targetDocumentId
+              ? { ...tableLink, linkTypes: [...tableLink.linkTypes, linkType] }
+              : tableLink,
           ),
         );
-      } else {
-        setTableLinks((prev) => [
-          ...prev,
+      }
+
+      if (!existingLink) {
+        setTableLinks((oldTableLinks) => [
+          ...oldTableLinks,
           { targetDocumentId, linkTypes: [linkType] },
         ]);
       }
