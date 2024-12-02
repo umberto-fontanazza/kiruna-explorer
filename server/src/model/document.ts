@@ -151,7 +151,9 @@ export class Document {
     return this._area;
   }
   async setArea(area: Area): Promise<void> {
-    if (this._area) await this._area.delete();
+    if (this._area) {
+      await this._area.delete();
+    }
     this._area = area;
   }
 
@@ -267,7 +269,7 @@ export class Document {
       throw new DocumentNotFound();
     }
     const documentRow = result.rows[0];
-    return Document.fromDatabaseRow(documentRow);
+    return await Document.fromDatabaseRow(documentRow);
   }
 
   toResponseBody() {
