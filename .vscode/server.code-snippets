@@ -22,4 +22,12 @@
     "body": ["throw new Error(\"Unimplemented!\"); //TODO: implement"],
     "description": "Unimplemented placeholder",
   },
+  "Sleep": {
+    "scope": "typescript",
+    "prefix": "!sleep",
+    "body": [
+      "await new Promise(r => setTimeout(r, ${1:seconds}*1000)); //TODO: remove",
+    ],
+    "description": "Synchronously sleep for x seconds",
+  },
 }
