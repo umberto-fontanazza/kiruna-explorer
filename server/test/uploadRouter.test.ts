@@ -1,11 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import request from "supertest";
 import app from "../src/app";
-import { Database } from "../src/database";
-
-afterAll(async () => {
-  await Database.disconnect();
-});
 
 describe("Upload bad requests", () => {
   test("File=include without a documentId is a BAD_REQUEST", async () => {

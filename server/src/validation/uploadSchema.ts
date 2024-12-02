@@ -24,7 +24,7 @@ export const getManyQueryParameters = z
     file: z.literal("omit").or(z.literal("include")).optional(),
   })
   .strict()
-  .refine((query) => !(query.documentId && query.file === "include"));
+  .refine((query) => query.documentId || query.file !== "include");
 
 //TODO: refine at least one field must be defined
 //TODO: refine intersection of ids in bind and decouple must be empty
