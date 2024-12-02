@@ -4,7 +4,7 @@ import app from "../src/app";
 import { Database } from "../src/database";
 import { Document, DocumentType } from "../src/model/document";
 import { ScaleType } from "../src/model/scale";
-import { loginAsPlanner } from "./utils";
+import { countEntriesInTable, loginAsPlanner } from "./utils";
 
 let documentId: number;
 let plannerCookie: string;
@@ -37,22 +37,35 @@ const validAreaBody = {
   ],
 };
 
+let initPolygonCount: number = 0;
+let initAreaCount: number = 0;
+
 const validCoordinates = {
   latitude: 67.85800000000079,
   longitude: 20.22000000000075,
 };
 
 beforeAll(async () => {
+  initAreaCount = await countEntriesInTable("area");
+  initPolygonCount = await countEntriesInTable("polygon");
   plannerCookie = await loginAsPlanner();
 });
 
 afterAll(async () => {
   await Document.delete(documentId);
+  const finalAreaCount = await countEntriesInTable("area");
+  if (finalAreaCount !== initAreaCount) {
+    console.warn(`The count of area was altered by the tests`);
+  }
+  const finalPolygonCount: number = await countEntriesInTable("polygon");
+  if (finalPolygonCount !== initPolygonCount) {
+    console.warn(`The count of polygon was altered by the tests`);
+  }
   await Database.disconnect();
 });
 
-describe("Testing areas for document router", () => {
-  test("Create a document with area AND coordinates", async () => {
+describe("Document with area BAD REQUEST", () => {
+  test("Area AND coordinates fails", async () => {
     const response = await request(app)
       .post("/documents")
       .send({
@@ -64,7 +77,7 @@ describe("Testing areas for document router", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
-  test("Create a document with malformed area", async () => {
+  test("Area without include field fails", async () => {
     const response = await request(app)
       .post("/documents")
       .send({
@@ -75,6 +88,19 @@ describe("Testing areas for document router", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
+  test("Area without exclude field fails", async () => {
+    const response = await request(app)
+      .post("/documents")
+      .send({
+        ...validDocument,
+        area: { ...validAreaBody, exclude: undefined },
+      })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+});
+
+describe("Testing areas for document router", () => {
   test("Create a document with valid area", async () => {
     const response = await request(app)
       .post("/documents")
