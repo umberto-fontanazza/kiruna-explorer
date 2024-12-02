@@ -250,7 +250,9 @@ const FirstPageModal: FC<FirstPageModalProps> = ({
             </div>
           </div>
         ) : (
-          <h3>The coordinates of the polygon are set up</h3>
+          <h3 className="polygon-selected">
+            The coordinates of the polygon are set
+          </h3>
         )}
       </div>
 

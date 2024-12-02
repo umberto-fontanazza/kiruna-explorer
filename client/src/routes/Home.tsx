@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { FC, useContext, useEffect, useState } from "react";
 import API from "../API/API";
 import MapComponent from "../components/MapComponents/Map";
@@ -8,7 +9,12 @@ import { authContext } from "../context/auth";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/Home.scss";
-import { Document } from "../utils/interfaces";
+import {
+  Document,
+  DocumentType,
+  ScaleType,
+  Stakeholder,
+} from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
 
 const Home: FC = (): JSX.Element => {
@@ -32,7 +38,34 @@ const Home: FC = (): JSX.Element => {
     const fetchDocuments = async () => {
       try {
         const documents: Document[] = await API.getDocuments();
-        setDocuments(documents);
+
+        const exampleDocument: Document = {
+          id: 1,
+          title: "Area Example Document",
+          description:
+            "This document represents an area with only include coordinates.",
+          type: DocumentType.Informative,
+          scale: {
+            type: ScaleType.ArchitecturalScale,
+            ratio: 1000,
+          },
+          stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Lkab],
+          issuanceDate: dayjs("2024-01-01"),
+          links: [],
+          area: {
+            include: [
+              { latitude: 67.878447, longitude: 20.144565 }, // Nord-Ovest
+              { latitude: 67.867853, longitude: 20.302914 }, // Nord-Est
+              { latitude: 67.824636, longitude: 20.335293 }, // Sud-Est
+              { latitude: 67.798874, longitude: 20.174381 },
+            ],
+            exclude: [], // Nessuna esclusione
+          },
+        };
+
+        const testDocs = [...documents, exampleDocument];
+
+        setDocuments(testDocs);
       } catch (err) {
         console.error(err);
       }

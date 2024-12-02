@@ -148,14 +148,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
     const newAreas: google.maps.Polygon[] = documents
       .filter((doc) => doc.area)
-      .map((doc) =>
-        createArea(
-          doc,
-          map,
-          () => setSidebarOpen,
-          () => setdocumentSelected,
-        ),
-      );
+      .map((doc) => createArea(doc, map, setSidebarOpen, setdocumentSelected))
+      .filter((area): area is google.maps.Polygon => area !== null);
 
     clearAreas(areas);
 

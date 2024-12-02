@@ -2,7 +2,6 @@ import { Dispatch, SetStateAction, useEffect } from "react";
 import { useAppContext } from "../context/appContext";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { Document, PolygonArea } from "./interfaces";
-import { kirunaCoords } from "./map";
 import { PositionMode } from "./modes";
 
 export const useDrawingTools = (
@@ -73,10 +72,37 @@ export const createArea = (
   doc: Document,
   map: google.maps.Map,
   setSidebarOpen: Dispatch<SetStateAction<boolean>>,
-  setdocumentSelected: Dispatch<SetStateAction<Document>>,
-): google.maps.Polygon => {
+  setdocumentSelected: Dispatch<SetStateAction<Document | null>>,
+): google.maps.Polygon | null => {
+  if (!doc.area) return null;
+
+  const includePaths = (doc.area.include || []).map((coord) => ({
+    lat: parseFloat(coord.latitude?.toString() || "NaN"),
+    lng: parseFloat(coord.longitude?.toString() || "NaN"),
+  }));
+
+  const excludePaths = (doc.area.exclude || []).map((exclude) =>
+    exclude.map((coord) => ({
+      lat: parseFloat(coord.latitude?.toString() || "NaN"),
+      lng: parseFloat(coord.longitude?.toString() || "NaN"),
+    })),
+  );
+
+  const isValidLatLng = (coord: { lat: number; lng: number }) =>
+    !isNaN(coord.lat) && !isNaN(coord.lng);
+
+  const validIncludePaths = includePaths.filter(isValidLatLng);
+  const validExcludePaths = excludePaths.map((exclude) =>
+    exclude.filter(isValidLatLng),
+  );
+
+  if (validIncludePaths.length === 0) {
+    console.error("Invalid include paths for document", doc);
+    return null;
+  }
+
   const area = new google.maps.Polygon({
-    paths: [doc.area?.include, doc.area?.exclude],
+    paths: [validIncludePaths, ...validExcludePaths],
     fillColor: "#00FF00",
     fillOpacity: 0.5,
     strokeWeight: 2,
@@ -84,23 +110,32 @@ export const createArea = (
     zIndex: 1,
   });
 
-  area.addListener("click", () => {
-    area.addListener("click", () => {
-      setSidebarOpen(true);
-      setdocumentSelected(doc);
+  area.setMap(map);
 
-      //TODO: Center Area
-      const newCenter = {
-        lat: doc.coordinates?.latitude ?? kirunaCoords.lat,
-        lng: doc.coordinates?.longitude
-          ? doc.coordinates?.longitude + 0.1 / (map?.getZoom() ?? 1)
-          : kirunaCoords.lng,
-      };
-      if ((map?.getZoom() ?? 0) < 12) map?.setZoom(12);
-      map?.setCenter(newCenter);
-      map?.panTo(newCenter);
+  google.maps.event.addListener(area, "click", () => {
+    // Calcola i limiti del poligono
+    const bounds = new google.maps.LatLngBounds();
+    validIncludePaths.forEach((point) => bounds.extend(point));
+
+    validExcludePaths.forEach((exclude) => {
+      exclude.forEach((point) => bounds.extend(point));
     });
+
+    // Centra la mappa sui limiti calcolati
+    map.fitBounds(bounds);
+
+    // Aggiungi un margine extra per migliorare la visibilità del contesto
+    const zoom = map.getZoom() ?? 0; // Ottieni lo zoom corrente
+    const newZoom = zoom - 0.2; // Riduci lo zoom per vedere più contesto
+    if (newZoom > 0) {
+      map.setZoom(newZoom); // Imposta il nuovo zoom
+    }
+
+    // Apri la sidebar e imposta il documento selezionato
+    setSidebarOpen(true);
+    setdocumentSelected(doc);
   });
+
   return area;
 };
 
