@@ -4,7 +4,11 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/Map.scss";
-import { createArea, useDrawingTools } from "../../utils/drawingTools";
+import {
+  clearAreas,
+  createArea,
+  useDrawingTools,
+} from "../../utils/drawingTools";
 import { Document, Link, fromDocumentTypeToIcon } from "../../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
 import { PositionMode } from "../../utils/modes";
@@ -129,6 +133,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   useEffect(() => {
     if (!isLoaded || !map || positionMode !== PositionMode.None) {
       clearMarkers();
+      clearAreas(areas);
       return;
     }
 
@@ -151,6 +156,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           () => setdocumentSelected,
         ),
       );
+
+    clearAreas(areas);
 
     const markerCluster = new MarkerClusterer({
       markers: newMarkers,

@@ -50,12 +50,19 @@ async function getDocumentById(id: number): Promise<Document> {
  * @returns id of the document just added
  */
 async function addDocument(document: Omit<Document, "id">): Promise<number> {
+  if (document.coordinates && document.area) {
+    throw new Error(
+      "Only one of 'coordinates' or 'area' must be provided, not both.",
+    );
+  }
+
   const responseBody = {
     ...document,
     id: undefined,
     links: undefined,
     issuanceDate: document.issuanceDate?.format("YYYY-MM-DD") || undefined,
   };
+
   const response = await fetch(baseURL + `/documents`, {
     method: "POST",
     credentials: "include",

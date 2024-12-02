@@ -102,5 +102,3 @@ const DocumentForm = () => {
 };
 
 export default DocumentForm;
-
-//onClick={handleFormSubmit}

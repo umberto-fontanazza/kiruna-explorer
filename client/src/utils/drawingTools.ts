@@ -103,3 +103,7 @@ export const createArea = (
   });
   return area;
 };
+
+export const clearAreas = (areas: google.maps.Polygon[]) => {
+  areas.forEach((area) => area.setMap(null));
+};
