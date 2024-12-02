@@ -372,7 +372,7 @@ This API uses the following error codes:
 
 ### Query parameters
 
-- `documentId`: **mandatory**. Returns uploads related to this document only.
+- `documentId`: **mandatory** when file=include. Returns uploads related to this document only.
 - `file`: defaults to `omit` to return uploads metadata only or `include` to return metadata along with the file.
 
 ### Response body
@@ -523,6 +523,11 @@ This API uses the following error codes:
 - `401 Unauthorized`: You are unauthorized.
 - `404 Not Found`: The requested upload was not found.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
+
+# <<<<<<< Updated upstream
+
+> > > > > > > Stashed changes
+> > > > > > > Stashed changes
 
 # Collection `sessions`
 

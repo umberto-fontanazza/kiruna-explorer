@@ -20,10 +20,11 @@ export const postBody = z
 export type GetManyQueryParameters = z.infer<typeof getManyQueryParameters>;
 export const getManyQueryParameters = z
   .object({
-    documentId: z.coerce.number().int().positive(),
+    documentId: z.coerce.number().int().positive().optional(),
     file: z.literal("omit").or(z.literal("include")).optional(),
   })
-  .strict();
+  .strict()
+  .refine((query) => !(query.documentId && query.file === "include"));
 
 //TODO: refine at least one field must be defined
 //TODO: refine intersection of ids in bind and decouple must be empty

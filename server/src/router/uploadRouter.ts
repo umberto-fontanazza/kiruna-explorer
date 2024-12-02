@@ -24,8 +24,9 @@ uploadRouter.get(
   "/",
   validateQueryParameters(getManyQueryParameters),
   async (request: Request, response: Response, next: NextFunction) => {
-    const documentId = Number(request.query.documentId);
-    const includeFile = request.query.file === "include";
+    const { documentId: rawId, file } = request.query;
+    const documentId = rawId ? Number(rawId) : undefined;
+    const includeFile = file === "include";
     const uploads = await Upload.fromDocumentAll(documentId, includeFile);
     response
       .status(StatusCodes.OK)
