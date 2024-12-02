@@ -205,12 +205,18 @@ export class Document {
   }
 
   static async delete(id: number): Promise<void> {
-    const result = await Database.query("DELETE FROM document WHERE id = $1", [
-      id,
-    ]);
+    const result = await Database.query(
+      "DELETE FROM document WHERE id = $1 RETURNING area_id",
+      [id],
+    );
     const affectedRows: number = result.rowCount || 0;
     if (affectedRows < 1)
       throw new DocumentNotFound("DELETE query affected rows were less than 1");
+    const { area_id: areaId } = result.rows[0];
+    if (areaId) {
+      const a = await Area.get(areaId);
+      await a.delete();
+    }
   }
 
   static async all(
