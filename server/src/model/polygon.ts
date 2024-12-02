@@ -1,5 +1,6 @@
 import { PoolClient } from "pg";
 import { Database } from "../database";
+import { PolygonNotFound } from "../error/polygonError";
 import { Coordinates } from "../validation/coordinatesSchema";
 import { PolygonBody } from "../validation/polygonSchema";
 
@@ -28,7 +29,7 @@ export class Polygon {
     WHERE id = ANY($1) 
     GROUP BY id;`;
     const { rows: polyRows } = await Database.query(sql, [ids]);
-    return polyRows.map(
+    const polygons: Polygon[] = polyRows.map(
       (row) =>
         new Polygon(
           row.id,
@@ -38,6 +39,15 @@ export class Polygon {
           })),
         ),
     );
+
+    const foundIds = polygons.map((p) => p.id);
+    const notFoundIds = ids.filter((id) => !foundIds.includes(id));
+    if (notFoundIds.length > 0) {
+      throw new PolygonNotFound(
+        `Couldn't find polygons with id: ${notFoundIds}`,
+      );
+    }
+    return polygons;
   }
 
   static async get(id: number): Promise<Polygon> {
