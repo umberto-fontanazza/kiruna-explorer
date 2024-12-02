@@ -44,7 +44,6 @@ export async function countEntriesInTable(table: string): Promise<number> {
     throw new Error(`Invalid database table named ${table}`);
   }
   const result = await Database.query(`SELECT COUNT(*) FROM ${table};`);
-  console.log(result.rows[0]);
   const count = Number(result.rows[0].count);
   return count;
 }
