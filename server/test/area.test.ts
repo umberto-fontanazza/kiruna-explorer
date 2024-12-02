@@ -2,7 +2,7 @@ import { StatusCodes } from "http-status-codes";
 import request from "supertest";
 import app from "../src/app";
 import { Database } from "../src/database";
-import { Document, DocumentType } from "../src/model/document";
+import { DocumentType } from "../src/model/document";
 import { ScaleType } from "../src/model/scale";
 import { countEntriesInTable, loginAsPlanner } from "./utils";
 
@@ -52,7 +52,6 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await Document.delete(documentId);
   const finalAreaCount = await countEntriesInTable("area");
   if (finalAreaCount !== initAreaCount) {
     console.warn(`The count of area was altered by the tests`);
@@ -132,5 +131,24 @@ describe("Testing areas for document router", () => {
     expect(JSON.stringify(exclude)).toStrictEqual(
       JSON.stringify(validAreaBody.exclude),
     );
+  });
+
+  test("PATCH said document", async () => {
+    const { include } = validAreaBody;
+    const patchedInclude = [...include, { latitude: 67.87, longitude: 20.24 }];
+    const patchedAreaBody = { ...validAreaBody, include: patchedInclude };
+    const response = await request(app)
+      .patch(`/documents/${documentId}`)
+      .send({ area: patchedAreaBody })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+
+  test("DELETE document", async () => {
+    const response = await request(app)
+      .delete(`/documents/${documentId}`)
+      .send()
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });
 });
