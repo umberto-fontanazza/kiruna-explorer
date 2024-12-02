@@ -17,15 +17,13 @@ export class Area {
   static async get(id: number): Promise<Area> {
     const sql = `SELECT id, include_polygon_id as include, exclude_polygon_ids as exclude FROM area WHERE id = $1`;
     const result = await Database.query(sql, [id]);
-    const { include, exclude } = result.rows[0];
-    const polygons = (await Polygon.getMany([include, ...exclude])).sort(
+    const { include: includeId, exclude: excludeIds } = result.rows[0];
+    const polygons = (await Polygon.getMany([includeId, ...excludeIds])).sort(
       (p1, p2) => p1.id - p2.id,
     );
-    return new Area(
-      id,
-      polygons.filter((p) => p.id === include)[0],
-      polygons.filter((p) => p.id !== include),
-    );
+    const includeP: Polygon = polygons.filter((p) => p.id === includeId)[0];
+    const excludeP: Polygon[] = polygons.filter((p) => p.id !== includeId);
+    return new Area(id, includeP, excludeP);
   }
 
   static async insert(body: AreaBody): Promise<Area> {
