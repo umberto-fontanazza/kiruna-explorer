@@ -51,7 +51,7 @@ export interface Upload {
   id: number;
   title: string;
   type: UploadType;
-  file: { type: string; data: number[] };
+  file: string;
 }
 
 export interface UploadForm {
@@ -107,12 +107,6 @@ export const stakeholdersOptions = [
 export enum UploadType {
   OriginalResource = "original_resource",
   Attachment = "attachment",
-}
-
-export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
-  id: number | null;
-  scale: Scale | null;
-  type: DocumentType | null;
 }
 
 export enum UserRole {

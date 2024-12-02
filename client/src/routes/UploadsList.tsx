@@ -6,22 +6,33 @@ import { Upload } from "../utils/interfaces";
 const UploadsList = () => {
   const [uploads, setUploads] = useState<Upload[] | null>(null);
 
-  useEffect(() => {
-    const retrieveUploads = async () => {
-      try {
-        let res: Upload[] = [];
-        const docs = await API.getDocuments();
-        for (const doc of docs) {
-          const uploads = await API.getUploads(doc.id);
-          res = res.concat(uploads);
-        }
-        setUploads(res);
-      } catch (err) {
-        console.error("Unable to fetch uploads: " + err);
+  const retrieveUploads = async () => {
+    try {
+      let res: Upload[] = [];
+      const docs = await API.getDocuments();
+      for (const doc of docs) {
+        const uploads = await API.getUploads(doc.id);
+        res = res.concat(uploads);
       }
-    };
+      setUploads(res);
+    } catch (err) {
+      console.error("Unable to fetch uploads: " + err);
+    }
+  };
+
+  useEffect(() => {
     retrieveUploads();
   }, []);
+
+  const handleDeleteUpload = async (uploadId: number) => {
+    try {
+      await API.deleteUpload(uploadId);
+      console.log("Upload id " + uploadId + " eliminated");
+      await retrieveUploads();
+    } catch (err) {
+      console.error("Error deleting upload: " + err);
+    }
+  };
 
   return (
     <>
@@ -34,13 +45,15 @@ const UploadsList = () => {
                 <td>{upload.title}</td>
                 <td>{upload.type}</td>
                 <td>
-                  <button>View upload</button>
+                  <button>Download</button>
                 </td>
                 <td>
                   <button>Modify links</button>
                 </td>
                 <td>
-                  <button>Delete</button>
+                  <button onClick={() => handleDeleteUpload(upload.id)}>
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}

@@ -49,20 +49,28 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         "include",
       );
 
-      if (!response || !response[0].file || !response[0].file.data) {
+      if (!response || !response[0].file || !response[0].file) {
         throw new Error("File content is missing in response");
       }
 
-      let blob: Blob | null = null;
       response.forEach((upload) => {
-        blob = new Blob([new Uint8Array(upload.file.data)], {
-          type: "application/octet-stream", // Tipo MIME generico, può essere cambiato se conosci il tipo esatto
+        const binaryString = atob(upload.file);
+
+        // Converte la stringa binaria in un array di byte
+        const byteArray = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          byteArray[i] = binaryString.charCodeAt(i);
+        }
+
+        // Crea un Blob dal byte array
+        const blob = new Blob([byteArray], {
+          type: "application/octet-stream",
         });
 
         const url = window.URL.createObjectURL(blob); // temporaneous URL for the blob
         const a = document.createElement("a"); // Create invisible element <a> to start download
         a.href = url;
-        a.download = upload.title + ".dat"; // File name TODO: set extension according to file type
+        a.download = upload.title; // File name TODO: set extension according to file type
         a.click(); // Click on <a> to start download
         window.URL.revokeObjectURL(url); // Free memory
       });
