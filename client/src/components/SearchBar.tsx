@@ -65,10 +65,6 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
     setShowSuggestions(false);
   };
 
-  useEffect(() => {
-    console.log(tableLinks);
-  }, [tableLinks]);
-
   const handleAddLink = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     if (selectedDocument?.id && linkType) {
