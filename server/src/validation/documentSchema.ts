@@ -1,6 +1,7 @@
 import { z } from "zod";
-import { DocumentType, Stakeholder } from "../model/document";
+import { DocumentType } from "../model/document";
 import { ScaleType } from "../model/scale";
+import { Stakeholder } from "../model/stakeholder";
 import { areaSchema } from "./areaSchema";
 import { coordinatesSchema } from "./coordinatesSchema";
 

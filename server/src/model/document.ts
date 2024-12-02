@@ -6,6 +6,7 @@ import { Coordinates } from "../validation/coordinatesSchema";
 import { Area } from "./area";
 import { Link, LinkResponseBody, LinkType } from "./link";
 import { Scale, ScaleRow, ScaleType } from "./scale";
+import { Stakeholder } from "./stakeholder";
 
 type DocumentDbRow = {
   id: number;
@@ -20,13 +21,6 @@ type DocumentDbRow = {
   issuance_date: Date;
   links: Record<string, LinkType[]>;
 };
-
-export enum Stakeholder {
-  KirunaKommun = "kiruna_kommun",
-  Lkab = "lkab",
-  Residents = "residents",
-  WhiteArkitekter = "white_arkitekter",
-}
 
 export enum DocumentType {
   Design = "design",
@@ -80,7 +74,7 @@ export class Document {
   scale: Scale;
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
-  area?: Area;
+  private _area?: Area;
   issuanceDate?: Dayjs;
   links?: LinkResponseBody[];
 
@@ -103,7 +97,7 @@ export class Document {
     this.scale = scale;
     this.stakeholders = stakeholders;
     this.coordinates = coordinates;
-    this.area = area;
+    if (area) this.setArea(area);
     this.issuanceDate = issuanceDate;
     this.links = links;
   }
@@ -153,11 +147,20 @@ export class Document {
     );
   }
 
+  get area(): Area | undefined {
+    return this._area;
+  }
+  async setArea(area: Area): Promise<void> {
+    if (this._area) await this._area.delete();
+    this._area = area;
+  }
+
   async update(): Promise<void> {
     const sql = `UPDATE document SET 
     title = $1, description = $2, type = $3, scale_type = $4, 
     scale_ratio = $5, stakeholders = $6, coordinates = ST_Point($7, $8)::geography, 
-    issuance_date = $9 WHERE id = $10`;
+    area_id = $9,
+    issuance_date = $10 WHERE id = $11`;
     const scaleRow: ScaleRow = this.scale.intoDatabaseRow();
     const result = await Database.query(sql, [
       this.title,
@@ -168,7 +171,8 @@ export class Document {
       this.stakeholders || null,
       this.coordinates?.longitude || null, // BEWARE ORDERING: https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples-in-gis-services#:~:text=PostGIS%20expects%20lng/lat.
       this.coordinates?.latitude || null,
-      this.issuanceDate?.toDate() || null,
+      this.area?.id || null,
+      (this.issuanceDate?.isValid() && this.issuanceDate?.toDate()) || null,
       this.id,
     ]);
     if (result.rowCount != 1) throw new Error("Failed db update");

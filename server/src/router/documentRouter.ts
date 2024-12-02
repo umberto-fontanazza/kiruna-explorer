@@ -12,6 +12,7 @@ import {
 import { Area } from "../model/area";
 import { Document, DocumentType } from "../model/document";
 import { Scale, ScaleType } from "../model/scale";
+import { AreaBody } from "../validation/areaSchema";
 import {
   getQueryParameters,
   idRequestParam,
@@ -121,6 +122,7 @@ documentRouter.patch(
       scale,
       stakeholders,
       coordinates,
+      area,
       issuanceDate,
     } = request.body as PatchBody;
     let document: Document;
@@ -141,6 +143,7 @@ documentRouter.patch(
     document.scale = (parsedScale! as Scale) || document.scale;
     document.stakeholders = stakeholders || document.stakeholders;
     document.coordinates = coordinates || document.coordinates;
+    if (area) document.setArea(await Area.insert(area as AreaBody));
     document.issuanceDate = issuanceDate
       ? dayjs(issuanceDate, "YYYY-MM-DD", true)
       : document.issuanceDate;
