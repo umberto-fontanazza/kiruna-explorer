@@ -13,15 +13,14 @@ import {
   DocumentForm,
   documentFormDefaults,
   LinkType,
+  PolygonArea,
   UploadType,
 } from "../utils/interfaces";
 
 interface DocumentFormContextType {
-  coordinates: Coordinates;
   searchableDocuments: Document[];
   documentFormSelected: DocumentForm;
   isSubmit: boolean;
-  setCoordinates: Dispatch<SetStateAction<Coordinates>>;
   setSearchableDocuments: Dispatch<SetStateAction<Document[]>>;
   setDocumentFormSelected: Dispatch<SetStateAction<DocumentForm>>;
   setIsSubmit: Dispatch<SetStateAction<boolean>>;
@@ -35,10 +34,8 @@ export const DocumentFormContext = createContext<
 export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [coordinates, setCoordinates] = useState<Coordinates>({
-    latitude: -1,
-    longitude: -1,
-  });
+  const [coordinates, setCoordinates] = useState<Coordinates | null>(null);
+  const [polygonArea, setPolygonArea] = useState<PolygonArea | null>(null);
   const [searchableDocuments, setSearchableDocuments] = useState<Document[]>(
     [],
   );
@@ -66,8 +63,17 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
           console.error(err);
         }
       };
+
       await fetchUpdate();
     } else {
+      if (coordinates) {
+        newDocument = {
+          ...newDocument,
+          coordinates: coordinates as Coordinates,
+        };
+      } else {
+        newDocument = { ...newDocument, area: polygonArea as PolygonArea };
+      }
       const id = await API.addDocument(newDocument as Document);
       newDocument.links?.forEach(
         async (link: { targetDocumentId: number; linkTypes: LinkType[] }) => {
@@ -95,8 +101,6 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
   return (
     <DocumentFormContext.Provider
       value={{
-        coordinates,
-        setCoordinates,
         searchableDocuments,
         setSearchableDocuments,
         documentFormSelected,

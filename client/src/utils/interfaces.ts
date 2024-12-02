@@ -18,6 +18,7 @@ export interface Document {
   coordinates?: Coordinates;
   issuanceDate?: Dayjs;
   links?: Link[];
+  area?: PolygonArea;
 }
 
 export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
@@ -40,6 +41,16 @@ export interface Link {
 
 export interface LoginErrors {
   login?: string;
+}
+
+export interface PolygonData {
+  polygon: google.maps.Polygon;
+  coordinates: { lat: number; lng: number }[];
+}
+
+export interface PolygonArea {
+  include: Coordinates[];
+  exclude: Coordinates[][];
 }
 
 export interface Scale {

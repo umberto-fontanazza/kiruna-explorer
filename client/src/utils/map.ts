@@ -1,5 +1,5 @@
 import { Libraries } from "@react-google-maps/api";
-export const libraries: Libraries = ["marker"];
+export const libraries: Libraries = ["marker", "drawing"];
 export const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
 export const kirunaCoordinates = {
   latitude: kirunaCoords.lat,

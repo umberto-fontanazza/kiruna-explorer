@@ -4,6 +4,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/Map.scss";
+import { createArea, useDrawingTools } from "../../utils/drawingTools";
 import { Document, Link, fromDocumentTypeToIcon } from "../../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
 import { PositionMode } from "../../utils/modes";
@@ -24,12 +25,13 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     setModalOpen,
     handleEditPositionModeConfirm,
   } = useAppContext();
-  const { setCoordinates, setIsSubmit } = useDocumentFormContext();
+  const { setDocumentFormSelected, setIsSubmit } = useDocumentFormContext();
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapType, setMapType] = useState<string>("satellite");
   const [markers, setMarkers] = useState<
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
+  const [areas, setAreas] = useState<google.maps.Polygon[]>([]);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -43,7 +45,11 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     const lat = event.latLng.lat();
     const lng = event.latLng.lng();
 
-    setCoordinates({ latitude: lat, longitude: lng });
+    setDocumentFormSelected((prev) => ({
+      ...prev,
+      coordinates: { latitude: lat, longitude: lng },
+      area: undefined,
+    }));
 
     if (positionMode === PositionMode.Insert) {
       // Insert Document Position flow
@@ -135,6 +141,17 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
     clearMarkers();
 
+    const newAreas: google.maps.Polygon[] = documents
+      .filter((doc) => doc.area)
+      .map((doc) =>
+        createArea(
+          doc,
+          map,
+          () => setSidebarOpen,
+          () => setdocumentSelected,
+        ),
+      );
+
     const markerCluster = new MarkerClusterer({
       markers: newMarkers,
       map,
@@ -168,11 +185,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     });
 
     setMarkers(newMarkers);
+    setAreas(newAreas);
 
     return () => {
       markerCluster.clearMarkers();
     };
   }, [isLoaded, map, documents]);
+
+  useDrawingTools(map, positionMode, () => setdocumentSelected); // Use Drawing Tools when necessary
 
   return isLoaded ? (
     <section id="map">
