@@ -524,11 +524,6 @@ This API uses the following error codes:
 - `404 Not Found`: The requested upload was not found.
 - `500 Internal Server Error`: An unexpected error occurred on the server.
 
-# <<<<<<< Updated upstream
-
-> > > > > > > Stashed changes
-> > > > > > > Stashed changes
-
 # Collection `sessions`
 
 Handles user session management.
