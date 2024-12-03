@@ -27,7 +27,9 @@ const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
               Select document type
             </option>
             {Object.values(DocumentType).map((value) => (
-              <option value={value}>{capitalizeFirstLetter(value)}</option>
+              <option value={value}>
+                {capitalizeFirstLetter(value).replace(/_/, " ")}
+              </option>
             ))}
             <option value={""}>No filter</option>
           </select>
@@ -46,7 +48,9 @@ const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
               Select scale type
             </option>
             {Object.values(ScaleType).map((value) => (
-              <option value={value}>{capitalizeFirstLetter(value)}</option>
+              <option value={value}>
+                {capitalizeFirstLetter(value).replace(/_/, " ")}
+              </option>
             ))}
             <option value={""}>No filter</option>
           </select>
