@@ -19,7 +19,7 @@ export const useDrawingTools = (
       drawingMode: google.maps.drawing.OverlayType.POLYGON,
       drawingControl: true,
       drawingControlOptions: {
-        position: google.maps.ControlPosition.TOP_CENTER,
+        position: google.maps.ControlPosition.BOTTOM_CENTER,
         drawingModes: [google.maps.drawing.OverlayType.POLYGON],
       },
       polygonOptions: {
@@ -71,8 +71,6 @@ export const useDrawingTools = (
 export const createArea = (
   doc: Document,
   map: google.maps.Map,
-  setSidebarOpen: Dispatch<SetStateAction<boolean>>,
-  setdocumentSelected: Dispatch<SetStateAction<Document | null>>,
 ): google.maps.Polygon | null => {
   if (!doc.area) return null;
 
@@ -112,33 +110,23 @@ export const createArea = (
 
   area.setMap(map);
 
-  google.maps.event.addListener(area, "click", () => {
-    // Calcola i limiti del poligono
-    const bounds = new google.maps.LatLngBounds();
-    validIncludePaths.forEach((point) => bounds.extend(point));
-
-    validExcludePaths.forEach((exclude) => {
-      exclude.forEach((point) => bounds.extend(point));
-    });
-
-    // Centra la mappa sui limiti calcolati
-    map.fitBounds(bounds);
-
-    // Aggiungi un margine extra per migliorare la visibilità del contesto
-    const zoom = map.getZoom() ?? 0; // Ottieni lo zoom corrente
-    const newZoom = zoom - 0.2; // Riduci lo zoom per vedere più contesto
-    if (newZoom > 0) {
-      map.setZoom(newZoom); // Imposta il nuovo zoom
-    }
-
-    // Apri la sidebar e imposta il documento selezionato
-    setSidebarOpen(true);
-    setdocumentSelected(doc);
-  });
-
   return area;
 };
 
 export const clearAreas = (areas: google.maps.Polygon[]) => {
   areas.forEach((area) => area.setMap(null));
+};
+
+export const getPolygonCenter = (
+  polygonArea: PolygonArea,
+): { lat: number; lng: number } | null => {
+  if (!polygonArea.include || polygonArea.include.length === 0) return null;
+
+  const bounds = new google.maps.LatLngBounds();
+  polygonArea.include.forEach((coord) =>
+    bounds.extend({ lat: coord.latitude, lng: coord.longitude }),
+  );
+
+  const center = bounds.getCenter();
+  return { lat: center.lat(), lng: center.lng() };
 };

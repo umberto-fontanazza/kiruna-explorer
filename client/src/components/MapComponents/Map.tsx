@@ -5,8 +5,8 @@ import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/Map.scss";
 import {
-  clearAreas,
   createArea,
+  getPolygonCenter,
   useDrawingTools,
 } from "../../utils/drawingTools";
 import { Document, Link, fromDocumentTypeToIcon } from "../../utils/interfaces";
@@ -35,7 +35,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [markers, setMarkers] = useState<
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
-  const [areas, setAreas] = useState<google.maps.Polygon[]>([]);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -90,14 +89,38 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     markerDivChild.className = `document-icon ${linked ? "linked" : ""}`;
     markerDivChild.innerHTML = `<span class="material-symbols-outlined color-${iconName} size">${iconName}</span>`;
 
+    const position = doc.area
+      ? (getPolygonCenter(doc.area) ?? {
+          lat: doc.coordinates?.latitude ?? 0,
+          lng: doc.coordinates?.longitude ?? 0,
+        })
+      : {
+          lat: doc.coordinates?.latitude ?? 0,
+          lng: doc.coordinates?.longitude ?? 0,
+        };
+
     const marker = new google.maps.marker.AdvancedMarkerElement({
       map,
-      position: {
-        lat: doc.coordinates?.latitude ?? 0,
-        lng: doc.coordinates?.longitude ?? 0,
-      },
+      position: position,
       content: markerDivChild,
       title: doc.title,
+    });
+
+    let hoverArea: google.maps.Polygon | null = null;
+
+    // Event listener per il mouseover
+    marker.addListener("mouseover", () => {
+      if (doc.area && map) {
+        hoverArea = createArea(doc, map);
+      }
+    });
+
+    // Event listener per il mouseout
+    marker.addListener("mouseout", () => {
+      if (hoverArea) {
+        hoverArea.setMap(null);
+        hoverArea = null;
+      }
     });
 
     marker.addListener("click", () => {
@@ -131,7 +154,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   useEffect(() => {
     if (!isLoaded || !map || positionMode !== PositionMode.None) {
       clearMarkers();
-      clearAreas(areas);
       return;
     }
 
@@ -143,13 +165,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       );
 
     clearMarkers();
-
-    const newAreas: google.maps.Polygon[] = documents
-      .filter((doc) => doc.area)
-      .map((doc) => createArea(doc, map, setSidebarOpen, setdocumentSelected))
-      .filter((area): area is google.maps.Polygon => area !== null);
-
-    clearAreas(areas);
 
     const markerCluster = new MarkerClusterer({
       markers: newMarkers,
@@ -184,7 +199,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     });
 
     setMarkers(newMarkers);
-    setAreas(newAreas);
 
     if (visualLinks && newMarkers.length > 0) {
       const bounds = new google.maps.LatLngBounds();
