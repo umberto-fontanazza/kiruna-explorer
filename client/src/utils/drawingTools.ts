@@ -121,14 +121,42 @@ export const clearAreas = (areas: google.maps.Polygon[]) => {
   areas.forEach((area) => area.setMap(null));
 };
 
-export const getPolygonCenter = (
-  polygonArea: PolygonArea,
-): { lat: number; lng: number } => {
-  const bounds = new google.maps.LatLngBounds();
-  polygonArea.include.forEach((coord) =>
-    bounds.extend({ lat: coord.latitude, lng: coord.longitude }),
-  );
+export const getPolygonCentroid = (polygonArea: {
+  include: { latitude: number; longitude: number }[];
+}): { lat: number; lng: number } => {
+  const coordinates = polygonArea.include;
 
-  const center = bounds.getCenter();
-  return { lat: center.lat(), lng: center.lng() };
+  if (coordinates.length < 3) {
+    throw new Error("A polygon must have at least three vertices.");
+  }
+
+  let area = 0;
+  let centroidX = 0;
+  let centroidY = 0;
+
+  const n = coordinates.length;
+
+  for (let i = 0; i < n; i++) {
+    const x1 = coordinates[i].longitude;
+    const y1 = coordinates[i].latitude;
+    const x2 = coordinates[(i + 1) % n].longitude;
+    const y2 = coordinates[(i + 1) % n].latitude;
+
+    const crossProduct = x1 * y2 - x2 * y1;
+
+    area += crossProduct;
+    centroidX += (x1 + x2) * crossProduct;
+    centroidY += (y1 + y2) * crossProduct;
+  }
+
+  area *= 0.5;
+
+  if (area === 0) {
+    throw new Error("The polygon has zero area and is likely degenerate.");
+  }
+
+  centroidX /= 6 * area;
+  centroidY /= 6 * area;
+
+  return { lat: centroidY, lng: centroidX };
 };

@@ -6,7 +6,7 @@ import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/Map.scss";
 import {
   createArea,
-  getPolygonCenter,
+  getPolygonCentroid,
   useDrawingTools,
 } from "../../utils/drawingTools";
 import {
@@ -101,7 +101,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     markerDivChild.innerHTML = `<span class="material-symbols-outlined color-${iconName} size">${iconName}</span>`;
 
     const position = doc.area
-      ? (getPolygonCenter(doc.area) ?? {
+      ? (getPolygonCentroid(doc.area) ?? {
           lat: doc.coordinates?.latitude ?? 0,
           lng: doc.coordinates?.longitude ?? 0,
         })
@@ -145,7 +145,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             lng: doc.coordinates.longitude,
           }
         : doc.area
-          ? (getPolygonCenter(doc.area) ?? kirunaCoords)
+          ? (getPolygonCentroid(doc.area) ?? kirunaCoords)
           : kirunaCoords;
       if ((map?.getZoom() ?? 0) < 12) map?.setZoom(12);
       map?.setCenter(newCenter);
