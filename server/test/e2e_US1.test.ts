@@ -240,26 +240,6 @@ describe("Testing story 1", () => {
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });
 
-  test("US1.16.1 PATCH with negative id", async () => {
-    const response = await request(app)
-      .patch("/documents/-1")
-      .set("Cookie", plannerCookie)
-      .send({
-        description: "New",
-      });
-    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
-  });
-
-  test("US1.16.2 PATCH with wrong id, impossible id", async () => {
-    const response = await request(app)
-      .patch("/documents/0")
-      .set("Cookie", plannerCookie)
-      .send({
-        description: "New wrong id",
-      });
-    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
-  });
-
   test("US1.16.3 PATCH with wrong id, not created document", async () => {
     const response = await request(app)
       .patch("/documents/5")

@@ -42,158 +42,152 @@ describe("Testing story 6", () => {
     testDocId6 = response.body.id;
   });
 
-  describe("Urban Planner story 6", () => {
-    afterAll(async () => {
-      await request(app).delete("/current/");
-    });
+  test("US 6.1 GET all documents as Urban Planner", async () => {
+    const response = await request(app)
+      .get("/documents/")
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.OK);
+    expect(response.body).toBeInstanceOf(Array);
+  });
 
-    test("US 6.1 GET all documents as Urban Planner", async () => {
-      const response = await request(app)
-        .get("/documents/")
-        .set("Cookie", plannerCookie);
-      expect(response.status).toStrictEqual(StatusCodes.OK);
-      expect(response.body).toBeInstanceOf(Array);
-    });
+  test("US 6.2 GET /documents filtered by type as Urban Planner", async () => {
+    const response = await request(app)
+      .get("/documents/")
+      .query({ type: DocumentType.Informative })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.OK);
+    expect(Array.isArray(response.body)).toBe(true);
+  });
 
-    test("US 6.2 GET /documents filtered by type as Urban Planner", async () => {
-      const response = await request(app)
-        .get("/documents/")
-        .query({ type: DocumentType.Informative })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toStrictEqual(StatusCodes.OK);
-      expect(Array.isArray(response.body)).toBe(true);
-    });
+  test("US 6.3 GET /documents with scaleType filter", async () => {
+    const response = await request(app)
+      .get("/documents")
+      .query({ scaleType: ScaleType.BlueprintsOrEffect })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toBe(StatusCodes.OK);
+    expect(Array.isArray(response.body)).toBe(true);
+  });
 
-    test("US 6.3 GET /documents with scaleType filter", async () => {
-      const response = await request(app)
-        .get("/documents")
-        .query({ scaleType: ScaleType.BlueprintsOrEffect })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toBe(StatusCodes.OK);
-      expect(Array.isArray(response.body)).toBe(true);
-    });
+  test("US 6.4 GET /documents with issuanceDate filter", async () => {
+    const response = await request(app)
+      .get("/documents")
+      .query({ maxIssuanceDate: "2023-12-31", minIssuanceDate: "2023-01-01" })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toBe(StatusCodes.OK);
+    expect(Array.isArray(response.body)).toBe(true);
+  });
 
-    test("US 6.4 GET /documents with issuanceDate filter", async () => {
-      const response = await request(app)
-        .get("/documents")
-        .query({ maxIssuanceDate: "2023-12-31", minIssuanceDate: "2023-01-01" })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toBe(StatusCodes.OK);
-      expect(Array.isArray(response.body)).toBe(true);
-    });
+  test("US 6.5 GET /documents with maxIssuanceDate filter", async () => {
+    const response = await request(app)
+      .get("/documents")
+      .query({ maxIssuanceDate: "2023-12-31" })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toBe(StatusCodes.OK);
+    expect(Array.isArray(response.body)).toBe(true);
+  });
 
-    test("US 6.5 GET /documents with maxIssuanceDate filter", async () => {
-      const response = await request(app)
-        .get("/documents")
-        .query({ maxIssuanceDate: "2023-12-31" })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toBe(StatusCodes.OK);
-      expect(Array.isArray(response.body)).toBe(true);
-    });
+  test("US 6.6 GET /documents with minIssuanceDate filter", async () => {
+    const response = await request(app)
+      .get("/documents")
+      .query({ minIssuanceDate: "2023-01-01" })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toBe(StatusCodes.OK);
+    expect(Array.isArray(response.body)).toBe(true);
+  });
 
-    test("US 6.6 GET /documents with minIssuanceDate filter", async () => {
-      const response = await request(app)
-        .get("/documents")
-        .query({ minIssuanceDate: "2023-01-01" })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toBe(StatusCodes.OK);
-      expect(Array.isArray(response.body)).toBe(true);
-    });
+  test("US 6.7 GET /documents with Type and issuanceDate filters", async () => {
+    const response = await request(app)
+      .get("/documents")
+      .query({
+        type: DocumentType.Informative,
+        maxIssuanceDate: "2023-12-31",
+        minIssuanceDate: "2023-01-01",
+      })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toBe(StatusCodes.OK);
+    expect(Array.isArray(response.body)).toBe(true);
+  });
 
-    test("US 6.7 GET /documents with Type and issuanceDate filters", async () => {
-      const response = await request(app)
-        .get("/documents")
-        .query({
-          type: DocumentType.Informative,
-          maxIssuanceDate: "2023-12-31",
-          minIssuanceDate: "2023-01-01",
-        })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toBe(StatusCodes.OK);
-      expect(Array.isArray(response.body)).toBe(true);
-    });
+  test("US 6.7 GET /documents with Type and scaleType filters", async () => {
+    const response = await request(app)
+      .get("/documents")
+      .query({
+        type: DocumentType.Informative,
+        scaleType: ScaleType.BlueprintsOrEffect,
+      })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toBe(StatusCodes.OK);
+    expect(Array.isArray(response.body)).toBe(true);
+  });
 
-    test("US 6.7 GET /documents with Type and scaleType filters", async () => {
-      const response = await request(app)
-        .get("/documents")
-        .query({
-          type: DocumentType.Informative,
-          scaleType: ScaleType.BlueprintsOrEffect,
-        })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toBe(StatusCodes.OK);
-      expect(Array.isArray(response.body)).toBe(true);
-    });
+  test("6.8 GET /documents with multiple filters", async () => {
+    const response = await request(app)
+      .get("/documents")
+      .query({
+        type: DocumentType.Informative,
+        scaleType: ScaleType.BlueprintsOrEffect,
+        maxIssuanceDate: "2023-12-31",
+        minIssuanceDate: "2023-01-01",
+      })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toBe(StatusCodes.OK);
+    expect(Array.isArray(response.body)).toBe(true);
+  });
 
-    test("6.8 GET /documents with multiple filters", async () => {
-      const response = await request(app)
-        .get("/documents")
-        .query({
-          type: DocumentType.Informative,
-          scaleType: ScaleType.BlueprintsOrEffect,
-          maxIssuanceDate: "2023-12-31",
-          minIssuanceDate: "2023-01-01",
-        })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toBe(StatusCodes.OK);
-      expect(Array.isArray(response.body)).toBe(true);
-    });
+  test("US 6.9 GET with wrong type as Urban Planner", async () => {
+    const response = await request(app)
+      .get("/documents/")
+      .query({ type: "Wrong" })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
 
-    test("US 6.9 GET with wrong type as Urban Planner", async () => {
-      const response = await request(app)
-        .get("/documents/")
-        .query({ type: "Wrong" })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
-    });
+  test("US 6.10 GET with wrong scaleType as Urban Planner", async () => {
+    const response = await request(app)
+      .get("/documents/")
+      .query({ scaleType: "Wrong" })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
 
-    test("US 6.10 GET with wrong scaleType as Urban Planner", async () => {
-      const response = await request(app)
-        .get("/documents/")
-        .query({ scaleType: "Wrong" })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
-    });
+  test("US 6.11 GET with wrong issuanceDate as Urban Planner", async () => {
+    const response = await request(app)
+      .get("/documents/")
+      .query({ maxIssuanceDate: "Wrong" })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
 
-    test("US 6.11 GET with wrong issuanceDate as Urban Planner", async () => {
-      const response = await request(app)
-        .get("/documents/")
-        .query({ maxIssuanceDate: "Wrong" })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
-    });
+  test("US 6.12 GET with wrong issuanceDate as Urban Planner", async () => {
+    const response = await request(app)
+      .get("/documents/")
+      .query({ minIssuanceDate: "Wrong" })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
 
-    test("US 6.12 GET with wrong issuanceDate as Urban Planner", async () => {
-      const response = await request(app)
-        .get("/documents/")
-        .query({ minIssuanceDate: "Wrong" })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
-    });
+  test("US 6.13 GET with wrong type and scaleType as Urban Planner", async () => {
+    const response = await request(app)
+      .get("/documents/")
+      .query({ type: "Wrong", scaleType: "Wrong" })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
 
-    test("US 6.13 GET with wrong type and scaleType as Urban Planner", async () => {
-      const response = await request(app)
-        .get("/documents/")
-        .query({ type: "Wrong", scaleType: "Wrong" })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
-    });
+  test("US 6.14 GET with wrong type and issuanceDate as Urban Planner", async () => {
+    const response = await request(app)
+      .get("/documents/")
+      .query({ type: "Wrong", maxIssuanceDate: "Wrong" })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
 
-    test("US 6.14 GET with wrong type and issuanceDate as Urban Planner", async () => {
-      const response = await request(app)
-        .get("/documents/")
-        .query({ type: "Wrong", maxIssuanceDate: "Wrong" })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
-    });
-
-    test("US 6.15 GET an empty list of documents as Urban Planner", async () => {
-      const response = await request(app)
-        .get("/documents/")
-        .query({ type: DocumentType.Design })
-        .set("Cookie", plannerCookie);
-      expect(response.status).toStrictEqual(StatusCodes.OK);
-    });
+  test("US 6.15 GET an empty list of documents as Urban Planner", async () => {
+    const response = await request(app)
+      .get("/documents/")
+      .query({ type: DocumentType.Design })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.OK);
   });
 
   test("DELETE with coordinates success", async () => {
