@@ -51,7 +51,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     libraries: libraries,
   });
 
-  //
   useEffect(() => {
     if (positionMode === PositionMode.None && polygonArea) {
       polygonArea?.setMap(null);
@@ -310,7 +309,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       )}
       <GoogleMap
         id="google-map"
-        zoom={10}
+        zoom={11}
         options={{
           ...mapOptions,
           mapTypeId: mapType,

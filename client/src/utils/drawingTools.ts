@@ -24,9 +24,9 @@ export const useDrawingTools = (
       polygonOptions: {
         fillColor: "#00FF00",
         fillOpacity: 0.5,
-        strokeWeight: 2,
-        clickable: true,
+        strokeWeight: 4,
         editable: true,
+        strokeColor: "#fecb00",
         zIndex: 1,
       },
     });

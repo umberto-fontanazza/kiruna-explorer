@@ -18,7 +18,7 @@ export const mapOptions = {
   mapTypeControlOptions: {
     mapTypeIds: ["satellite", "roadmap", "hybrid", "terrain"],
   },
-  minZoom: 11,
+  minZoom: 10,
   maxZoom: 20,
   fullscreenControl: false,
   restriction: {

@@ -14,6 +14,7 @@ import LoginForm from "./routes/LoginForm";
 import UploadsList from "./routes/UploadsList";
 import "./styles/App.scss";
 import { User } from "./utils/interfaces";
+import { parsingKirunaMunicipality } from "./utils/municipal_area_mapping";
 
 const App: FC = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -22,6 +23,7 @@ const App: FC = () => {
   useEffect(() => {
     (async () => {
       try {
+        parsingKirunaMunicipality();
         const user = await API.getUser();
         setUser(user);
       } catch (error: unknown) {
