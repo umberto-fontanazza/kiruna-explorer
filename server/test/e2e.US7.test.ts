@@ -21,7 +21,7 @@ afterAll(async () => {
 });
 
 describe("Testing story 7", () => {
-  const testDocAllFields = {
+  const testUS7 = {
     title: "Story 6 test",
     description: "This one will be tested for story 6",
     type: DocumentType.Informative,
@@ -30,7 +30,7 @@ describe("Testing story 7", () => {
     issuanceDate: "2021-12-12",
     coordinates: { latitude: 45, longitude: 30 },
   };
-  let testDocId: number;
+  let testDocId7: number;
   const testDoc2 = {
     title: "Story 7 test",
     description: "This one will be tested for story 7",
@@ -53,11 +53,11 @@ describe("Testing story 7", () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send(testDocAllFields);
+      .send(testUS7);
     expect(response.status).toBe(StatusCodes.CREATED);
     expect(response.body).toHaveProperty("id");
     expect(typeof response.body.id).toBe("number");
-    testDocId = response.body.id;
+    testDocId7 = response.body.id;
   });
 
   test("POST /documents with valid body", async () => {
@@ -77,7 +77,7 @@ describe("Testing story 7", () => {
       .set("Cookie", plannerCookie)
       .send({
         ...testResource,
-        documentIds: [testDocId],
+        documentIds: [testDocId7],
       });
     expect(response.status).toBe(StatusCodes.CREATED);
     expect(response.body).toHaveProperty("id");
@@ -90,7 +90,7 @@ describe("Testing story 7", () => {
       .post("/uploads/")
       .send({
         ...testResource,
-        documentIds: [testDocId],
+        documentIds: [testDocId7],
       });
     expect(response.status).toBe(StatusCodes.UNAUTHORIZED);
   });
@@ -113,7 +113,7 @@ describe("Testing story 7", () => {
       .send({
         title: "Test Upload",
         type: UploadType.attachment,
-        documentIds: [testDocId],
+        documentIds: [testDocId7],
         file: 1,
       });
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
@@ -126,7 +126,7 @@ describe("Testing story 7", () => {
       .send({
         title: "Test Upload",
         type: "invalid",
-        documentIds: [testDocId],
+        documentIds: [testDocId7],
         file: Buffer.from("test file content").toString("base64"),
       });
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
@@ -138,7 +138,7 @@ describe("Testing story 7", () => {
       .set("Cookie", plannerCookie)
       .send({
         type: UploadType.attachment,
-        documentIds: [testDocId],
+        documentIds: [testDocId7],
         file: Buffer.from("test file content").toString("base64"),
       });
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
@@ -280,7 +280,7 @@ describe("Testing story 7", () => {
 
   test("US1.19 DELETE an existing document", async () => {
     const response = await request(app)
-      .del(`/documents/${testDocId}`)
+      .del(`/documents/${testDocId7}`)
       .set("Cookie", plannerCookie);
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
 
