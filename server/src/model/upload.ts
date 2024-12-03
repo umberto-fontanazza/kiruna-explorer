@@ -39,9 +39,8 @@ export class Upload {
     title: string,
     type: UploadType,
     file: Buffer,
-    bindedDocumentIds: number[],
+    bindedDocumentIds: number[] = [],
   ): Promise<Upload> {
-    assert(bindedDocumentIds.length >= 1);
     const uploadId = await Database.withTransaction(async (client) => {
       const result = await client.query(
         "INSERT INTO upload(title, type, file) VALUES($1, $2, $3) RETURNING id;",
@@ -58,14 +57,16 @@ export class Upload {
   }
 
   static async fromDocumentAll(
-    documentId: number,
+    documentId?: number,
     includeFile: boolean = false,
   ): Promise<Upload[]> {
-    const sql = `SELECT u.id, u.title, u.type${includeFile ? ", file" : ""} 
-      FROM document d 
-      JOIN upload u ON u.id = ANY(d.upload_ids) 
-      WHERE d.id = $1`;
-    const result = await Database.query(sql, [documentId]);
+    const joinSql = `JOIN document d ON u.id = ANY(d.upload_ids) 
+      ${documentId ? "WHERE d.id = $1" : ""}`;
+    const sql = `SELECT u.id, u.title, 
+      u.type${includeFile ? ", file" : ""} 
+      FROM upload u ${documentId ? joinSql : ""}`;
+    const args = documentId ? [documentId] : [];
+    const result = await Database.query(sql, args);
     return result.rows.map(
       ({ id, title, type, file }) => new Upload(id, title, type, file),
     );
@@ -126,5 +127,9 @@ export class Upload {
     });
   }
 
-  toResponseBody = () => ({ ...this, file: this.file?.toString("base64") });
+  toResponseBody = (omitId = false) => ({
+    ...this,
+    id: omitId ? undefined : this.id,
+    file: this.file?.toString("base64"),
+  });
 }

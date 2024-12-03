@@ -15,7 +15,6 @@ interface AppContextType {
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setPositionMode: React.Dispatch<React.SetStateAction<PositionMode>>;
   setVisualLinks: React.Dispatch<React.SetStateAction<boolean>>;
-  handleEditButton: () => void;
   handleCancelPopup: () => void;
   handleEditPositionModeConfirm: (
     docSelected: Document,
@@ -39,11 +38,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     PositionMode.None,
   );
   const [visualLinks, setVisualLinks] = useState<boolean>(false);
-
-  const handleEditButton = () => {
-    setEditDocumentMode(true);
-    setModalOpen(true);
-  };
 
   const handleCancelPopup = () => {
     setIsPopupOpen(false);
@@ -84,7 +78,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setPositionMode,
         setVisualLinks,
         //Functions
-        handleEditButton,
         handleCancelPopup,
         handleEditPositionModeConfirm,
       }}

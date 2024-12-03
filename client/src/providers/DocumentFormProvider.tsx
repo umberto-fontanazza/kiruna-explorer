@@ -11,19 +11,26 @@ import {
   Coordinates,
   Document,
   DocumentForm,
+  documentFormDefaults,
+  Link,
   LinkType,
+  UploadType,
 } from "../utils/interfaces";
 
 interface DocumentFormContextType {
   coordinates: Coordinates;
   searchableDocuments: Document[];
-  documentFormSelected: Document | null;
+  documentFormSelected: DocumentForm;
   isSubmit: boolean;
   setCoordinates: Dispatch<SetStateAction<Coordinates>>;
   setSearchableDocuments: Dispatch<SetStateAction<Document[]>>;
-  setDocumentFormSelected: Dispatch<SetStateAction<Document | null>>;
+  setDocumentFormSelected: Dispatch<SetStateAction<DocumentForm>>;
   setIsSubmit: Dispatch<SetStateAction<boolean>>;
-  handleAddNewDocument: (newDocument: DocumentForm) => void;
+  handleAddNewDocument: (newDocument: DocumentForm, file: string) => void;
+  handleUpdateDocument: (
+    document: DocumentForm,
+    oldDocumentLinks: Link[] | undefined,
+  ) => void;
 }
 
 export const DocumentFormContext = createContext<
@@ -41,28 +48,15 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
     [],
   );
   const [documentFormSelected, setDocumentFormSelected] =
-    useState<Document | null>(null);
+    useState<DocumentForm>(documentFormDefaults);
 
   const [isSubmit, setIsSubmit] = useState<boolean>(false);
 
-  const handleAddNewDocument = async (newDocument: DocumentForm) => {
-    if (newDocument.id) {
-      const fetchUpdate = async () => {
-        try {
-          await API.updateDocument(newDocument as Document);
-          newDocument.links?.map(async (link: any) => {
-            await API.putLink(
-              newDocument.id!,
-              link.targetDocumentId,
-              link.linkTypes,
-            );
-          });
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      await fetchUpdate();
-    } else {
+  const handleAddNewDocument = async (
+    newDocument: DocumentForm,
+    file?: string,
+  ) => {
+    if (!newDocument.id) {
       const id = await API.addDocument(newDocument as Document);
       newDocument.links?.forEach(
         async (link: { targetDocumentId: number; linkTypes: LinkType[] }) => {
@@ -74,10 +68,59 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
           });
         },
       );
+      if (file) {
+        await API.addUpload(
+          "Original resource upload test",
+          UploadType.OriginalResource,
+          file,
+          [id],
+        );
+      }
     }
+
     setIsSubmit(true);
-    setDocumentFormSelected(null);
+    setDocumentFormSelected(documentFormDefaults);
   };
+
+  const handleUpdateDocument = async (
+    document: DocumentForm,
+    oldDocumentLinks: Link[] | undefined,
+  ) => {
+    if (document.id) {
+      try {
+        await API.updateDocument(document as Document);
+
+        if (document.links) {
+          for (const link of document.links) {
+            await API.putLink(
+              document.id!,
+              link.targetDocumentId,
+              link.linkTypes,
+            );
+          }
+        }
+
+        if (oldDocumentLinks) {
+          const newTargetIds =
+            document.links?.map((link) => link.targetDocumentId) || [];
+
+          const linksToDelete = oldDocumentLinks.filter(
+            (oldLink) => !newTargetIds.includes(oldLink.targetDocumentId),
+          );
+
+          for (const link of linksToDelete) {
+            await API.deleteLink(document.id!, link.targetDocumentId);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    setIsSubmit(true);
+    setDocumentFormSelected(documentFormDefaults);
+  };
+
   return (
     <DocumentFormContext.Provider
       value={{
@@ -91,6 +134,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
         setIsSubmit,
         //Functions
         handleAddNewDocument,
+        handleUpdateDocument,
       }}
     >
       {children}

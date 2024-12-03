@@ -63,7 +63,7 @@ const buildSqlWhere = (
       },
       [[], []],
     );
-  return [`WHERE ${sqlWithWildcards.join(", ")}`, args];
+  return [`WHERE ${sqlWithWildcards.join(" AND ")}`, args];
 };
 
 export class Document {
@@ -277,6 +277,8 @@ export class Document {
       ...this,
       area: this.area?.toResponseBody(),
       issuanceDate: this.issuanceDate?.format("YYYY-MM-DD") || undefined,
+      stakeholders:
+        this.stakeholders?.length === 0 ? undefined : this.stakeholders,
     };
   }
 }

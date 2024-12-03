@@ -22,6 +22,11 @@
     width: 100%;
     height: 92vh;
     position: relative;
+    transition: width 0.3s linear;
+
+    &.with-sidebar {
+      width: 70%;
+    }
 
     .button-overlay {
       position: absolute;
@@ -54,10 +59,10 @@
           justify-content: center;
           align-items: center;
           gap: 1rem;
+          padding: 0 1rem;
 
           .material-symbols-outlined {
-            margin-left: 1rem;
-            transform: scale(1.3);
+            transform: scale(1.5);
           }
 
           h4 {

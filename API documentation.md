@@ -6,9 +6,9 @@
 2. Collections  
    2.1. [Collection `documents`](#collection-documents)  
    2.2. [Collection `links`](#collection-links)  
-   2.3. [Collection `sessions`](#collection-sessions)  
-   2.4. [Collection `users`](#collection-users)  
-   2.5. [Collection `uploads`](#collection-uploads)
+   2.3. [Collection `uploads`](#collection-uploads)  
+   2.4. [Collection `sessions`](#collection-sessions)  
+   2.5. [Collection `users`](#collection-users)
 
 <br/>
 
@@ -358,6 +358,172 @@ This API uses the following error codes:
 
 <br/>
 
+# Collection `uploads`
+
+### Supported requests
+
+- [GET `/uploads`](#get-uploads)
+- [GET `/uploads/{id}`](#get-uploadsid)
+- [POST `/uploads`](#post-uploads)
+- [PATCH `/uploads/{id}`](#patch-uploadsid)
+- [DELETE `/uploads/{id}`](#delete-uploadsid)
+
+## GET `/uploads`
+
+### Query parameters
+
+- `documentId`: **mandatory** when file=include. Returns uploads related to this document only.
+- `file`: defaults to `omit` to return uploads metadata only or `include` to return metadata along with the file.
+
+### Response body
+
+```json
+[
+  {
+    "id": 2,
+    "title": "Document 12 pdf",
+    "type": "original_resource"
+  },
+  {
+    "id": 10,
+    "title": "Signed document",
+    "type": "original_resource"
+  },
+  {
+    "id": 11,
+    "title": "Meeting document",
+    "type": "original_resource"
+  }
+]
+```
+
+## GET `/uploads/{id}`
+
+Retrieve an upload file from its identifier. The file is encoded in base64 as value of the "file" field in the JSON response.
+
+### Query parameters
+
+- `bindedDocumentIds`: defaults to `omit` but can bet set to `include` to return also an array with the ids of the documents binded to the upload
+
+### Response body
+
+```json
+{
+  "id": 3,
+  "title": "Kiruna relocation act",
+  "type": "original_resource",
+  "file": "45j24dffF526x345",
+  "bindedDocumentIds": [12, 13]
+}
+```
+
+### Success status
+
+- `200 Ok`
+
+### Errors
+
+This API can return the following error codes:
+
+- `404 Not Found`: The requested upload was not found.
+- `500 Internal Server Error`: An unexpected error occurred on the server.
+
+## POST `/uploads`
+
+Upload a new file to the server, binding it to one or more documents
+
+### Request body parameters
+
+| **Parameter** | **Description**                                                                     | **Type**                            | **Required** |
+| ------------- | ----------------------------------------------------------------------------------- | ----------------------------------- | ------------ |
+| `title`       | The title of the upload                                                             | `string`                            | Yes          |
+| `type`        | Type of the upload                                                                  | `original_resource` or `attachment` | Yes          |
+| `documentIds` | Ids of the documents related to the attachment. If present it's length must be >= 1 | `number[]`                          | No           |
+| `file`        | Actual file encoded in base64                                                       | `string`                            | Yes          |
+
+### Request body
+
+```json
+{
+  "title": "Kiruna relocation act",
+  "type": "original_resource",
+  "file": "45j24dffF526x345",
+  "documentIds": [1, 3, 5]
+}
+```
+
+### Response body
+
+```json
+{
+  "id": 1
+}
+```
+
+### Success status
+
+- `201 Created`
+
+### Errors
+
+This API uses the following error codes:
+
+- `400 Bad Request`: The request was malformed or missing required parameters.
+- `401 Unauthorized`: You are unauthorized.
+- `500 Internal Server Error`: An unexpected error occurred on the server.
+
+## PATCH `/uploads/{id}`
+
+Edit upload metadata and/or binding to documents. All request body parameters are optional.
+//TODO: n:n, 1:n, or what for both original resources and attachments
+
+### Request body parameters
+
+| **Parameter**         | **Description**                                               | **Type**                    |
+| --------------------- | ------------------------------------------------------------- | --------------------------- |
+| `title`               | The title of the upload                                       | `string`                    |
+| `bindDocumentIds`     | Ids of documents to bind to the upload (must be decoupled)    | `number[]` with length >= 1 |
+| `decoupleDocumentIds` | Ids of documents to decouple from the upload (must be binded) | `number[]` with length >= 1 |
+
+### Request body
+
+```json
+{
+  "title": "Kiruna relocation act",
+  "bindDocumentIds": [7, 13],
+  "decoupleDocumentIds": [3, 5]
+}
+```
+
+### Success status
+
+- `201 Created`
+
+### Errors
+
+This API uses the following error codes:
+
+- `400 Bad Request`: The request was malformed or missing required parameters.
+- `401 Unauthorized`: You are unauthorized.
+- `404 Not Found`: The requested upload was not found.
+- `500 Internal Server Error`: An unexpected error occurred on the server.
+
+## DELETE `/uploads/{id}`
+
+Delete an existing upload by its unique identifier after decoupling it from all binded documents.
+
+### Success status
+
+- `204 No content`
+
+### Errors
+
+This API uses the following error codes:
+
+- `401 Unauthorized`: You are unauthorized.
+- `404 Not Found`: The requested upload was not found.
+- `500 Internal Server Error`: An unexpected error occurred on the server.
+
 # Collection `sessions`
 
 Handles user session management.
@@ -487,146 +653,4 @@ Register a new user.
 
 - `400 Bad Request`: The request was malformed or missing required parameters.
 - `409 Conflict`: User already existing.
-- `500 Internal Server Error`: An unexpected error occurred on the server.
-
-# Collection `uploads`
-
-### Supported requests
-
-- [GET `/uploads`](#get-uploads)
-- [GET `/uploads/{id}`](#get-uploadsid)
-- [POST `/uploads`](#post-uploads)
-- [PATCH `/uploads/{id}`](#patch-uploadsid)
-- [DELETE `/uploads/{id}`](#delete-uploadsid)
-
-## GET `/uploads`
-
-### Query parameters
-
-- `documentId`: **mandatory**. Returns uploads related to this document only.
-- `file`: defaults to `omit` to return uploads metadata only or `include` to return metadata along with the file.
-
-## GET `/uploads/{id}`
-
-Retrieve an upload file from its identifier. The file is encoded in base64 as value of the "file" field in the JSON response.
-
-### Query parameters
-
-- `bindedDocumentIds`: defaults to `omit` but can bet set to `include` to return also an array with the ids of the documents binded to the upload
-
-### Response body
-
-```json
-{
-  "title": "Kiruna relocation act",
-  "type": "original_resource",
-  "file": "45j24dffF526x345"
-}
-```
-
-### Success status
-
-- `200 Ok`
-
-### Errors
-
-This API can return the following error codes:
-
-- `404 Not Found`: The requested upload was not found.
-- `500 Internal Server Error`: An unexpected error occurred on the server.
-
-## POST `/uploads`
-
-Upload a new file to the server, binding it to one or more documents
-
-### Request body parameters
-
-| **Parameter** | **Description**                                | **Type**                            | **Required** |
-| ------------- | ---------------------------------------------- | ----------------------------------- | ------------ |
-| `title`       | The title of the upload                        | `string`                            | Yes          |
-| `type`        | Type of the upload                             | `original_resource` or `attachment` | Yes          |
-| `documentIds` | Ids of the documents related to the attachment | `number[]` with length >= 1         | Yes          |
-| `file`        | Actual file encoded in base64                  | `string`                            | Yes          |
-
-### Request body
-
-```json
-{
-  "title": "Kiruna relocation act",
-  "type": "original_resource",
-  "file": "45j24dffF526x345",
-  "documentIds": [1, 3, 5]
-}
-```
-
-### Response body
-
-```json
-{
-  "id": 1
-}
-```
-
-### Success status
-
-- `201 Created`
-
-### Errors
-
-This API uses the following error codes:
-
-- `400 Bad Request`: The request was malformed or missing required parameters.
-- `401 Unauthorized`: You are unauthorized.
-- `500 Internal Server Error`: An unexpected error occurred on the server.
-
-## PATCH `/uploads/{id}`
-
-Edit upload metadata and/or binding to documents. All request body parameters are optional.
-//TODO: n:n, 1:n, or what for both original resources and attachments
-
-### Request body parameters
-
-| **Parameter**         | **Description**                                               | **Type**                    |
-| --------------------- | ------------------------------------------------------------- | --------------------------- |
-| `title`               | The title of the upload                                       | `string`                    |
-| `bindDocumentIds`     | Ids of documents to bind to the upload (must be decoupled)    | `number[]` with length >= 1 |
-| `decoupleDocumentIds` | Ids of documents to decouple from the upload (must be binded) | `number[]` with length >= 1 |
-
-### Request body
-
-```json
-{
-  "title": "Kiruna relocation act",
-  "bindDocumentIds": [7, 13],
-  "decoupleDocumentIds": [3, 5]
-}
-```
-
-### Success status
-
-- `201 Created`
-
-### Errors
-
-This API uses the following error codes:
-
-- `400 Bad Request`: The request was malformed or missing required parameters.
-- `401 Unauthorized`: You are unauthorized.
-- `404 Not Found`: The requested upload was not found.
-- `500 Internal Server Error`: An unexpected error occurred on the server.
-
-## DELETE `/uploads/{id}`
-
-Delete an existing upload by its unique identifier after decoupling it from all binded documents.
-
-### Success status
-
-- `204 No content`
-
-### Errors
-
-This API uses the following error codes:
-
-- `401 Unauthorized`: You are unauthorized.
-- `404 Not Found`: The requested upload was not found.
 - `500 Internal Server Error`: An unexpected error occurred on the server.

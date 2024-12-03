@@ -14,7 +14,7 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = (props) => {
-  const { setVisualLinks, handleEditButton } = useAppContext();
+  const { setVisualLinks } = useAppContext();
   return (
     <>
       <div className="container-btns">
