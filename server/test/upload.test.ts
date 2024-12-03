@@ -12,8 +12,10 @@ describe("Upload class", () => {
     connect: jest.fn(),
   };
 
-  const mockWithTransaction = jest.fn(
-    async (action: (client: PoolClient) => Promise<any>) => {
+  const mockWithTransaction: <T>(
+    action: (client: PoolClient) => Promise<T>,
+  ) => Promise<T> = jest.fn(
+    async <T>(action: (client: PoolClient) => Promise<T>): Promise<T> => {
       return await action(mockClient as PoolClient);
     },
   );
