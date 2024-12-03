@@ -51,6 +51,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     libraries: libraries,
   });
 
+  //
+  useEffect(() => {
+    if (positionMode === PositionMode.None && polygonArea) {
+      polygonArea?.setMap(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positionMode]);
+
   const onMapClick = (event: google.maps.MapMouseEvent) => {
     if (!event.latLng) return;
 
