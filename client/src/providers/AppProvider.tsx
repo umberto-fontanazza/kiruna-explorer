@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useState } from "react";
 import API from "../API/API";
-import { Coordinates, Document } from "../utils/interfaces";
+import { Coordinates, Document, PolygonArea } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
 
 // Definizione del tipo per il contesto
@@ -18,7 +18,7 @@ interface AppContextType {
   handleCancelPopup: () => void;
   handleEditPositionModeConfirm: (
     docSelected: Document,
-    newPos: Coordinates,
+    newPos: Coordinates | PolygonArea,
   ) => void;
 }
 
@@ -45,17 +45,28 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
 
   const handleEditPositionModeConfirm = async (
     docSelected: Document,
-    newPos: Coordinates,
+    newPos: Coordinates | PolygonArea,
   ) => {
     if (docSelected) {
       try {
-        const updateDocument = {
-          ...docSelected,
-          coordinates: {
-            latitude: newPos.latitude,
-            longitude: newPos.longitude,
-          },
-        };
+        let updateDocument;
+
+        if ("latitude" in newPos && "longitude" in newPos) {
+          updateDocument = {
+            ...docSelected,
+            coordinates: {
+              latitude: newPos.latitude,
+              longitude: newPos.longitude,
+            },
+            area: undefined,
+          };
+        } else {
+          updateDocument = {
+            ...docSelected,
+            coordinates: undefined,
+            area: newPos,
+          };
+        }
         await API.updateDocument(updateDocument);
       } catch (err) {
         console.error(err);

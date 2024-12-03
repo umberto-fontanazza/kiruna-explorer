@@ -16,9 +16,9 @@ export interface Document {
   // optional fields below
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
+  area?: PolygonArea;
   issuanceDate?: Dayjs;
   links?: Link[];
-  area?: PolygonArea;
 }
 
 export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {

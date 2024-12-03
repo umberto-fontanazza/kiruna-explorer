@@ -9,7 +9,12 @@ import {
   getPolygonCenter,
   useDrawingTools,
 } from "../../utils/drawingTools";
-import { Document, Link, fromDocumentTypeToIcon } from "../../utils/interfaces";
+import {
+  Document,
+  Link,
+  PolygonArea,
+  fromDocumentTypeToIcon,
+} from "../../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
 import { PositionMode } from "../../utils/modes";
 import MapTypeSelector from "../MapTypeSelector";
@@ -35,6 +40,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [markers, setMarkers] = useState<
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
+  const [saved, setSaved] = useState(false);
+  const [polygonArea, setPolygonArea] = useState<google.maps.Polygon | null>(
+    null,
+  );
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -58,12 +67,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       // Insert Document Position flow
       setdocumentSelected(null);
       setModalOpen(true);
-      // } else if (positionMode === PositionMode.Update && docSelected) {
-      //   // Edit Document Position Flow
-      //   handleEditPositionModeConfirm(docSelected, {
-      //     latitude: lat,
-      //     longitude: lng,
-      //   });
     }
 
     setIsSubmit(false);
@@ -112,7 +115,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     // Event listener per il mouseover
     marker.content?.addEventListener("mouseenter", () => {
       if (doc.area && map) {
-        hoverArea = createArea(doc, map);
+        hoverArea = createArea(doc, map, positionMode);
       }
     });
 
@@ -178,6 +181,11 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       return;
     }
 
+    if (positionMode === PositionMode.Update && docSelected?.area) {
+      createArea(docSelected, map, positionMode, setPolygonArea);
+      return;
+    }
+
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
       .filter((doc) => {
         if (positionMode === PositionMode.Update) {
@@ -185,10 +193,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         }
         return doc.coordinates || doc.area;
       })
-      .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true)) // Filtro in base a visualLinks
+      .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
       .map((doc) =>
         createMarker(doc, visualLinks && doc.id !== docSelected?.id),
-      ); // Crea marker
+      );
 
     clearMarkers();
 
@@ -241,7 +249,29 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     };
   }, [isLoaded, map, documents]);
 
-  useDrawingTools(map, positionMode, () => setdocumentSelected); // Use Drawing Tools when necessary
+  useEffect(() => {
+    if (
+      docSelected &&
+      saved &&
+      polygonArea &&
+      positionMode === PositionMode.Update
+    ) {
+      const path = polygonArea.getPath();
+      const newPolygonArea: PolygonArea = {
+        include: path.getArray().map((latLng) => ({
+          latitude: latLng.lat(),
+          longitude: latLng.lng(),
+        })),
+        exclude: [],
+      };
+      handleEditPositionModeConfirm(docSelected, newPolygonArea);
+      polygonArea.setMap(null);
+      setSaved(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [saved]);
+
+  useDrawingTools(map, () => setdocumentSelected);
 
   return isLoaded ? (
     <section id="map">
@@ -258,6 +288,16 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               ? "Select a point on the map, where you want to add a new Document"
               : "Select a point on the map, where you want to update the position of the document selected"}
           </h3>
+          {positionMode === PositionMode.Update && docSelected?.area && (
+            <button
+              className="edit-area-btn"
+              onClick={() => {
+                setSaved(true);
+              }}
+            >
+              Save
+            </button>
+          )}
         </div>
       )}
       <GoogleMap

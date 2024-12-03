@@ -6,14 +6,13 @@ import { PositionMode } from "./modes";
 
 export const useDrawingTools = (
   map: google.maps.Map | null,
-  positionMode: PositionMode,
   setdocumentSelected: Dispatch<SetStateAction<Document | null>>,
 ) => {
-  const { setModalOpen } = useAppContext();
+  const { setModalOpen, positionMode } = useAppContext();
   const { setDocumentFormSelected } = useDocumentFormContext();
 
   useEffect(() => {
-    if (!map || positionMode === PositionMode.None) return;
+    if (!map || positionMode !== PositionMode.Insert) return;
 
     const drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: google.maps.drawing.OverlayType.POLYGON,
@@ -71,6 +70,8 @@ export const useDrawingTools = (
 export const createArea = (
   doc: Document,
   map: google.maps.Map,
+  positionMode: PositionMode,
+  setPolygon?: Dispatch<SetStateAction<google.maps.Polygon | null>>,
 ): google.maps.Polygon | null => {
   if (!doc.area) return null;
   const includePaths = (doc.area.include || []).map((coord) => ({
@@ -104,10 +105,14 @@ export const createArea = (
     fillOpacity: 0.5,
     strokeWeight: 2,
     clickable: true,
+    draggable: positionMode === PositionMode.Update,
+    editable: positionMode === PositionMode.Update,
     zIndex: 1,
   });
 
   area.setMap(map);
+
+  if (positionMode === PositionMode.Update && setPolygon) setPolygon(area);
 
   return area;
 };
@@ -118,9 +123,7 @@ export const clearAreas = (areas: google.maps.Polygon[]) => {
 
 export const getPolygonCenter = (
   polygonArea: PolygonArea,
-): { lat: number; lng: number } | null => {
-  if (!polygonArea.include || polygonArea.include.length === 0) return null;
-
+): { lat: number; lng: number } => {
   const bounds = new google.maps.LatLngBounds();
   polygonArea.include.forEach((coord) =>
     bounds.extend({ lat: coord.latitude, lng: coord.longitude }),
