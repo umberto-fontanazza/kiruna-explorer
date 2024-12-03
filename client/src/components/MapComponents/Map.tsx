@@ -167,6 +167,16 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
     setMarkers(newMarkers);
 
+    if (visualLinks && newMarkers.length > 0) {
+      const bounds = new google.maps.LatLngBounds();
+      newMarkers.forEach((marker) => {
+        if (marker.position) {
+          bounds.extend(marker.position);
+        }
+      });
+      map.fitBounds(bounds);
+    }
+
     return () => {
       markerCluster.clearMarkers();
     };
