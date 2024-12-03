@@ -46,6 +46,7 @@ const Home: FC = (): JSX.Element => {
         // ho aggiunto isDeleted per eliminare lo sfarfallio ed una chiamata inutile al server
         try {
           const doc = await API.getDocumentById(docSelected.id);
+          console.log(doc);
           setDocSelected(doc);
         } catch (err) {
           console.error(err);
