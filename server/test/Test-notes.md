@@ -101,3 +101,27 @@
 12. Try to view all documents filtered with wrong issuanceDate (min).
 13. Try to view all documents filtered with wrong type and scale.
 14. Try to view all documents filtered with wrong type and issuanceDate (max).
+
+## US 7. As an Urban Planner I want to add one or more original resources for a document.
+
+1. Create a resource for a specific document, as urban planner. DONE (OK)
+2. Create a resource for a specific document, without being urban planner. DONE (UNAUTHORIZED)
+3. Create a resource for a specific document, as urban planner, but that document does not exist. DONE (BAD_REQUEST)
+4. Create a resource for a specific document, as urban planner, with invalid fields. DONE (BAD_REQUEST)
+5. Create a resource for a specific document, as urban planner, with missing documentIds. DONE (CREATED)
+6. Create a resource for a specific document, as urban planner, with missing fields. DONE (BAD_REQUEST)
+7. View all the resources for a specific document, as urban planner. DONE (OK)
+8. Try to view all the resource without bein urban planner. DONE (OK)
+9. View all the resources for a specific document, as urban planner, but that document does not exist. DONE (BAD_REQUEST)
+10. View all the resources for a specific document, as urban planner, but that document does not have any upload. DONE (ERROR HERE)
+11. Upload a resource for a specific document, as Urban Planner DONE (CREATED)
+12. Upload a resource for a specific document, without being Urban Planner. DONE (UNAUTHORIZED)
+13. Upload a resource for a specific document, as Urban Planner, with invalid id. DONE (BAD_REQUEST)
+14. Upload a resource for a specific document, as Urban Planner, with invalid title. DONE (BAD_REQUEST)
+15. Delete a resource for a specific document, as Urban Planner. DONE (NO_CONTENT)
+16. Delete a resource for a specific document, without being Urban Planner. DONE (UNAUTHORIZED)
+17. Delete a resource for a specific document, as Urban Planner, with invalid id. DONE (BAD_REQUEST)
+
+## US 8. As an Urban Planner I want to search documents So that I can find what I am interested in
+
+## US 9. As an Urban Planner I want to define the geolocated area of a document on the map
