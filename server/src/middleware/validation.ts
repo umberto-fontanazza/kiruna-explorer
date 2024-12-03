@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { z } from "zod";
-import { StatusCodes } from "http-status-codes";
+import { NextFunction, Request, Response } from "express";
 import { ParamsDictionary } from "express-serve-static-core";
+import { StatusCodes } from "http-status-codes";
+import { z } from "zod";
 import { PutBody as LinkPutBody } from "../validation/linkSchema";
 
 // Alternative: https://dev.to/osalumense/validating-request-data-in-expressjs-using-zod-a-comprehensive-guide-3a0j#:~:text=import%20%7B%20RequestHandler%20%7D%20from%20%27express%27%3B

@@ -1,9 +1,30 @@
 import dayjs from "dayjs";
-import { Document } from "../utils/interfaces";
+import { Document, Filters } from "../utils/interfaces";
 import { baseURL } from "./API";
 
-async function getDocuments(): Promise<Document[]> {
-  const response = await fetch(baseURL + "/documents");
+async function getDocuments(filters?: Filters): Promise<Document[]> {
+  const params = new URLSearchParams();
+  if (filters) {
+    if (filters.type) params.append("type", filters.type);
+    if (filters.scaleType) params.append("scaleType", filters.scaleType);
+    if (filters.maxIssuanceDate)
+      params.append(
+        "maxIssuanceDate",
+        filters.maxIssuanceDate.format("YYYY-MM-DD"),
+      );
+    if (filters.minIssuanceDate)
+      params.append(
+        "minIssuanceDate",
+        filters.minIssuanceDate.format("YYYY-MM-DD"),
+      );
+  }
+
+  const response = await fetch(`${baseURL}/documents?${params.toString()}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   if (!response.ok) {
     throw new Error("Error in fetching documents");
   }

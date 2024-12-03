@@ -1,32 +1,10 @@
 import dayjs, { Dayjs } from "dayjs";
 import { kirunaCoordinates } from "./map";
 
-export interface User {
-  email: string;
-  name: string;
-  surname: string;
-  role: UserRole;
-}
-
-export enum UserRole {
-  Developer = "developer",
-  Planner = "planner",
-  Resident = "resident",
-  Visitor = "visitor",
-}
-
+/************************** INTERFACES ****************************/
 export interface Coordinates {
   latitude: number;
   longitude: number;
-}
-
-export interface LoginErrors {
-  login?: string;
-}
-
-export interface Link {
-  targetDocumentId: number;
-  linkTypes: LinkType[];
 }
 
 export interface Document {
@@ -42,12 +20,48 @@ export interface Document {
   links?: Link[];
 }
 
-export enum LinkType {
-  Direct = "direct",
-  Collateral = "collateral",
-  Projection = "projection",
-  Update = "update",
+export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
+  id: number | null;
+  scale: Scale | null;
+  type: DocumentType | null;
 }
+
+export interface Filters {
+  type: DocumentType | undefined;
+  scaleType: ScaleType | undefined;
+  maxIssuanceDate: Dayjs | undefined;
+  minIssuanceDate: Dayjs | undefined;
+}
+
+export interface Link {
+  targetDocumentId: number;
+  linkTypes: LinkType[];
+}
+
+export interface LoginErrors {
+  login?: string;
+}
+
+export interface Scale {
+  type: ScaleType;
+  ratio?: number;
+}
+
+export interface Upload {
+  id: number;
+  title: string;
+  type: UploadType;
+  file: { type: string; data: number[] };
+}
+
+export interface User {
+  email: string;
+  name: string;
+  surname: string;
+  role: UserRole;
+}
+
+/************************ ENUM ***************************/
 
 export enum DocumentType {
   Design = "design",
@@ -57,23 +71,19 @@ export enum DocumentType {
   Technical = "technical",
 }
 
-export const documentTypeDisplay: { [key in DocumentType]: string } = {
-  [DocumentType.Design]: "Design",
-  [DocumentType.Informative]: "Informative",
-  [DocumentType.MaterialEffect]: "Material effect",
-  [DocumentType.Prescriptive]: "Prescriptive",
-  [DocumentType.Technical]: "Technical",
-};
+export enum LinkType {
+  Direct = "direct",
+  Collateral = "collateral",
+  Projection = "projection",
+  Update = "update",
+}
 
-export const fromDocumentTypeToIcon = new Map<DocumentType | undefined, string>(
-  [
-    [DocumentType.Design, "design_services"],
-    [DocumentType.Informative, "info"],
-    [DocumentType.MaterialEffect, "construction"],
-    [DocumentType.Prescriptive, "find_in_page"],
-    [DocumentType.Technical, "settings"],
-  ],
-);
+export enum ScaleType {
+  ArchitecturalScale = "architectural_scale",
+  BlueprintsOrEffect = "blueprints/effects",
+  Concept = "concept",
+  Text = "text",
+}
 
 export enum Stakeholder {
   KirunaKommun = "kiruna_kommun",
@@ -82,34 +92,29 @@ export enum Stakeholder {
   WhiteArkitekter = "white_arkitekter",
 }
 
-export const stakeholderDisplay: { [key in Stakeholder]: string } = {
-  [Stakeholder.KirunaKommun]: "Kiruna kommun",
-  [Stakeholder.Lkab]: "LKAB",
-  [Stakeholder.Residents]: "Residents",
-  [Stakeholder.WhiteArkitekter]: "White Arkitekter",
-};
+export const stakeholdersOptions = [
+  { value: Stakeholder.Lkab, label: "LKAB" },
+  { value: Stakeholder.KirunaKommun, label: "Kiruna kommun" },
+  { value: Stakeholder.Residents, label: "Residents" },
+  { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
+];
 
-export interface Scale {
-  type: ScaleType;
-  ratio?: number;
+export enum UploadType {
+  OriginalResource = "original_resource",
+  Attachment = "attachment",
 }
-
-export enum ScaleType {
-  BlueprintsOrEffect = "blueprints/effects",
-  Text = "text",
-  Ratio = "ratio",
-}
-
-export const scaleTypeDisplay: { [key in ScaleType]: string } = {
-  [ScaleType.BlueprintsOrEffect]: "Blueprints/effects",
-  [ScaleType.Text]: "Text",
-  [ScaleType.Ratio]: "Ratio",
-};
 
 export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
   id: number | null;
   scale: Scale | null;
   type: DocumentType | null;
+}
+
+export enum UserRole {
+  Developer = "developer",
+  Planner = "planner",
+  Resident = "resident",
+  Visitor = "visitor",
 }
 
 export const documentFormDefaults: DocumentForm = {
@@ -140,3 +145,13 @@ export const createDocumentStateFromExisting = (
   links: docSelected.links,
   coordinates: docSelected.coordinates,
 });
+
+export const fromDocumentTypeToIcon = new Map<DocumentType | undefined, string>(
+  [
+    [DocumentType.Design, "design_services"],
+    [DocumentType.Informative, "info"],
+    [DocumentType.MaterialEffect, "construction"],
+    [DocumentType.Prescriptive, "find_in_page"],
+    [DocumentType.Technical, "settings"],
+  ],
+);

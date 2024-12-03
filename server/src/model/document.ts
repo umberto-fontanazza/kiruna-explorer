@@ -67,7 +67,7 @@ const buildSqlWhere = (
       },
       [[], []],
     );
-  return [`WHERE ${sqlWithWildcards.join(", ")}`, args];
+  return [`WHERE ${sqlWithWildcards.join(" AND ")}`, args];
 };
 
 export class Document {
