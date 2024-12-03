@@ -83,51 +83,50 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
   };
 
   return (
-    <div className="third-page">
-      <h2>Upload Files</h2>
-      <div
-        className="upload-box"
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        <p>Drag and drop your file here or use the button below to upload.</p>
-        <button
-          className="upload-btn"
-          type="button"
-          onClick={handleButtonClick}
+    <>
+      <div className="form-content">
+        <h2>Upload Files</h2>
+        <div
+          className="upload-box"
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
         >
-          Select File
-        </button>
-      </div>
-
-      {filesToUpload && filesToUpload.length > 0 && (
-        <div className="uploaded-files">
-          <h3>Uploaded Files:</h3>
-          <ul>
-            {filesToUpload.map((file, index) => (
-              <li key={index} className="uploaded-file-item">
-                <strong>Title:</strong>{" "}
-                <input
-                  type="text"
-                  value={file.title}
-                  onChange={(e) => handleEditTitle(index, e.target.value)}
-                  placeholder="Edit file title"
-                />
-                <br />
-                <strong>Base64:</strong> {file.data.substring(0, 30)}...{" "}
-                <button
-                  className="remove-btn"
-                  onClick={() => handleRemoveFile(index)}
-                >
-                  Remove
-                </button>
-              </li>
-            ))}
-          </ul>
+          <p>Drag and drop the original resources here</p>
+          <button
+            className="upload-btn"
+            type="button"
+            onClick={handleButtonClick}
+          >
+            Select File
+          </button>
         </div>
-      )}
 
+        {filesToUpload && filesToUpload.length > 0 && (
+          <div className="uploaded-files">
+            <h3>Uploaded Files:</h3>
+            <ul>
+              {filesToUpload.map((file, index) => (
+                <li key={index} className="uploaded-file-item">
+                  <p>Title:</p>{" "}
+                  <input
+                    type="text"
+                    value={file.title}
+                    onChange={(e) => handleEditTitle(index, e.target.value)}
+                  />
+                  <br />
+                  <button
+                    className="remove-btn"
+                    onClick={() => handleRemoveFile(index)}
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
       <div className="actions">
         <button className="back" onClick={() => goBack((p) => p - 1)}>
           Back
@@ -136,7 +135,7 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
           {documentForm.id ? "Update Document" : "Add Document"}
         </button>
       </div>
-    </div>
+    </>
   );
 };
 

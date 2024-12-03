@@ -41,7 +41,8 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   const handleDownload = async () => {
     try {
       if (!props.document) {
-        throw new Error("Document is null");
+        console.error("Document is null");
+        return;
       }
 
       const response: Upload[] = await API.getUploads(
@@ -49,34 +50,41 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         "include",
       );
 
-      if (!response || !response[0].file || !response[0].file) {
-        throw new Error("File content is missing in response");
+      if (!response || response.length === 0) {
+        console.warn("No files found in the response.");
+        alert("The document does not contain any original resources.");
+        return;
       }
 
       response.forEach((upload) => {
-        const binaryString = atob(upload.file);
+        try {
+          const binaryString = atob(upload.file);
 
-        // Converte la stringa binaria in un array di byte
-        const byteArray = new Uint8Array(binaryString.length);
-        for (let i = 0; i < binaryString.length; i++) {
-          byteArray[i] = binaryString.charCodeAt(i);
+          const byteArray = Uint8Array.from(binaryString, (char) =>
+            char.charCodeAt(0),
+          );
+
+          const blob = new Blob([byteArray], {
+            type: "application/octet-stream",
+          });
+
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = upload.title || "download";
+          a.click();
+          window.URL.revokeObjectURL(url);
+        } catch (downloadError) {
+          console.error(
+            `Error processing file ${upload.title}:`,
+            downloadError,
+          );
+          alert(`Failed to download ${upload.title}.`);
         }
-
-        // Crea un Blob dal byte array
-        const blob = new Blob([byteArray], {
-          type: "application/octet-stream",
-        });
-
-        const url = window.URL.createObjectURL(blob); // temporaneous URL for the blob
-        const a = document.createElement("a"); // Create invisible element <a> to start download
-        a.href = url;
-        a.download = upload.title; // File name TODO: set extension according to file type
-        a.click(); // Click on <a> to start download
-        window.URL.revokeObjectURL(url); // Free memory
       });
     } catch (error) {
       console.error("Download error:", error);
-      alert(`Error during the download.`);
+      alert("An error occurred during the download process. Please try again.");
     }
   };
 
