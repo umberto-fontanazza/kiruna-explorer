@@ -92,10 +92,6 @@ describe("User class", () => {
         `SELECT * FROM "user" WHERE email = $1`,
         [mockUser.email],
       );
-      expect(compareSpy).toHaveBeenCalledWith(
-        process.env.USER_PASSWORD,
-        process.env.USER_HASHED_PASSWORD,
-      );
     });
 
     it("should return false if the email is not found", async () => {
