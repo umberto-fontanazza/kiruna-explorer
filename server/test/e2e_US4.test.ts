@@ -79,23 +79,23 @@ describe("Testing story 4", () => {
   });
 
   describe("Visitor", () => {
-    test("US 4.2 GET all documents as Visitor", async () => {
+    test("US 4.2.1 GET all documents as Visitor", async () => {
       const response = await request(app).get("/documents/");
       expect(response.status).toStrictEqual(StatusCodes.OK);
       expect(response.body).toBeInstanceOf(Array);
     });
 
-    test("US 4.5 GET with ID as a Visitor", async () => {
+    test("US 4.5.1 GET with ID as a Visitor", async () => {
       const response = await request(app).get(`/documents/${testDocId4}`);
       expect(response.status).toStrictEqual(StatusCodes.OK);
     });
 
-    test("US 4.7 GET with non existing ID as Urban Planner", async () => {
+    test("US 4.7.1 GET with non existing ID as Urban Planner", async () => {
       const response = await request(app).get("/documents/5");
       expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
     });
 
-    test("US 4.8 GET with wrong ID as Visitor", async () => {
+    test("US 4.8.1 GET with wrong ID as Visitor", async () => {
       const response = await request(app).get("/documents/0");
       expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
     });
@@ -106,7 +106,7 @@ describe("Testing story 4", () => {
       residentCookie = await loginAsResident();
     });
 
-    test("US 4.3 GET all documents as Resident", async () => {
+    test("US 4.3.2 GET all documents as Resident", async () => {
       const response = await request(app)
         .get("/documents/")
         .set("Cookie", residentCookie);
@@ -114,21 +114,21 @@ describe("Testing story 4", () => {
       expect(response.body).toBeInstanceOf(Array);
     });
 
-    test("US 4.6 GET with ID as a Resident", async () => {
+    test("US 4.6.2 GET with ID as a Resident", async () => {
       const response = await request(app)
         .get(`/documents/${testDocId4}`)
         .set("Cookie", residentCookie);
       expect(response.status).toStrictEqual(StatusCodes.OK);
     });
     // Verificar si este error esta mal escrito en el documento de document.router
-    test("US 4.7 GET with non existing ID as Urban Planner", async () => {
+    test("US 4.7.2 GET with non existing ID as Urban Planner", async () => {
       const response = await request(app)
         .get("/documents/5")
         .set("Cookie", residentCookie);
       expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
     });
 
-    test("US 4.8 GET with wrong ID as Resident", async () => {
+    test("US 4.8.2 GET with wrong ID as Resident", async () => {
       const response = await request(app).get("/documents/-20");
       expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
     });
