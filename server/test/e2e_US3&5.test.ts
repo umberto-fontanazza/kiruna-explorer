@@ -20,7 +20,7 @@ afterAll(async () => {
 });
 
 describe("Testing story 3 and 5", () => {
-  const testDoc = {
+  const testUS3 = {
     title: "Coordinates test",
     description: "This one will be tested with coordinates",
     scale: { type: ScaleType.Text },
@@ -53,12 +53,12 @@ describe("Testing story 3 and 5", () => {
     latitude: 45,
     longitude: 30,
   };
-  let testDocId: number;
+  let testUS3Id: number;
 
   test("US3.1 POST with georeference without being an Urban Planner", async () => {
     const response = await request(app)
       .post("/documents/")
-      .send({ ...testDoc, coordinates });
+      .send({ ...testUS3, coordinates });
     expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
   });
 
@@ -66,18 +66,18 @@ describe("Testing story 3 and 5", () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testDoc, coordinates });
+      .send({ ...testUS3, coordinates });
     expect(response.status).toBe(StatusCodes.CREATED);
     expect(response.body.id).toBeDefined();
     expect(typeof response.body.id).toBe("number");
-    testDocId = response.body.id;
+    testUS3Id = response.body.id;
   });
 
   test("US3.3 POST with coordinates wrong", async () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testDoc, wrongCoordinates });
+      .send({ ...testUS3, wrongCoordinates });
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
   });
 
@@ -85,7 +85,7 @@ describe("Testing story 3 and 5", () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testDoc, wrongCoordinates });
+      .send({ ...testUS3, wrongCoordinates });
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
   });
 
@@ -93,7 +93,7 @@ describe("Testing story 3 and 5", () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testDoc, wrongCoordinates2 });
+      .send({ ...testUS3, wrongCoordinates2 });
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
   });
 
@@ -101,7 +101,7 @@ describe("Testing story 3 and 5", () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testDoc, wrongCoordinates3 });
+      .send({ ...testUS3, wrongCoordinates3 });
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
   });
 
@@ -109,7 +109,7 @@ describe("Testing story 3 and 5", () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testDoc, wrongCoordinates4 });
+      .send({ ...testUS3, wrongCoordinates4 });
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
   });
 
@@ -117,7 +117,7 @@ describe("Testing story 3 and 5", () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testDoc, missingLon });
+      .send({ ...testUS3, missingLon });
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
   });
 
@@ -125,13 +125,13 @@ describe("Testing story 3 and 5", () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testDoc, missingLat });
+      .send({ ...testUS3, missingLat });
     expect(response.status).toBe(StatusCodes.BAD_REQUEST);
   });
 
   test("US3.5 PATCH with coordinates success", async () => {
     const response = await request(app)
-      .patch(`/documents/${testDocId}`)
+      .patch(`/documents/${testUS3Id}`)
       .set("Cookie", plannerCookie)
       .send({ coordinates: { latitude: 45, longitude: 20 } });
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
@@ -139,7 +139,7 @@ describe("Testing story 3 and 5", () => {
 
   test("US3.6 PATCH with coordinates wrong", async () => {
     const response = await request(app)
-      .patch(`/documents/${testDocId}`)
+      .patch(`/documents/${testUS3Id}`)
       .set("Cookie", plannerCookie)
       .send({ coordinates: { latitude: 200, longitude: 20 } });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
@@ -147,7 +147,7 @@ describe("Testing story 3 and 5", () => {
 
   test("US3.6 PATCH with coordinates wrong", async () => {
     const response = await request(app)
-      .patch(`/documents/${testDocId}`)
+      .patch(`/documents/${testUS3Id}`)
       .set("Cookie", plannerCookie)
       .send({ coordinates: { latitude: 45, longitude: 200 } });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
@@ -155,7 +155,7 @@ describe("Testing story 3 and 5", () => {
 
   test("US3.6 PATCH with coordinates wrong", async () => {
     const response = await request(app)
-      .patch(`/documents/${testDocId}`)
+      .patch(`/documents/${testUS3Id}`)
       .set("Cookie", plannerCookie)
       .send({ coordinates: { latitude: "Wrong", longitude: 20 } });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
@@ -163,7 +163,7 @@ describe("Testing story 3 and 5", () => {
 
   test("US3.6 PATCH with coordinates wrong", async () => {
     const response = await request(app)
-      .patch(`/documents/${testDocId}`)
+      .patch(`/documents/${testUS3Id}`)
       .set("Cookie", plannerCookie)
       .send({ coordinates: { latitude: 45, longitude: "Wrong" } });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
@@ -171,7 +171,7 @@ describe("Testing story 3 and 5", () => {
 
   test("US3.6 PATCH with coordinates wrong", async () => {
     const response = await request(app)
-      .patch(`/documents/${testDocId}`)
+      .patch(`/documents/${testUS3Id}`)
       .set("Cookie", plannerCookie)
       .send({ coordinates: { latitude: "Wrong", longitude: "Wrong" } });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
@@ -179,7 +179,7 @@ describe("Testing story 3 and 5", () => {
 
   test("US3.7 PATCH with incomplete coordinates", async () => {
     const response = await request(app)
-      .patch(`/documents/${testDocId}`)
+      .patch(`/documents/${testUS3Id}`)
       .set("Cookie", plannerCookie)
       .send({ coordinates: { latitude: 45 } });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
@@ -187,7 +187,7 @@ describe("Testing story 3 and 5", () => {
 
   test("US3.7 PATCH with incomplete coordinates", async () => {
     const response = await request(app)
-      .patch(`/documents/${testDocId}`)
+      .patch(`/documents/${testUS3Id}`)
       .set("Cookie", plannerCookie)
       .send({ coordinates: { longitude: 60 } });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
@@ -195,7 +195,7 @@ describe("Testing story 3 and 5", () => {
 
   test("DELETE with coordinates success", async () => {
     const response = await request(app)
-      .del(`/documents/${testDocId}`)
+      .del(`/documents/${testUS3Id}`)
       .set("Cookie", plannerCookie);
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });
