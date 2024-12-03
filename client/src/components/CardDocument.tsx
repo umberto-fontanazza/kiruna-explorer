@@ -36,7 +36,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     setEditDocumentMode,
   } = useAppContext();
   const { setDocumentToDelete, setIsDeleted } = usePopupContext();
-  const { setDocumentFormSelected, setCoordinates } = useDocumentFormContext();
+  const { setDocumentFormSelected } = useDocumentFormContext();
 
   const handleDownload = async () => {
     try {
@@ -99,7 +99,8 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     setModalOpen(true);
     setDocumentFormSelected(props.document as DocumentForm);
     if (props.document?.coordinates) {
-      setCoordinates(props.document.coordinates);
+      //TODO: I have to handle this
+      //setCoordinates(props.document.coordinates);
     }
   };
 

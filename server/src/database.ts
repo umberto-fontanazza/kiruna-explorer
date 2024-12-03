@@ -11,7 +11,6 @@ export class Database {
 
     // 58509 is the OID for type _stakeholder(array of type staholder) in our postgres database
     types.setTypeParser(58509, (val) => {
-      console.log(val);
       const parsed = val.slice(1, -1).split(",");
       console.log(parsed);
 

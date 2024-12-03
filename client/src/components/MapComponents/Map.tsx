@@ -109,14 +109,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     let hoverArea: google.maps.Polygon | null = null;
 
     // Event listener per il mouseover
-    marker.addListener("mouseover", () => {
+    marker.content?.addEventListener("mouseenter", () => {
       if (doc.area && map) {
         hoverArea = createArea(doc, map);
       }
     });
 
     // Event listener per il mouseout
-    marker.addListener("mouseout", () => {
+    marker.content?.addEventListener("mouseleave", () => {
       if (hoverArea) {
         hoverArea.setMap(null);
         hoverArea = null;
@@ -158,7 +158,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     }
 
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
-      .filter((doc) => doc.coordinates)
+      .filter((doc) => doc.coordinates || doc.area)
       .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
       .map((doc) =>
         createMarker(doc, visualLinks && doc.id !== docSelected?.id),

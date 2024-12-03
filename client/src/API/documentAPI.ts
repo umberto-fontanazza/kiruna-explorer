@@ -62,7 +62,6 @@ async function addDocument(document: Omit<Document, "id">): Promise<number> {
     links: undefined,
     issuanceDate: document.issuanceDate?.format("YYYY-MM-DD") || undefined,
   };
-
   const response = await fetch(baseURL + `/documents`, {
     method: "POST",
     credentials: "include",

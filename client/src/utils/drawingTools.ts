@@ -73,7 +73,6 @@ export const createArea = (
   map: google.maps.Map,
 ): google.maps.Polygon | null => {
   if (!doc.area) return null;
-
   const includePaths = (doc.area.include || []).map((coord) => ({
     lat: parseFloat(coord.latitude?.toString() || "NaN"),
     lng: parseFloat(coord.longitude?.toString() || "NaN"),
