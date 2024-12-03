@@ -143,7 +143,7 @@ documentRouter.patch(
     document.scale = (parsedScale! as Scale) || document.scale;
     document.stakeholders = stakeholders || document.stakeholders;
     document.coordinates = coordinates || document.coordinates;
-    if (area) document.setArea(await Area.insert(area as AreaBody));
+    if (area) await document.setArea(await Area.insert(area as AreaBody));
     document.issuanceDate = issuanceDate
       ? dayjs(issuanceDate, "YYYY-MM-DD", true)
       : document.issuanceDate;
