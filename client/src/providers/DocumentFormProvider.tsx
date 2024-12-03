@@ -27,7 +27,7 @@ interface DocumentFormContextType {
   setSearchableDocuments: Dispatch<SetStateAction<Document[]>>;
   setDocumentFormSelected: Dispatch<SetStateAction<DocumentForm>>;
   setIsSubmit: Dispatch<SetStateAction<boolean>>;
-  handleAddNewDocument: (newDocument: DocumentForm, file: string) => void;
+  handleAddNewDocument: (newDocument: DocumentForm, file: UploadForm[]) => void;
   handleUpdateDocument: (
     document: DocumentForm,
     oldDocumentLinks: Link[] | undefined,
