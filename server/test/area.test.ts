@@ -27,7 +27,7 @@ const validAreaBody = {
     [
       { latitude: 67.85000000000012, longitude: 20.23500000000034 },
       { latitude: 67.84500000000045, longitude: 20.24000000000082 },
-      { latitude: 67.84750000000067, longitude: 20.22800000000036 },
+      { latitude: 67.8475000000006, longitude: 20.22800000000036 },
     ],
     [
       { latitude: 67.85800000000079, longitude: 20.22000000000075 },
