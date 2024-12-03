@@ -1,5 +1,4 @@
 import { Dispatch, FC, SetStateAction } from "react";
-import "../../styles/DocumentFormPagesStyles/SecondPageModal.scss";
 import { DocumentForm, Link } from "../../utils/interfaces";
 import LinksTable from "../LinksTable";
 import SearchBar from "../SearchBar";

@@ -7,7 +7,7 @@
   background: Color.$sidebar-background;
   position: fixed;
   overflow-x: hidden;
-  transition: right 0.5s;
+  transition: right 0.3s linear;
   display: flex;
   flex-direction: column;
   align-items: center;

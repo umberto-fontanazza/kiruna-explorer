@@ -159,7 +159,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
               );
             })
           ) : (
-            <span>elle</span>
+            <span>-</span>
           )}
         </h4>
         <h4>

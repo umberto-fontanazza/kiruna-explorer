@@ -17,6 +17,7 @@ const DocumentForm = () => {
     documentFormSelected,
     setDocumentFormSelected,
     handleAddNewDocument,
+    handleUpdateDocument,
   } = useDocumentFormContext();
   const [page, setPage] = useState<number>(1);
   const [tableLinks, setTableLinks] = useState<Link[]>(
@@ -36,13 +37,26 @@ const DocumentForm = () => {
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-    handleAddNewDocument(
-      {
-        ...documentFormSelected,
-        links: tableLinks,
-      },
-      uploadedFiles ?? undefined,
-    );
+
+    // Add document
+    if (!documentFormSelected.id) {
+      handleAddNewDocument(
+        {
+          ...documentFormSelected,
+          links: tableLinks,
+        },
+        uploadedFiles ?? [],
+      );
+    }
+
+    // Update document
+    if (documentFormSelected.id) {
+      handleUpdateDocument(
+        { ...documentFormSelected, links: tableLinks },
+        documentFormSelected.links,
+      );
+    }
+
     resetForm(false);
   };
 

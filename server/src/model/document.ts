@@ -240,6 +240,7 @@ export class Document {
       throw new DocumentNotFound();
     }
     const documentRow = result.rows[0];
+    console.log(documentRow);
     return Document.fromDatabaseRow(documentRow);
   }
 
@@ -247,6 +248,8 @@ export class Document {
     return {
       ...this,
       issuanceDate: this.issuanceDate?.format("YYYY-MM-DD") || undefined,
+      stakeholders:
+        this.stakeholders?.length === 0 ? undefined : this.stakeholders,
     };
   }
 }

@@ -50,10 +50,7 @@ function LinksTable({ tableLinks, setTableLinks }: LinksTableProps) {
 
   const renderLinkRow = (link: Link, type: LinkType, index: number) => {
     const document = documentMap[link.targetDocumentId];
-    if (!document) {
-      console.error(`Document with ID ${link.targetDocumentId} not found.`);
-      return null;
-    }
+    if (!document) return null;
 
     return (
       <tr key={`${index}-${type}`}>
