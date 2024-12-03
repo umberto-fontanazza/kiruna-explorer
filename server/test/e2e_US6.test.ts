@@ -9,7 +9,7 @@ import { ScaleType } from "../src/model/scale";
 import { loginAsPlanner } from "./utils";
 dotenv.config();
 
-// End to end testing
+// End to end testing for user story 6
 let plannerCookie: string;
 
 beforeAll(async () => {
@@ -21,7 +21,7 @@ afterAll(async () => {
 });
 
 describe("Testing story 6", () => {
-  const testDocAllFields = {
+  const testUS6 = {
     title: "Story 6 test",
     description: "This one will be tested for story 6",
     type: DocumentType.Informative,
@@ -30,17 +30,17 @@ describe("Testing story 6", () => {
     issuanceDate: "2021-12-12",
     coordinates: { latitude: 45, longitude: 30 },
   };
-  let testDocId: number;
+  let testDocId6: number;
 
   test("POST with All fields filled", async () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testDocAllFields });
+      .send({ ...testUS6 });
     expect(response.status).toBe(StatusCodes.CREATED);
     expect(response.body.id).toBeDefined();
     expect(typeof response.body.id).toBe("number");
-    testDocId = response.body.id;
+    testDocId6 = response.body.id;
   });
 
   describe("Urban Planner story 6", () => {
@@ -234,7 +234,7 @@ describe("Testing story 6", () => {
 
   test("DELETE with coordinates success", async () => {
     const response = await request(app)
-      .del(`/documents/${testDocId}`)
+      .del(`/documents/${testDocId6}`)
       .set("Cookie", plannerCookie);
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });
