@@ -88,3 +88,16 @@
 ## US 6. As an Urban Planner I want to list all documents
 
 1. View all documents as a Urban Planner. DONE (OK)
+2. View all documents as a Urban Planner and filter by Type. DONE (OK)
+3. View all documents as a Urban Planner and filter by scale. DONE (OK)
+4. View all documents as a Urban Planner and filter by issuance date (max and min). DONE (OK)
+5. View all documents as a Urban Planner and filter by issuance date (max). DONE (OK)
+6. View all documents as a Urban Planner and filter by issuance date (min). DONE (OK)
+7. View all documents as a Urban Planner and filter by multiple fields, Type and issuance date (max and min). DONE (OK)
+8. View all documents as a Urban Planner and filter by multiple fields, Type, scale and issuance date (max and min). DONE (OK)
+9. Try to view all documents filtered with wrong type.
+10. Try to view all documents filtered with wrong scale.
+11. Try to view all documents filtered with wrong issuanceDate (max).
+12. Try to view all documents filtered with wrong issuanceDate (min).
+13. Try to view all documents filtered with wrong type and scale.
+14. Try to view all documents filtered with wrong type and issuanceDate (max).
