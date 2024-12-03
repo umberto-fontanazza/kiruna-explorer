@@ -127,10 +127,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       setSidebarOpen(true);
       setdocumentSelected(doc);
 
-      const newCenter = {
-        lat: doc.coordinates?.latitude ?? kirunaCoords.lat,
-        lng: doc.coordinates?.longitude ?? kirunaCoords.lng,
-      };
+      const newCenter = doc.coordinates
+        ? {
+            lat: doc.coordinates.latitude,
+            lng: doc.coordinates.longitude,
+          }
+        : doc.area
+          ? (getPolygonCenter(doc.area) ?? kirunaCoords)
+          : kirunaCoords;
       if ((map?.getZoom() ?? 0) < 12) map?.setZoom(12);
       map?.setCenter(newCenter);
       map?.panTo(newCenter);
