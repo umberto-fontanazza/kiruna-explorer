@@ -35,7 +35,7 @@ const SecondPageModal: FC<SecondPageModalProps> = ({
           Back
         </button>
         <button className="primary" type="submit">
-          {documentForm.id ? "Update Document" : "Add Document"}
+          Continue
         </button>
       </div>
     </>
