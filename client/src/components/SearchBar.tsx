@@ -39,17 +39,19 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
     if (userInput.length >= 2) {
       const lowerCaseQuery = userInput.toLowerCase();
 
-      const startsWithQuery = searchableDocuments.filter((doc) =>
-        doc.title.toLowerCase().startsWith(lowerCaseQuery),
-      );
+      const matchesQuery = searchableDocuments
+        .filter((doc) => {
+          const titleWords = doc.title.toLowerCase().split(/\s+/);
 
-      const containsQuery = searchableDocuments.filter(
-        (doc) =>
-          !startsWithQuery.includes(doc) &&
-          doc.title.toLowerCase().includes(lowerCaseQuery),
-      );
+          return lowerCaseQuery
+            .split(/\s+/)
+            .every((queryPart) =>
+              titleWords.some((titleWord) => titleWord.startsWith(queryPart)),
+            );
+        })
+        .sort((a, b) => a.title.localeCompare(b.title));
 
-      setFilteredSuggestions([...startsWithQuery, ...containsQuery]);
+      setFilteredSuggestions(matchesQuery);
     } else {
       setFilteredSuggestions([]);
     }
@@ -71,18 +73,19 @@ function SearchBar({ tableLinks, setTableLinks }: SearchBarProps) {
         (link) => link.targetDocumentId === targetDocumentId,
       );
 
-      if (existingLink) {
-        setTableLinks((prev) =>
-          prev.map((link) =>
-            link.targetDocumentId === targetDocumentId &&
-            !link.linkTypes.includes(linkType)
-              ? { ...link, linkTypes: [...link.linkTypes, linkType] }
-              : link,
+      if (!existingLink?.linkTypes.includes(linkType)) {
+        setTableLinks((oldTableLinks) =>
+          oldTableLinks.map((tableLink) =>
+            tableLink.targetDocumentId === targetDocumentId
+              ? { ...tableLink, linkTypes: [...tableLink.linkTypes, linkType] }
+              : tableLink,
           ),
         );
-      } else {
-        setTableLinks((prev) => [
-          ...prev,
+      }
+
+      if (!existingLink) {
+        setTableLinks((oldTableLinks) => [
+          ...oldTableLinks,
           { targetDocumentId, linkTypes: [linkType] },
         ]);
       }

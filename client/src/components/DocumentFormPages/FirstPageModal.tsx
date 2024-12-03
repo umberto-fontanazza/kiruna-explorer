@@ -9,7 +9,6 @@ import {
   stakeholdersOptions,
 } from "../../utils/interfaces";
 
-import "../../styles/DocumentFormPagesStyles/FirstPageModal.scss";
 import { capitalizeFirstLetter } from "../../utils/utils";
 
 interface FirstPageModalProps {
@@ -176,7 +175,7 @@ const FirstPageModal: FC<FirstPageModalProps> = ({
         </div>
 
         <div className="form-group stakeholders">
-          <label>Stakeholders *</label>
+          <label>Stakeholders</label>
           <div className="checkbox-group">
             {stakeholdersOptions.map((option) => (
               <label key={option.value} className="checkbox-label">

@@ -11,6 +11,7 @@ import {
   Document,
   DocumentForm,
   documentFormDefaults,
+  Link,
   LinkType,
   UploadType,
 } from "../utils/interfaces";
@@ -23,6 +24,10 @@ interface DocumentFormContextType {
   setDocumentFormSelected: Dispatch<SetStateAction<DocumentForm>>;
   setIsSubmit: Dispatch<SetStateAction<boolean>>;
   handleAddNewDocument: (newDocument: DocumentForm, file: string) => void;
+  handleUpdateDocument: (
+    document: DocumentForm,
+    oldDocumentLinks: Link[] | undefined,
+  ) => void;
 }
 
 export const DocumentFormContext = createContext<
@@ -81,6 +86,46 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
         );
       }
     }
+
+    setIsSubmit(true);
+    setDocumentFormSelected(documentFormDefaults);
+  };
+
+  const handleUpdateDocument = async (
+    document: DocumentForm,
+    oldDocumentLinks: Link[] | undefined,
+  ) => {
+    if (document.id) {
+      try {
+        await API.updateDocument(document as Document);
+
+        if (document.links) {
+          for (const link of document.links) {
+            await API.putLink(
+              document.id!,
+              link.targetDocumentId,
+              link.linkTypes,
+            );
+          }
+        }
+
+        if (oldDocumentLinks) {
+          const newTargetIds =
+            document.links?.map((link) => link.targetDocumentId) || [];
+
+          const linksToDelete = oldDocumentLinks.filter(
+            (oldLink) => !newTargetIds.includes(oldLink.targetDocumentId),
+          );
+
+          for (const link of linksToDelete) {
+            await API.deleteLink(document.id!, link.targetDocumentId);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
     setIsSubmit(true);
     setDocumentFormSelected(documentFormDefaults);
   };
@@ -96,6 +141,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
         setIsSubmit,
         //Functions
         handleAddNewDocument,
+        handleUpdateDocument,
       }}
     >
       {children}

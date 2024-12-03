@@ -158,16 +158,16 @@ form.document.modal {
       transform: scale(1.005);
     }
   }
-}
 
-.page-2 .form-content {
-  justify-content: space-around !important;
+  &.page-2 .form-content {
+    justify-content: space-around;
 
-  p {
-    font-family: "SwedenSansBold", sans-serif;
-    color: Color.$first;
-    font-size: 1.2rem;
-    text-align: center;
+    p {
+      font-family: "SwedenSansBold", sans-serif;
+      color: Color.$first;
+      font-size: 1.2rem;
+      text-align: center;
+    }
   }
 }
 

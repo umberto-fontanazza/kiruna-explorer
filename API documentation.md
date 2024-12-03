@@ -372,7 +372,7 @@ This API uses the following error codes:
 
 ### Query parameters
 
-- `documentId`: **mandatory**. Returns uploads related to this document only.
+- `documentId`: **mandatory** when file=include. Returns uploads related to this document only.
 - `file`: defaults to `omit` to return uploads metadata only or `include` to return metadata along with the file.
 
 ### Response body
