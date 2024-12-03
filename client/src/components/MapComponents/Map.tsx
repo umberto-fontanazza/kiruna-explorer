@@ -58,12 +58,12 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       // Insert Document Position flow
       setdocumentSelected(null);
       setModalOpen(true);
-    } else if (positionMode === PositionMode.Update && docSelected) {
-      // Edit Document Position Flow
-      handleEditPositionModeConfirm(docSelected, {
-        latitude: lat,
-        longitude: lng,
-      });
+      // } else if (positionMode === PositionMode.Update && docSelected) {
+      //   // Edit Document Position Flow
+      //   handleEditPositionModeConfirm(docSelected, {
+      //     latitude: lat,
+      //     longitude: lng,
+      //   });
     }
 
     setIsSubmit(false);
@@ -104,6 +104,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       position: position,
       content: markerDivChild,
       title: doc.title,
+      gmpDraggable: positionMode === PositionMode.Update,
     });
 
     let hoverArea: google.maps.Polygon | null = null;
@@ -140,6 +141,19 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       map?.panTo(newCenter);
     });
 
+    if (positionMode === PositionMode.Update) {
+      marker.addListener("dragend", (event: any) => {
+        const newLatLng = {
+          latitude: event.latLng.lat(),
+          longitude: event.latLng.lng(),
+        };
+
+        if (docSelected) {
+          handleEditPositionModeConfirm(doc, newLatLng);
+        }
+      });
+    }
+
     return marker;
   };
 
@@ -151,22 +165,30 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     return false;
   };
 
-  const clearMarkers = () => {
+  const clearMarkers = (doc?: Document) => {
+    if (doc) {
+      documents.filter((document) => document.id === doc.id);
+    }
     markers.forEach((marker) => (marker.map = null));
   };
 
   useEffect(() => {
-    if (!isLoaded || !map || positionMode !== PositionMode.None) {
+    if (!isLoaded || !map || positionMode === PositionMode.Insert) {
       clearMarkers();
       return;
     }
 
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
-      .filter((doc) => doc.coordinates || doc.area)
-      .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
+      .filter((doc) => {
+        if (positionMode === PositionMode.Update) {
+          return doc.id === docSelected?.id;
+        }
+        return doc.coordinates || doc.area;
+      })
+      .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true)) // Filtro in base a visualLinks
       .map((doc) =>
         createMarker(doc, visualLinks && doc.id !== docSelected?.id),
-      );
+      ); // Crea marker
 
     clearMarkers();
 
