@@ -1,0 +1,76 @@
+Title: Compilation of responses “So what the
+people of Kiruna think?
+Stakeholders: Kiruna kommun/Residents
+Scale: Text
+Issuance date: 2007
+Type: Informative document
+Connections: 3
+Language: Swedish
+Pages=0
+-----------------------------------
+Title: Detail plan for Bolagsomradet Gruvstadspark
+(18)
+Stakeholders: Kiruna kommun
+Scale: 1 : 8.000
+Issuance date: 20/10/2010
+Type: Prescriptive document
+Connections: 8
+Language: Swedish
+Pages: 1-32
+------------------------------------
+Title: Development Plan (41)
+Stakeholders: Kiruna kommun/White Arkitekter
+Scale: 1 : 7,500
+Issuance date: 17/03/2014
+Type: Design document
+Connections: 7
+Language: Swedish
+Pages: 111
+-------------------------------------
+Title: Deformation forecast (45)
+Stakeholders: LKAB
+Scale: 1 : 12,000
+Issuance date: 12/2014
+Type: Technical document
+Connections: 7
+Language: Swedish
+Pages: 1
+--------------------------------------
+Title: Adjusted development plan (47)
+Stakeholders: Kiruna kommun/White Arkitekter
+Scale: 1 : 7.500
+Issuance date: 2015
+Type: Design document
+Connections: 13
+Language: Swedish
+Pages: 1
+-----------------------------------------
+Title: Detail plan for square and commercial
+street (50)
+Stakeholders: Kiruna kommun
+Scale: 1 : 1,000
+Issuance date: 22/06/2016
+Type: Prescriptive document
+Connections: 7
+Language: Swedish
+Pages: 1-43
+--------------------------------------------
+Title: Construction of Scandic Hotel begins (63)
+Stakeholders: LKAB
+Scale: blueprints/effects
+Issuance date: 04/2019
+Type: Material effect
+Connections: 2
+Language: -
+Pages: -
+Coordinates: 67°50'54.7"N 20°18'17.2"E
+---------------------------------------------
+Title: Construction of Aurora Center begins (65)
+Stakeholders: LKAB
+Scale: blueprints/effects
+Issuance date: 05/2019
+Type: Material effect
+Connections: 2
+Language: -
+Pages: -
+Coordinates: 67°50'57.0"N 20°18'15.8"E
