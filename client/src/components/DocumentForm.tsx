@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/DocumentForm.scss";
-import { documentFormDefaults, Link, UploadForm } from "../utils/interfaces";
+import { documentFormDefaults, Link, Upload } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
 import FirstPageModal from "./DocumentFormPages/FirstPageModal";
 import SecondPageModal from "./DocumentFormPages/SecondPageModal";
@@ -23,7 +23,9 @@ const DocumentForm = () => {
   const [tableLinks, setTableLinks] = useState<Link[]>(
     documentFormSelected?.links || [],
   );
-  const [uploadedFiles, setUploadedFiles] = useState<UploadForm[] | null>(null);
+  const [filesToUpload, setFilesToUpload] = useState<Upload[] | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     setDocumentFormSelected((prev) => ({
@@ -45,7 +47,7 @@ const DocumentForm = () => {
           ...documentFormSelected,
           links: tableLinks,
         },
-        uploadedFiles ?? [],
+        filesToUpload ?? [],
       );
     }
 
@@ -54,6 +56,7 @@ const DocumentForm = () => {
       handleUpdateDocument(
         { ...documentFormSelected, links: tableLinks },
         documentFormSelected.links,
+        filesToUpload,
       );
     }
 
@@ -117,9 +120,9 @@ const DocumentForm = () => {
         <ThirdPageModal
           documentForm={documentFormSelected}
           tableLinks={tableLinks}
-          filesToUpload={uploadedFiles}
+          filesToUpload={filesToUpload}
           goBack={setPage}
-          setFilesToUpload={setUploadedFiles}
+          setFilesToUpload={setFilesToUpload}
         />
       )}
     </form>
@@ -127,5 +130,3 @@ const DocumentForm = () => {
 };
 
 export default DocumentForm;
-
-//onClick={handleFormSubmit}

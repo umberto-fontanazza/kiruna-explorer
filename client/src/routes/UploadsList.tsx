@@ -4,17 +4,12 @@ import NavHeader from "../components/NavHeader";
 import { Upload } from "../utils/interfaces";
 
 const UploadsList = () => {
-  const [uploads, setUploads] = useState<Upload[] | null>(null);
+  const [uploads, setUploads] = useState<Upload[]>([]);
 
   const retrieveUploads = async () => {
     try {
-      let res: Upload[] = [];
-      const docs = await API.getDocuments();
-      for (const doc of docs) {
-        const uploads = await API.getUploads(doc.id);
-        res = res.concat(uploads);
-      }
-      setUploads(res);
+      const uploads = await API.getUploads();
+      setUploads(uploads);
     } catch (err) {
       console.error("Unable to fetch uploads: " + err);
     }
@@ -44,14 +39,13 @@ const UploadsList = () => {
               <tr key={index}>
                 <td>{upload.title}</td>
                 <td>{upload.type}</td>
+
                 <td>
-                  <button>Download</button>
-                </td>
-                <td>
-                  <button>Modify links</button>
-                </td>
-                <td>
-                  <button onClick={() => handleDeleteUpload(upload.id)}>
+                  <button
+                    onClick={() =>
+                      upload.id !== undefined && handleDeleteUpload(upload.id)
+                    }
+                  >
                     Delete
                   </button>
                 </td>

@@ -2,11 +2,13 @@ import { Upload, UploadType } from "../utils/interfaces";
 import { baseURL } from "./API";
 
 async function getUploads(
-  documentId: number,
+  documentId?: number,
   file?: string,
 ): Promise<Upload[]> {
   const params = new URLSearchParams();
-  params.append("documentId", documentId.toString());
+  if (documentId !== undefined) {
+    params.append("documentId", documentId.toString());
+  }
   if (file) params.append("file", file);
   const response = await fetch(baseURL + `/uploads?` + params.toString(), {
     method: "GET",
@@ -85,6 +87,7 @@ async function deleteUpload(uploadId: number): Promise<void> {
   if (!response.ok) {
     throw new Error("Something went wrong deleting the Upload file");
   }
+  console.log("Delete API called");
 }
 
 export const uploadAPI = {

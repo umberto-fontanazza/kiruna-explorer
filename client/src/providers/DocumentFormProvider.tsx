@@ -14,7 +14,7 @@ import {
   documentFormDefaults,
   Link,
   LinkType,
-  UploadForm,
+  Upload,
   UploadType,
 } from "../utils/interfaces";
 
@@ -27,10 +27,11 @@ interface DocumentFormContextType {
   setSearchableDocuments: Dispatch<SetStateAction<Document[]>>;
   setDocumentFormSelected: Dispatch<SetStateAction<DocumentForm>>;
   setIsSubmit: Dispatch<SetStateAction<boolean>>;
-  handleAddNewDocument: (newDocument: DocumentForm, file: UploadForm[]) => void;
+  handleAddNewDocument: (newDocument: DocumentForm, file: Upload[]) => void;
   handleUpdateDocument: (
     document: DocumentForm,
     oldDocumentLinks: Link[] | undefined,
+    filesToUpload: Upload[] | undefined,
   ) => void;
 }
 
@@ -55,7 +56,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
 
   const handleAddNewDocument = async (
     newDocument: DocumentForm,
-    uploads?: UploadForm[],
+    uploads?: Upload[],
   ) => {
     if (!newDocument.id) {
       const id = await API.addDocument(newDocument as Document);
@@ -89,6 +90,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
   const handleUpdateDocument = async (
     document: DocumentForm,
     oldDocumentLinks: Link[] | undefined,
+    filesToUpload: Upload[] | undefined,
   ) => {
     if (document.id) {
       try {
@@ -115,6 +117,15 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
           for (const link of linksToDelete) {
             await API.deleteLink(document.id!, link.targetDocumentId);
           }
+        }
+
+        if (filesToUpload) {
+          filesToUpload.map(
+            async (file) =>
+              await API.addUpload(file.title, file.type, file.data, [
+                document.id!,
+              ]),
+          );
         }
       } catch (err) {
         console.error(err);
