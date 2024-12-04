@@ -29,7 +29,6 @@ const LoginForm: FC = (): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_: unknown) {
       setErrors({ login: "Email and/or password wrong" });
-      console.log(errors);
     }
   };
 

@@ -14,7 +14,6 @@ import LoginForm from "./routes/LoginForm";
 import UploadsList from "./routes/UploadsList";
 import "./styles/App.scss";
 import { User } from "./utils/interfaces";
-
 const App: FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const { isPopupOpen, modalOpen } = useAppContext();

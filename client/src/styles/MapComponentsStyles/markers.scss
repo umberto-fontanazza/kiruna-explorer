@@ -1,0 +1,23 @@
+@use "../Color.scss";
+
+.document-icon {
+  border: 2px solid Color.$first;
+  border-radius: 50%;
+  width: 4.5rem;
+  height: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: Color.$third;
+
+  cursor: pointer;
+
+  &.linked {
+    background-color: Color.$second;
+    border: 2px solid green;
+  }
+
+  &:hover {
+    background-color: Color.$second;
+  }
+}

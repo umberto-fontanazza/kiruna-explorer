@@ -191,62 +191,68 @@ const FirstPageModal: FC<FirstPageModalProps> = ({
           </div>
         </div>
 
-        <div className="form-row">
-          <div className="form-group latitude">
-            <label>Latitude *</label>
-            <input
-              type="number"
-              id="latitude"
-              step="0.00000000000001"
-              name="latitude"
-              min="-90"
-              max="90"
-              value={
-                documentForm.coordinates?.latitude !== null
-                  ? documentForm.coordinates?.latitude
-                  : ""
-              }
-              onChange={(e) =>
-                setDocumentForm((prev: DocumentForm) => ({
-                  ...prev,
-                  coordinates: {
-                    latitude: Number(e.target.value),
-                    longitude: prev.coordinates?.longitude ?? 0,
-                  },
-                }))
-              }
-              placeholder="Es. 34.1234"
-            />
-          </div>
+        {documentForm.coordinates ? (
+          <div className="form-row">
+            <div className="form-group latitude">
+              <label>Latitude *</label>
+              <input
+                type="number"
+                id="latitude"
+                step="0.00000000000001"
+                name="latitude"
+                min="-90"
+                max="90"
+                value={
+                  documentForm.coordinates?.latitude !== null
+                    ? documentForm.coordinates?.latitude
+                    : ""
+                }
+                onChange={(e) =>
+                  setDocumentForm((prev: DocumentForm) => ({
+                    ...prev,
+                    coordinates: {
+                      latitude: Number(e.target.value),
+                      longitude: prev.coordinates?.longitude ?? 0,
+                    },
+                  }))
+                }
+                placeholder="Es. 34.1234"
+              />
+            </div>
 
-          <div className="form-group longitude">
-            <label>Longitude *</label>
-            <input
-              lang="en"
-              type="number"
-              step="0.00000000000001"
-              id="longitude"
-              name="longitude"
-              min="-180"
-              max="180"
-              value={
-                documentForm.coordinates?.longitude !== null
-                  ? documentForm.coordinates?.longitude
-                  : ""
-              }
-              onChange={(e) => {
-                setDocumentForm((prev) => ({
-                  ...prev,
-                  coordinates: {
-                    latitude: prev.coordinates?.latitude ?? 0,
-                    longitude: Number(e.target.value),
-                  },
-                }));
-              }}
-              placeholder="Es. 20.2253"
-            />
+            <div className="form-group longitude">
+              <label>Longitude *</label>
+              <input
+                lang="en"
+                type="number"
+                step="0.00000000000001"
+                id="longitude"
+                name="longitude"
+                min="-180"
+                max="180"
+                value={
+                  documentForm.coordinates?.longitude !== null
+                    ? documentForm.coordinates?.longitude
+                    : ""
+                }
+                onChange={(e) => {
+                  setDocumentForm((prev) => ({
+                    ...prev,
+                    coordinates: {
+                      latitude: prev.coordinates?.latitude ?? 0,
+                      longitude: Number(e.target.value),
+                    },
+                  }));
+                }}
+                placeholder="Es. 20.2253"
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          <h3 className="polygon-selected">
+            The coordinates of the polygon are set
+          </h3>
+        )}
       </div>
 
       <button className="primary" type="submit">

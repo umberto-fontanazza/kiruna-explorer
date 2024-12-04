@@ -7,14 +7,19 @@ import NavHeader from "../components/NavHeader";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/DocumentsList.scss";
-import { Coordinates, Document, Filters } from "../utils/interfaces";
+import {
+  Coordinates,
+  Document,
+  Filters,
+  PolygonArea,
+} from "../utils/interfaces";
 
 const DocumentsList = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [documentCoordinates, setDocumentCoordinates] = useState<Coordinates>({
-    latitude: -1,
-    longitude: -1,
-  });
+  const [docSelected, setDocSelected] = useState<Document | null>(null);
+  const [documentLocation, setDocumentLocation] = useState<
+    Coordinates | PolygonArea | null
+  >(null);
   const [filters, setFilters] = useState<Filters>({
     type: undefined,
     scaleType: undefined,
@@ -37,10 +42,7 @@ const DocumentsList = () => {
   }, [isDeleted, isSubmit, filters]);
 
   const handleCloseMap = () => {
-    setDocumentCoordinates({
-      latitude: -1,
-      longitude: -1,
-    });
+    setDocumentLocation(null);
   };
 
   return (
@@ -58,14 +60,17 @@ const DocumentsList = () => {
           <FiltersList setFilters={setFilters} />
         </div>
         <ControlledCarousel
+          docSelected={docSelected}
+          setDocSelected={setDocSelected}
           documents={documents}
-          setCoordinates={setDocumentCoordinates}
+          setLocation={setDocumentLocation}
         />
       </div>
-      {documentCoordinates && documentCoordinates.latitude !== -1 && (
+      {documentLocation && docSelected && (
         <Minimap
-          coordinates={documentCoordinates}
-          onClose={() => handleCloseMap()}
+          documentSelected={docSelected}
+          documentLocation={documentLocation}
+          onClose={handleCloseMap}
         />
       )}
     </div>

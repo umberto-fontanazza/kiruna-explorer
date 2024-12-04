@@ -11,6 +11,7 @@ import {
   Document,
   DocumentForm,
   Link,
+  PolygonArea,
   ScaleType,
   Upload,
   fromDocumentTypeToIcon,
@@ -23,7 +24,9 @@ interface CardDocumentProps {
   toEditPos: () => void;
   showMapButton: boolean;
   isDocSelected: boolean;
-  setMinimapCoord: Dispatch<SetStateAction<Coordinates>> | null;
+  setMinimapCoord: Dispatch<
+    SetStateAction<Coordinates | PolygonArea | null>
+  > | null;
 }
 
 const CardDocument: FC<CardDocumentProps> = (props) => {
@@ -36,7 +39,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     setEditDocumentMode,
   } = useAppContext();
   const { setDocumentToDelete, setIsDeleted } = usePopupContext();
-  const { setDocumentFormSelected, setCoordinates } = useDocumentFormContext();
+  const { setDocumentFormSelected } = useDocumentFormContext();
 
   const handleDownload = async () => {
     try {
@@ -91,6 +94,8 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   const getDocumentCoordinates = () => {
     if (props.document?.coordinates) {
       props.setMinimapCoord?.(props.document.coordinates);
+    } else if (props.document?.area) {
+      props.setMinimapCoord?.(props.document.area);
     }
   };
 
@@ -99,7 +104,8 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     setModalOpen(true);
     setDocumentFormSelected(props.document as DocumentForm);
     if (props.document?.coordinates) {
-      setCoordinates(props.document.coordinates);
+      //TODO: I have to handle this
+      //setCoordinates(props.document.coordinates);
     }
   };
 

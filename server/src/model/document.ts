@@ -276,6 +276,7 @@ export class Document {
     return {
       ...this,
       area: this.area?.toResponseBody(),
+      _area: undefined, //TODO: ho bisogno di un po' di refactoring
       issuanceDate: this.issuanceDate?.format("YYYY-MM-DD") || undefined,
       stakeholders:
         this.stakeholders?.length === 0 ? undefined : this.stakeholders,

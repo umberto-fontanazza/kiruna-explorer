@@ -1,15 +1,15 @@
 import { Libraries } from "@react-google-maps/api";
-export const libraries: Libraries = ["marker"];
+export const libraries: Libraries = ["marker", "drawing"];
 export const kirunaCoords = { lat: 67.8558, lng: 20.2253 };
 export const kirunaCoordinates = {
   latitude: kirunaCoords.lat,
   longitude: kirunaCoords.lng,
 };
 export const kirunaBoundaries = {
-  north: 68.0,
-  south: 67.7,
-  east: 20.7,
-  west: 19.6,
+  north: 80.0,
+  south: 80.7,
+  east: 48.7,
+  west: 35.6,
 };
 
 export const mapOptions = {
@@ -18,7 +18,7 @@ export const mapOptions = {
   mapTypeControlOptions: {
     mapTypeIds: ["satellite", "roadmap", "hybrid", "terrain"],
   },
-  minZoom: 11,
+  minZoom: 8,
   maxZoom: 20,
   fullscreenControl: false,
   restriction: {
