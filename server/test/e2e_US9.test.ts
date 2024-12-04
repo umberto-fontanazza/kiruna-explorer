@@ -64,7 +64,7 @@ afterAll(async () => {
 });
 
 describe("Document with area BAD REQUEST", () => {
-  test("Area AND coordinates fails", async () => {
+  test("US 9.1 POST a document with area AND coordinates, as urban planner", async () => {
     const response = await request(app)
       .post("/documents")
       .send({
@@ -76,7 +76,18 @@ describe("Document with area BAD REQUEST", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
-  test("Area without include field fails", async () => {
+  test("US 9.2 POST a document with area AND coordinates, as visitor", async () => {
+    const response = await request(app)
+      .post("/documents")
+      .send({
+        ...validDocument,
+        coordinates: validCoordinates,
+        area: validAreaBody,
+      });
+    expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
+  });
+
+  test("US 9.3 POST Area without include field, as Urban planner", async () => {
     const response = await request(app)
       .post("/documents")
       .send({
@@ -87,7 +98,7 @@ describe("Document with area BAD REQUEST", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
-  test("Area without exclude field fails", async () => {
+  test("US 9.4 POST Area without exclude field, as Urban planner", async () => {
     const response = await request(app)
       .post("/documents")
       .send({
@@ -97,10 +108,21 @@ describe("Document with area BAD REQUEST", () => {
       .set("Cookie", plannerCookie);
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
+
+  test("US 9.5 POST Create a document with valid area, but without being urban planner", async () => {
+    const response = await request(app)
+      .post("/documents")
+      .send({
+        ...validDocument,
+        area: validAreaBody,
+      });
+    documentId = response.body.id;
+    expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
+  });
 });
 
 describe("Testing areas for document router", () => {
-  test("Create a document with valid area", async () => {
+  test("US 9.6 POST a document with valid area, as Urban planner", async () => {
     const response = await request(app)
       .post("/documents")
       .send({
@@ -113,7 +135,7 @@ describe("Testing areas for document router", () => {
     expect(response.status).toStrictEqual(StatusCodes.CREATED);
   });
 
-  test("Get the document just created", async () => {
+  test("US 9.7 GET the document just created", async () => {
     const response = await request(app).get(`/documents/${documentId}`);
     const receivedDocument = response.body;
     expect(response.status).toStrictEqual(StatusCodes.OK);
@@ -133,7 +155,29 @@ describe("Testing areas for document router", () => {
     );
   });
 
-  test("PATCH said document", async () => {
+  test("US 9.8 GET the document just created, as Urban planner", async () => {
+    const response = await request(app)
+      .get(`/documents/${documentId}`)
+      .set("Cookie", plannerCookie);
+    const receivedDocument = response.body;
+    expect(response.status).toStrictEqual(StatusCodes.OK);
+    expect(receivedDocument).toBeDefined();
+    expect(receivedDocument.area).toBeDefined();
+    expect(receivedDocument.coordinates).toBeUndefined();
+    const { area } = receivedDocument;
+    const { include, exclude } = area;
+    expect(include).toBeDefined();
+    expect(exclude).toBeDefined();
+    expect(JSON.stringify(area)).toStrictEqual(JSON.stringify(validAreaBody));
+    expect(JSON.stringify(include)).toStrictEqual(
+      JSON.stringify(validAreaBody.include),
+    );
+    expect(JSON.stringify(exclude)).toStrictEqual(
+      JSON.stringify(validAreaBody.exclude),
+    );
+  });
+
+  test("US 9.9 PATCH said document", async () => {
     const { include } = validAreaBody;
     const patchedInclude = [...include, { latitude: 67.87, longitude: 20.24 }];
     const patchedAreaBody = { ...validAreaBody, include: patchedInclude };
@@ -144,7 +188,33 @@ describe("Testing areas for document router", () => {
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });
 
-  test("DELETE document", async () => {
+  test("US 9.10 PATCH said document, as visitor", async () => {
+    const { include } = validAreaBody;
+    const patchedInclude = [...include, { latitude: 67.87, longitude: 20.24 }];
+    const patchedAreaBody = { ...validAreaBody, include: patchedInclude };
+    const response = await request(app)
+      .patch(`/documents/${documentId}`)
+      .send({ area: patchedAreaBody });
+    expect(response.status).toStrictEqual(StatusCodes.UNAUTHORIZED);
+  });
+
+  test("US 9.11 PATCH said document, with invalid area", async () => {
+    const response = await request(app)
+      .patch(`/documents/${documentId}`)
+      .send({ area: { include: "invalid" } })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US 9.12 PATCH said document, with area and coordinates", async () => {
+    const response = await request(app)
+      .patch(`/documents/${documentId}`)
+      .send({ area: validAreaBody, coordinates: validCoordinates })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US 9.13 DELETE document", async () => {
     const response = await request(app)
       .delete(`/documents/${documentId}`)
       .send()

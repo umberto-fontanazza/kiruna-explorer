@@ -127,3 +127,17 @@
 All the filter part are writed in the US6, im waiting to do the search bar.
 
 ## US 9. As an Urban Planner I want to define the geolocated area of a document on the map
+
+1. Create a document, as urban planner, defining area AND coordinates. DONE (BAD_REQUEST)
+2. Create a document, as a visitor, defining area AND coordinates. DONE (UNAUTHORIZED)
+3. Create a document, as Urban planner defining Area, but without include field. DONE (BAD_REQUEST)
+4. Create a document, as Urban planner defining Area, but without exclude field. DONE (BAD_REQUEST)
+5. Create a document defining valid area, but without being urban planner. DONE (UNAUTHORIZED)
+6. Create a document defining valid area, as Urban planner. DONE (CREATED)
+7. View the document just created. DONE (OK)
+8. View the document just created, as Urban planner. DONE (OK)
+9. Update the document, as Urban planner. DONE(OK)
+10. Update the document, as Visitor. DONE(UNAUTHORIZED)
+11. Update the document, as Urban planner, with invalid area. DONE (BAD_RQEUEST)
+12. Update the document, as Urban Planner, with area and coordinates. DONE(BAD_REQUEST)
+13. Delete the document, as Urban Planner. DONE(NO_CONTENT)
