@@ -10,6 +10,7 @@ import {
   useDrawingTools,
 } from "../../utils/drawingTools";
 import {
+  Coordinates,
   Document,
   Link,
   PolygonArea,
@@ -17,6 +18,7 @@ import {
 } from "../../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
 import { PositionMode } from "../../utils/modes";
+import { createMunicipalArea } from "../../utils/municipalArea";
 import MapTypeSelector from "../MapTypeSelector";
 
 interface MapComponentProps {
@@ -40,6 +42,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [markers, setMarkers] = useState<
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
+  const [newMarkerPosition, setNewMarkerPosition] =
+    useState<Coordinates | null>(null);
   const [saved, setSaved] = useState(false);
   const [polygonArea, setPolygonArea] = useState<google.maps.Polygon | null>(
     null,
@@ -159,7 +163,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         };
 
         if (docSelected) {
-          handleEditPositionModeConfirm(doc, newLatLng);
+          setNewMarkerPosition(newLatLng);
         }
       });
     }
@@ -192,6 +196,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       createArea(docSelected, map, positionMode, setPolygonArea);
       return;
     }
+
+    createMunicipalArea(map);
 
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
       .filter((doc) => {
@@ -257,22 +263,24 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   }, [isLoaded, map, documents]);
 
   useEffect(() => {
-    if (
-      docSelected &&
-      saved &&
-      polygonArea &&
-      positionMode === PositionMode.Update
-    ) {
-      const path = polygonArea.getPath();
-      const newPolygonArea: PolygonArea = {
-        include: path.getArray().map((latLng) => ({
-          latitude: latLng.lat(),
-          longitude: latLng.lng(),
-        })),
-        exclude: [],
-      };
-      handleEditPositionModeConfirm(docSelected, newPolygonArea);
-      polygonArea.setMap(null);
+    if (docSelected && saved && positionMode === PositionMode.Update) {
+      if (polygonArea) {
+        const path = polygonArea.getPath();
+        const newPolygonArea: PolygonArea = {
+          include: path.getArray().map((latLng) => ({
+            latitude: latLng.lat(),
+            longitude: latLng.lng(),
+          })),
+          exclude: [],
+        };
+        handleEditPositionModeConfirm(docSelected, newPolygonArea);
+        polygonArea.setMap(null);
+      } else {
+        if (newMarkerPosition) {
+          handleEditPositionModeConfirm(docSelected, newMarkerPosition);
+          setNewMarkerPosition(null);
+        }
+      }
       setSaved(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -295,7 +303,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               ? "Select a point on the map, where you want to add a new Document"
               : "Select a point on the map, where you want to update the position of the document selected"}
           </h3>
-          {positionMode === PositionMode.Update && docSelected?.area && (
+          {positionMode === PositionMode.Update && (
             <button
               className="edit-area-btn"
               onClick={() => {
@@ -309,7 +317,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       )}
       <GoogleMap
         id="google-map"
-        zoom={11}
+        zoom={0}
         options={{
           ...mapOptions,
           mapTypeId: mapType,

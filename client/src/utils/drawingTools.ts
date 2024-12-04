@@ -22,7 +22,7 @@ export const useDrawingTools = (
         drawingModes: [google.maps.drawing.OverlayType.POLYGON],
       },
       polygonOptions: {
-        fillColor: "#00FF00",
+        fillColor: "#fecb00",
         fillOpacity: 0.5,
         strokeWeight: 4,
         editable: true,
@@ -101,13 +101,14 @@ export const createArea = (
 
   const area = new google.maps.Polygon({
     paths: [validIncludePaths, ...validExcludePaths],
-    fillColor: "#00FF00",
+    fillColor: "#fecb00",
     fillOpacity: 0.5,
-    strokeWeight: 2,
+    strokeWeight: 4,
+    strokeColor: "#fecb00",
+    zIndex: 1,
     clickable: true,
     draggable: positionMode === PositionMode.Update,
     editable: positionMode === PositionMode.Update,
-    zIndex: 1,
   });
 
   area.setMap(map);

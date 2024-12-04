@@ -21,27 +21,29 @@ const Minimap: FC<MinimapProps> = ({ coordinates, onClose }) => {
   }
 
   return (
-    <div className="minimap">
-      <button className="close-btn" onClick={() => onClose()}>
-        &times;
-      </button>
-      <GoogleMap
-        id="minimap"
-        zoom={14}
-        center={{
-          lat: coordinates.latitude,
-          lng: coordinates.longitude,
-        }}
-        options={{ ...mapOptions, mapTypeId: "satellite" }}
-        mapContainerStyle={{
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        <Marker
-          position={{ lat: coordinates.latitude, lng: coordinates.longitude }}
-        />
-      </GoogleMap>
+    <div className="minimap-overlay">
+      <div className="minimap">
+        <button className="close-btn" onClick={() => onClose()}>
+          &times;
+        </button>
+        <GoogleMap
+          id="minimap"
+          zoom={14}
+          center={{
+            lat: coordinates.latitude,
+            lng: coordinates.longitude,
+          }}
+          options={{ ...mapOptions, mapTypeId: "satellite" }}
+          mapContainerStyle={{
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <Marker
+            position={{ lat: coordinates.latitude, lng: coordinates.longitude }}
+          />
+        </GoogleMap>
+      </div>
     </div>
   );
 };
