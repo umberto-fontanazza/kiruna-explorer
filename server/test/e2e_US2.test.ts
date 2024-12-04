@@ -3,9 +3,10 @@ import { StatusCodes } from "http-status-codes";
 import request from "supertest";
 import app from "../src/app";
 import { Database } from "../src/database";
-import { DocumentType, Stakeholder } from "../src/model/document";
+import { DocumentType } from "../src/model/document";
 import { LinkType } from "../src/model/link";
 import { ScaleType } from "../src/model/scale";
+import { Stakeholder } from "../src/model/stakeholder";
 import { loginAsPlanner } from "./utils";
 dotenv.config();
 

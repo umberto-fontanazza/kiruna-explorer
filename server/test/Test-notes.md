@@ -124,4 +124,6 @@
 
 ## US 8. As an Urban Planner I want to search documents So that I can find what I am interested in
 
+All the filter part are writed in the US6, im waiting to do the search bar.
+
 ## US 9. As an Urban Planner I want to define the geolocated area of a document on the map
