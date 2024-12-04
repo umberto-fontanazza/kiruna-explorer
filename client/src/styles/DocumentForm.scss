@@ -168,6 +168,38 @@ form.document.modal {
       font-size: 1.2rem;
       text-align: center;
     }
+
+    .search-link {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .search-link-row {
+        display: flex;
+        position: relative;
+        justify-content: center;
+        gap: 5%;
+
+        .search-link-type {
+          width: 20%;
+        }
+
+        .add-link-button {
+          width: 25%;
+          font-weight: bold;
+          border-radius: 8px;
+          transition: background-color 0.3s ease;
+          background-color: Color.$first;
+          color: white;
+          border: 0.1rem solid Color.$first;
+
+          &:hover {
+            background: Color.$first-hover;
+            color: white;
+          }
+        }
+      }
+    }
   }
 }
 
