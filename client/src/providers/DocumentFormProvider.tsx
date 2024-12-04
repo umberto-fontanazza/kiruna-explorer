@@ -8,7 +8,6 @@ import {
 } from "react";
 import API from "../API/API";
 import {
-  Coordinates,
   Document,
   DocumentForm,
   documentFormDefaults,
@@ -19,11 +18,9 @@ import {
 } from "../utils/interfaces";
 
 interface DocumentFormContextType {
-  coordinates: Coordinates;
   searchableDocuments: Document[];
   documentFormSelected: DocumentForm;
   isSubmit: boolean;
-  setCoordinates: Dispatch<SetStateAction<Coordinates>>;
   setSearchableDocuments: Dispatch<SetStateAction<Document[]>>;
   setDocumentFormSelected: Dispatch<SetStateAction<DocumentForm>>;
   setIsSubmit: Dispatch<SetStateAction<boolean>>;
@@ -41,10 +38,6 @@ export const DocumentFormContext = createContext<
 export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [coordinates, setCoordinates] = useState<Coordinates>({
-    latitude: -1,
-    longitude: -1,
-  });
   const [searchableDocuments, setSearchableDocuments] = useState<Document[]>(
     [],
   );
@@ -57,9 +50,25 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
     newDocument: DocumentForm,
     uploads?: UploadForm[],
   ) => {
-    if (!newDocument.id) {
-      const id = await API.addDocument(newDocument as Document);
-      newDocument.links?.forEach(
+    if (newDocument.id) {
+      const fetchUpdate = async () => {
+        try {
+          await API.updateDocument(newDocument as Document);
+          newDocument.links?.map(async (link: any) => {
+            await API.putLink(
+              newDocument.id!,
+              link.targetDocumentId,
+              link.linkTypes,
+            );
+          });
+        } catch (err) {
+          console.error(err);
+        }
+      };
+      await fetchUpdate();
+    } else {
+      const id = await API.addDocument(documentFormSelected as Document);
+      documentFormSelected.links?.forEach(
         async (link: { targetDocumentId: number; linkTypes: LinkType[] }) => {
           await API.putLink(link.targetDocumentId, id, link.linkTypes);
           searchableDocuments.map(async (doc) => {
@@ -128,8 +137,6 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
   return (
     <DocumentFormContext.Provider
       value={{
-        coordinates,
-        setCoordinates,
         searchableDocuments,
         setSearchableDocuments,
         documentFormSelected,

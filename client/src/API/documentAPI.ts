@@ -50,6 +50,11 @@ async function getDocumentById(id: number): Promise<Document> {
  * @returns id of the document just added
  */
 async function addDocument(document: Omit<Document, "id">): Promise<number> {
+  if (document.coordinates && document.area) {
+    throw new Error(
+      "Only one of 'coordinates' or 'area' must be provided, not both.",
+    );
+  }
   const responseBody = {
     ...document,
     id: undefined,
@@ -72,6 +77,11 @@ async function addDocument(document: Omit<Document, "id">): Promise<number> {
 }
 
 async function updateDocument(document: Document): Promise<void> {
+  if (document.coordinates && document.area) {
+    throw new Error(
+      "Only one of 'coordinates' or 'area' must be provided, not both.",
+    );
+  }
   const responseBody = {
     ...document,
     id: undefined,

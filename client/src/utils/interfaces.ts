@@ -16,6 +16,7 @@ export interface Document {
   // optional fields below
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
+  area?: PolygonArea;
   issuanceDate?: Dayjs;
   links?: Link[];
 }
@@ -40,6 +41,16 @@ export interface Link {
 
 export interface LoginErrors {
   login?: string;
+}
+
+export interface PolygonData {
+  polygon: google.maps.Polygon;
+  coordinates: { lat: number; lng: number }[];
+}
+
+export interface PolygonArea {
+  include: Coordinates[];
+  exclude: Coordinates[][];
 }
 
 export interface Scale {

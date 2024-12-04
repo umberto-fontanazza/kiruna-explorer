@@ -27,7 +27,6 @@ const UploadsList = () => {
   const handleDeleteUpload = async (uploadId: number) => {
     try {
       await API.deleteUpload(uploadId);
-      console.log("Upload id " + uploadId + " eliminated");
       await retrieveUploads();
     } catch (err) {
       console.error("Error deleting upload: " + err);

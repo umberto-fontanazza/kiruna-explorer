@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/DocumentForm.scss";
@@ -13,7 +13,6 @@ const DocumentForm = () => {
   const { setModalOpen, setEditDocumentMode, setPositionMode } =
     useAppContext();
   const {
-    coordinates,
     documentFormSelected,
     setDocumentFormSelected,
     handleAddNewDocument,
@@ -24,16 +23,6 @@ const DocumentForm = () => {
     documentFormSelected?.links || [],
   );
   const [uploadedFiles, setUploadedFiles] = useState<UploadForm[] | null>(null);
-
-  useEffect(() => {
-    setDocumentFormSelected((prev) => ({
-      ...prev,
-      coordinates: {
-        latitude: coordinates.latitude,
-        longitude: coordinates.longitude,
-      },
-    }));
-  }, [coordinates]);
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -127,5 +116,3 @@ const DocumentForm = () => {
 };
 
 export default DocumentForm;
-
-//onClick={handleFormSubmit}
