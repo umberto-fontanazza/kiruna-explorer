@@ -13,6 +13,7 @@ body {
     flex-direction: column;
 
     .header {
+      position: relative;
       height: 10%;
       display: flex;
       justify-content: space-around;
