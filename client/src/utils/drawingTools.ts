@@ -22,11 +22,11 @@ export const useDrawingTools = (
         drawingModes: [google.maps.drawing.OverlayType.POLYGON],
       },
       polygonOptions: {
-        fillColor: "#00FF00",
+        fillColor: "#fecb00",
         fillOpacity: 0.5,
-        strokeWeight: 2,
-        clickable: true,
+        strokeWeight: 4,
         editable: true,
+        strokeColor: "#fecb00",
         zIndex: 1,
       },
     });
@@ -74,12 +74,83 @@ export const createArea = (
   setPolygon?: Dispatch<SetStateAction<google.maps.Polygon | null>>,
 ): google.maps.Polygon | null => {
   if (!doc.area) return null;
-  const includePaths = (doc.area.include || []).map((coord) => ({
+  const { include, exclude } = parseAreaPaths(doc.area);
+
+  if (include.length === 0) {
+    console.error("Invalid include paths for document", doc);
+    return null;
+  }
+
+  const area = new google.maps.Polygon({
+    paths: [include, ...exclude],
+    fillColor: "#fecb00",
+    fillOpacity: 0.5,
+    strokeWeight: 4,
+    strokeColor: "#fecb00",
+    zIndex: 1,
+    clickable: true,
+    draggable: positionMode === PositionMode.Update,
+    editable: positionMode === PositionMode.Update,
+  });
+
+  area.setMap(map);
+
+  if (positionMode === PositionMode.Update && setPolygon) setPolygon(area);
+
+  return area;
+};
+
+export const clearAreas = (areas: google.maps.Polygon[]) => {
+  areas.forEach((area) => area.setMap(null));
+};
+
+export const getPolygonCentroid = (polygonArea: {
+  include: { latitude: number; longitude: number }[];
+}): { lat: number; lng: number } => {
+  const coordinates = polygonArea.include;
+
+  if (coordinates.length < 3) {
+    throw new Error("A polygon must have at least three vertices.");
+  }
+
+  let area = 0;
+  let centroidX = 0;
+  let centroidY = 0;
+
+  const n = coordinates.length;
+
+  for (let i = 0; i < n; i++) {
+    const x1 = coordinates[i].longitude;
+    const y1 = coordinates[i].latitude;
+    const x2 = coordinates[(i + 1) % n].longitude;
+    const y2 = coordinates[(i + 1) % n].latitude;
+
+    const crossProduct = x1 * y2 - x2 * y1;
+
+    area += crossProduct;
+    centroidX += (x1 + x2) * crossProduct;
+    centroidY += (y1 + y2) * crossProduct;
+  }
+
+  area *= 0.5;
+
+  if (area === 0) {
+    throw new Error("The polygon has zero area and is likely degenerate.");
+  }
+
+  centroidX /= 6 * area;
+  centroidY /= 6 * area;
+
+  return { lat: centroidY, lng: centroidX };
+};
+
+export const parseAreaPaths = (area: PolygonArea) => {
+  const includePaths = (area.include || []).map((coord) => ({
     lat: parseFloat(coord.latitude?.toString() || "NaN"),
     lng: parseFloat(coord.longitude?.toString() || "NaN"),
   }));
 
-  const excludePaths = (doc.area.exclude || []).map((exclude) =>
+  const excludePaths = (area.exclude || []).map((exclude) =>
     exclude.map((coord) => ({
       lat: parseFloat(coord.latitude?.toString() || "NaN"),
       lng: parseFloat(coord.longitude?.toString() || "NaN"),
@@ -94,41 +165,5 @@ export const createArea = (
     exclude.filter(isValidLatLng),
   );
 
-  if (validIncludePaths.length === 0) {
-    console.error("Invalid include paths for document", doc);
-    return null;
-  }
-
-  const area = new google.maps.Polygon({
-    paths: [validIncludePaths, ...validExcludePaths],
-    fillColor: "#00FF00",
-    fillOpacity: 0.5,
-    strokeWeight: 2,
-    clickable: true,
-    draggable: positionMode === PositionMode.Update,
-    editable: positionMode === PositionMode.Update,
-    zIndex: 1,
-  });
-
-  area.setMap(map);
-
-  if (positionMode === PositionMode.Update && setPolygon) setPolygon(area);
-
-  return area;
-};
-
-export const clearAreas = (areas: google.maps.Polygon[]) => {
-  areas.forEach((area) => area.setMap(null));
-};
-
-export const getPolygonCenter = (
-  polygonArea: PolygonArea,
-): { lat: number; lng: number } => {
-  const bounds = new google.maps.LatLngBounds();
-  polygonArea.include.forEach((coord) =>
-    bounds.extend({ lat: coord.latitude, lng: coord.longitude }),
-  );
-
-  const center = bounds.getCenter();
-  return { lat: center.lat(), lng: center.lng() };
+  return { include: validIncludePaths, exclude: validExcludePaths };
 };

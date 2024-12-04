@@ -4,28 +4,6 @@
   width: 100%;
   height: 100%;
 
-  .document-icon {
-    border: 2px solid Color.$first;
-    border-radius: 50%;
-    width: 5rem;
-    height: 5rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: Color.$third;
-
-    cursor: pointer;
-
-    &.linked {
-      background-color: Color.$second;
-      border: 2px solid green;
-    }
-
-    &:hover {
-      background-color: Color.$second;
-    }
-  }
-
   .insert-mode {
     display: flex;
     flex-direction: column;

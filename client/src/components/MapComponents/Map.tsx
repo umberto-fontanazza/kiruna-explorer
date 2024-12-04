@@ -4,18 +4,15 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/Map.scss";
+import { createArea, useDrawingTools } from "../../utils/drawingTools";
 import {
-  createArea,
-  getPolygonCenter,
-  useDrawingTools,
-} from "../../utils/drawingTools";
-import {
+  Coordinates,
   Document,
   Link,
   PolygonArea,
-  fromDocumentTypeToIcon,
 } from "../../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
+import { createMarker } from "../../utils/markersTools";
 import { PositionMode } from "../../utils/modes";
 import MapTypeSelector from "../MapTypeSelector";
 
@@ -40,6 +37,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [markers, setMarkers] = useState<
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
+  const [newMarkerPosition, setNewMarkerPosition] =
+    useState<Coordinates | null>(null);
   const [saved, setSaved] = useState(false);
   const [polygonArea, setPolygonArea] = useState<google.maps.Polygon | null>(
     null,
@@ -51,7 +50,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     libraries: libraries,
   });
 
-  //
   useEffect(() => {
     if (positionMode === PositionMode.None && polygonArea) {
       polygonArea?.setMap(null);
@@ -91,83 +89,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionMode]);
 
-  const createMarker = (
-    doc: Document,
-    linked: boolean = false,
-  ): google.maps.marker.AdvancedMarkerElement => {
-    const markerDivChild = document.createElement("div");
-    const iconName = fromDocumentTypeToIcon.get(doc.type) as string;
-    markerDivChild.className = `document-icon ${linked ? "linked" : ""}`;
-    markerDivChild.innerHTML = `<span class="material-symbols-outlined color-${iconName} size">${iconName}</span>`;
-
-    const position = doc.area
-      ? (getPolygonCenter(doc.area) ?? {
-          lat: doc.coordinates?.latitude ?? 0,
-          lng: doc.coordinates?.longitude ?? 0,
-        })
-      : {
-          lat: doc.coordinates?.latitude ?? 0,
-          lng: doc.coordinates?.longitude ?? 0,
-        };
-
-    const marker = new google.maps.marker.AdvancedMarkerElement({
-      map,
-      position: position,
-      content: markerDivChild,
-      title: doc.title,
-      gmpDraggable: positionMode === PositionMode.Update,
-    });
-
-    let hoverArea: google.maps.Polygon | null = null;
-
-    // Event listener per il mouseover
-    marker.content?.addEventListener("mouseenter", () => {
-      if (doc.area && map) {
-        hoverArea = createArea(doc, map, positionMode);
-      }
-    });
-
-    // Event listener per il mouseout
-    marker.content?.addEventListener("mouseleave", () => {
-      if (hoverArea) {
-        hoverArea.setMap(null);
-        hoverArea = null;
-      }
-    });
-
-    marker.addListener("click", () => {
-      setSidebarOpen(true);
-      setdocumentSelected(doc);
-
-      const newCenter = doc.coordinates
-        ? {
-            lat: doc.coordinates.latitude,
-            lng: doc.coordinates.longitude,
-          }
-        : doc.area
-          ? (getPolygonCenter(doc.area) ?? kirunaCoords)
-          : kirunaCoords;
-      if ((map?.getZoom() ?? 0) < 12) map?.setZoom(12);
-      map?.setCenter(newCenter);
-      map?.panTo(newCenter);
-    });
-
-    if (positionMode === PositionMode.Update) {
-      marker.addListener("dragend", (event: any) => {
-        const newLatLng = {
-          latitude: event.latLng.lat(),
-          longitude: event.latLng.lng(),
-        };
-
-        if (docSelected) {
-          handleEditPositionModeConfirm(doc, newLatLng);
-        }
-      });
-    }
-
-    return marker;
-  };
-
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
       docSelected?.links?.map((link: Link) => link.targetDocumentId) ?? [];
@@ -194,6 +115,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       return;
     }
 
+    //createMunicipalArea(map);
+
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
       .filter((doc) => {
         if (positionMode === PositionMode.Update) {
@@ -203,7 +126,15 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       })
       .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
       .map((doc) =>
-        createMarker(doc, visualLinks && doc.id !== docSelected?.id),
+        createMarker(
+          doc,
+          visualLinks && doc.id !== docSelected?.id,
+          map,
+          positionMode,
+          setdocumentSelected,
+          setSidebarOpen,
+          setNewMarkerPosition,
+        ),
       );
 
     clearMarkers();
@@ -258,22 +189,24 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   }, [isLoaded, map, documents]);
 
   useEffect(() => {
-    if (
-      docSelected &&
-      saved &&
-      polygonArea &&
-      positionMode === PositionMode.Update
-    ) {
-      const path = polygonArea.getPath();
-      const newPolygonArea: PolygonArea = {
-        include: path.getArray().map((latLng) => ({
-          latitude: latLng.lat(),
-          longitude: latLng.lng(),
-        })),
-        exclude: [],
-      };
-      handleEditPositionModeConfirm(docSelected, newPolygonArea);
-      polygonArea.setMap(null);
+    if (docSelected && saved && positionMode === PositionMode.Update) {
+      if (polygonArea) {
+        const path = polygonArea.getPath();
+        const newPolygonArea: PolygonArea = {
+          include: path.getArray().map((latLng) => ({
+            latitude: latLng.lat(),
+            longitude: latLng.lng(),
+          })),
+          exclude: [],
+        };
+        handleEditPositionModeConfirm(docSelected, newPolygonArea);
+        polygonArea.setMap(null);
+      } else {
+        if (newMarkerPosition) {
+          handleEditPositionModeConfirm(docSelected, newMarkerPosition);
+          setNewMarkerPosition(null);
+        }
+      }
       setSaved(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -296,7 +229,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               ? "Select a point on the map, where you want to add a new Document"
               : "Select a point on the map, where you want to update the position of the document selected"}
           </h3>
-          {positionMode === PositionMode.Update && docSelected?.area && (
+          {positionMode === PositionMode.Update && (
             <button
               className="edit-area-btn"
               onClick={() => {
@@ -310,7 +243,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       )}
       <GoogleMap
         id="google-map"
-        zoom={10}
+        zoom={11}
         options={{
           ...mapOptions,
           mapTypeId: mapType,
