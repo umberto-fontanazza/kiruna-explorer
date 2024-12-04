@@ -133,9 +133,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           visualLinks && doc.id !== docSelected?.id,
           map,
           positionMode,
+          setNewMarkerPosition,
           setdocumentSelected,
           setSidebarOpen,
-          setNewMarkerPosition,
         ),
       );
 

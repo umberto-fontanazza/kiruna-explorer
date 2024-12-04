@@ -1,4 +1,9 @@
-import React, { createContext, ReactNode, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  SetStateAction,
+  useState,
+} from "react";
 import API from "../API/API";
 import { Coordinates, Document, PolygonArea } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
@@ -10,6 +15,7 @@ interface AppContextType {
   isPopupOpen: boolean;
   positionMode: PositionMode;
   visualLinks: boolean;
+  isPositionEdited: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEditDocumentMode: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -20,6 +26,7 @@ interface AppContextType {
     docSelected: Document,
     newPos: Coordinates | PolygonArea,
   ) => void;
+  setIsPositionEdited: React.Dispatch<SetStateAction<boolean>>;
 }
 
 // Creazione del contesto
@@ -32,6 +39,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editDocumentMode, setEditDocumentMode] = useState<boolean>(false);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+  const [isPositionEdited, setIsPositionEdited] = useState<boolean>(false);
 
   // Questo controlla solo il cambio di una scritta
   const [positionMode, setPositionMode] = useState<PositionMode>(
@@ -67,12 +75,12 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
             area: newPos,
           };
         }
-        console.log(updateDocument);
         await API.updateDocument(updateDocument);
       } catch (err) {
         console.error(err);
       }
     }
+    setIsPositionEdited(true);
     setPositionMode(PositionMode.None);
   };
 
@@ -84,6 +92,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         isPopupOpen,
         positionMode,
         visualLinks,
+        isPositionEdited,
         setModalOpen,
         setEditDocumentMode,
         setIsPopupOpen,
@@ -92,6 +101,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         //Functions
         handleCancelPopup,
         handleEditPositionModeConfirm,
+        setIsPositionEdited,
       }}
     >
       {children}

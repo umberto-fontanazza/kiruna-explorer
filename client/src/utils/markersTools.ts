@@ -10,9 +10,9 @@ export const createMarker = (
   linked: boolean = false,
   map: google.maps.Map,
   positionMode: PositionMode,
+  setNewMarkerPosition?: Dispatch<SetStateAction<Coordinates | null>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
-  setNewMarkerPosition?: Dispatch<SetStateAction<Coordinates | null>>,
 ): google.maps.marker.AdvancedMarkerElement => {
   const markerDivChild = document.createElement("div");
   const iconName = fromDocumentTypeToIcon.get(doc.type) as string;
@@ -39,22 +39,24 @@ export const createMarker = (
 
   let hoverArea: google.maps.Polygon | null = null;
 
-  // Event listener per il mouseover
-  marker.content?.addEventListener("mouseenter", () => {
-    if (doc.area && map) {
-      hoverArea = createArea(doc, map, positionMode);
-    }
-    //TODO: Heeelp
-    //createMunicipalArea(map);
-  });
+  if (positionMode === PositionMode.None) {
+    // Event listener per il mouseover
+    marker.content?.addEventListener("mouseenter", () => {
+      if (doc.area && map) {
+        hoverArea = createArea(doc, map, positionMode);
+      }
+      //TODO: Heeelp
+      //createMunicipalArea(map);
+    });
 
-  // Event listener per il mouseout
-  marker.content?.addEventListener("mouseleave", () => {
-    if (hoverArea) {
-      hoverArea.setMap(null);
-      hoverArea = null;
-    }
-  });
+    // Event listener per il mouseout
+    marker.content?.addEventListener("mouseleave", () => {
+      if (hoverArea) {
+        hoverArea.setMap(null);
+        hoverArea = null;
+      }
+    });
+  }
 
   if (
     setSidebarOpen &&

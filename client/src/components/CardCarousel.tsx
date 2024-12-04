@@ -4,8 +4,10 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useAppContext } from "../context/appContext";
 import "../styles/CardCarousel.scss";
 import { Coordinates, Document, PolygonArea } from "../utils/interfaces";
+import { PositionMode } from "../utils/modes";
 import CardDocument from "./CardDocument";
 
 interface CardCarouselProps {
@@ -21,12 +23,24 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
   documents,
   setLocation,
 }) => {
+  const { setPositionMode } = useAppContext();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef = useRef<any>(null);
 
   const handleCardClick = (doc: Document, index: number) => {
     setDocSelected(doc);
     swiperRef.current?.swiper.slideTo(index);
+  };
+
+  const handleEditPos = () => {
+    if (docSelected) {
+      if (docSelected.coordinates) {
+        setLocation(docSelected.coordinates);
+      } else if (docSelected.area) {
+        setLocation(docSelected.area);
+      }
+    }
+    setPositionMode(PositionMode.Update);
   };
 
   return (
@@ -62,7 +76,7 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
               >
                 <CardDocument
                   document={doc}
-                  toEditPos={() => {}}
+                  toEditPos={handleEditPos}
                   showMapButton={true}
                   isDocSelected={docSelected?.id === doc.id}
                   setMinimapCoord={setLocation}

@@ -4,6 +4,7 @@ import ControlledCarousel from "../components/CardCarousel";
 import FiltersList from "../components/FiltersList";
 import Minimap from "../components/MapComponents/Minimap";
 import NavHeader from "../components/NavHeader";
+import { useAppContext } from "../context/appContext";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/DocumentsList.scss";
@@ -28,6 +29,7 @@ const DocumentsList = () => {
   });
   const { isDeleted } = usePopupContext();
   const { isSubmit } = useDocumentFormContext();
+  const { isPositionEdited } = useAppContext();
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -39,7 +41,7 @@ const DocumentsList = () => {
       }
     };
     fetchDocuments();
-  }, [isDeleted, isSubmit, filters]);
+  }, [isDeleted, isSubmit, isPositionEdited, filters]);
 
   const handleCloseMap = () => {
     setDocumentLocation(null);

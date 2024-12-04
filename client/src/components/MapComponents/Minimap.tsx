@@ -6,6 +6,7 @@ import { createArea, getPolygonCentroid } from "../../utils/drawingTools";
 import { Coordinates, Document, PolygonArea } from "../../utils/interfaces";
 import { libraries, mapOptions } from "../../utils/map";
 import { createMarker } from "../../utils/markersTools";
+import { PositionMode } from "../../utils/modes";
 
 interface MinimapProps {
   documentSelected: Document | null;
@@ -18,8 +19,19 @@ const Minimap: FC<MinimapProps> = ({
   documentLocation,
   onClose,
 }) => {
-  const { positionMode } = useAppContext();
+  const {
+    positionMode,
+    setPositionMode,
+    handleEditPositionModeConfirm,
+    setIsPositionEdited,
+  } = useAppContext();
   const [minimap, setMinimap] = useState<google.maps.Map | null>(null);
+  const [polygonArea, setPolygonArea] = useState<google.maps.Polygon | null>(
+    null,
+  );
+  const [newMarkerPosition, setNewMarkerPosition] =
+    useState<Coordinates | null>(null);
+  const [saved, setSaved] = useState<boolean>(false);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
@@ -29,12 +41,45 @@ const Minimap: FC<MinimapProps> = ({
   useEffect(() => {
     if (documentSelected && minimap) {
       if ("latitude" in documentLocation && "longitude" in documentLocation) {
-        createMarker(documentSelected, false, minimap, positionMode);
+        createMarker(
+          documentSelected,
+          false,
+          minimap,
+          positionMode,
+          setNewMarkerPosition,
+        );
       } else {
-        createArea(documentSelected, minimap, positionMode);
+        createArea(documentSelected, minimap, positionMode, setPolygonArea);
       }
     }
-  }, [documentLocation, documentSelected, minimap, positionMode]);
+  }, [documentLocation, minimap, documentSelected, positionMode]);
+
+  useEffect(() => {
+    if (documentSelected && saved && positionMode === PositionMode.Update) {
+      setIsPositionEdited(false);
+      if (polygonArea) {
+        const path = polygonArea.getPath();
+        const newPolygonArea: PolygonArea = {
+          include: path.getArray().map((latLng) => ({
+            latitude: latLng.lat(),
+            longitude: latLng.lng(),
+          })),
+          exclude: [],
+        };
+        handleEditPositionModeConfirm(documentSelected, newPolygonArea);
+        polygonArea?.setMap(null);
+      } else {
+        if (newMarkerPosition) {
+          handleEditPositionModeConfirm(documentSelected, newMarkerPosition);
+        }
+      }
+      setNewMarkerPosition(null);
+      setPolygonArea(null);
+      setSaved(false);
+      onClose();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [saved]);
 
   const mapCenter = (): { lat: number; lng: number } => {
     if ("latitude" in documentLocation && "longitude" in documentLocation) {
@@ -50,6 +95,13 @@ const Minimap: FC<MinimapProps> = ({
     return { lat: 0, lng: 0 }; // Default (centrato su 0,0)
   };
 
+  const handleCloseButton = () => {
+    setNewMarkerPosition(null);
+    setPolygonArea(null);
+    setPositionMode(PositionMode.None);
+    onClose();
+  };
+
   if (!isLoaded) {
     return <div>Loading Minimap...</div>;
   }
@@ -57,9 +109,28 @@ const Minimap: FC<MinimapProps> = ({
   return (
     <div className="minimap-overlay">
       <div className="minimap">
-        <button className="close-btn" onClick={() => onClose()}>
+        <button className="close-btn" onClick={handleCloseButton}>
           &times;
         </button>
+        {positionMode !== PositionMode.None && (
+          <div className="update-mode">
+            <h2>Update Position</h2>
+            <h3>
+              Select a point on the map, where you want to update the position
+              of the document selected
+            </h3>
+            {positionMode === PositionMode.Update && (
+              <button
+                className="edit-area-btn"
+                onClick={() => {
+                  setSaved(true);
+                }}
+              >
+                Save
+              </button>
+            )}
+          </div>
+        )}
         <GoogleMap
           id="minimap"
           zoom={12}
@@ -70,32 +141,7 @@ const Minimap: FC<MinimapProps> = ({
             height: "100%",
           }}
           onLoad={setMinimap}
-        >
-          {/* {"latitude" in documentLocation &&
-            "longitude" in documentLocation && (
-              <Marker
-                position={{
-                  lat: documentLocation.latitude,
-                  lng: documentLocation.longitude,
-                }}
-              />
-            )}
-          {"include" in documentLocation && "exclude" in documentLocation && (
-            <Polygon
-              paths={[
-                parseAreaPaths(documentLocation).include,
-                ...parseAreaPaths(documentLocation).exclude,
-              ]}
-              options={{
-                fillColor: "#fecb00",
-                fillOpacity: 0.5,
-                strokeWeight: 4,
-                strokeColor: "#fecb00",
-                zIndex: 1,
-              }}
-            />
-          )} */}
-        </GoogleMap>
+        ></GoogleMap>
       </div>
     </div>
   );
