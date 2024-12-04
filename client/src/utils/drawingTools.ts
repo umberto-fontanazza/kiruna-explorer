@@ -74,33 +74,15 @@ export const createArea = (
   setPolygon?: Dispatch<SetStateAction<google.maps.Polygon | null>>,
 ): google.maps.Polygon | null => {
   if (!doc.area) return null;
-  const includePaths = (doc.area.include || []).map((coord) => ({
-    lat: parseFloat(coord.latitude?.toString() || "NaN"),
-    lng: parseFloat(coord.longitude?.toString() || "NaN"),
-  }));
+  const { include, exclude } = parseAreaPaths(doc.area);
 
-  const excludePaths = (doc.area.exclude || []).map((exclude) =>
-    exclude.map((coord) => ({
-      lat: parseFloat(coord.latitude?.toString() || "NaN"),
-      lng: parseFloat(coord.longitude?.toString() || "NaN"),
-    })),
-  );
-
-  const isValidLatLng = (coord: { lat: number; lng: number }) =>
-    !isNaN(coord.lat) && !isNaN(coord.lng);
-
-  const validIncludePaths = includePaths.filter(isValidLatLng);
-  const validExcludePaths = excludePaths.map((exclude) =>
-    exclude.filter(isValidLatLng),
-  );
-
-  if (validIncludePaths.length === 0) {
+  if (include.length === 0) {
     console.error("Invalid include paths for document", doc);
     return null;
   }
 
   const area = new google.maps.Polygon({
-    paths: [validIncludePaths, ...validExcludePaths],
+    paths: [include, ...exclude],
     fillColor: "#fecb00",
     fillOpacity: 0.5,
     strokeWeight: 4,
@@ -160,4 +142,28 @@ export const getPolygonCentroid = (polygonArea: {
   centroidY /= 6 * area;
 
   return { lat: centroidY, lng: centroidX };
+};
+
+export const parseAreaPaths = (area: PolygonArea) => {
+  const includePaths = (area.include || []).map((coord) => ({
+    lat: parseFloat(coord.latitude?.toString() || "NaN"),
+    lng: parseFloat(coord.longitude?.toString() || "NaN"),
+  }));
+
+  const excludePaths = (area.exclude || []).map((exclude) =>
+    exclude.map((coord) => ({
+      lat: parseFloat(coord.latitude?.toString() || "NaN"),
+      lng: parseFloat(coord.longitude?.toString() || "NaN"),
+    })),
+  );
+
+  const isValidLatLng = (coord: { lat: number; lng: number }) =>
+    !isNaN(coord.lat) && !isNaN(coord.lng);
+
+  const validIncludePaths = includePaths.filter(isValidLatLng);
+  const validExcludePaths = excludePaths.map((exclude) =>
+    exclude.filter(isValidLatLng),
+  );
+
+  return { include: validIncludePaths, exclude: validExcludePaths };
 };

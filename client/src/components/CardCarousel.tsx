@@ -1,23 +1,26 @@
-import { Dispatch, FC, SetStateAction, useRef, useState } from "react";
+import { Dispatch, FC, SetStateAction, useRef } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "../styles/CardCarousel.scss";
-import { Coordinates, Document } from "../utils/interfaces";
+import { Coordinates, Document, PolygonArea } from "../utils/interfaces";
 import CardDocument from "./CardDocument";
 
 interface CardCarouselProps {
+  docSelected: Document | null;
+  setDocSelected: Dispatch<SetStateAction<Document | null>>;
   documents: Document[] | null;
-  setCoordinates: Dispatch<SetStateAction<Coordinates>>;
+  setLocation: Dispatch<SetStateAction<Coordinates | PolygonArea | null>>;
 }
 
 const ControlledCarousel: FC<CardCarouselProps> = ({
+  docSelected,
+  setDocSelected,
   documents,
-  setCoordinates,
+  setLocation,
 }) => {
-  const [docSelected, setDocSelected] = useState<Document | null>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef = useRef<any>(null);
 
@@ -62,7 +65,7 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
                   toEditPos={() => {}}
                   showMapButton={true}
                   isDocSelected={docSelected?.id === doc.id}
-                  setMinimapCoord={setCoordinates}
+                  setMinimapCoord={setLocation}
                 />
               </div>
             </SwiperSlide>

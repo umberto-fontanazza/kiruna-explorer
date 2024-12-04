@@ -4,21 +4,16 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/Map.scss";
-import {
-  createArea,
-  getPolygonCentroid,
-  useDrawingTools,
-} from "../../utils/drawingTools";
+import { createArea, useDrawingTools } from "../../utils/drawingTools";
 import {
   Coordinates,
   Document,
   Link,
   PolygonArea,
-  fromDocumentTypeToIcon,
 } from "../../utils/interfaces";
 import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
+import { createMarker } from "../../utils/markersTools";
 import { PositionMode } from "../../utils/modes";
-import { createMunicipalArea } from "../../utils/municipalArea";
 import MapTypeSelector from "../MapTypeSelector";
 
 interface MapComponentProps {
@@ -94,83 +89,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionMode]);
 
-  const createMarker = (
-    doc: Document,
-    linked: boolean = false,
-  ): google.maps.marker.AdvancedMarkerElement => {
-    const markerDivChild = document.createElement("div");
-    const iconName = fromDocumentTypeToIcon.get(doc.type) as string;
-    markerDivChild.className = `document-icon ${linked ? "linked" : ""}`;
-    markerDivChild.innerHTML = `<span class="material-symbols-outlined color-${iconName} size">${iconName}</span>`;
-
-    const position = doc.area
-      ? (getPolygonCentroid(doc.area) ?? {
-          lat: doc.coordinates?.latitude ?? 0,
-          lng: doc.coordinates?.longitude ?? 0,
-        })
-      : {
-          lat: doc.coordinates?.latitude ?? 0,
-          lng: doc.coordinates?.longitude ?? 0,
-        };
-
-    const marker = new google.maps.marker.AdvancedMarkerElement({
-      map,
-      position: position,
-      content: markerDivChild,
-      title: doc.title,
-      gmpDraggable: positionMode === PositionMode.Update,
-    });
-
-    let hoverArea: google.maps.Polygon | null = null;
-
-    // Event listener per il mouseover
-    marker.content?.addEventListener("mouseenter", () => {
-      if (doc.area && map) {
-        hoverArea = createArea(doc, map, positionMode);
-      }
-    });
-
-    // Event listener per il mouseout
-    marker.content?.addEventListener("mouseleave", () => {
-      if (hoverArea) {
-        hoverArea.setMap(null);
-        hoverArea = null;
-      }
-    });
-
-    marker.addListener("click", () => {
-      setSidebarOpen(true);
-      setdocumentSelected(doc);
-
-      const newCenter = doc.coordinates
-        ? {
-            lat: doc.coordinates.latitude,
-            lng: doc.coordinates.longitude,
-          }
-        : doc.area
-          ? (getPolygonCentroid(doc.area) ?? kirunaCoords)
-          : kirunaCoords;
-      if ((map?.getZoom() ?? 0) < 12) map?.setZoom(12);
-      map?.setCenter(newCenter);
-      map?.panTo(newCenter);
-    });
-
-    if (positionMode === PositionMode.Update) {
-      marker.addListener("dragend", (event: any) => {
-        const newLatLng = {
-          latitude: event.latLng.lat(),
-          longitude: event.latLng.lng(),
-        };
-
-        if (docSelected) {
-          setNewMarkerPosition(newLatLng);
-        }
-      });
-    }
-
-    return marker;
-  };
-
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
       docSelected?.links?.map((link: Link) => link.targetDocumentId) ?? [];
@@ -197,7 +115,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       return;
     }
 
-    createMunicipalArea(map);
+    //createMunicipalArea(map);
 
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
       .filter((doc) => {
@@ -208,7 +126,15 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       })
       .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
       .map((doc) =>
-        createMarker(doc, visualLinks && doc.id !== docSelected?.id),
+        createMarker(
+          doc,
+          visualLinks && doc.id !== docSelected?.id,
+          map,
+          positionMode,
+          setdocumentSelected,
+          setSidebarOpen,
+          setNewMarkerPosition,
+        ),
       );
 
     clearMarkers();
@@ -317,7 +243,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       )}
       <GoogleMap
         id="google-map"
-        zoom={0}
+        zoom={11}
         options={{
           ...mapOptions,
           mapTypeId: mapType,
