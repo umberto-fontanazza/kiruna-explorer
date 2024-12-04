@@ -67,7 +67,7 @@ function SearchBar({ setSelectedSuggestion }: SearchBarProps) {
   return (
     <>
       <div id="search-input-container">
-        <img src="magnifying-glass.png" className="search-icon-mg" />
+        <img src="magnifying-glass-blue.png" className="search-icon-mg" />
         <input
           type="text"
           className="search-input"
@@ -78,7 +78,7 @@ function SearchBar({ setSelectedSuggestion }: SearchBarProps) {
           onBlur={() => setShowSuggestions(false)}
         />
         <img
-          src="x-black.png"
+          src="search-bar-x.png"
           className="search-icon-x"
           alt="Clear search"
           onClick={() => setQuery("")}
