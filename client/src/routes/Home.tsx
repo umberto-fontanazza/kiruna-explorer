@@ -46,6 +46,7 @@ const Home: FC = (): JSX.Element => {
         // ho aggiunto isDeleted per eliminare lo sfarfallio ed una chiamata inutile al server
         try {
           const doc = await API.getDocumentById(docSelected.id);
+          console.log(doc);
           setDocSelected(doc);
         } catch (err) {
           console.error(err);
@@ -81,7 +82,7 @@ const Home: FC = (): JSX.Element => {
       <div className="body-container">
         {modalOpen && <div className="overlay" />}
         {/* Map Component with overlay button for adding documents */}
-        <div className="map">
+        <div className={`map ${sidebarOpen ? "with-sidebar" : ""}`}>
           <MapComponent
             documents={documents}
             docSelected={docSelected}

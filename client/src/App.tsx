@@ -11,6 +11,7 @@ import { PopupProvider } from "./providers/PopupProvider";
 import DocumentsList from "./routes/DocumentsList";
 import Home from "./routes/Home";
 import LoginForm from "./routes/LoginForm";
+import UploadsList from "./routes/UploadsList";
 import "./styles/App.scss";
 import { User } from "./utils/interfaces";
 
@@ -65,6 +66,10 @@ const App: FC = () => {
 
               {/* Route /documents where can be find the list of all documents */}
               <Route path="/documents" element={<DocumentsList />} />
+
+              {/* Route /documents where can be find the list of all documents */}
+              <Route path="/uploads" element={<UploadsList />} />
+
               {/* Route /* to cath all bad urls */}
               <Route path="*" element={<NotFound />} />
             </Route>

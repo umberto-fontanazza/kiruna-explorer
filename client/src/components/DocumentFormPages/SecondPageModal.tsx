@@ -1,5 +1,4 @@
 import { Dispatch, FC, SetStateAction } from "react";
-import "../../styles/DocumentFormPagesStyles/SecondPageModal.scss";
 import { DocumentForm, Link } from "../../utils/interfaces";
 import LinksTable from "../LinksTable";
 import SearchBar from "../SearchBar";
@@ -36,7 +35,7 @@ const SecondPageModal: FC<SecondPageModalProps> = ({
           Back
         </button>
         <button className="primary" type="submit">
-          {documentForm.id ? "Update Document" : "Add Document"}
+          Continue
         </button>
       </div>
     </>

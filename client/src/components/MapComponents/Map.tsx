@@ -96,9 +96,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
       const newCenter = {
         lat: doc.coordinates?.latitude ?? kirunaCoords.lat,
-        lng: doc.coordinates?.longitude
-          ? doc.coordinates?.longitude + 0.1 / (map?.getZoom() ?? 1)
-          : kirunaCoords.lng,
+        lng: doc.coordinates?.longitude ?? kirunaCoords.lng,
       };
       if ((map?.getZoom() ?? 0) < 12) map?.setZoom(12);
       map?.setCenter(newCenter);
@@ -168,6 +166,16 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     });
 
     setMarkers(newMarkers);
+
+    if (visualLinks && newMarkers.length > 0) {
+      const bounds = new google.maps.LatLngBounds();
+      newMarkers.forEach((marker) => {
+        if (marker.position) {
+          bounds.extend(marker.position);
+        }
+      });
+      map.fitBounds(bounds);
+    }
 
     return () => {
       markerCluster.clearMarkers();

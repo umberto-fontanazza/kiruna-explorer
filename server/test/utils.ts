@@ -1,5 +1,6 @@
 import request from "supertest";
 import app from "../src/app";
+import { Database } from "../src/database";
 
 /**
  * Register a planner account and login with said accound
@@ -35,4 +36,14 @@ export async function loginAsResident(): Promise<string> {
   });
   const sessionCookie: string = response.header["set-cookie"][0];
   return sessionCookie;
+}
+
+const tables = ["area", "polygon", "document", "user"];
+export async function countEntriesInTable(table: string): Promise<number> {
+  if (!tables.includes(table)) {
+    throw new Error(`Invalid database table named ${table}`);
+  }
+  const result = await Database.query(`SELECT COUNT(*) FROM ${table};`);
+  const count = Number(result.rows[0].count);
+  return count;
 }

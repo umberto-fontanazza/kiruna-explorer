@@ -1,14 +1,9 @@
 import { z } from "zod";
-import { DocumentType, Stakeholder } from "../model/document";
+import { DocumentType } from "../model/document";
 import { ScaleType } from "../model/scale";
-
-export type Coordinates = z.infer<typeof coordinates>;
-const coordinates = z
-  .object({
-    latitude: z.number().min(-90).max(90),
-    longitude: z.number().min(-180).max(180),
-  })
-  .strict();
+import { Stakeholder } from "../model/stakeholder";
+import { areaSchema } from "./areaSchema";
+import { coordinatesSchema } from "./coordinatesSchema";
 
 export const idRequestParam = z.object({
   id: z.coerce.number().int().positive(),
@@ -64,10 +59,14 @@ export const postBody = z
     type: z.nativeEnum(DocumentType),
     scale,
     stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
-    coordinates: coordinates.optional(),
+    coordinates: coordinatesSchema.optional(),
+    area: areaSchema.optional(),
     issuanceDate: z.string().date().optional(),
   })
-  .strict();
+  .strict()
+  .refine((body) => !(body.coordinates && body.area), {
+    message: "Area and coordinates are mutually exclusive",
+  });
 
 export type PatchBody = z.infer<typeof patchBody>;
 export const patchBody = z
@@ -77,7 +76,11 @@ export const patchBody = z
     type: z.nativeEnum(DocumentType).optional(),
     scale: scale.optional(),
     stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
-    coordinates: coordinates.optional(),
+    coordinates: coordinatesSchema.optional(),
+    area: areaSchema.optional(),
     issuanceDate: z.string().date().optional(),
   })
-  .strict();
+  .strict()
+  .refine((body) => !(body.coordinates && body.area), {
+    message: "Area and coordinates are mutually exclusive",
+  });

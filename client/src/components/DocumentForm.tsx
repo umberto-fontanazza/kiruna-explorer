@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/DocumentForm.scss";
-import { documentFormDefaults, Link } from "../utils/interfaces";
+import { documentFormDefaults, Link, UploadForm } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
 import FirstPageModal from "./DocumentFormPages/FirstPageModal";
 import SecondPageModal from "./DocumentFormPages/SecondPageModal";
@@ -17,12 +17,13 @@ const DocumentForm = () => {
     documentFormSelected,
     setDocumentFormSelected,
     handleAddNewDocument,
+    handleUpdateDocument,
   } = useDocumentFormContext();
   const [page, setPage] = useState<number>(1);
   const [tableLinks, setTableLinks] = useState<Link[]>(
     documentFormSelected?.links || [],
   );
-  const [uploadedFile, setUploadedFile] = useState<string | null>(null);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadForm[] | null>(null);
 
   useEffect(() => {
     setDocumentFormSelected((prev) => ({
@@ -36,13 +37,26 @@ const DocumentForm = () => {
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
-    handleAddNewDocument(
-      {
-        ...documentFormSelected,
-        links: tableLinks,
-      },
-      uploadedFile ?? "",
-    );
+
+    // Add document
+    if (!documentFormSelected.id) {
+      handleAddNewDocument(
+        {
+          ...documentFormSelected,
+          links: tableLinks,
+        },
+        uploadedFiles ?? [],
+      );
+    }
+
+    // Update document
+    if (documentFormSelected.id) {
+      handleUpdateDocument(
+        { ...documentFormSelected, links: tableLinks },
+        documentFormSelected.links,
+      );
+    }
+
     resetForm(false);
   };
 
@@ -103,9 +117,9 @@ const DocumentForm = () => {
         <ThirdPageModal
           documentForm={documentFormSelected}
           tableLinks={tableLinks}
-          fileToUpload={uploadedFile}
+          filesToUpload={uploadedFiles}
           goBack={setPage}
-          setFileToUpload={setUploadedFile}
+          setFilesToUpload={setUploadedFiles}
         />
       )}
     </form>

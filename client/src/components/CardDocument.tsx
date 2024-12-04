@@ -12,6 +12,7 @@ import {
   DocumentForm,
   Link,
   ScaleType,
+  Upload,
   fromDocumentTypeToIcon,
   stakeholdersOptions,
 } from "../utils/interfaces";
@@ -40,41 +41,50 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   const handleDownload = async () => {
     try {
       if (!props.document) {
-        throw new Error("Document is null");
+        console.error("Document is null");
+        return;
       }
 
-      const response = await API.getUploads(props.document.id, "include");
+      const response: Upload[] = await API.getUploads(
+        props.document.id,
+        "include",
+      );
 
-      if (!response || !response[0].file || !response[0].file.data) {
-        throw new Error("File content is missing in response");
+      if (!response || response.length === 0) {
+        console.warn("No files found in the response.");
+        alert("The document does not contain any original resources.");
+        return;
       }
 
-      // Estrai l'array di byte direttamente dalla risposta
-      const byteArray = response[0].file.data;
+      response.forEach((upload) => {
+        try {
+          const binaryString = atob(upload.file);
 
-      // Crea un Blob direttamente dall'array di byte
-      const blob = new Blob([new Uint8Array(byteArray)], {
-        type: "application/octet-stream", // Tipo MIME generico, può essere cambiato se conosci il tipo esatto
+          const byteArray = Uint8Array.from(binaryString, (char) =>
+            char.charCodeAt(0),
+          );
+
+          const blob = new Blob([byteArray], {
+            type: "application/octet-stream",
+          });
+
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = upload.title || "download";
+          a.click();
+          window.URL.revokeObjectURL(url);
+        } catch (downloadError) {
+          console.error(
+            `Error processing file ${upload.title}:`,
+            downloadError,
+          );
+          alert(`Failed to download ${upload.title}.`);
+        }
       });
-
-      // Crea un URL temporaneo per il Blob
-      const url = window.URL.createObjectURL(blob);
-
-      // Crea un elemento <a> invisibile per avviare il download
-      const a = document.createElement("a");
-      a.href = url;
-
-      // Nome del file per il download
-      a.download = response[0].title + ".dat"; // Personalizza il nome del file
-
-      // Simula il click per avviare il download
-      a.click();
-
-      // Libera la memoria per l'URL creato
-      window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Download error:", error);
-      alert(`Error during the download.`);
+      alert("An error occurred during the download process. Please try again.");
     }
   };
 
@@ -157,7 +167,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
               );
             })
           ) : (
-            <span>elle</span>
+            <span>-</span>
           )}
         </h4>
         <h4>

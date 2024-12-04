@@ -1,4 +1,4 @@
-import { FC, useContext, useState } from "react";
+import { FC, useContext, useRef, useState } from "react";
 import { Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { authContext } from "../context/auth";
@@ -10,6 +10,10 @@ const LoginForm: FC = (): JSX.Element => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<LoginErrors>({});
+
+  const [alertMessage, setAlertMessage] = useState<string | null>(null);
+  const timeoutRef = useRef<number | null>(null);
+
   const nav = useNavigate();
 
   if (user) {
@@ -29,8 +33,21 @@ const LoginForm: FC = (): JSX.Element => {
     }
   };
 
+  const handleNotImplemented = (message: string) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    setAlertMessage(message);
+    timeoutRef.current = setTimeout(() => {
+      setAlertMessage(null);
+      timeoutRef.current = null;
+    }, 2000);
+  };
+
   return (
     <div className="form">
+      {alertMessage && <div className="custom-alert">{alertMessage}</div>}
       <div className="login-container">
         <div className="left-panel">
           <h1>Kiruna eXplorer.</h1>
@@ -83,13 +100,30 @@ const LoginForm: FC = (): JSX.Element => {
             <p className="m-0 text-danger text-center">{errors.login}</p>
 
             <div className="forgot-password">
-              <a href="/forgot-password">Forgot password?</a>
+              <a
+                href="#"
+                onClick={() =>
+                  handleNotImplemented(
+                    "Forgot password functionality is not implemented yet.",
+                  )
+                }
+              >
+                Forgot password?
+              </a>
             </div>
             <button type="submit">Login</button>
           </Form>
 
           <div className="signup">
-            Doesn’t have an account? <a href="/signup">Sign up for free</a>
+            Doesn’t have an account?{" "}
+            <a
+              href="#"
+              onClick={() =>
+                handleNotImplemented("Sign up is not implemented yet.")
+              }
+            >
+              Sign up for free
+            </a>
           </div>
         </div>
       </div>
