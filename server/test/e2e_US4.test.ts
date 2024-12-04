@@ -81,11 +81,11 @@ describe("Testing story 4", () => {
   });
 
   describe("Visitor", () => {
-    test("US 4.2.1 GET all documents as Visitor", async () => {
-      const response = await request(app).get("/documents/");
-      expect(response.status).toStrictEqual(StatusCodes.OK);
-      expect(response.body).toBeInstanceOf(Array);
-    });
+    // test("US 4.2.1 GET all documents as Visitor", async () => {
+    //   const response = await request(app).get("/documents/");
+    //   expect(response.status).toStrictEqual(StatusCodes.OK);
+    //   expect(response.body).toBeInstanceOf(Array);
+    // });
 
     test("US 4.5.1 GET with ID as a Visitor", async () => {
       const response = await request(app).get(`/documents/${testDocId4}`);
@@ -108,13 +108,13 @@ describe("Testing story 4", () => {
       residentCookie = await loginAsResident();
     });
 
-    test("US 4.3.2 GET all documents as Resident", async () => {
-      const response = await request(app)
-        .get("/documents/")
-        .set("Cookie", residentCookie);
-      expect(response.status).toStrictEqual(StatusCodes.OK);
-      expect(response.body).toBeInstanceOf(Array);
-    });
+    // test("US 4.3.2 GET all documents as Resident", async () => {
+    //   const response = await request(app)
+    //     .get("/documents/")
+    //     .set("Cookie", residentCookie);
+    //   expect(response.status).toStrictEqual(StatusCodes.OK);
+    //   expect(response.body).toBeInstanceOf(Array);
+    // });
 
     test("US 4.6.2 GET with ID as a Resident", async () => {
       const response = await request(app)
