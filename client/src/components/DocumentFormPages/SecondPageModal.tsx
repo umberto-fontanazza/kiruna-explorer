@@ -1,5 +1,6 @@
-import { Dispatch, FC, SetStateAction } from "react";
-import { DocumentForm, Link } from "../../utils/interfaces";
+import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Document, DocumentForm, Link, LinkType } from "../../utils/interfaces";
+import { capitalizeFirstLetter } from "../../utils/utils";
 import LinksTable from "../LinksTable";
 import SearchBar from "../SearchBar";
 
@@ -16,6 +17,36 @@ const SecondPageModal: FC<SecondPageModalProps> = ({
   setTableLinks,
   goBack,
 }) => {
+  const [selectedDocument, setSelectedDocument] = useState<Document>();
+  const [linkType, setLinkType] = useState(LinkType.Direct);
+
+  const handleAddLink = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (selectedDocument?.id && linkType) {
+      const targetDocumentId = selectedDocument.id;
+      const existingLink = tableLinks.find(
+        (link) => link.targetDocumentId === targetDocumentId,
+      );
+
+      if (!existingLink?.linkTypes.includes(linkType)) {
+        setTableLinks((oldTableLinks) =>
+          oldTableLinks.map((tableLink) =>
+            tableLink.targetDocumentId === targetDocumentId
+              ? { ...tableLink, linkTypes: [...tableLink.linkTypes, linkType] }
+              : tableLink,
+          ),
+        );
+      }
+
+      if (!existingLink) {
+        setTableLinks((oldTableLinks) => [
+          ...oldTableLinks,
+          { targetDocumentId, linkTypes: [linkType] },
+        ]);
+      }
+    }
+  };
+
   return (
     <>
       <div className="form-content">
@@ -28,7 +59,27 @@ const SecondPageModal: FC<SecondPageModalProps> = ({
           </p>
         )}
 
-        <SearchBar tableLinks={tableLinks} setTableLinks={setTableLinks} />
+        <div className="search-link">
+          <div className="search-link-row">
+            <SearchBar setSelectedSuggestion={setSelectedDocument} />
+            <select
+              className="search-link-type"
+              onChange={(e) => setLinkType(e.target.value as LinkType)}
+            >
+              {Object.values(LinkType).map((linkType) => (
+                <option key={linkType} value={linkType}>
+                  {capitalizeFirstLetter(linkType)}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="search-link-row">
+            <button className="add-link-button" onClick={handleAddLink}>
+              Add Link
+            </button>
+          </div>
+        </div>
       </div>
       <div className="actions">
         <button className="back" onClick={() => goBack((p) => p - 1)}>

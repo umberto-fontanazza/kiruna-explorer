@@ -50,27 +50,11 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
     newDocument: DocumentForm,
     uploads?: UploadForm[],
   ) => {
-    if (newDocument.id) {
-      const fetchUpdate = async () => {
-        try {
-          await API.updateDocument(newDocument as Document);
-          newDocument.links?.map(async (link: any) => {
-            await API.putLink(
-              newDocument.id!,
-              link.targetDocumentId,
-              link.linkTypes,
-            );
-          });
-        } catch (err) {
-          console.error(err);
-        }
-      };
-      await fetchUpdate();
-    } else {
-      const id = await API.addDocument(documentFormSelected as Document);
-      documentFormSelected.links?.forEach(
+    if (!newDocument.id) {
+      const id = await API.addDocument(newDocument as Document);
+      newDocument.links?.forEach(
         async (link: { targetDocumentId: number; linkTypes: LinkType[] }) => {
-          await API.putLink(link.targetDocumentId, id, link.linkTypes);
+          await API.putLink(id, link.targetDocumentId, link.linkTypes);
           searchableDocuments.map(async (doc) => {
             if (doc.id === link.targetDocumentId) {
               doc.links = await API.getLinks(doc.id);
