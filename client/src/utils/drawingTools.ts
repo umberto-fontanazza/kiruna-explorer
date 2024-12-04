@@ -95,7 +95,23 @@ export const createArea = (
 
   area.setMap(map);
 
-  if (positionMode === PositionMode.Update && setPolygon) setPolygon(area);
+  console.log("Sono entrato nella createAREA");
+
+  if (positionMode === PositionMode.Update && setPolygon) {
+    area.addListener("dragend", () => {
+      setPolygon(area);
+    });
+    const paths = area.getPath();
+    paths.addListener("set_at", () => {
+      setPolygon(area);
+    });
+
+    paths.addListener("insert_at", () => {
+      setPolygon(area);
+    });
+  }
+
+  console.log("Ho crato quest'area");
 
   return area;
 };

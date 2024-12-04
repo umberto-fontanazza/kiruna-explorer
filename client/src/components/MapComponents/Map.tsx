@@ -111,7 +111,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     }
 
     if (positionMode === PositionMode.Update && docSelected?.area) {
-      createArea(docSelected, map, positionMode, setPolygonArea);
+      console.log("Sono entrato qui");
+      const area = createArea(docSelected, map, positionMode, setPolygonArea);
+      console.log(area);
       return;
     }
 
@@ -189,6 +191,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   }, [isLoaded, map, documents]);
 
   useEffect(() => {
+    console.log(polygonArea);
+  }, [polygonArea]);
+
+  useEffect(() => {
     if (docSelected && saved && positionMode === PositionMode.Update) {
       if (polygonArea) {
         const path = polygonArea.getPath();
@@ -200,13 +206,16 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           exclude: [],
         };
         handleEditPositionModeConfirm(docSelected, newPolygonArea);
-        polygonArea.setMap(null);
+        polygonArea?.setMap(null);
       } else {
+        console.log(newMarkerPosition);
         if (newMarkerPosition) {
           handleEditPositionModeConfirm(docSelected, newMarkerPosition);
-          setNewMarkerPosition(null);
         }
       }
+
+      setNewMarkerPosition(null);
+      setPolygonArea(null);
       setSaved(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

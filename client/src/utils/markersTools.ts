@@ -56,7 +56,11 @@ export const createMarker = (
     }
   });
 
-  if (setSidebarOpen && setdocumentSelected) {
+  if (
+    setSidebarOpen &&
+    setdocumentSelected &&
+    positionMode !== PositionMode.Update
+  ) {
     marker.addListener("click", () => {
       setSidebarOpen(true);
       setdocumentSelected(doc);
@@ -81,6 +85,7 @@ export const createMarker = (
         latitude: event.latLng.lat(),
         longitude: event.latLng.lng(),
       };
+      console.log(newLatLng);
       setNewMarkerPosition(newLatLng);
     });
   }
