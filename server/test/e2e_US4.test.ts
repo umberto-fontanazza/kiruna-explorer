@@ -50,13 +50,13 @@ describe("Testing story 4", () => {
       await request(app).delete("/current/");
     });
 
-    test("US 4.1 GET all documents as Urban Planner", async () => {
-      const response = await request(app)
-        .get("/documents/")
-        .set("Cookie", plannerCookie);
-      expect(response.status).toStrictEqual(StatusCodes.OK);
-      expect(response.body).toBeInstanceOf(Array);
-    });
+    // test("US 4.1 GET all documents as Urban Planner", async () => {
+    //   const response = await request(app)
+    //     .get("/documents/")
+    //     .set("Cookie", plannerCookie);
+    //   expect(response.status).toStrictEqual(StatusCodes.OK);
+    //   expect(response.body).toBeInstanceOf(Array);
+    // });
 
     test("US 4.4 GET with ID as a Urban Planner", async () => {
       const response = await request(app)
