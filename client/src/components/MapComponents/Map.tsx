@@ -14,6 +14,7 @@ import {
 import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
 import { createMarker } from "../../utils/markersTools";
 import { PositionMode } from "../../utils/modes";
+import { createMunicipalArea } from "../../utils/municipalArea";
 import MapTypeSelector from "../MapTypeSelector";
 
 interface MapComponentProps {
@@ -43,6 +44,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [polygonArea, setPolygonArea] = useState<google.maps.Polygon | null>(
     null,
   );
+  const [municipalArea, setMunicipalArea] = useState<
+    google.maps.Polygon[] | undefined
+  >(undefined);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -219,6 +223,71 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   useDrawingTools(map, () => setdocumentSelected);
 
+  useEffect(() => {
+    if (municipalArea && municipalArea.length > 0) {
+      const bounds = new google.maps.LatLngBounds();
+      municipalArea.forEach((polygon) => {
+        const paths = polygon.getPaths();
+        paths.forEach((path) => {
+          const coordinates = path.getArray();
+          coordinates.forEach((latLng) => bounds.extend(latLng));
+        });
+      });
+
+      // Adatta la mappa ai confini calcolati
+      map?.fitBounds(bounds);
+    }
+  }, [municipalArea]);
+
+  const handleMunicipalAreaButton = () => {
+    if (municipalArea) {
+      // Trasforma municipalArea in un PolygonArea
+      const newPolygonArea: PolygonArea = {
+        include: [],
+        exclude: [],
+      };
+
+      municipalArea.forEach((polygon, i) => {
+        const paths = polygon.getPaths(); // Ottiene i percorsi (outer + inner)
+
+        if (i === 16) {
+          paths.forEach((path, j) => {
+            const coordinates = path.getArray().map((latLng) => ({
+              latitude: latLng.lat(),
+              longitude: latLng.lng(),
+            }));
+
+            if (i === 16 && j === 0) {
+              console.log(coordinates);
+              // Primo percorso: include
+              newPolygonArea.include = coordinates;
+            } else {
+              // Percorsi successivi: exclude
+              newPolygonArea.exclude.push(coordinates);
+            }
+          });
+        }
+      });
+      // Aggiorna il documento selezionato con l'area calcolata
+      setDocumentFormSelected((prev) => ({
+        ...prev,
+        coordinates: undefined,
+        area: newPolygonArea,
+      }));
+
+      if (positionMode === PositionMode.Insert) {
+        // Inserimento nuovo documento
+        setdocumentSelected(null);
+        setModalOpen(true);
+      }
+      municipalArea?.forEach((area) => {
+        area.setMap(null);
+      });
+      setIsSubmit(false);
+      setMunicipalArea(undefined);
+    }
+  };
+
   return isLoaded ? (
     <section id="map">
       <MapTypeSelector mapType={mapType} setMapType={setMapType} />
@@ -245,6 +314,24 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             </button>
           )}
         </div>
+      )}
+      {positionMode === PositionMode.Insert && (
+        <button
+          className="municipal-btn"
+          onMouseEnter={() => {
+            const municipalPolygons = createMunicipalArea(map!);
+            setMunicipalArea(municipalPolygons);
+          }}
+          onMouseLeave={() => {
+            municipalArea?.forEach((area) => {
+              area.setMap(null);
+            });
+            setMunicipalArea(undefined);
+          }}
+          onClick={handleMunicipalAreaButton}
+        >
+          Select Municipal Area
+        </button>
       )}
       <GoogleMap
         id="google-map"

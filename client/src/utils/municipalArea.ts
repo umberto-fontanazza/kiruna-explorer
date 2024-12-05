@@ -25,8 +25,13 @@ const extractCoordinates = (features: any) => {
   });
 };
 
-export const createMunicipalArea = (map: google.maps.Map) => {
+export const createMunicipalArea = (
+  map: google.maps.Map,
+): google.maps.Polygon[] => {
   const multiPolygons = extractCoordinates(geoJsonData.features);
+
+  // Array per raccogliere tutti i poligoni
+  const municipalPolygons: google.maps.Polygon[] = [];
 
   multiPolygons.forEach((polygons: any) => {
     polygons.forEach((polygon: any) => {
@@ -56,6 +61,12 @@ export const createMunicipalArea = (map: google.maps.Map) => {
 
       // Mostra il poligono sulla mappa
       municipalPolygon.setMap(map);
+
+      // Aggiungi il poligono all'array
+      municipalPolygons.push(municipalPolygon);
     });
   });
+
+  // Ritorna tutti i poligoni creati
+  return municipalPolygons;
 };
