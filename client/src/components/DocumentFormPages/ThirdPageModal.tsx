@@ -65,19 +65,19 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
     reader.readAsDataURL(file);
   };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrgOvr = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(true);
   };
 
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrgLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrp = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
@@ -132,9 +132,9 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
         <h2>Upload Files</h2>
         <div
           className="upload-box"
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
+          onDragOver={handleDrgOvr}
+          onDragLeave={handleDrgLeave}
+          onDrop={handleDrp}
         >
           <p>Drag and drop the original resources here</p>
           <button
