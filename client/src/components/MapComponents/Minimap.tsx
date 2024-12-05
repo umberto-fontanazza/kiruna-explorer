@@ -2,7 +2,7 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { FC, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import "../../styles/MapComponentsStyles/Minimap.scss";
-import { createArea, getPolygonCentroid } from "../../utils/drawingTools";
+import { createArea } from "../../utils/drawingTools";
 import { Coordinates, Document, PolygonArea } from "../../utils/interfaces";
 import { libraries, mapOptions } from "../../utils/map";
 import { createMarker } from "../../utils/markersTools";
@@ -83,10 +83,34 @@ const Minimap: FC<MinimapProps> = ({
         lng: documentLocation.longitude,
       };
     } else if ("include" in documentLocation && "exclude" in documentLocation) {
-      // Se documentLocation è di tipo PolygonArea
-      return getPolygonCentroid(documentLocation); // Centra il poligono
+      const bounds = calculateBounds(documentLocation);
+
+      // Centra la mappa sui bounds calcolati
+      const center = bounds.getCenter();
+      return {
+        lat: center.lat(),
+        lng: center.lng(),
+      };
     }
     return { lat: 0, lng: 0 }; // Default (centrato su 0,0)
+  };
+
+  const calculateBounds = (polygonArea: PolygonArea) => {
+    const bounds = new google.maps.LatLngBounds();
+
+    // Aggiungi le coordinate "include" al bounds
+    polygonArea.include.forEach((coord) => {
+      bounds.extend(new google.maps.LatLng(coord.latitude, coord.longitude));
+    });
+
+    // Aggiungi anche le coordinate di tutti i "exclude" (le aree escluse)
+    polygonArea.exclude.forEach((excludePolygon) => {
+      excludePolygon.forEach((coord) => {
+        bounds.extend(new google.maps.LatLng(coord.latitude, coord.longitude));
+      });
+    });
+
+    return bounds;
   };
 
   const handleCloseButton = () => {
@@ -127,7 +151,7 @@ const Minimap: FC<MinimapProps> = ({
         )}
         <GoogleMap
           id="minimap"
-          zoom={12}
+          zoom={9}
           center={mapCenter()}
           options={{ ...mapOptions, mapTypeId: "satellite" }}
           mapContainerStyle={{
