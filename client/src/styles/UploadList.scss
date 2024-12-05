@@ -33,7 +33,7 @@
     border-spacing: 0;
     border-radius: 10px;
     overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
     font-family: "SwedenSansBold", sans-serif;
 
     th,
@@ -82,44 +82,44 @@
   justify-content: center;
   align-items: center;
   font-family: "SwedenSansBold", sans-serif;
-}
 
-.delete-modal-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  text-align: center;
-  width: 30%;
-}
+  .delete-modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    width: 30%;
 
-.delete-modal-actions {
-  margin-top: 20px;
-}
+    .delete-modal-actions {
+      margin-top: 20px;
 
-.delete-modal-actions button {
-  margin: 0 10px;
+      button {
+        margin: 0 10px;
 
-  &.cancel-btn {
-    background-color: #f0f0f0;
-    color: #333333;
-    border: 0.1rem solid #bcbcbc;
-    border-radius: 1rem;
+        &.cancel-btn {
+          background-color: #f0f0f0;
+          color: #333333;
+          border: 0.1rem solid #bcbcbc;
+          border-radius: 1rem;
 
-    &:hover {
-      background-color: #e0e0e0;
-      border: 0.1rem solid #bcbcbc;
-    }
-  }
+          &:hover {
+            background-color: #e0e0e0;
+            border: 0.1rem solid #bcbcbc;
+          }
+        }
 
-  &.delete-btn {
-    background-color: #d9534f;
-    border: 0.1rem solid #d9534f;
-    color: white;
-    border-radius: 1rem;
+        &.delete-btn {
+          background-color: #d9534f;
+          border: 0.1rem solid #d9534f;
+          color: white;
+          border-radius: 1rem;
 
-    &:hover {
-      background-color: #c12e2a;
-      border: 0.1rem solid #c12e2a;
+          &:hover {
+            background-color: #c12e2a;
+            border: 0.1rem solid #c12e2a;
+          }
+        }
+      }
     }
   }
 }
