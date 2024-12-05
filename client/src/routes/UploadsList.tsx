@@ -33,7 +33,6 @@ const UploadsList = () => {
   const handleDownloadById = async (uploadId: number) => {
     try {
       const response: Upload = await API.getUploadById(uploadId);
-      console.log("Received upload data:", response);
       if (!response) {
         console.warn("No files found in the response.");
         alert("Error in the download");
@@ -93,9 +92,11 @@ const UploadsList = () => {
       {uploads !== null ? (
         <table>
           <thead>
-            <th>Title</th>
-            <th>Type</th>
-            <th>Actions</th>
+            <tr>
+              <th>Title</th>
+              <th>Type</th>
+              <th>Actions</th>
+            </tr>
           </thead>
           <tbody>
             {uploads.map((upload) => (

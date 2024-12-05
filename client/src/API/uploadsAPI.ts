@@ -133,7 +133,6 @@ async function deleteUpload(uploadId: number): Promise<void> {
   if (!response.ok) {
     throw new Error("Something went wrong deleting the Upload file");
   }
-  console.log("Delete API called");
 }
 
 export const uploadAPI = {

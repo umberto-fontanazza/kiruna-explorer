@@ -19,7 +19,6 @@ const UploadEditModal: React.FC<UploadEditModal> = ({
     const fetchDocuments = async () => {
       try {
         const links = await API.getBindedDocuments(openEditForm.uploadId);
-        console.log(links);
         setLinkedDocs(links);
         const res: Document[] = await API.getDocuments();
         setDocuments(res);

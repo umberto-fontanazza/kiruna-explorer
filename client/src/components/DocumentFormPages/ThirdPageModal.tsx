@@ -42,11 +42,6 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
     fetchUploads();
   }, [documentForm.id]);
 
-  useEffect(() => {
-    console.log(oldUploads);
-    console.log("files to upload" + filesToUpload);
-  }, [oldUploads]);
-
   const handleFileUpload = (file: File) => {
     const reader = new FileReader();
     reader.onload = () => {
