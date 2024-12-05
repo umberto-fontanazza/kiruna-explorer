@@ -117,7 +117,7 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
     }
   };
 
-  const handleEditTitle = (index: number, newTitle: string) => {
+  const handleEditUploadTitle = (index: number, newTitle: string) => {
     setFilesToUpload(
       (prev) =>
         prev?.map((file, i) =>
@@ -153,7 +153,7 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
                   value={file.title}
                   onChange={(e) =>
                     file.id !== undefined &&
-                    handleEditTitle(file.id, e.target.value)
+                    handleEditUploadTitle(file.id, e.target.value)
                   }
                 />
                 <br />
@@ -175,7 +175,9 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
                   <input
                     type="text"
                     value={file.title}
-                    onChange={(e) => handleEditTitle(index, e.target.value)}
+                    onChange={(e) =>
+                      handleEditUploadTitle(index, e.target.value)
+                    }
                   />
                   <br />
                   <button
