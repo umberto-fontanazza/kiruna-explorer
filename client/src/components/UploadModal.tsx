@@ -13,7 +13,7 @@ const UploadModal: React.FC<UploadModal> = ({
   retrieveUploads,
 }) => {
   const [dragActive, setDragActive] = useState(false);
-  const [filesToUpload, setFilesToUpload] = useState<Upload[]>([]);
+  const [filesToUp, setfilesToUp] = useState<Upload[]>([]);
 
   const handleFileUp = (file: File) => {
     const reader = new FileReader();
@@ -21,7 +21,7 @@ const UploadModal: React.FC<UploadModal> = ({
       const base64String = reader.result?.toString().split(",")[1];
       if (base64String) {
         const defaultTitle = file.name;
-        setFilesToUpload((prev) => [
+        setfilesToUp((prev) => [
           ...(prev || []),
           {
             id: undefined,
@@ -72,13 +72,11 @@ const UploadModal: React.FC<UploadModal> = ({
   };
 
   const handleRemoveFile = (index: number) => {
-    setFilesToUpload(
-      (prev) => prev?.filter((_, i) => i !== index) || undefined,
-    );
+    setfilesToUp((prev) => prev?.filter((_, i) => i !== index) || undefined);
   };
 
   const handleEditTitle = (index: number, newTitle: string) => {
-    setFilesToUpload(
+    setfilesToUp(
       (prev) =>
         prev?.map((file, i) =>
           i === index ? { ...file, title: newTitle } : file,
@@ -98,7 +96,7 @@ const UploadModal: React.FC<UploadModal> = ({
         ),
       );
       retrieveUploads();
-      setFilesToUpload([]);
+      setfilesToUp([]);
       setOpenUploadForm(false);
     } catch (err) {
       console.error("Upload error: " + err);
@@ -113,7 +111,7 @@ const UploadModal: React.FC<UploadModal> = ({
   return (
     <form
       className={"upload-form"}
-      onSubmit={(e) => handleUploadFormSubmit(filesToUpload, e)}
+      onSubmit={(e) => handleUploadFormSubmit(filesToUp, e)}
     >
       <button className="close" onClick={(e) => handleCloseForm(e)}>
         <img src="/x.png" alt="Close" />
@@ -140,11 +138,11 @@ const UploadModal: React.FC<UploadModal> = ({
           </div>
 
           <div className="uploaded-files">
-            <h3>Files Uploaded:</h3>
+            <h3>Files Upload:</h3>
             <ul>
-              {filesToUpload &&
-                filesToUpload.length > 0 &&
-                filesToUpload.map((file, ind) => (
+              {filesToUp &&
+                filesToUp.length > 0 &&
+                filesToUp.map((file, ind) => (
                   <li key={file.id} className="uploaded-file-item">
                     <p>Title:</p>{" "}
                     <input
