@@ -56,7 +56,6 @@ const Minimap: FC<MinimapProps> = ({
 
   useEffect(() => {
     if (documentSelected && saved && positionMode === PositionMode.Update) {
-      setIsPositionEdited(false);
       if (polygonArea) {
         const path = polygonArea.getPath();
         const newPolygonArea: PolygonArea = {

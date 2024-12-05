@@ -82,13 +82,17 @@ export const createMarker = (
   }
 
   if (positionMode === PositionMode.Update && setNewMarkerPosition) {
-    marker.addListener("dragend", (event: any) => {
-      const newLatLng = {
-        latitude: event.latLng.lat(),
-        longitude: event.latLng.lng(),
-      };
-      console.log(newLatLng);
-      setNewMarkerPosition(newLatLng);
+    marker.addListener("dragend", (event: google.maps.MapMouseEvent) => {
+      if (event.latLng) {
+        const newLatLng = {
+          lat: event.latLng.lat(),
+          lng: event.latLng.lng(),
+        };
+        setNewMarkerPosition({
+          latitude: newLatLng.lat,
+          longitude: newLatLng.lng,
+        });
+      }
     });
   }
 
