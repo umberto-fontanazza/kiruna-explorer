@@ -120,7 +120,7 @@ const UploadModal: React.FC<UploadModal> = ({
       </button>
 
       <div className="upload-form-header">
-        <h2 className="upload-form-title">New Upload Registration</h2>
+        <h2 className="upload-form-title">New Uploads Registration</h2>
         <div className="form-content">
           <h2>Upload Files</h2>
           <div
@@ -129,7 +129,7 @@ const UploadModal: React.FC<UploadModal> = ({
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <p>Drag and drop the original resources here</p>
+            <p>Drag and drop here</p>
             <button
               className="upload-btn"
               type="button"
@@ -140,22 +140,22 @@ const UploadModal: React.FC<UploadModal> = ({
           </div>
 
           <div className="uploaded-files">
-            <h3>Uploaded Files:</h3>
+            <h3>Files Uploaded:</h3>
             <ul>
               {filesToUpload &&
                 filesToUpload.length > 0 &&
-                filesToUpload.map((file, index) => (
+                filesToUpload.map((file, ind) => (
                   <li key={file.id} className="uploaded-file-item">
                     <p>Title:</p>{" "}
                     <input
                       type="text"
                       value={file.title}
-                      onChange={(e) => handleEditTitle(index, e.target.value)}
+                      onChange={(e) => handleEditTitle(ind, e.target.value)}
                     />
                     <br />
                     <button
                       className="remove-btn"
-                      onClick={() => handleRemoveFile(index)}
+                      onClick={() => handleRemoveFile(ind)}
                     >
                       Remove
                     </button>
@@ -166,7 +166,7 @@ const UploadModal: React.FC<UploadModal> = ({
         </div>
         <div className="actions">
           <button className="primary" type="submit">
-            Add Upload
+            Add upload
           </button>
         </div>
       </div>
