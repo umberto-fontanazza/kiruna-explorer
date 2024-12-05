@@ -105,11 +105,19 @@ const UploadsList = () => {
                 <td>{capitalizeFirstLetter(upload.type).replace("_", " ")}</td>
 
                 <td className="upload-actions">
-                  <button onClick={() => handleDownloadById(upload.id!)}>
+                  <button
+                    onClick={() =>
+                      upload.id !== undefined && handleDownloadById(upload.id)
+                    }
+                  >
                     Download
                   </button>
                   {user && (
-                    <button onClick={(e) => handleEdit(e, upload.id!)}>
+                    <button
+                      onClick={(e) =>
+                        upload.id !== undefined && handleEdit(e, upload.id)
+                      }
+                    >
                       Edit linked Documents
                     </button>
                   )}

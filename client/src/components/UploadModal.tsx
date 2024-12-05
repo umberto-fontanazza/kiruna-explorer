@@ -54,7 +54,7 @@ const UploadModal: React.FC<UploadModal> = ({
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+    if (e.dataTransfer?.files?.[0]) {
       handleFileUpload(e.dataTransfer.files[0]);
     }
   };
@@ -64,7 +64,7 @@ const UploadModal: React.FC<UploadModal> = ({
     input.type = "file";
     input.onchange = (e: Event) => {
       const target = e.target as HTMLInputElement;
-      if (target.files && target.files[0]) {
+      if (target?.files?.[0]) {
         handleFileUpload(target.files[0]);
       }
     };
@@ -108,72 +108,69 @@ const UploadModal: React.FC<UploadModal> = ({
   const handleCloseForm = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setOpenUploadForm(false);
-    return;
   };
 
   return (
-    <>
-      <form
-        className={"upload-form"}
-        onSubmit={(e) => handleUploadFormSubmit(filesToUpload, e)}
-      >
-        <button className="close" onClick={(e) => handleCloseForm(e)}>
-          <img src="/x.png" alt="Close" />
-        </button>
+    <form
+      className={"upload-form"}
+      onSubmit={(e) => handleUploadFormSubmit(filesToUpload, e)}
+    >
+      <button className="close" onClick={(e) => handleCloseForm(e)}>
+        <img src="/x.png" alt="Close" />
+      </button>
 
-        <div className="upload-form-header">
-          <h2 className="upload-form-title">New Upload Registration</h2>
-          <div className="form-content">
-            <h2>Upload Files</h2>
-            <div
-              className="upload-box"
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
-              onDrop={handleDrop}
+      <div className="upload-form-header">
+        <h2 className="upload-form-title">New Upload Registration</h2>
+        <div className="form-content">
+          <h2>Upload Files</h2>
+          <div
+            className="upload-box"
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            <p>Drag and drop the original resources here</p>
+            <button
+              className="upload-btn"
+              type="button"
+              onClick={handleButtonClick}
             >
-              <p>Drag and drop the original resources here</p>
-              <button
-                className="upload-btn"
-                type="button"
-                onClick={handleButtonClick}
-              >
-                Select File
-              </button>
-            </div>
-
-            <div className="uploaded-files">
-              <h3>Uploaded Files:</h3>
-              <ul>
-                {filesToUpload &&
-                  filesToUpload.length > 0 &&
-                  filesToUpload.map((file, index) => (
-                    <li key={index} className="uploaded-file-item">
-                      <p>Title:</p>{" "}
-                      <input
-                        type="text"
-                        value={file.title}
-                        onChange={(e) => handleEditTitle(index, e.target.value)}
-                      />
-                      <br />
-                      <button
-                        className="remove-btn"
-                        onClick={() => handleRemoveFile(index)}
-                      >
-                        Remove
-                      </button>
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          </div>
-          <div className="actions">
-            <button className="primary" type="submit">
-              Add Upload
+              Select File
             </button>
           </div>
+
+          <div className="uploaded-files">
+            <h3>Uploaded Files:</h3>
+            <ul>
+              {filesToUpload &&
+                filesToUpload.length > 0 &&
+                filesToUpload.map((file, index) => (
+                  <li key={file.id} className="uploaded-file-item">
+                    <p>Title:</p>{" "}
+                    <input
+                      type="text"
+                      value={file.title}
+                      onChange={(e) => handleEditTitle(index, e.target.value)}
+                    />
+                    <br />
+                    <button
+                      className="remove-btn"
+                      onClick={() => handleRemoveFile(index)}
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+            </ul>
+          </div>
         </div>
-      </form>
-    </>
+        <div className="actions">
+          <button className="primary" type="submit">
+            Add Upload
+          </button>
+        </div>
+      </div>
+    </form>
   );
 };
 

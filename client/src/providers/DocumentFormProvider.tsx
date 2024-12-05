@@ -113,7 +113,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
         }
 
         if (filesToUpload) {
-          filesToUpload.map(
+          filesToUpload.forEach(
             async (file) =>
               await API.addUpload(file.title, file.type, file.file, [
                 document.id!,

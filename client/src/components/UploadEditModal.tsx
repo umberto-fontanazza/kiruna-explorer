@@ -31,7 +31,7 @@ const UploadEditModal: React.FC<UploadEditModal> = ({
 
   const handleLinkToggle = async (docId: number) => {
     try {
-      if (linkedDocs && linkedDocs.includes(docId)) {
+      if (linkedDocs?.includes(docId)) {
         // Unlink document
         await API.updateUploadLinks(openEditForm.uploadId, undefined, [docId]);
         setLinkedDocs((prev) => prev.filter((id) => id !== docId));
@@ -68,13 +68,11 @@ const UploadEditModal: React.FC<UploadEditModal> = ({
                 <span>{doc.title}</span>
                 <button
                   className={`link-btn ${
-                    linkedDocs && linkedDocs.includes(doc.id) ? "linked" : ""
+                    linkedDocs?.includes(doc.id) ? "linked" : ""
                   }`}
                   onClick={() => handleLinkToggle(doc.id)}
                 >
-                  {linkedDocs && linkedDocs.includes(doc.id)
-                    ? "Linked"
-                    : "Link"}
+                  {linkedDocs?.includes(doc.id) ? "Linked" : "Link"}
                 </button>
               </div>
             ))
