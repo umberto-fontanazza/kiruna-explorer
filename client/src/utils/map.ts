@@ -6,10 +6,10 @@ export const kirunaCoordinates = {
   longitude: kirunaCoords.lng,
 };
 export const kirunaBoundaries = {
-  north: 80.0,
-  south: 80.7,
-  east: 48.7,
-  west: 35.6,
+  north: 80.0, // Esteso verso nord
+  south: 50.0, // Esteso verso sud
+  east: 50.0, // Esteso verso est
+  west: 10.0, // Esteso verso ovest
 };
 
 export const mapOptions = {

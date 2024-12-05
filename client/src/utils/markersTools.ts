@@ -10,9 +10,9 @@ export const createMarker = (
   linked: boolean = false,
   map: google.maps.Map,
   positionMode: PositionMode,
+  setNewMarkerPosition?: Dispatch<SetStateAction<Coordinates | null>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
-  setNewMarkerPosition?: Dispatch<SetStateAction<Coordinates | null>>,
 ): google.maps.marker.AdvancedMarkerElement => {
   const markerDivChild = document.createElement("div");
   const iconName = fromDocumentTypeToIcon.get(doc.type) as string;
@@ -39,24 +39,30 @@ export const createMarker = (
 
   let hoverArea: google.maps.Polygon | null = null;
 
-  // Event listener per il mouseover
-  marker.content?.addEventListener("mouseenter", () => {
-    if (doc.area && map) {
-      hoverArea = createArea(doc, map, positionMode);
-    }
-    //TODO: Heeelp
-    //createMunicipalArea(map);
-  });
+  if (positionMode === PositionMode.None) {
+    // Event listener per il mouseover
+    marker.content?.addEventListener("mouseenter", () => {
+      if (doc.area && map) {
+        hoverArea = createArea(doc, map, positionMode);
+      }
+      //TODO: Heeelp
+      //createMunicipalArea(map);
+    });
 
-  // Event listener per il mouseout
-  marker.content?.addEventListener("mouseleave", () => {
-    if (hoverArea) {
-      hoverArea.setMap(null);
-      hoverArea = null;
-    }
-  });
+    // Event listener per il mouseout
+    marker.content?.addEventListener("mouseleave", () => {
+      if (hoverArea) {
+        hoverArea.setMap(null);
+        hoverArea = null;
+      }
+    });
+  }
 
-  if (setSidebarOpen && setdocumentSelected) {
+  if (
+    setSidebarOpen &&
+    setdocumentSelected &&
+    positionMode !== PositionMode.Update
+  ) {
     marker.addListener("click", () => {
       setSidebarOpen(true);
       setdocumentSelected(doc);
@@ -76,12 +82,17 @@ export const createMarker = (
   }
 
   if (positionMode === PositionMode.Update && setNewMarkerPosition) {
-    marker.addListener("dragend", (event: any) => {
-      const newLatLng = {
-        latitude: event.latLng.lat(),
-        longitude: event.latLng.lng(),
-      };
-      setNewMarkerPosition(newLatLng);
+    marker.addListener("dragend", (event: google.maps.MapMouseEvent) => {
+      if (event.latLng) {
+        const newLatLng = {
+          lat: event.latLng.lat(),
+          lng: event.latLng.lng(),
+        };
+        setNewMarkerPosition({
+          latitude: newLatLng.lat,
+          longitude: newLatLng.lng,
+        });
+      }
     });
   }
 

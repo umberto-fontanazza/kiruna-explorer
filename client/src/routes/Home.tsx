@@ -52,7 +52,6 @@ const Home: FC = (): JSX.Element => {
         }
       }
     };
-
     fetchDocument();
   }, [documents]);
 

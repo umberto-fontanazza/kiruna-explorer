@@ -111,7 +111,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     }
 
     if (positionMode === PositionMode.Update && docSelected?.area) {
-      createArea(docSelected, map, positionMode, setPolygonArea);
+      const area = createArea(docSelected, map, positionMode);
+      setPolygonArea(area);
       return;
     }
 
@@ -131,9 +132,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           visualLinks && doc.id !== docSelected?.id,
           map,
           positionMode,
+          setNewMarkerPosition,
           setdocumentSelected,
           setSidebarOpen,
-          setNewMarkerPosition,
         ),
       );
 
@@ -189,6 +190,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   }, [isLoaded, map, documents]);
 
   useEffect(() => {
+    if (positionMode === PositionMode.None) {
+      polygonArea?.setMap(null);
+      setNewMarkerPosition(null);
+      setPolygonArea(null);
+    }
+  }, [positionMode]);
+
+  useEffect(() => {
     if (docSelected && saved && positionMode === PositionMode.Update) {
       if (polygonArea) {
         const path = polygonArea.getPath();
@@ -200,15 +209,11 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           exclude: [],
         };
         handleEditPositionModeConfirm(docSelected, newPolygonArea);
-        polygonArea.setMap(null);
-      } else {
-        if (newMarkerPosition) {
-          handleEditPositionModeConfirm(docSelected, newMarkerPosition);
-          setNewMarkerPosition(null);
-        }
+      } else if (newMarkerPosition) {
+        handleEditPositionModeConfirm(docSelected, newMarkerPosition);
       }
-      setSaved(false);
     }
+    setSaved(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saved]);
 
