@@ -15,7 +15,7 @@ const UploadModal: React.FC<UploadModal> = ({
   const [dragActive, setDragActive] = useState(false);
   const [filesToUpload, setFilesToUpload] = useState<Upload[]>([]);
 
-  const handleFileUpload = (file: File) => {
+  const handleFileUp = (file: File) => {
     const reader = new FileReader();
     reader.onload = () => {
       const base64String = reader.result?.toString().split(",")[1];
@@ -55,7 +55,7 @@ const UploadModal: React.FC<UploadModal> = ({
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer?.files?.[0]) {
-      handleFileUpload(e.dataTransfer.files[0]);
+      handleFileUp(e.dataTransfer.files[0]);
     }
   };
 
@@ -65,7 +65,7 @@ const UploadModal: React.FC<UploadModal> = ({
     input.onchange = (e: Event) => {
       const target = e.target as HTMLInputElement;
       if (target?.files?.[0]) {
-        handleFileUpload(target.files[0]);
+        handleFileUp(target.files[0]);
       }
     };
     input.click();

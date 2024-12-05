@@ -98,7 +98,7 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
     inputElement.click();
   };
 
-  const handleRemoveFile = (index: number) => {
+  const handleRmvFile = (index: number) => {
     setFilesToUpload(
       (prev) => prev?.filter((_, i) => i !== index) || undefined,
     );
@@ -182,7 +182,7 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
                   <br />
                   <button
                     className="remove-btn"
-                    onClick={() => handleRemoveFile(index)}
+                    onClick={() => handleRmvFile(index)}
                   >
                     Remove
                   </button>
