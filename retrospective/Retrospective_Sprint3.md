@@ -66,13 +66,25 @@ sections:
 
 - What caused your errors in estimation (if any)?
 
+  - Jest was very slow.
+
 - What lessons did you learn (both positive and negative) in this sprint?
 
+  - API definition is a crucial step in the sprint, everybody has to agree on it and it should be done in a few days.
+
 - Which improvement goals set in the previous retrospective were you able to achieve?
-- Which ones you were not able to achieve? Why?
+
+  1. Backend team members ready to work on frontend
+  2. Some improvents in adopting common component organization guidelines
+
+- Which ones you were not able to achieve? Why? 2. Reduce frontend complexity, because we had no time and we had to focus on creting new features
 
 - Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
 
-> Propose one or two
+  > Propose one or two
+
+  1. Produce working code quickly and optimize it in a second pass
+  2. Check and agree on APIs definition quickly
 
 - One thing you are proud of as a Team!!
+  - We're proud of how our app is growing
