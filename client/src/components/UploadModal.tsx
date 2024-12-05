@@ -109,66 +109,72 @@ const UploadModal: React.FC<UploadModal> = ({
   };
 
   return (
-    <form
-      className={"upload-form"}
-      onSubmit={(e) => handleUploadFormSubmit(filesToUp, e)}
-    >
-      <button className="close" onClick={(e) => handleCloseForm(e)}>
-        <img src="/x.png" alt="Close" />
-      </button>
+    <div className="add-modal-overlay">
+      <form
+        className={"upload-form"}
+        onSubmit={(e) => handleUploadFormSubmit(filesToUp, e)}
+      >
+        <button className="close" onClick={(e) => handleCloseForm(e)}>
+          <img src="/x.png" alt="Close" />
+        </button>
 
-      <div className="upload-form-header">
-        <h2 className="upload-form-title">New Uploads Registration</h2>
-        <div className="form-content">
-          <h2>Upload Files</h2>
-          <div
-            className="upload-box"
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-          >
-            <p>Drag and drop here</p>
-            <button
-              className="upload-btn"
-              type="button"
-              onClick={handleButtonClick}
+        <div className="upload-form-header">
+          <h2 className="upload-form-title">New Uploads Registration</h2>
+          <div className="form-content">
+            <h2>Upload Files</h2>
+            <div
+              className="upload-box"
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
             >
-              Select File
+              <p>Drag and drop here</p>
+              <button
+                className="upload-btn"
+                type="button"
+                onClick={handleButtonClick}
+              >
+                Select File
+              </button>
+            </div>
+
+            {filesToUp.length > 0 && (
+              <div className="uploaded-files">
+                <h3>Files to upload:</h3>
+                <ul>
+                  {filesToUp &&
+                    filesToUp.length > 0 &&
+                    filesToUp.map((file, index) => (
+                      <li key={index} className="uploaded-file-item">
+                        <p>Title:</p>{" "}
+                        <input
+                          type="text"
+                          value={file.title}
+                          onChange={(e) =>
+                            handleEditTitle(index, e.target.value)
+                          }
+                        />
+                        <br />
+                        <button
+                          className="remove-btn"
+                          onClick={() => handleRemoveFile(index)}
+                        >
+                          Remove
+                        </button>
+                      </li>
+                    ))}
+                </ul>
+              </div>
+            )}
+          </div>
+          <div className="actions">
+            <button className="primary" type="submit">
+              Add upload
             </button>
           </div>
-
-          <div className="uploaded-files">
-            <h3>Files Upload:</h3>
-            <ul>
-              {filesToUp &&
-                filesToUp.length > 0 &&
-                filesToUp.map((file, ind) => (
-                  <li key={file.id} className="uploaded-file-item">
-                    <p>Title:</p>{" "}
-                    <input
-                      type="text"
-                      value={file.title}
-                      onChange={(e) => handleEditTitle(ind, e.target.value)}
-                    />
-                    <br />
-                    <button
-                      className="remove-btn"
-                      onClick={() => handleRemoveFile(ind)}
-                    >
-                      Remove
-                    </button>
-                  </li>
-                ))}
-            </ul>
-          </div>
         </div>
-        <div className="actions">
-          <button className="primary" type="submit">
-            Add upload
-          </button>
-        </div>
-      </div>
-    </form>
+      </form>
+    </div>
   );
 };
 

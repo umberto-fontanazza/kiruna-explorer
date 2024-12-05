@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import API from "../API/API";
 import NavHeader from "../components/NavHeader";
+import UploadDeleteModal from "../components/UploadDeleteModal";
 import UploadEditModal from "../components/UploadEditModal";
 import UploadModal from "../components/UploadModal";
 import { authContext } from "../context/auth";
@@ -15,6 +16,10 @@ const UploadsList = () => {
     open: boolean;
     uploadId: number;
   }>({ open: false, uploadId: -2 });
+  const [showUploadDeleteModal, setShowUploadDeleteModal] =
+    useState<boolean>(false);
+  const [deleteUploadId, setDeleteUploadId] = useState<number | null>(null);
+
   const { user } = useContext(authContext);
 
   const retrieveUploads = async () => {
@@ -41,15 +46,12 @@ const UploadsList = () => {
 
       try {
         const binaryString = atob(response.file);
-
         const byteArray = Uint8Array.from(binaryString, (char) =>
           char.charCodeAt(0),
         );
-
         const blob = new Blob([byteArray], {
           type: "application/octet-stream",
         });
-
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -80,79 +82,99 @@ const UploadsList = () => {
   const handleDeleteUpload = async (uploadId: number) => {
     try {
       await API.deleteUpload(uploadId);
+      setShowUploadDeleteModal(false);
+      setDeleteUploadId(null);
       await retrieveUploads();
     } catch (err) {
       console.error("Error deleting upload: " + err);
     }
   };
 
+  const openUploadDeleteModal = (uploadId: number) => {
+    setDeleteUploadId(uploadId);
+    setShowUploadDeleteModal(true);
+  };
+
   return (
     <>
       <NavHeader />
-      {uploads !== null ? (
-        <table>
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {uploads.map((upload) => (
-              <tr key={upload.id}>
-                <td>{upload.title}</td>
-                <td>{capitalizeFirstLetter(upload.type).replace("_", " ")}</td>
+      <div className="upload-container">
+        {uploads !== null ? (
+          <table className="upload-table">
+            <thead>
+              <tr>
+                <th>TITLE</th>
+                <th>TYPE</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              {uploads.map((upload) => (
+                <tr key={upload.id}>
+                  <td>{upload.title}</td>
+                  <td>
+                    {capitalizeFirstLetter(upload.type).replace(/_/, " ")}
+                  </td>
 
-                <td className="upload-actions">
-                  <button
-                    onClick={() =>
-                      upload.id !== undefined && handleDownloadById(upload.id)
-                    }
-                  >
-                    Download
-                  </button>
-                  {user && (
+                  <td className="upload-actions">
                     <button
-                      onClick={(e) =>
-                        upload.id !== undefined && handleEdit(e, upload.id)
+                      onClick={() =>
+                        upload.id !== undefined && handleDownloadById(upload.id)
                       }
                     >
-                      Edit linked Documents
+                      Download
                     </button>
-                  )}
-                  <button
-                    onClick={() =>
-                      upload.id !== undefined && handleDeleteUpload(upload.id)
-                    }
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <h2>Trying to retrieve all the uploaded files</h2>
-      )}
-      {user && (
-        <button onClick={() => setOpenUploadForm(true)}>
-          Add new Original Resource
-        </button>
-      )}
-      {openUploadForm && (
-        <UploadModal
-          setOpenUploadForm={setOpenUploadForm}
-          retrieveUploads={retrieveUploads}
+                    {user && (
+                      <button
+                        onClick={(e) =>
+                          upload.id !== undefined && handleEdit(e, upload.id)
+                        }
+                      >
+                        Edit linked Documents
+                      </button>
+                    )}
+                    <button
+                      onClick={() =>
+                        upload.id !== undefined &&
+                        openUploadDeleteModal(upload.id)
+                      }
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        ) : (
+          <h2>Trying to retrieve all the uploaded files</h2>
+        )}
+        {user && (
+          <button
+            className="add-upload"
+            onClick={() => setOpenUploadForm(true)}
+          >
+            Add new Original Resource
+          </button>
+        )}
+        {openUploadForm && (
+          <UploadModal
+            setOpenUploadForm={setOpenUploadForm}
+            retrieveUploads={retrieveUploads}
+          />
+        )}
+        {openEditForm.open && (
+          <UploadEditModal
+            openEditForm={openEditForm}
+            setOpenEditForm={setOpenEditForm}
+          />
+        )}
+        <UploadDeleteModal
+          open={showUploadDeleteModal}
+          onClose={() => setShowUploadDeleteModal(false)}
+          onConfirm={() => deleteUploadId && handleDeleteUpload(deleteUploadId)}
         />
-      )}
-      {openEditForm.open && (
-        <UploadEditModal
-          openEditForm={openEditForm}
-          setOpenEditForm={setOpenEditForm}
-        />
-      )}
+      </div>
     </>
   );
 };
