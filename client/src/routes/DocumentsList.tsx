@@ -5,6 +5,7 @@ import FiltersList from "../components/FiltersList";
 import Minimap from "../components/MapComponents/Minimap";
 import NavHeader from "../components/NavHeader";
 import { useAppContext } from "../context/appContext";
+import SearchBar from "../components/SearchBar";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/DocumentsList.scss";
@@ -17,7 +18,9 @@ import {
 
 const DocumentsList = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [docSelected, setDocSelected] = useState<Document | null>(null);
+  const [docSelected, setDocSelected] = useState<Document | undefined>(
+    undefined,
+  );
   const [documentLocation, setDocumentLocation] = useState<
     Coordinates | PolygonArea | null
   >(null);
@@ -35,7 +38,12 @@ const DocumentsList = () => {
     const fetchDocuments = async () => {
       try {
         const documents: Document[] = await API.getDocuments(filters);
-        setDocuments(documents);
+        const sortedDocuments = documents.sort((a, b) =>
+          a.title.localeCompare(b.title, undefined, {
+            sensitivity: "base",
+          }),
+        );
+        setDocuments(sortedDocuments);
       } catch (err) {
         console.error(err);
       }
@@ -53,12 +61,7 @@ const DocumentsList = () => {
       <div className="doc-lists">
         <div className="header">
           <h1 className="title">Documents List</h1>
-          <div className="searchbar-container">
-            <input type="text" className="searchbar" placeholder="Search..." />
-            <button className="search-button">
-              <span className="material-symbols-outlined">search</span>
-            </button>
-          </div>
+          <SearchBar setSelectedSuggestion={setDocSelected} />
           <FiltersList setFilters={setFilters} />
         </div>
         <ControlledCarousel
