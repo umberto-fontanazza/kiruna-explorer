@@ -42,7 +42,7 @@
         border-bottom: 1px solid lightgray;
 
         &:last-child {
-          border-bottom: none; // Rimuovi il bordo inferiore dall'ultimo elemento
+          border-bottom: none;
         }
 
         input {
@@ -63,7 +63,7 @@
           transition: background-color 0.3s ease;
 
           &:hover {
-            background-color: darken(Color.$first-hover, 10%);
+            background-color: Color.$first-hover;
           }
         }
       }
@@ -86,104 +86,3 @@
     }
   }
 }
-
-/*********************************************************/
-
-/*
-
-
-    p {
-      font-size: 1.2rem;
-      color: darkgray;
-
-      .upload-btn {
-        margin-top: 1rem;
-        padding: 0.5rem 1.5rem;
-        background-color: Color.$first;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-
-        &:hover {
-          background-color: Color.$first-hover;
-        }
-      }
-    }
-
-    .uploaded-files {
-      max-width: 600px;
-      width: 100%;
-      background-color: white;
-      border: 1px solid lightgray;
-      border-radius: 8px;
-      padding: 1rem;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-
-      h3 {
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-        color: darkgray;
-      }
-
-      ul {
-        max-height: 200px; // Imposta un'altezza massima per l'area dei file
-        overflow-y: auto; // Abilita la barra di scorrimento verticale
-        padding: 0;
-        margin: 0;
-        list-style: none;
-
-        .uploaded-file-item {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 0.5rem;
-          border-bottom: 1px solid lightgray;
-
-          &:last-child {
-            border-bottom: none; // Rimuovi il bordo inferiore dall'ultimo elemento
-          }
-
-          input {
-            flex: 1;
-            padding: 0.5rem;
-            border: 1px solid lightgray;
-            border-radius: 5px;
-            margin-right: 0.5rem;
-          }
-
-          .remove-btn {
-            padding: 0.5rem;
-            background-color: Color.$first;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-
-            &:hover {
-              background-color: darken(Color.$first-hover, 10%);
-            }
-          }
-        }
-      }
-    }
-
-    .actions {
-      display: flex;
-      gap: 1ch;
-      width: 100%;
-
-      button {
-        flex: 1;
-      }
-      .primary {
-        &:hover {
-          background-color: Color.$first-hover;
-        }
-      }
-    }
-  }
-}
-*/

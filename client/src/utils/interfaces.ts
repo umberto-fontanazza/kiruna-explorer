@@ -59,15 +59,10 @@ export interface Scale {
 }
 
 export interface Upload {
-  id: number;
+  id: number | undefined;
   title: string;
   type: UploadType;
   file: string;
-}
-
-export interface UploadForm {
-  title: string;
-  data: string;
 }
 
 export interface User {

@@ -1,0 +1,54 @@
+@use "Color";
+
+table {
+  width: 90%;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-family: "SwedenSansBold", sans-serif;
+
+  th,
+  td {
+    padding: 0.8rem 1rem;
+    text-align: center;
+    background-color: white;
+    border: 1px solid #ddd;
+  }
+
+  th {
+    background-color: Color.$first;
+    color: white;
+    top: 0;
+    font-size: 1.2rem;
+    letter-spacing: 0.1em;
+  }
+
+  td {
+    font-size: 1rem;
+  }
+
+  .upload-actions {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  td:first-child img {
+    height: 4vh;
+    transform: scale(0.8);
+  }
+
+  .remove-link {
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    background-color: Color.$first;
+    color: white;
+    border: 0.1rem solid Color.$first;
+
+    &:hover {
+      background: Color.$first-hover;
+      color: white;
+    }
+  }
+}

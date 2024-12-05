@@ -1,13 +1,14 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import API from "../../API/API";
 import "../../styles/DocumentFormPagesStyles/ThirdPageModal.scss";
-import { DocumentForm, Link, UploadForm } from "../../utils/interfaces";
+import { DocumentForm, Link, Upload, UploadType } from "../../utils/interfaces";
 
 interface ThirdPageModalProps {
   documentForm: DocumentForm;
-  filesToUpload: UploadForm[] | null;
+  filesToUpload: Upload[] | undefined;
   tableLinks: Link[];
   goBack: Dispatch<SetStateAction<number>>;
-  setFilesToUpload: Dispatch<SetStateAction<UploadForm[] | null>>;
+  setFilesToUpload: Dispatch<SetStateAction<Upload[] | undefined>>;
 }
 
 const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
@@ -18,6 +19,29 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
 }) => {
   const [dragActive, setDragActive] = useState(false);
 
+  const [oldUploads, setOldUploads] = useState<Upload[]>([]);
+
+  useEffect(() => {
+    const fetchUploads = async () => {
+      if (documentForm?.id) {
+        try {
+          const uploads = await API.getUploads(documentForm.id);
+          const formattedUploads = uploads.map((upload) => ({
+            id: upload.id,
+            title: upload.title,
+            type: upload.type,
+            file: "",
+          }));
+          setOldUploads(formattedUploads);
+        } catch (error) {
+          console.error("Error fetching uploads:", error);
+        }
+      }
+    };
+
+    fetchUploads();
+  }, [documentForm.id]);
+
   const handleFileUpload = (file: File) => {
     const reader = new FileReader();
     reader.onload = () => {
@@ -26,7 +50,12 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
         const defaultTitle = file.name;
         setFilesToUpload((prev) => [
           ...(prev || []),
-          { title: defaultTitle, data: base64String },
+          {
+            id: undefined,
+            title: defaultTitle,
+            type: UploadType.OriginalResource,
+            file: base64String,
+          },
         ]);
       }
     };
@@ -36,19 +65,19 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
     reader.readAsDataURL(file);
   };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrgOvr = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(true);
   };
 
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrgLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrp = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
@@ -57,28 +86,43 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
     }
   };
 
-  const handleButtonClick = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.onchange = (e: Event) => {
+  const handleBtnClick = () => {
+    const inputElement = document.createElement("input");
+    inputElement.type = "file";
+    inputElement.onchange = (e: Event) => {
       const target = e.target as HTMLInputElement;
       if (target.files && target.files[0]) {
         handleFileUpload(target.files[0]);
       }
     };
-    input.click();
+    inputElement.click();
   };
 
-  const handleRemoveFile = (index: number) => {
-    setFilesToUpload((prev) => prev?.filter((_, i) => i !== index) || null);
+  const handleRmvFile = (index: number) => {
+    setFilesToUpload(
+      (prev) => prev?.filter((_, i) => i !== index) || undefined,
+    );
   };
 
-  const handleEditTitle = (index: number, newTitle: string) => {
+  const handleRemoveOldFile = async (
+    uploadId: number,
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+    try {
+      await API.deleteUpload(uploadId);
+      setOldUploads((prev) => prev.filter((file) => file.id !== uploadId));
+    } catch (error) {
+      console.error("Error removing old file:", error);
+    }
+  };
+
+  const handleEditUploadTitle = (index: number, newTitle: string) => {
     setFilesToUpload(
       (prev) =>
         prev?.map((file, i) =>
           i === index ? { ...file, title: newTitle } : file,
-        ) || null,
+        ) || undefined,
     );
   };
 
@@ -88,44 +132,64 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
         <h2>Upload Files</h2>
         <div
           className="upload-box"
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
+          onDragOver={handleDrgOvr}
+          onDragLeave={handleDrgLeave}
+          onDrop={handleDrp}
         >
           <p>Drag and drop the original resources here</p>
-          <button
-            className="upload-btn"
-            type="button"
-            onClick={handleButtonClick}
-          >
+          <button className="upload-btn" type="button" onClick={handleBtnClick}>
             Select File
           </button>
         </div>
 
-        {filesToUpload && filesToUpload.length > 0 && (
-          <div className="uploaded-files">
-            <h3>Uploaded Files:</h3>
-            <ul>
-              {filesToUpload.map((file, index) => (
+        <div className="uploaded-files">
+          <h3>Uploaded Files:</h3>
+          <ul>
+            {oldUploads.map((file) => (
+              <li key={file.id} className="uploaded-file-item">
+                <p>Title:</p>{" "}
+                <input
+                  type="text"
+                  value={file.title}
+                  onChange={(e) =>
+                    file.id !== undefined &&
+                    handleEditUploadTitle(file.id, e.target.value)
+                  }
+                />
+                <br />
+                <button
+                  className="remove-btn"
+                  onClick={(e) => {
+                    if (file.id !== undefined) handleRemoveOldFile(file.id, e);
+                  }}
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
+            {filesToUpload &&
+              filesToUpload.length > 0 &&
+              filesToUpload.map((file, index) => (
                 <li key={index} className="uploaded-file-item">
                   <p>Title:</p>{" "}
                   <input
                     type="text"
                     value={file.title}
-                    onChange={(e) => handleEditTitle(index, e.target.value)}
+                    onChange={(e) =>
+                      handleEditUploadTitle(index, e.target.value)
+                    }
                   />
                   <br />
                   <button
                     className="remove-btn"
-                    onClick={() => handleRemoveFile(index)}
+                    onClick={() => handleRmvFile(index)}
                   >
                     Remove
                   </button>
                 </li>
               ))}
-            </ul>
-          </div>
-        )}
+          </ul>
+        </div>
       </div>
       <div className="actions">
         <button className="back" onClick={() => goBack((p) => p - 1)}>

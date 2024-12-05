@@ -2,11 +2,13 @@ import { Upload, UploadType } from "../utils/interfaces";
 import { baseURL } from "./API";
 
 async function getUploads(
-  documentId: number,
+  documentId?: number,
   file?: string,
 ): Promise<Upload[]> {
   const params = new URLSearchParams();
-  params.append("documentId", documentId.toString());
+  if (documentId !== undefined) {
+    params.append("documentId", documentId.toString());
+  }
   if (file) params.append("file", file);
   const response = await fetch(baseURL + `/uploads?` + params.toString(), {
     method: "GET",
@@ -26,15 +28,38 @@ async function getUploadById(uploadId: number): Promise<Upload> {
   if (!response.ok) {
     throw new Error("Error in fetching upload by id");
   }
-  const file: Upload = await response.json();
-  return file;
+
+  const {
+    id,
+    title,
+    type,
+    file,
+  }: { id: number; title: string; type: UploadType; file: string } =
+    await response.json();
+
+  return {
+    id,
+    title,
+    type,
+    file,
+  };
+}
+
+async function getBindedDocuments(uploadId: number): Promise<number[]> {
+  const queryParams = "?bindedDocumentIds=include";
+  const response = await fetch(baseURL + `/uploads/${uploadId}${queryParams}`);
+  if (!response.ok) {
+    throw new Error("Error in fetching binded documents");
+  }
+  const res = await response.json();
+  return res.bindDocumentIds;
 }
 
 async function addUpload(
   title: string,
   type: UploadType,
   file: string,
-  documentsIds: number[],
+  documentsIds?: number[],
 ): Promise<number> {
   const requestBody = {
     title: title,
@@ -77,6 +102,29 @@ async function editUpload(
   }
 }
 
+export const updateUploadLinks = async (
+  id: number,
+  bindDocumentIds?: number[],
+  decoupleDocumentIds?: number[],
+): Promise<void> => {
+  try {
+    const requestBody = { bindDocumentIds, decoupleDocumentIds };
+    const response = await fetch(baseURL + `/uploads/${id}`, {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(requestBody),
+    });
+    if (!response.ok) {
+      throw new Error("Error linking documents to upload");
+    }
+  } catch (error) {
+    throw new Error("Error linking documents to upload: " + error);
+  }
+};
+
 async function deleteUpload(uploadId: number): Promise<void> {
   const response = await fetch(baseURL + `/uploads/${uploadId}`, {
     method: "DELETE",
@@ -90,7 +138,9 @@ async function deleteUpload(uploadId: number): Promise<void> {
 export const uploadAPI = {
   getUploads,
   getUploadById,
+  getBindedDocuments,
   addUpload,
   editUpload,
   deleteUpload,
+  updateUploadLinks,
 };

@@ -1,0 +1,56 @@
+@use "Color";
+
+.edit-update-modal {
+  font-family: "SwedenSans", sans-serif;
+  position: absolute;
+  background-color: Color.$third;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  height: 85%;
+  width: 38vw;
+  border-radius: 1rem;
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  z-index: 1000;
+
+  button.close {
+    position: absolute;
+    $close-button-size: 3em;
+    width: $close-button-size;
+    height: $close-button-size;
+    $close-button-gap: 10px;
+    top: $close-button-gap;
+    right: $close-button-gap;
+    border-radius: 50%;
+    border: none;
+    background-color: Color.$first;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img {
+      height: 3vh;
+      transform: scale(0.9);
+    }
+
+    &:hover {
+      background-color: Color.$first-hover;
+    }
+  }
+
+  h2 {
+    font-size: 3vmin;
+    font-family: "SwedenSansBold", sans-serif;
+    color: Color.$first;
+    margin: 0;
+  }
+
+  .upload-form-title {
+    font-size: 20px;
+  }
+}
