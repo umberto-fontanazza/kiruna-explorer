@@ -71,7 +71,6 @@ export const createArea = (
   doc: Document,
   map: google.maps.Map,
   positionMode: PositionMode,
-  setPolygon?: Dispatch<SetStateAction<google.maps.Polygon | null>>,
 ): google.maps.Polygon | null => {
   if (!doc.area) return null;
   const { include, exclude } = parseAreaPaths(doc.area);
@@ -94,24 +93,6 @@ export const createArea = (
   });
 
   area.setMap(map);
-
-  console.log("Sono entrato nella createAREA");
-
-  if (positionMode === PositionMode.Update && setPolygon) {
-    area.addListener("dragend", () => {
-      setPolygon(area);
-    });
-    const paths = area.getPath();
-    paths.addListener("set_at", () => {
-      setPolygon(area);
-    });
-
-    paths.addListener("insert_at", () => {
-      setPolygon(area);
-    });
-  }
-
-  console.log("Ho crato quest'area");
 
   return area;
 };

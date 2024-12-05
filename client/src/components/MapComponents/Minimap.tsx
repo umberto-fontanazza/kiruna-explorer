@@ -45,7 +45,8 @@ const Minimap: FC<MinimapProps> = ({
           setNewMarkerPosition,
         );
       } else {
-        createArea(documentSelected, minimap, positionMode, setPolygonArea);
+        const area = createArea(documentSelected, minimap, positionMode);
+        setPolygonArea(area);
       }
     }
   }, [documentLocation, minimap, documentSelected, positionMode]);

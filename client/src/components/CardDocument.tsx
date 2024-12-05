@@ -37,7 +37,6 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     visualLinks,
     setVisualLinks,
     setEditDocumentMode,
-    setIsPositionEdited,
   } = useAppContext();
   const { setDocumentToDelete, setIsDeleted } = usePopupContext();
   const { setDocumentFormSelected } = useDocumentFormContext();
@@ -244,7 +243,6 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
             <button
               className="btn-edit pos"
               onClick={() => {
-                setIsPositionEdited(false);
                 props.toEditPos();
               }}
               title="Edit Coordinates"

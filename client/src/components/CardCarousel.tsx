@@ -42,12 +42,13 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
     }
   }, [docSelected]);
 
-  useEffect(() => {
-    if (documents && documents.length > 0) {
-      setDocSelected(documents[0]);
-      swiperRef.current?.swiper.slideTo(0);
-    }
-  }, [documents]);
+  //TODO: Ema you have to fix this for filters
+  // useEffect(() => {
+  //   if (documents && documents.length > 0) {
+  //     setDocSelected(documents[0]);
+  //     swiperRef.current?.swiper.slideTo(0);
+  //   }
+  // }, [documents]);
 
   const handleSlideChange = () => {
     if (swiperRef.current && documents) {

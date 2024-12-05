@@ -13,8 +13,12 @@ import { PositionMode } from "../utils/modes";
 
 const Home: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
-  const { positionMode, modalOpen, setPositionMode, isPositionEdited } =
-    useAppContext();
+  const {
+    positionMode,
+    modalOpen,
+    setPositionMode,
+    handleEditPositionModeConfirm,
+  } = useAppContext();
   const { isDeleted } = usePopupContext();
   const { isSubmit } = useDocumentFormContext();
 
@@ -34,7 +38,7 @@ const Home: FC = (): JSX.Element => {
       }
     };
     fetchDocuments();
-  }, [isDeleted, isSubmit, isPositionEdited]);
+  }, [isDeleted, isSubmit, handleEditPositionModeConfirm]);
 
   useEffect(() => {
     const fetchDocument = async () => {
@@ -48,7 +52,6 @@ const Home: FC = (): JSX.Element => {
         }
       }
     };
-
     fetchDocument();
   }, [documents]);
 
