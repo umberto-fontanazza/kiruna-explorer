@@ -288,6 +288,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     }
   };
 
+  const [isHovered, setIsHovered] = useState(false);
+
   return isLoaded ? (
     <section id="map">
       <MapTypeSelector mapType={mapType} setMapType={setMapType} />
@@ -319,14 +321,18 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         <button
           className="municipal-btn"
           onMouseEnter={() => {
-            const municipalPolygons = createMunicipalArea(map!);
-            setMunicipalArea(municipalPolygons);
+            if (!isHovered) {
+              setIsHovered(true);
+              const municipalPolygons = createMunicipalArea(map!);
+              setMunicipalArea(municipalPolygons);
+            }
           }}
           onMouseLeave={() => {
-            municipalArea?.forEach((area) => {
-              area.setMap(null);
-            });
-            setMunicipalArea(undefined);
+            if (isHovered) {
+              setIsHovered(false);
+              municipalArea?.forEach((area) => area.setMap(null));
+              setMunicipalArea(undefined);
+            }
           }}
           onClick={handleMunicipalAreaButton}
         >
