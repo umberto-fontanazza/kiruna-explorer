@@ -30,7 +30,7 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
             id: upload.id,
             title: upload.title,
             type: upload.type,
-            data: "",
+            file: "",
           }));
           setOldUploads(formattedUploads);
         } catch (error) {
@@ -59,7 +59,7 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
             id: undefined,
             title: defaultTitle,
             type: UploadType.OriginalResource,
-            data: base64String,
+            file: base64String,
           },
         ]);
       }

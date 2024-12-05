@@ -85,7 +85,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
             await API.addUpload(
               upload.title,
               UploadType.OriginalResource,
-              upload.data,
+              upload.file,
               [id],
             ),
         );
@@ -131,7 +131,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
         if (filesToUpload) {
           filesToUpload.map(
             async (file) =>
-              await API.addUpload(file.title, file.type, file.data, [
+              await API.addUpload(file.title, file.type, file.file, [
                 document.id!,
               ]),
           );

@@ -27,7 +27,7 @@ const UploadModal: React.FC<UploadModal> = ({
             id: undefined,
             title: defaultTitle,
             type: UploadType.OriginalResource,
-            data: base64String,
+            file: base64String,
           },
         ]);
       }
@@ -94,7 +94,7 @@ const UploadModal: React.FC<UploadModal> = ({
     try {
       await Promise.all(
         uploads.map((upload) =>
-          API.addUpload(upload.title, upload.type, upload.data),
+          API.addUpload(upload.title, upload.type, upload.file),
         ),
       );
       retrieveUploads();

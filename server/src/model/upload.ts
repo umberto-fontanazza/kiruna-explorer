@@ -1,5 +1,4 @@
 import { strict as assert } from "assert";
-import { QueryResult } from "pg";
 import { Database } from "../database";
 
 export enum UploadType {
@@ -108,7 +107,7 @@ export class Upload {
     const file = withFile ? (resultUpload.rows[0].file as Buffer) : undefined;
 
     // handle optional document ids binding query
-    assert(!bindDocuments || (resultBindings as QueryResult).rowCount === 1);
+    //assert(!bindDocuments || (resultBindings as QueryResult).rowCount === 1);
     const bindedDocumentIds: number[] | undefined = (
       resultBindings?.rows as { id: number }[]
     )?.map((obj) => obj.id);

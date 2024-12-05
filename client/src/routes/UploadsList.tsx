@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import API from "../API/API";
 import NavHeader from "../components/NavHeader";
+import UploadEditModal from "../components/UploadEditModal";
 import UploadModal from "../components/UploadModal";
+import { authContext } from "../context/auth";
 import "../styles/UploadList.scss";
 import { Upload } from "../utils/interfaces";
 import { capitalizeFirstLetter } from "../utils/utils";
@@ -9,6 +11,11 @@ import { capitalizeFirstLetter } from "../utils/utils";
 const UploadsList = () => {
   const [uploads, setUploads] = useState<Upload[]>([]);
   const [openUploadForm, setOpenUploadForm] = useState<boolean>(false);
+  const [openEditForm, setOpenEditForm] = useState<{
+    open: boolean;
+    uploadId: number;
+  }>({ open: false, uploadId: -2 });
+  const { user } = useContext(authContext);
 
   const retrieveUploads = async () => {
     try {
@@ -34,7 +41,7 @@ const UploadsList = () => {
       }
 
       try {
-        const binaryString = atob(response.data);
+        const binaryString = atob(response.file);
 
         const byteArray = Uint8Array.from(binaryString, (char) =>
           char.charCodeAt(0),
@@ -61,6 +68,14 @@ const UploadsList = () => {
       console.error("Download error:", error);
       alert("An error occurred during the download process. Please try again.");
     }
+  };
+
+  const handleEdit = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    uploadId: number,
+  ) => {
+    e.preventDefault();
+    setOpenEditForm({ open: true, uploadId });
   };
 
   const handleDeleteUpload = async (uploadId: number) => {
@@ -92,6 +107,11 @@ const UploadsList = () => {
                   <button onClick={() => handleDownloadById(upload.id!)}>
                     Download
                   </button>
+                  {user && (
+                    <button onClick={(e) => handleEdit(e, upload.id!)}>
+                      Edit linked Documents
+                    </button>
+                  )}
                   <button
                     onClick={() =>
                       upload.id !== undefined && handleDeleteUpload(upload.id)
@@ -107,13 +127,21 @@ const UploadsList = () => {
       ) : (
         <h2>Trying to retrieve all the uploaded files</h2>
       )}
-      <button onClick={() => setOpenUploadForm(true)}>
-        Add new Original Resource
-      </button>
+      {user && (
+        <button onClick={() => setOpenUploadForm(true)}>
+          Add new Original Resource
+        </button>
+      )}
       {openUploadForm && (
         <UploadModal
           setOpenUploadForm={setOpenUploadForm}
           retrieveUploads={retrieveUploads}
+        />
+      )}
+      {openEditForm.open && (
+        <UploadEditModal
+          openEditForm={openEditForm}
+          setOpenEditForm={setOpenEditForm}
         />
       )}
     </>

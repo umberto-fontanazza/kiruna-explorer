@@ -61,7 +61,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
 
       response.forEach((upload) => {
         try {
-          const binaryString = atob(upload.data);
+          const binaryString = atob(upload.file);
 
           const byteArray = Uint8Array.from(binaryString, (char) =>
             char.charCodeAt(0),
