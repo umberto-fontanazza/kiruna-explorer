@@ -71,7 +71,6 @@ export const createArea = (
   doc: Document,
   map: google.maps.Map,
   positionMode: PositionMode,
-  setPolygon?: Dispatch<SetStateAction<google.maps.Polygon | null>>,
 ): google.maps.Polygon | null => {
   if (!doc.area) return null;
   const { include, exclude } = parseAreaPaths(doc.area);
@@ -94,8 +93,6 @@ export const createArea = (
   });
 
   area.setMap(map);
-
-  if (positionMode === PositionMode.Update && setPolygon) setPolygon(area);
 
   return area;
 };
