@@ -19,12 +19,8 @@ const Minimap: FC<MinimapProps> = ({
   documentLocation,
   onClose,
 }) => {
-  const {
-    positionMode,
-    setPositionMode,
-    handleEditPositionModeConfirm,
-    setIsPositionEdited,
-  } = useAppContext();
+  const { positionMode, setPositionMode, handleEditPositionModeConfirm } =
+    useAppContext();
   const [minimap, setMinimap] = useState<google.maps.Map | null>(null);
   const [polygonArea, setPolygonArea] = useState<google.maps.Polygon | null>(
     null,
@@ -67,10 +63,8 @@ const Minimap: FC<MinimapProps> = ({
         };
         handleEditPositionModeConfirm(documentSelected, newPolygonArea);
         polygonArea?.setMap(null);
-      } else {
-        if (newMarkerPosition) {
-          handleEditPositionModeConfirm(documentSelected, newMarkerPosition);
-        }
+      } else if (newMarkerPosition) {
+        handleEditPositionModeConfirm(documentSelected, newMarkerPosition);
       }
       setNewMarkerPosition(null);
       setPolygonArea(null);
