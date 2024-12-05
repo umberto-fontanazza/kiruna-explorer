@@ -86,16 +86,16 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
     }
   };
 
-  const handleButtonClick = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.onchange = (e: Event) => {
+  const handleBtnClick = () => {
+    const inputElement = document.createElement("input");
+    inputElement.type = "file";
+    inputElement.onchange = (e: Event) => {
       const target = e.target as HTMLInputElement;
       if (target.files && target.files[0]) {
         handleFileUpload(target.files[0]);
       }
     };
-    input.click();
+    inputElement.click();
   };
 
   const handleRemoveFile = (index: number) => {
@@ -137,11 +137,7 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
           onDrop={handleDrp}
         >
           <p>Drag and drop the original resources here</p>
-          <button
-            className="upload-btn"
-            type="button"
-            onClick={handleButtonClick}
-          >
+          <button className="upload-btn" type="button" onClick={handleBtnClick}>
             Select File
           </button>
         </div>
