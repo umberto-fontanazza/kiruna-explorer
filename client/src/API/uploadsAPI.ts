@@ -28,15 +28,28 @@ async function getUploadById(uploadId: number): Promise<Upload> {
   if (!response.ok) {
     throw new Error("Error in fetching upload by id");
   }
-  const file: Upload = await response.json();
-  return file;
+
+  const {
+    id,
+    title,
+    type,
+    file,
+  }: { id: number; title: string; type: UploadType; file: string } =
+    await response.json();
+
+  return {
+    id,
+    title,
+    type,
+    data: file,
+  };
 }
 
 async function addUpload(
   title: string,
   type: UploadType,
   file: string,
-  documentsIds: number[],
+  documentsIds?: number[],
 ): Promise<number> {
   const requestBody = {
     title: title,
