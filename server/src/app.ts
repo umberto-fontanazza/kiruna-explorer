@@ -17,7 +17,7 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-app.use(express.json({ limit: "10mb" }));
+app.use(express.json());
 app.use(morgan("dev"));
 
 const corsOptions = {
