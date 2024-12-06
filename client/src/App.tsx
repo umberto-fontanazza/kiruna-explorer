@@ -8,6 +8,7 @@ import { useAppContext } from "./context/appContext";
 import { authContext } from "./context/auth";
 import { DocumentFormProvider } from "./providers/DocumentFormProvider";
 import { PopupProvider } from "./providers/PopupProvider";
+import Diagram from "./routes/Diagram";
 import DocumentsList from "./routes/DocumentsList";
 import Home from "./routes/Home";
 import LoginForm from "./routes/LoginForm";
@@ -68,6 +69,8 @@ const App: FC = () => {
 
               {/* Route /documents where can be find the list of all documents */}
               <Route path="/uploads" element={<UploadsList />} />
+
+              <Route path="/diagram" element={<Diagram />} />
 
               {/* Route /* to cath all bad urls */}
               <Route path="*" element={<NotFound />} />

@@ -90,7 +90,7 @@ async function editUpload(
 ): Promise<void> {
   const requestBody = { title, bindDocumentIds, decoupleDocumentIds };
   const response = await fetch(baseURL + `/uploads/${uploadId}`, {
-    method: "POST",
+    method: "PATCH",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
