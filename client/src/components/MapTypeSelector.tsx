@@ -1,5 +1,4 @@
 import { Dispatch, FC, SetStateAction } from "react";
-import "../styles/MapTypeSelector.scss";
 
 interface MapTypeSelectorProps {
   mapType: string;
