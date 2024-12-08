@@ -8,6 +8,7 @@ interface MapTypeSelectorProps {
 const MapTypeSelector: FC<MapTypeSelectorProps> = ({ mapType, setMapType }) => {
   return (
     <div className="map-type-selector-wrapper">
+      <span className="material-symbols-outlined">pageview</span>
       <select
         className="map-types"
         value={mapType}
