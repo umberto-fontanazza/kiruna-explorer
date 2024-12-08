@@ -29,8 +29,8 @@
     }
 
     .button-overlay {
-      position: absolute;
-      bottom: 5%;
+      position: fixed;
+      bottom: 2rem;
       left: 1.3%;
       display: flex;
       justify-content: center;
@@ -39,7 +39,7 @@
       .doc-btn {
         border-radius: 1rem;
         width: 13vw;
-        height: 8vh;
+        height: 6.5vh;
         background-color: Color.$third;
         color: Color.$first;
         border: 0.2rem solid Color.$first;

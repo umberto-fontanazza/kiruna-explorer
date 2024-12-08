@@ -47,6 +47,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [municipalArea, setMunicipalArea] = useState<
     google.maps.Polygon[] | undefined
   >(undefined);
+  const [drawingMode, setDrawingMode] = useState<string>("");
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -300,11 +301,20 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               ? "Insert Mode"
               : "Update Position"}
           </h2>
-          <h3>
-            {positionMode === PositionMode.Insert
-              ? "Select a point on the map, where you want to add a new Document"
-              : "Select a point on the map, where you want to update the position of the document selected"}
-          </h3>
+          {positionMode === PositionMode.Insert && (
+            <h3>
+              {drawingMode === "marker"
+                ? "Select a point on the map, where you want to add a new Document"
+                : "Draw a polygon on the map, where you want to add a new Document"}
+            </h3>
+          )}
+          {positionMode === PositionMode.Update && (
+            <h3>
+              {drawingMode === "marker"
+                ? "Select a point on the map, where you want to update the position of the document selected"
+                : "Draw a polygon on the map, where you want to update the position of the document selected"}
+            </h3>
+          )}
           {positionMode === PositionMode.Update && (
             <button
               className="edit-area-btn"
@@ -317,27 +327,45 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           )}
         </div>
       )}
+
       {positionMode === PositionMode.Insert && (
-        <button
-          className="municipal-btn"
-          onMouseEnter={() => {
-            if (!isHovered) {
-              setIsHovered(true);
-              const municipalPolygons = createMunicipalArea(map!);
-              setMunicipalArea(municipalPolygons);
-            }
-          }}
-          onMouseLeave={() => {
-            if (isHovered) {
-              setIsHovered(false);
-              municipalArea?.forEach((area) => area.setMap(null));
-              setMunicipalArea(undefined);
-            }
-          }}
-          onClick={handleMunicipalAreaButton}
-        >
-          Select Municipal Area
-        </button>
+        <div className="drawing-controls">
+          <button
+            id="municipal-btn"
+            onMouseEnter={() => {
+              if (!isHovered) {
+                setIsHovered(true);
+                const municipalPolygons = createMunicipalArea(map!);
+                setMunicipalArea(municipalPolygons);
+              }
+            }}
+            onMouseLeave={() => {
+              if (isHovered) {
+                setIsHovered(false);
+                municipalArea?.forEach((area) => area.setMap(null));
+                setMunicipalArea(undefined);
+              }
+            }}
+            onClick={handleMunicipalAreaButton}
+          >
+            <div className="municipal-container">
+              <span className="material-symbols-outlined">location_city</span>
+              <h4>Municipal Area</h4>
+            </div>
+          </button>
+          <button id="polygon-btn" onClick={() => setDrawingMode("polygon")}>
+            <div className="polygon-container">
+              <span className="material-symbols-outlined">polyline</span>
+              <h4>Polygon</h4>
+            </div>
+          </button>
+          <button id="marker-btn" onClick={() => setDrawingMode("marker")}>
+            <div className="marker-container">
+              <span className="material-symbols-outlined">explore_nearby</span>
+              <h4>Marker</h4>
+            </div>
+          </button>
+        </div>
       )}
       <GoogleMap
         id="google-map"
