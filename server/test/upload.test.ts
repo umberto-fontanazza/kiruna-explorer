@@ -191,16 +191,14 @@ describe("Upload class", () => {
     });
 
     mockQuery.mockResolvedValueOnce({
-      rows: [],
-      rowCount: 0,
+      rows: [{ id: 2 }, { id: 3 }],
+      rowCount: 2,
       command: "SELECT",
       oid: 0,
       fields: [],
     });
 
-    await expect(Upload.get(uploadId, bindDocuments, withFile)).rejects.toThrow(
-      /false == true/,
-    );
+    const upload = await Upload.get(uploadId, bindDocuments, withFile);
 
     expect(mockQuery).toHaveBeenCalledWith(
       "SELECT title, type, file FROM upload WHERE id = $1",
@@ -210,5 +208,10 @@ describe("Upload class", () => {
       "SELECT id FROM document WHERE $1 = ANY(upload_ids)",
       [uploadId],
     );
+
+    expect(upload).toBeInstanceOf(Upload);
+    expect(upload.id).toBe(uploadId);
+    expect(upload.title).toBe("Upload 1");
+    expect(upload.bindedDocumentIds).toEqual([2, 3]);
   });
 });
