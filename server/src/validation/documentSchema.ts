@@ -1,9 +1,12 @@
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { z } from "zod";
 import { DocumentType } from "../model/document";
 import { ScaleType } from "../model/scale";
 import { Stakeholder } from "../model/stakeholder";
 import { areaSchema } from "./areaSchema";
 import { coordinatesSchema } from "./coordinatesSchema";
+dayjs.extend(customParseFormat);
 
 export const idRequestParam = z.object({
   id: z.coerce.number().int().positive(),
@@ -49,7 +52,16 @@ export const getQueryParameters = z
     maxIssuanceDate: z.string().date().optional(),
     minIssuanceDate: z.string().date().optional(),
   })
-  .strict();
+  .strict()
+  .refine(
+    (query) => {
+      if (!query.maxIssuanceDate || !query.minIssuanceDate) return true;
+      const min = dayjs(query.minIssuanceDate, "YYYY-MM-DD", true);
+      const max = dayjs(query.maxIssuanceDate, "YYYY-MM-DD", true);
+      return !min.isAfter(max);
+    },
+    { message: "maxIssuanceDate must be >= minIssuanceDate" },
+  );
 
 export type PostBody = z.infer<typeof postBody>;
 export const postBody = z
