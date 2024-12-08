@@ -19,10 +19,12 @@ export function sinkErrorHandler(
   if (error instanceof UserError) {
     response.status(error.statusCode).json({ message: error.message });
   } else {
+    const message =
+      error instanceof Error
+        ? error.message
+        : "An unexpected error occurred on the server";
     console.error(error);
-    response
-      .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ message: "An unexpected error occurred on the server" });
+    response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message });
   }
   next(error);
 }
