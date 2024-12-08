@@ -10,11 +10,12 @@ const createValidator =
   (targetExtractor = (request: Request) => request.body) =>
   (schema: z.Schema) =>
   (request: Request, response: Response, nextFunction: NextFunction) => {
-    const { success } = schema.safeParse(targetExtractor(request));
-    if (success) {
+    const parseResult = schema.safeParse(targetExtractor(request));
+    if (parseResult.success) {
       nextFunction();
     } else {
-      response.status(StatusCodes.BAD_REQUEST).send();
+      response.status(StatusCodes.BAD_REQUEST).send(parseResult.error);
+      nextFunction(parseResult.error);
     }
   };
 

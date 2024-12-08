@@ -7,13 +7,17 @@ import { UserError } from "../error/userError";
  * it handles unhandled errors
  */
 export function sinkErrorHandler(
-  err: Error,
+  error: Error,
   request: Request,
   response: Response,
   next: NextFunction,
 ) {
-  if (err instanceof UserError) {
-    response.status(err.statusCode).json({ message: err.message });
+  if (response.headersSent) {
+    next(error);
+    return;
+  }
+  if (error instanceof UserError) {
+    response.status(error.statusCode).json({ message: error.message });
   } else {
     const message =
       err instanceof Error
@@ -22,5 +26,5 @@ export function sinkErrorHandler(
     console.error(err);
     response.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message });
   }
-  next();
+  next(error);
 }
