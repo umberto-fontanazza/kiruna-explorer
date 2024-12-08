@@ -1,4 +1,4 @@
-# TEMPLATE FOR RETROSPECTIVE (Team ##)
+# TEMPLATE FOR RETROSPECTIVE (Team 15)
 
 The retrospective should include _at least_ the following
 sections:
@@ -47,23 +47,26 @@ sections:
 ## QUALITY MEASURES
 
 - Unit Testing:
+
   - Total hours estimated: 12h
   - Total hours spent: 12h
   - Nr of automated unit test cases: 45
   - Coverage:
+
     ## Code Coverage Summary
 
-    | File            | Statements   | Branches     | Functions   | Lines       |
-    |------------------|--------------|--------------|-------------|-------------|
-    | `src`           | 100% (55/55) | 60% (6/10)   | 100% (9/9)  | 100% (54/54) |
-    | `src/error`     | 75% (6/8)    | 33.33% (1/3) | 50% (2/4)   | 75% (6/8)    |
-    | `src/middleware`| 94.23% (49/52) | 88.23% (15/17) | 84.61% (11/13) | 95.91% (47/49) |
-    | `src/model`     | 95.23% (120/126) | 95.4% (83/87) | 93.33% (28/30) | 95.04% (115/121) |
-    | `src/router`    | 84.76% (128/151) | 74.07% (20/27) | 84% (21/25)  | 86.3% (126/146) |
-    | `src/validation`| 90.9% (20/22) | 66.66% (4/6) | 100% (1/1)  | 90.9% (20/22) |
-    | `test`          | 100% (12/12) | 100% (0/0)   | 100% (2/2)  | 100% (12/12) |
-    
+    | File             | Statements       | Branches       | Functions      | Lines            |
+    | ---------------- | ---------------- | -------------- | -------------- | ---------------- |
+    | `src`            | 100% (55/55)     | 60% (6/10)     | 100% (9/9)     | 100% (54/54)     |
+    | `src/error`      | 75% (6/8)        | 33.33% (1/3)   | 50% (2/4)      | 75% (6/8)        |
+    | `src/middleware` | 94.23% (49/52)   | 88.23% (15/17) | 84.61% (11/13) | 95.91% (47/49)   |
+    | `src/model`      | 95.23% (120/126) | 95.4% (83/87)  | 93.33% (28/30) | 95.04% (115/121) |
+    | `src/router`     | 84.76% (128/151) | 74.07% (20/27) | 84% (21/25)    | 86.3% (126/146)  |
+    | `src/validation` | 90.9% (20/22)    | 66.66% (4/6)   | 100% (1/1)     | 90.9% (20/22)    |
+    | `test`           | 100% (12/12)     | 100% (0/0)     | 100% (2/2)     | 100% (12/12)     |
+
     ### Coverage Totals
+
     - **Statements:** 91.54% (398/426)
     - **Branches:** 86% (129/150)
     - **Functions:** 88.09% (74/84)
