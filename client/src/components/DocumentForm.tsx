@@ -34,7 +34,7 @@ const DocumentForm = () => {
 
     if (!validateDate(documentFormSelected.issuanceTime || "")) {
       errors.issuanceTime =
-        "Invalid date format. Use YYYY, YYYY-MM, or YYYY-MM-DD.";
+        "Invalid date or invalid date format.<br/>Please use YYYY, YYYY-MM or YYYY-MM-DD.";
     }
 
     setErrors(errors);
@@ -84,7 +84,6 @@ const DocumentForm = () => {
         ev.preventDefault();
         if (page === 1) {
           if (validateFirstPage()) setPage(2);
-          else console.log(errors);
         } else if (page === 2) setPage(3);
         else handleFormSubmit(ev);
       }}
@@ -107,8 +106,8 @@ const DocumentForm = () => {
         <FirstPageModal
           documentForm={documentFormSelected}
           setDocumentForm={setDocumentFormSelected}
-          setPage={setPage}
           errors={errors}
+          setErrors={setErrors}
         />
       )}
       {page === 2 && (

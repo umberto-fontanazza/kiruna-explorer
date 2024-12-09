@@ -8,20 +8,21 @@ import {
   stakeholdersOptions,
 } from "../../utils/interfaces";
 
-import { capitalizeFirstLetter } from "../../utils/utils";
+import { Tooltip } from "react-tooltip";
+import { capitalizeFirstLetter, validateDate } from "../../utils/utils";
 
 interface FirstPageModalProps {
   documentForm: DocumentForm;
   setDocumentForm: Dispatch<SetStateAction<DocumentForm>>;
-  setPage: (page: number) => void;
   errors: Record<string, string> | null;
+  setErrors: Dispatch<SetStateAction<Record<string, string> | null>>;
 }
 
 const FirstPageModal: FC<FirstPageModalProps> = ({
   documentForm,
   setDocumentForm,
-  setPage,
   errors,
+  setErrors,
 }) => {
   const onCheckboxChange = (event: {
     target: { value: string; checked: boolean };
@@ -131,22 +132,38 @@ const FirstPageModal: FC<FirstPageModalProps> = ({
 
         <div className="form-row">
           <div className="form-group issuance-time">
-            <label htmlFor="issuance-time">Issuance Date</label>
+            <label htmlFor="issuance-time">Issuance Date *</label>
             <input
               id="issuance-time"
               type="text"
               placeholder="YYYY, YYYY-MM, or YYYY-MM-DD"
               value={documentForm.issuanceTime || ""}
-              onChange={(e) =>
+              onChange={(e) => {
                 setDocumentForm((prev) => ({
                   ...prev,
                   issuanceTime: e.target.value,
-                }))
-              }
+                }));
+                if (
+                  errors &&
+                  errors.issuanceTime &&
+                  validateDate(e.target.value || "")
+                ) {
+                  setErrors((previousErrors) => ({
+                    ...previousErrors,
+                    issuanceTime: "",
+                  }));
+                }
+              }}
+              data-tooltip-id="issuance-time-tooltip"
+              data-tooltip-html={errors?.issuanceTime || ""}
+              data-tooltip-place="bottom"
             />
-            {errors && errors.issuanceTime && (
-              <p className="form-error">{errors.issuanceTime}</p>
-            )}
+
+            <Tooltip
+              id="issuance-time-tooltip"
+              className={errors?.issuanceTime ? "tooltip-error" : ""}
+              isOpen={!!errors?.issuanceTime}
+            />
           </div>
 
           <div className="form-group document-type">
