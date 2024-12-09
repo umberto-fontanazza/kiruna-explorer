@@ -62,8 +62,8 @@ export const createMarker = (
         hoverArea.setMap(null);
         hoverArea = null;
       }
-      //infoWindow.close(); // Nasconde l'InfoWindow
-      //content.classList.remove("show");
+      infoWindow.close(); // Nasconde l'InfoWindow
+      content.classList.remove("show");
     });
   }
 
