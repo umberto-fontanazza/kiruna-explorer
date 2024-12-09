@@ -194,9 +194,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         <h4>
           Issuance Date:&nbsp;
           <span>
-            {props.document?.issuanceDate?.isValid()
-              ? props.document?.issuanceDate?.format("MMMM D, YYYY")
-              : "-"}
+            {props.document?.issuanceTime ? props.document?.issuanceTime : "-"}
           </span>
         </h4>
         <h4>

@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { Dispatch, FC, SetStateAction } from "react";
 import {
   Document,
@@ -21,11 +20,19 @@ const FirstPageModal: FC<FirstPageModalProps> = ({
   setDocumentForm,
 }) => {
   const onDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setDocumentForm((prev) => ({
-      ...prev,
-      issuanceDate: value ? dayjs(value) : (prev.issuanceDate ?? undefined),
-    }));
+    const value = e.target.value.trim();
+    const validYear = /^\d{4}$/.test(value);
+    const validYearMonth = /^\d{4}-\d{2}$/.test(value);
+    const validFullDate = /^\d{4}-\d{2}-\d{2}$/.test(value);
+    console.log("helo");
+    if (validYear || validYearMonth || validFullDate) {
+      setDocumentForm((prev) => ({
+        ...prev,
+        issuanceTime: value,
+      }));
+    } else {
+      //TODO: Invalid date error
+    }
   };
 
   const onCheckboxChange = (event: {
@@ -135,17 +142,19 @@ const FirstPageModal: FC<FirstPageModalProps> = ({
         </div>
 
         <div className="form-row">
-          <div className="form-group issuance-date">
-            <label htmlFor="issuance-date">Issuance Date</label>
+          <div className="form-group issuance-time">
+            <label htmlFor="issuance-time">Issuance Date</label>
             <input
-              id="issuance-date"
-              type="date"
-              value={
-                documentForm.issuanceDate
-                  ? documentForm.issuanceDate?.format("YYYY-MM-DD")
-                  : ""
+              id="issuance-time"
+              type="text"
+              placeholder="YYYY, YYYY-MM, or YYYY-MM-DD"
+              value={documentForm.issuanceTime || ""}
+              onChange={(e) =>
+                setDocumentForm((prev) => ({
+                  ...prev,
+                  issuanceTime: e.target.value,
+                }))
               }
-              onChange={onDateChange}
             />
           </div>
 
