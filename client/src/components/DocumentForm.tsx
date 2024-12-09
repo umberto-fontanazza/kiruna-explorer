@@ -22,9 +22,7 @@ const DocumentForm = () => {
   const [tableLinks, setTableLinks] = useState<Link[]>(
     documentFormSelected?.links || [],
   );
-  const [filesToUpload, setFilesToUpload] = useState<Upload[] | undefined>(
-    undefined,
-  );
+  const [filesToUpload, setFilesToUpload] = useState<Upload[]>([]);
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();

@@ -7,7 +7,7 @@ import UploadTable from "../UploadTable";
 
 interface ThirdPageModalProps {
   documentForm: DocumentForm;
-  filesToUpload: Upload[] | undefined;
+  filesToUpload: Upload[];
   tableLinks: Link[];
   goBack: Dispatch<SetStateAction<number>>;
   setFilesToUpload: Dispatch<SetStateAction<Upload[]>>;
@@ -73,40 +73,42 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
         <h2>Upload Files</h2>
         <UploadBox setFilesToUpload={setFilesToUpload} />
 
-        <div className="uploaded-files">
-          <h3>Uploaded Files:</h3>
-          <ul>
-            {oldUploads.map((upload) => (
-              <li key={upload.id} className="uploaded-file-item">
-                <p>Title:</p>{" "}
-                <input
-                  type="text"
-                  value={upload.title}
-                  onChange={(e) =>
-                    upload.id !== undefined &&
-                    handleEditUploadOldTitle(upload.id, e.target.value)
-                  }
+        {filesToUpload.length > 0 || oldUploads.length > 0 ? (
+          <div className="uploaded-files">
+            <h3>Uploaded Files:</h3>
+            <ul>
+              {oldUploads.map((upload) => (
+                <li key={upload.id} className="uploaded-file-item">
+                  <p>Title:</p>{" "}
+                  <input
+                    type="text"
+                    value={upload.title}
+                    onChange={(e) =>
+                      upload.id !== undefined &&
+                      handleEditUploadOldTitle(upload.id, e.target.value)
+                    }
+                  />
+                  <br />
+                  <button
+                    className="remove-btn"
+                    onClick={(e) => {
+                      if (upload.id !== undefined)
+                        handleRemoveOldFile(upload.id, e);
+                    }}
+                  >
+                    Remove
+                  </button>
+                </li>
+              ))}
+              {filesToUpload && filesToUpload.length > 0 && (
+                <UploadTable
+                  filesToUpload={filesToUpload}
+                  setFilesToUpload={setFilesToUpload}
                 />
-                <br />
-                <button
-                  className="remove-btn"
-                  onClick={(e) => {
-                    if (upload.id !== undefined)
-                      handleRemoveOldFile(upload.id, e);
-                  }}
-                >
-                  Remove
-                </button>
-              </li>
-            ))}
-            {filesToUpload && filesToUpload.length > 0 && (
-              <UploadTable
-                filesToUpload={filesToUpload}
-                setFilesToUpload={setFilesToUpload}
-              />
-            )}
-          </ul>
-        </div>
+              )}
+            </ul>
+          </div>
+        ) : null}
       </div>
       <div className="actions">
         <button className="back" onClick={() => goBack((p) => p - 1)}>
