@@ -21,3 +21,22 @@
     background-color: Color.$second;
   }
 }
+
+div.gm-style-iw.gm-style-iw-c,
+div.gm-style-iw-d,
+div.gm-style-iw-tc {
+  background-color: Color.$first;
+}
+
+.info-window {
+  opacity: 0;
+  transform: scale(0);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease;
+}
+
+.info-window.show {
+  opacity: 1;
+  transform: scale(1);
+}
