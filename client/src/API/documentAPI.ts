@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { Document, Filters } from "../utils/interfaces";
 import { baseURL } from "./API";
 
@@ -31,7 +30,8 @@ async function getDocuments(filters?: Filters): Promise<Document[]> {
   const documents = await response.json();
   return documents.map((doc: any) => ({
     ...doc,
-    issuanceDate: dayjs(doc.issuanceDate),
+    //FIXME: remove this line when backend will return issuanceTime
+    issuanceTime: doc.issuanceDate,
   }));
 }
 
@@ -41,7 +41,8 @@ async function getDocumentById(id: number): Promise<Document> {
     throw new Error("Error in fetching document by id");
   }
   const document = await response.json();
-  document.issuanceDate = dayjs(document.issuanceDate);
+  //FIXME: remove this line when backend will return issuanceTime
+  document.issuanceTime = document.issuanceDate;
   return document;
 }
 
@@ -59,7 +60,7 @@ async function addDocument(document: Omit<Document, "id">): Promise<number> {
     ...document,
     id: undefined,
     links: undefined,
-    issuanceDate: document.issuanceDate?.format("YYYY-MM-DD") || undefined,
+    issuanceTime: document.issuanceDate?.format("YYYY-MM-DD") || undefined,
   };
   const response = await fetch(baseURL + `/documents`, {
     method: "POST",
