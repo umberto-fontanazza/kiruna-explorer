@@ -13,28 +13,16 @@ import { capitalizeFirstLetter } from "../../utils/utils";
 interface FirstPageModalProps {
   documentForm: DocumentForm;
   setDocumentForm: Dispatch<SetStateAction<DocumentForm>>;
+  setPage: (page: number) => void;
+  errors: Record<string, string> | null;
 }
 
 const FirstPageModal: FC<FirstPageModalProps> = ({
   documentForm,
   setDocumentForm,
+  setPage,
+  errors,
 }) => {
-  const onDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value.trim();
-    const validYear = /^\d{4}$/.test(value);
-    const validYearMonth = /^\d{4}-\d{2}$/.test(value);
-    const validFullDate = /^\d{4}-\d{2}-\d{2}$/.test(value);
-    console.log("helo");
-    if (validYear || validYearMonth || validFullDate) {
-      setDocumentForm((prev) => ({
-        ...prev,
-        issuanceTime: value,
-      }));
-    } else {
-      //TODO: Invalid date error
-    }
-  };
-
   const onCheckboxChange = (event: {
     target: { value: string; checked: boolean };
   }) => {
@@ -156,6 +144,9 @@ const FirstPageModal: FC<FirstPageModalProps> = ({
                 }))
               }
             />
+            {errors && errors.issuanceTime && (
+              <p className="form-error">{errors.issuanceTime}</p>
+            )}
           </div>
 
           <div className="form-group document-type">
