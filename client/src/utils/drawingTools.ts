@@ -16,11 +16,7 @@ export const useDrawingTools = (
 
     const drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: google.maps.drawing.OverlayType.POLYGON,
-      drawingControl: true,
-      drawingControlOptions: {
-        position: google.maps.ControlPosition.BOTTOM_CENTER,
-        drawingModes: [google.maps.drawing.OverlayType.POLYGON],
-      },
+      drawingControl: false,
       polygonOptions: {
         fillColor: "#fecb00",
         fillOpacity: 0.5,
@@ -32,6 +28,14 @@ export const useDrawingTools = (
     });
 
     drawingManager.setMap(map);
+
+    document.getElementById("polygon-btn")?.addEventListener("click", () => {
+      drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+    });
+
+    document.getElementById("marker-btn")?.addEventListener("click", () => {
+      drawingManager.setDrawingMode(null);
+    });
 
     const overlayCompleteListener = google.maps.event.addListener(
       drawingManager,

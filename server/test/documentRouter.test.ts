@@ -1,12 +1,12 @@
 import dotenv from "dotenv";
-dotenv.config(); //TODO: remove and fix
-import app from "../src/app";
-import request from "supertest";
 import { StatusCodes } from "http-status-codes";
+import request from "supertest";
+import app from "../src/app";
 import { Database } from "../src/database";
 import { DocumentType } from "../src/model/document";
 import { ScaleType } from "../src/model/scale";
 import { loginAsPlanner } from "./utils";
+dotenv.config(); //TODO: remove and fix
 
 let plannerCookie: string;
 
@@ -116,5 +116,21 @@ describe("Testing with coordinates", () => {
       .del(`/documents/${testDocId}`)
       .set("Cookie", plannerCookie);
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+});
+
+describe("GET /documents filters", () => {
+  test("minIssuanceDate > maxIssuanceDate is a bad request", async () => {
+    const response = await request(app).get(
+      `/documents/?minIssuanceDate=2024-01-01&maxIssuanceDate=2023-12-31`,
+    );
+    expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("minIssuanceDate == maxIssuanceDate is a valid request", async () => {
+    const response = await request(app).get(
+      `/documents/?minIssuanceDate=2024-01-01&maxIssuanceDate=2024-01-01`,
+    );
+    expect(response.status).toStrictEqual(StatusCodes.OK);
   });
 });
