@@ -52,7 +52,6 @@ async function getBindedDocuments(uploadId: number): Promise<number[]> {
     throw new Error("Error in fetching binded documents");
   }
   const res = await response.json();
-  console.log(res);
   return res.bindedDocumentIds;
 }
 
