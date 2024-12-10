@@ -1,11 +1,9 @@
 @use "Color";
 
-body {
-  background: linear-gradient(#005293, #005293, #005293, #005293, #fecb00);
-}
-
 #document-list {
-  height: 100%;
+  background: linear-gradient(#005293, #005293, #005293, #005293, #fecb00);
+  height: 100vh;
+  overflow-y: hidden;
 
   .doc-lists {
     height: 100%;
