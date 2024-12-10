@@ -34,14 +34,15 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   const {
     setIsPopupOpen,
     setModalOpen,
+    showTooltipUploads,
     visualLinks,
     setVisualLinks,
     setEditDocumentMode,
+    setShowTooltipUploads,
   } = useAppContext();
   const { setDocumentToDelete, setIsDeleted } = usePopupContext();
   const { setDocumentFormSelected } = useDocumentFormContext();
 
-  const [showTooltipUploads, setShowTooltipUploads] = useState<boolean>(false);
   const [uploadsById, setUploadsByID] = useState<Upload[]>([]);
 
   const handleShowUploads = async () => {
@@ -108,6 +109,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   };
 
   const handleEditButton = () => {
+    setShowTooltipUploads(false);
     setEditDocumentMode(true);
     setModalOpen(true);
     setDocumentFormSelected(props.document as DocumentForm);
@@ -118,6 +120,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   };
 
   const handleDeleteButton = () => {
+    setShowTooltipUploads(false);
     setIsPopupOpen(true);
     setDocumentToDelete(props.document);
     setIsDeleted(false);

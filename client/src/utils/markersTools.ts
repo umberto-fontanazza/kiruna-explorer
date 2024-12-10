@@ -10,6 +10,7 @@ export const createMarker = (
   linked: boolean = false,
   map: google.maps.Map,
   positionMode: PositionMode,
+  setShowPopoupDownload: Dispatch<SetStateAction<boolean>>,
   setNewMarkerPosition?: Dispatch<SetStateAction<Coordinates | null>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
@@ -66,6 +67,7 @@ export const createMarker = (
     marker.addListener("click", () => {
       setSidebarOpen(true);
       setdocumentSelected(doc);
+      setShowPopoupDownload(false);
 
       const newCenter = doc.coordinates
         ? {

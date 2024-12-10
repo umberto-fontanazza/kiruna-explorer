@@ -18,6 +18,7 @@ const Home: FC = (): JSX.Element => {
     modalOpen,
     setPositionMode,
     handleEditPositionModeConfirm,
+    setShowTooltipUploads,
   } = useAppContext();
   const { isDeleted } = usePopupContext();
   const { isSubmit } = useDocumentFormContext();
@@ -86,6 +87,7 @@ const Home: FC = (): JSX.Element => {
             docSelected={docSelected}
             setSidebarOpen={setSidebarOpen}
             setdocumentSelected={setDocSelected}
+            setShowTooltipUploads={setShowTooltipUploads}
           />
           {user && (
             <>

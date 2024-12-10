@@ -22,10 +22,17 @@ interface MapComponentProps {
   docSelected: Document | null;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
   setdocumentSelected: Dispatch<SetStateAction<Document | null>>;
+  setShowTooltipUploads: Dispatch<SetStateAction<boolean>>;
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
-  const { documents, docSelected, setSidebarOpen, setdocumentSelected } = props;
+  const {
+    documents,
+    docSelected,
+    setSidebarOpen,
+    setdocumentSelected,
+    setShowTooltipUploads,
+  } = props;
   const {
     visualLinks,
     positionMode,
@@ -137,6 +144,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           visualLinks && doc.id !== docSelected?.id,
           map,
           positionMode,
+          setShowTooltipUploads,
           setNewMarkerPosition,
           setdocumentSelected,
           setSidebarOpen,

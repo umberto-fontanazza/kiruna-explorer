@@ -253,7 +253,7 @@ span.material-symbols-outlined {
 }
 
 .btn-download-container {
-  position: relative; // Necessario per posizionare il tooltip rispetto al pulsante
+  position: relative;
 }
 
 .tooltip {
@@ -264,7 +264,7 @@ span.material-symbols-outlined {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   padding: 10px;
   z-index: 1000;
-  top: 100%; // Posizionato sotto il pulsante
+  top: 100%;
   right: 0%;
   min-width: 150px;
 }
