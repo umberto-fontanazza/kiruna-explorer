@@ -11,9 +11,10 @@
 | Step |                                                                      System                                                                       |
 | :--: | :-----------------------------------------------------------------------------------------------------------------------------------------------: |
 |  1   |                                                    User click on the "Add new document" button                                                    |
-|  2   |                                         User is redirected to "Insert Mode" to select a point on the map                                          |
-|  3   |                                      User click on the geographical point that wants to refers the document                                       |
-|  4   | User is redirected to the form ["New Document"](https://github.com/umberto-fontanazza/kiruna-explorer/blob/main/screenshots/newDocument_Form.png) |
+|  2   |                                              User is redirected to "Insert Mode" to select an option                                              |
+|  3   |                                                             User is click on "Marker"                                                             |
+|  4   |                                      User click on the geographical point that wants to refers the document                                       |
+|  5   | User is redirected to the form ["New Document"](https://github.com/umberto-fontanazza/kiruna-explorer/blob/main/screenshots/newDocument_Form.png) |
 
 ### Scenario 2.1: User modify the position on the form new document, logged in as an Urban Planner
 
