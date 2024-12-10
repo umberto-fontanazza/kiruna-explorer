@@ -365,6 +365,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               <h4>Marker</h4>
             </div>
           </button>
+          <button
+            id="existing-btn" /*onClick={()=>()}   //TODO: implement onClick*/
+          >
+            <div className="existing-container">
+              <span className="material-symbols-outlined">category_search</span>
+              <h4>Areas & Points</h4>
+            </div>
+          </button>
         </div>
       )}
       <GoogleMap

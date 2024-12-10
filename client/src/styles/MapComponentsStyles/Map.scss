@@ -3,7 +3,7 @@
 #map {
   width: 100%;
   height: 100%;
-  --shared-width: 30vw;
+  --shared-width: 37vw;
 
   .insert-mode {
     display: flex;
@@ -127,7 +127,8 @@
 
   #municipal-btn,
   #polygon-btn,
-  #marker-btn {
+  #marker-btn,
+  #existing-btn {
     border-radius: 1rem;
     width: 13vw;
     height: 6.5vh;
@@ -147,7 +148,8 @@
 
   .municipal-container,
   .polygon-container,
-  .marker-container {
+  .marker-container,
+  .existing-container {
     display: flex;
     align-items: center;
 
@@ -165,7 +167,8 @@
   }
 
   .polygon-container,
-  .marker-container {
+  .marker-container,
+  .existing-container {
     justify-content: space-evenly;
   }
 }
