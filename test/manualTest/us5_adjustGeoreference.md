@@ -2,7 +2,7 @@
 
 ## As an Urban Planner, I want to adjust/define the georeferencing of a document on the map so that I can study its relationship to the territory
 
-### Scenario 1.1: Adjust the georeferencing of a document on the map
+### Scenario 1.1: Adjust the georeferencing of a document on the map when specific position was selected
 
 - Type of user: Urban Planner
 - Precondition: User is on the [Main Page for UP](https://github.com/umberto-fontanazza/kiruna-explorer/blob/main/screenshots/main_page_UP.png)
@@ -12,7 +12,7 @@
 | :--: | :---------------------------------------------------------------------: |
 |  1   |              User click on the icon of a specific document              |
 |  2   |         User click on the green icon to modify the georeference         |
-|  3   |         User click on the map the new position for the document         |
+|  3   |         User drop on the map the new position for the document          |
 |  4   | The main page now displays the icon of the document in the new position |
 
 ### Scenario 1.2: Adjust the georeferencing of a document on the map by inserting manually valid data
