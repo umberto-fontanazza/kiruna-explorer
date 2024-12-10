@@ -1,5 +1,6 @@
 declare namespace Express {
   interface Request {
-    locals: object;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    locals?: { [key: string]: any };
   }
 }
