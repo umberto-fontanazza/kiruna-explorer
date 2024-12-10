@@ -133,14 +133,16 @@ const UploadsList = () => {
                         Edit linked Documents
                       </button>
                     )}
-                    <button
-                      onClick={() =>
-                        upload.id !== undefined &&
-                        openUploadDeleteModal(upload.id)
-                      }
-                    >
-                      Delete
-                    </button>
+                    {user && (
+                      <button
+                        onClick={() =>
+                          upload.id !== undefined &&
+                          openUploadDeleteModal(upload.id)
+                        }
+                      >
+                        Delete
+                      </button>
+                    )}
                   </td>
                 </tr>
               ))}
