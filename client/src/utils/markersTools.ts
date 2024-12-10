@@ -33,7 +33,6 @@ export const createMarker = (
     map,
     position: position,
     content: markerDivChild,
-    title: doc.title,
     gmpDraggable: positionMode === PositionMode.Update,
   });
 
