@@ -121,8 +121,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       return;
     }
 
-    //createMunicipalArea(map);
-
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
       .filter((doc) => {
         if (positionMode === PositionMode.Update) {
@@ -333,9 +331,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           <button
             id="municipal-btn"
             onMouseEnter={() => {
-              if (!isHovered) {
+              if (!isHovered && map) {
                 setIsHovered(true);
-                const municipalPolygons = createMunicipalArea(map!);
+                const municipalPolygons = createMunicipalArea(map);
                 setMunicipalArea(municipalPolygons);
               }
             }}

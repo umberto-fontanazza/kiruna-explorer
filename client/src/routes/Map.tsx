@@ -11,7 +11,7 @@ import "../styles/Map.scss";
 import { Document } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
 
-const Map: FC = (): JSX.Element => {
+const HomeMap: FC = (): JSX.Element => {
   const { user } = useContext(authContext);
   const {
     positionMode,
@@ -88,34 +88,30 @@ const Map: FC = (): JSX.Element => {
             setdocumentSelected={setDocSelected}
           />
           {user && (
-            <>
-              <div className="button-overlay">
-                <button
-                  className="doc-btn"
-                  onClick={
-                    positionMode === PositionMode.None
-                      ? handleAddButton
-                      : () => setPositionMode(PositionMode.None)
-                  }
-                >
-                  {positionMode !== PositionMode.None ? (
-                    <div className="add-container">
-                      <span className="material-symbols-outlined">
-                        arrow_back
-                      </span>
-                      <h4>Back</h4>
-                    </div>
-                  ) : (
-                    <div className="back-container">
-                      <span className="material-symbols-outlined">
-                        note_add
-                      </span>
-                      <h4>Add new Document</h4>
-                    </div>
-                  )}
-                </button>
-              </div>
-            </>
+            <div className="button-overlay">
+              <button
+                className="doc-btn"
+                onClick={
+                  positionMode === PositionMode.None
+                    ? handleAddButton
+                    : () => setPositionMode(PositionMode.None)
+                }
+              >
+                {positionMode !== PositionMode.None ? (
+                  <div className="add-container">
+                    <span className="material-symbols-outlined">
+                      arrow_back
+                    </span>
+                    <h4>Back</h4>
+                  </div>
+                ) : (
+                  <div className="back-container">
+                    <span className="material-symbols-outlined">note_add</span>
+                    <h4>Add new Document</h4>
+                  </div>
+                )}
+              </button>
+            </div>
           )}
         </div>
 
@@ -137,4 +133,4 @@ const Map: FC = (): JSX.Element => {
   );
 };
 
-export default Map;
+export default HomeMap;
