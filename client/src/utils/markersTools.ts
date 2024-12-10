@@ -39,22 +39,31 @@ export const createMarker = (
 
   let hoverArea: google.maps.Polygon | null = null;
 
+  const content = document.createElement("div");
+  content.innerHTML = doc.title;
+  content.classList.add("info-window");
+
+  const infoWindow = new google.maps.InfoWindow({
+    headerDisabled: true,
+    content: content,
+  });
+
   if (positionMode === PositionMode.None) {
-    // Event listener per il mouseover
     marker.content?.addEventListener("mouseenter", () => {
       if (doc.area && map) {
         hoverArea = createArea(doc, map, positionMode);
       }
-      //TODO: Heeelp
-      //createMunicipalArea(map);
+      infoWindow.open(map, marker);
+      setTimeout(() => content.classList.add("show"), 0);
     });
 
-    // Event listener per il mouseout
     marker.content?.addEventListener("mouseleave", () => {
       if (hoverArea) {
         hoverArea.setMap(null);
         hoverArea = null;
       }
+      infoWindow.close(); // Nasconde l'InfoWindow
+      content.classList.remove("show");
     });
   }
 
