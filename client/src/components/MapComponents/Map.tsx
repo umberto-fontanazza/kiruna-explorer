@@ -305,14 +305,18 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             <h3>
               {drawingMode === "marker"
                 ? "Select a point on the map, where you want to add a new Document"
-                : "Draw a polygon on the map, where you want to add a new Document"}
+                : drawingMode === "polygon"
+                  ? "Draw a polygon on the map, where you want to add a new Document"
+                  : "Select a document on the map to place the new Document in the same point or area"}
             </h3>
           )}
           {positionMode === PositionMode.Update && (
             <h3>
               {drawingMode === "marker"
                 ? "Select a point on the map, where you want to update the position of the document selected"
-                : "Draw a polygon on the map, where you want to update the position of the document selected"}
+                : drawingMode === "polygon"
+                  ? "Draw a polygon on the map, where you want to update the position of the document selected"
+                  : "Select a document on the map to update the position of the Document to the same point or area"}
             </h3>
           )}
           {positionMode === PositionMode.Update && (
@@ -365,9 +369,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
               <h4>Marker</h4>
             </div>
           </button>
-          <button
-            id="existing-btn" /*onClick={()=>()}   //TODO: implement onClick*/
-          >
+          <button id="existing-btn" onClick={() => setDrawingMode("existing")}>
             <div className="existing-container">
               <span className="material-symbols-outlined">category_search</span>
               <h4>Areas & Points</h4>
