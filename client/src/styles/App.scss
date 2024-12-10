@@ -37,10 +37,12 @@ body,
 #root {
   font-family: "SwedenSans", sans-serif;
   height: 100vh;
+  overflow-y: auto;
 }
 
 ::-webkit-scrollbar {
   width: 10px;
+  display: none;
 }
 
 ::-webkit-scrollbar-track {

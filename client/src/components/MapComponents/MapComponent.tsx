@@ -3,7 +3,7 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
-import "../../styles/MapComponentsStyles/Map.scss";
+import "../../styles/MapComponentsStyles/MapComponent.scss";
 import { createArea, useDrawingTools } from "../../utils/drawingTools";
 import {
   Coordinates,

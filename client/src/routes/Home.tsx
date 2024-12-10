@@ -1,139 +1,111 @@
-import { FC, useContext, useEffect, useState } from "react";
-import API from "../API/API";
-import MapComponent from "../components/MapComponents/Map";
-import NavHeader from "../components/NavHeader";
-import Sidebar from "../components/Sidebar";
-import { useAppContext } from "../context/appContext";
-import { authContext } from "../context/auth";
-import { useDocumentFormContext } from "../context/DocumentFormContext";
-import { usePopupContext } from "../context/PopupContext";
+import { useNavigate } from "react-router-dom";
 import "../styles/Home.scss";
-import { Document } from "../utils/interfaces";
-import { PositionMode } from "../utils/modes";
 
-const Home: FC = (): JSX.Element => {
-  const { user } = useContext(authContext);
-  const {
-    positionMode,
-    modalOpen,
-    setPositionMode,
-    handleEditPositionModeConfirm,
-  } = useAppContext();
-  const { isDeleted } = usePopupContext();
-  const { isSubmit } = useDocumentFormContext();
-
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [docSelected, setDocSelected] = useState<Document | null>(null);
-
-  // State to control sidebar visibility.
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        const documents: Document[] = await API.getDocuments();
-        setDocuments(documents);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchDocuments();
-  }, [isDeleted, isSubmit, handleEditPositionModeConfirm]);
-
-  useEffect(() => {
-    const fetchDocument = async () => {
-      if (docSelected?.id && !isDeleted) {
-        // ho aggiunto isDeleted per eliminare lo sfarfallio ed una chiamata inutile al server
-        try {
-          const doc = await API.getDocumentById(docSelected.id);
-          setDocSelected(doc);
-        } catch (err) {
-          console.error(err);
-        }
-      }
-    };
-    fetchDocument();
-  }, [documents]);
-
-  // Handle Add Document button click to open modal
-  const handleAddButton = () => {
-    setPositionMode(PositionMode.Insert);
-    setSidebarOpen(false);
-  };
-
-  useEffect(() => {
-    if (isDeleted) {
-      setSidebarOpen(false);
-    }
-  }, [isDeleted]);
-
-  //Handle to edit the position of the document selected
-  const handleEditPositionMode = () => {
-    setSidebarOpen(false);
-    setPositionMode(PositionMode.Update);
-  };
-
+const Home = () => {
+  const nav = useNavigate();
   return (
-    <>
-      {/* Navigation Header */}
-      <NavHeader />
-      <div className="body-container">
-        {modalOpen && <div className="overlay" />}
-        {/* Map Component with overlay button for adding documents */}
-        <div className={`map ${sidebarOpen ? "with-sidebar" : ""}`}>
-          <MapComponent
-            documents={documents}
-            docSelected={docSelected}
-            setSidebarOpen={setSidebarOpen}
-            setdocumentSelected={setDocSelected}
-          />
-          {user && (
-            <>
-              <div className="button-overlay">
-                <button
-                  className="doc-btn"
-                  onClick={
-                    positionMode === PositionMode.None
-                      ? handleAddButton
-                      : () => setPositionMode(PositionMode.None)
-                  }
-                >
-                  {positionMode !== PositionMode.None ? (
-                    <div className="add-container">
-                      <span className="material-symbols-outlined">
-                        arrow_back
-                      </span>
-                      <h4>Back</h4>
-                    </div>
-                  ) : (
-                    <div className="back-container">
-                      <span className="material-symbols-outlined">
-                        note_add
-                      </span>
-                      <h4>Add new Document</h4>
-                    </div>
-                  )}
-                </button>
-              </div>
-            </>
-          )}
+    <div className="home">
+      <div className="header">
+        {/* Titolo sulla sinistra */}
+        <div className="hero-title">
+          <h1>Kiruna eXplorer.</h1>
         </div>
 
-        {/* Sidebar to show document details */}
-        <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-          {
-            <Sidebar
-              setSidebarOpen={setSidebarOpen}
-              document={docSelected}
-              documents={documents}
-              setDocuments={setDocuments}
-              setDocument={setDocSelected}
-              toEditPos={handleEditPositionMode}
-            />
-          }
+        {/* Info + bottoni sulla destra */}
+        <div className="info">
+          <h1>
+            Discover the city that is shifting to become UNESCO heritage in
+            2029.
+          </h1>
+          <p>
+            Explore the map, discover the details of the buildings and follow
+            the entire transformation of the city.
+          </p>
+          <div className="hero-btns">
+            <button onClick={() => nav("/map")}>View Map</button>
+            <button onClick={() => nav("/diagram")}>View Diagram</button>
+          </div>
         </div>
       </div>
-    </>
+
+      <div className="hero-content">
+        <div className="login-card">
+          <h2>Are you an Urban Planner?</h2>
+          <button className="urb-login" onClick={() => nav("/login")}>
+            Login
+          </button>
+        </div>
+        <div className="features-cards">
+          <div className="map-feature">
+            <span className="material-symbols-outlined">map</span>
+            <h3>View Documents Directly on the Map</h3>
+            <p>
+              Effortlessly explore building plans, historical data, and future
+              projections directly on the map. No more switching tabs—everything
+              you need is just a click away for a seamless and immersive
+              experience.
+            </p>
+          </div>
+          <div className="edit-feature">
+            <span className="material-symbols-outlined">edit_document</span>
+            <h3>Edit Documents</h3>
+            <p>
+              Update, adjust, and refine documents in real-time with our Edit
+              Document feature. Make changes directly within the platform,
+              ensuring accuracy and efficiency without interruptions. Stay in
+              control and keep your work seamless.
+            </p>
+          </div>
+          <div className="diagram-feature">
+            <span className="material-symbols-outlined">monitoring</span>
+            <h3>Study Documents Using the Diagram</h3>
+            <p>
+              Visualize and study key documents like never before with our
+              "Study Documents Using the Diagram" feature. Dive into detailed,
+              interactive diagrams that bring clarity to complex data, making
+              analysis easier and more intuitive.
+            </p>
+          </div>
+          <div className="documents-feature">
+            <span className="material-symbols-outlined">edit_location</span>
+            <h3>Edit Documents Position</h3>
+            <p>
+              With our "Edit Document Position" feature, you can seamlessly
+              reposition documents to align with your workflow. Organize,
+              adjust, and fine-tune placements directly on the platform for a
+              more efficient and customized experience.
+            </p>
+          </div>
+        </div>
+      </div>
+      <footer>
+        <div className="footer-container">
+          <div className="footer-social">
+            <a
+              href="https://github.com/umberto-fontanazza/kiruna-explorer"
+              target="_blank"
+              aria-label="GitHub Repository"
+            >
+              <img src="../../public/github-mark.svg" alt="GitHub" />
+            </a>
+            <a
+              href="https://it.wikipedia.org/wiki/Kiruna"
+              target="_blank"
+              aria-label="Kiruna su Wikipedia"
+            >
+              <img src="../../public/wikipedia-logo.svg" alt="GitHub" />
+            </a>
+          </div>
+          <p className="footer-credits">
+            © 2024 Kiruna Explorer. Realizzato da{" "}
+            <a href="https://github.com/umberto-fontanazza" target="_blank">
+              Group 15
+            </a>
+            .
+          </p>
+        </div>
+      </footer>
+    </div>
   );
 };
 

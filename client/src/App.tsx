@@ -11,6 +11,7 @@ import { PopupProvider } from "./providers/PopupProvider";
 import DocumentsList from "./routes/DocumentsList";
 import Home from "./routes/Home";
 import LoginForm from "./routes/LoginForm";
+import Map from "./routes/Map";
 import UploadsList from "./routes/UploadsList";
 import "./styles/App.scss";
 import { User } from "./utils/interfaces";
@@ -57,11 +58,12 @@ const App: FC = () => {
               {/* Default redirect to /home */}
               <Route index element={<Navigate replace to="/home" />} />
 
+              <Route path="/home" element={<Home />} />
               {/* Route /login for the Home page with the form to perform the login */}
               <Route path="/login" element={<LoginForm />} />
 
               {/* Route /home for the Home page with the map and diagram */}
-              <Route path="/home" element={<Home />} />
+              <Route path="/map" element={<Map />} />
 
               {/* Route /documents where can be find the list of all documents */}
               <Route path="/documents" element={<DocumentsList />} />
