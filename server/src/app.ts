@@ -6,6 +6,7 @@ import { StatusCodes } from "http-status-codes";
 import morgan from "morgan";
 import passport from "passport";
 import { sinkErrorHandler } from "./middleware/error";
+import { locals } from "./middleware/locals";
 import passportInitializer from "./passport-config";
 import { documentRouter } from "./router/documentRouter";
 import { sessionRouter } from "./router/sessionRouter";
@@ -26,6 +27,7 @@ const corsOptions = {
   credentials: true,
 };
 app.use(cors(corsOptions));
+app.use(locals);
 
 passportInitializer(passport);
 
