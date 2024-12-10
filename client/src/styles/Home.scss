@@ -1,5 +1,9 @@
 @use "Color";
 
+.home-body::-webkit-scrollbar {
+  display: none;
+}
+
 .home {
   color: white;
   text-align: center;
