@@ -18,14 +18,14 @@ const LoginForm: FC = (): JSX.Element => {
 
   if (user) {
     // interrupt rendering
-    nav("/home");
+    nav("/map");
   }
 
   const handleSubmit = async (event: { preventDefault: () => void }) => {
     event.preventDefault();
     try {
       await login(email, password);
-      nav("/home");
+      nav("/map");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_: unknown) {
       setErrors({ login: "Email and/or password wrong" });
