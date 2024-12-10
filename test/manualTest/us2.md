@@ -14,7 +14,7 @@
 |  2   | User selects an option from the Type of link from dropdown list |
 |  3   |                    User click on "Add Link"                     |
 |  4   |            User can see the list of the added links             |
-|  5   |                  User click on "Add Document"                   |
+|  5   |                    User click on "Continue"                     |
 
 ### Scenario 1.2 - Add multiple links to a new document.
 
@@ -29,9 +29,9 @@
 |  3   |                    User click on "Add Link"                     |
 |  4   |          User repeats steps 1, 2 and 3 multiple times           |
 |  5   |            User can see the list of the added links             |
-|  6   |                  User click on "Add Document"                   |
+|  6   |                    User click on "Continue"                     |
 
-### Scenario 1.3 - Add multiple links to a new document to the same document.
+### Scenario 1.3 - Add multiple links to a new document to the same document, with different types.
 
 - Type of user: Urban Planner
 - Precondition: User is on the Add Links form [Scenario 3.1 from US1]
@@ -44,7 +44,7 @@
 |  3   |                        User click on "Add Link"                        |
 |  4   | User repeats steps 1, 2 and 3 multiple times, with different link type |
 |  5   |                User can see the list of the added links                |
-|  6   |                      User click on "Add Document"                      |
+|  6   |                        User click on "Continue"                        |
 
 ### Scenario 1.4 - Delete a links to a new document in the creation form.
 
@@ -60,7 +60,7 @@
 |  4   |          User repeats steps 1, 2 and 3 multiple times           |
 |  5   |            User can see the list of the added links             |
 |  6   |                User click on the button "Remove"                |
-|  7   |                  User click on "Add Document"                   |
+|  7   |                    User click on "Continue"                     |
 
 ### Scenario 1.5 - Update links to a created document.
 
@@ -72,10 +72,10 @@
 | :--: | :---------------------------------------------------: |
 |  1   |          User click on a document in the map          |
 |  2   | User click on the button edit document, at the bottom |
-|  3   |               User click on "continue"                |
+|  3   |               User click on "Continue"                |
 |  4   |     User create a new link as in the scenario 1.1     |
 |  5   |           User click on the button "Remove"           |
-|  5   |            User click on "Update Document"            |
+|  5   |               User click on "Continue"                |
 
 ### Scenario 1.6 - Attemp to add a connection without selecting one of the fields
 

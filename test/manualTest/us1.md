@@ -200,21 +200,6 @@ Not yet implemented.
 |  5   |                                                           User click on "Continue"                                                            |
 |  6   | Error message [Please fill out this field](https://github.com/umberto-fontanazza/kiruna-explorer/blob/main/screenshots/newDocument_error.png) |
 
-### Scenario 3.7: Try to Add new document with missing stakeholders????
-
-- Type of user: Urban Planner
-- Precondition: User is on the form "Add new Document" [Scenario 2.1](#scenario-21-enter-to-the-for-add-document-logged-in-as-an-urban-planner)
-- Post condition: Message of error to the users indicating that the field has to be complete.
-
-| Step |                                                                    System                                                                     |
-| :--: | :-------------------------------------------------------------------------------------------------------------------------------------------: |
-|  1   |                                                   User enters a title in the "Title" field                                                    |
-|  2   |                                             User enters a description in the "Description" field                                              |
-|  3   |                                             User selects an option from the "Scale" dropdown list                                             |
-|  4   |                                                User selects an option from the "Type" dropdown                                                |
-|  5   |                                                           User click on "Continue"                                                            |
-|  6   | Error message [Please fill out this field](https://github.com/umberto-fontanazza/kiruna-explorer/blob/main/screenshots/newDocument_error.png) |
-
 ### Scenario 3.8: Return to the homepage from the New Document Registration
 
 - Type of user: Urban Planner
@@ -230,3 +215,5 @@ Not yet implemented.
 |  5   |                     User selects an option from the "Type" dropdown                     |
 |  6   |            User selects one or multiple options from the "Stakeholders" list            |
 |  7   |                                    User click on "x"                                    |
+|  8   |                                  User click on "Back"                                   |
+|  9   |                             System returns to the home page                             |
