@@ -80,28 +80,34 @@ const Home = () => {
       </div>
       <footer>
         <div className="footer-container">
-          <div className="footer-social">
-            <a
-              href="https://github.com/umberto-fontanazza/kiruna-explorer"
-              target="_blank"
-              aria-label="GitHub Repository"
-            >
-              <img src="../../public/github-mark.svg" alt="GitHub" />
-            </a>
-            <a
-              href="https://it.wikipedia.org/wiki/Kiruna"
-              target="_blank"
-              aria-label="Kiruna su Wikipedia"
-            >
-              <img src="../../public/wikipedia-logo.svg" alt="GitHub" />
-            </a>
+          <div className="footer-title">
+            <h3>Kiruna eXplorer.</h3>
+            <div className="footer-social">
+              <a
+                href="https://github.com/umberto-fontanazza/kiruna-explorer"
+                target="_blank"
+                aria-label="GitHub Repository"
+              >
+                <img src="../../public/github-mark.svg" alt="GitHub" />
+              </a>
+              <a
+                href="https://it.wikipedia.org/wiki/Kiruna"
+                target="_blank"
+                aria-label="Kiruna su Wikipedia"
+              >
+                <img src="../../public/wikipedia-logo.svg" alt="Wikipedia" />
+              </a>
+              <a
+                href="https://www.instagram.com/umberto.fontanazza/"
+                target="_blank"
+                aria-label="Stavo facendo un po' di refactoring"
+              >
+                <img src="../../public/ig-logo.svg" alt="Instagram" />
+              </a>
+            </div>
           </div>
           <p className="footer-credits">
-            © 2024 Kiruna Explorer. Realizzato da{" "}
-            <a href="https://github.com/umberto-fontanazza" target="_blank">
-              Group 15
-            </a>
-            .
+            © 2024 Kiruna Explorer. Created by Group 15.
           </p>
         </div>
       </footer>
