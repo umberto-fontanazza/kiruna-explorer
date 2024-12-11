@@ -15,21 +15,6 @@ const UploadModal: React.FC<UploadModal> = ({
 }) => {
   const [filesToUpload, setFilesToUpload] = useState<Upload[]>([]);
 
-  const handleRemoveFile = (index: number) => {
-    setFilesToUpload(
-      (prev) => prev?.filter((_, i) => i !== index) || undefined,
-    );
-  };
-
-  const handleEditTitle = (index: number, newTitle: string) => {
-    setFilesToUpload(
-      (prev) =>
-        prev?.map((file, i) =>
-          i === index ? { ...file, title: newTitle } : file,
-        ) || undefined,
-    );
-  };
-
   const handleUploadFormSubmit = async (
     uploads: Upload[],
     e: React.FormEvent<HTMLFormElement>,

@@ -6,7 +6,7 @@ interface UploadBoxProps {
 }
 
 const UploadBox: React.FC<UploadBoxProps> = ({ setFilesToUpload }) => {
-  const [dragActive, setDragActive] = useState(false);
+  const setDragActive = useState(false)[1];
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -24,7 +24,7 @@ const UploadBox: React.FC<UploadBoxProps> = ({ setFilesToUpload }) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+    if (e.dataTransfer.files?.[0]) {
       handleFileUpload(e.dataTransfer.files[0]);
     }
   };
@@ -34,7 +34,7 @@ const UploadBox: React.FC<UploadBoxProps> = ({ setFilesToUpload }) => {
     inputElement.type = "file";
     inputElement.onchange = (e: Event) => {
       const target = e.target as HTMLInputElement;
-      if (target.files && target.files[0]) {
+      if (target.files?.[0]) {
         handleFileUpload(target.files[0]);
       }
     };

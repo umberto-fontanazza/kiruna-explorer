@@ -162,7 +162,10 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
                           <li key={upload.id}>
                             <button
                               className="tooltip-item"
-                              onClick={() => handleDownload(upload.id!)}
+                              onClick={() =>
+                                upload.id !== undefined &&
+                                handleDownload(upload.id)
+                              }
                             >
                               {upload.title}
                             </button>
