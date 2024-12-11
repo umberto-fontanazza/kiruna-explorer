@@ -35,7 +35,7 @@ describe("Testing story 2", () => {
     type: DocumentType.Informative,
     scale: { type: ScaleType.BlueprintsOrEffect },
     stakeholders: [Stakeholder.KirunaKommun],
-    issuanceDate: "2021-12-12",
+    issuanceTime: "2021-12-12",
     coordinates: { latitude: 45, longitude: 30 },
   };
   const targetDocument3 = {
@@ -44,7 +44,7 @@ describe("Testing story 2", () => {
     type: DocumentType.Informative,
     scale: { type: ScaleType.BlueprintsOrEffect },
     stakeholders: [Stakeholder.KirunaKommun],
-    issuanceDate: "2021-12-11",
+    issuanceTime: "2021-12-11",
     coordinates: { latitude: 35, longitude: 30 },
   };
   let sourceDocumentId1: number;
