@@ -70,13 +70,19 @@ const UploadModal: React.FC<UploadModal> = ({
           <div className="form-content">
             <h2>Upload Files</h2>
             <UploadBox setFilesToUpload={setFilesToUpload} />
-
-            {filesToUpload.length > 0 && (
-              <UploadTable
-                filesToUpload={filesToUpload}
-                setFilesToUpload={setFilesToUpload}
-              />
-            )}
+            {filesToUpload.length > 0 ? (
+              <div className="uploaded-files">
+                <h3>Uploaded Files:</h3>
+                <ul>
+                  {filesToUpload.length > 0 && (
+                    <UploadTable
+                      filesToUpload={filesToUpload}
+                      setFilesToUpload={setFilesToUpload}
+                    />
+                  )}
+                </ul>
+              </div>
+            ) : null}
           </div>
           <div className="actions">
             <button className="primary" type="submit">

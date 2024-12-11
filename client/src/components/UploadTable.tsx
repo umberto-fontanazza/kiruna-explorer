@@ -1,4 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
+import "../styles/DocumentFormPagesStyles/ThirdPageModal.scss";
 import { Upload } from "../utils/interfaces";
 
 interface UploadTableProps {

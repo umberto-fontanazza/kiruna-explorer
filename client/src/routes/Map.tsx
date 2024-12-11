@@ -17,6 +17,7 @@ const HomeMap: FC = (): JSX.Element => {
     positionMode,
     modalOpen,
     setPositionMode,
+    setShowTooltipUploads,
     handleEditPositionModeConfirm,
   } = useAppContext();
   const { isDeleted } = usePopupContext();
@@ -86,6 +87,7 @@ const HomeMap: FC = (): JSX.Element => {
             docSelected={docSelected}
             setSidebarOpen={setSidebarOpen}
             setdocumentSelected={setDocSelected}
+            setShowTooltipUploads={setShowTooltipUploads}
           />
           {user && (
             <div className="button-overlay">

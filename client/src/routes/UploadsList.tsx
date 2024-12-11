@@ -109,43 +109,46 @@ const UploadsList = () => {
               </tr>
             </thead>
             <tbody>
-              {uploads.map((upload) => (
-                <tr key={upload.id}>
-                  <td>{upload.title}</td>
-                  <td>
-                    {capitalizeFirstLetter(upload.type).replace(/_/, " ")}
-                  </td>
+              {uploads
+                .sort((a, b) => a.title.localeCompare(b.title))
+                .map((upload) => (
+                  <tr key={upload.id}>
+                    <td>{capitalizeFirstLetter(upload.title)}</td>
+                    <td>
+                      {capitalizeFirstLetter(upload.type).replace(/_/, " ")}
+                    </td>
 
-                  <td className="upload-actions">
-                    <button
-                      onClick={() =>
-                        upload.id !== undefined && handleDownloadById(upload.id)
-                      }
-                    >
-                      Download
-                    </button>
-                    {user && (
-                      <button
-                        onClick={(e) =>
-                          upload.id !== undefined && handleEdit(e, upload.id)
-                        }
-                      >
-                        Edit linked Documents
-                      </button>
-                    )}
-                    {user && (
+                    <td className="upload-actions">
                       <button
                         onClick={() =>
                           upload.id !== undefined &&
-                          openUploadDeleteModal(upload.id)
+                          handleDownloadById(upload.id)
                         }
                       >
-                        Delete
+                        Download
                       </button>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                      {user && (
+                        <button
+                          onClick={(e) =>
+                            upload.id !== undefined && handleEdit(e, upload.id)
+                          }
+                        >
+                          Edit linked Documents
+                        </button>
+                      )}
+                      {user && (
+                        <button
+                          onClick={() =>
+                            upload.id !== undefined &&
+                            openUploadDeleteModal(upload.id)
+                          }
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         ) : (
