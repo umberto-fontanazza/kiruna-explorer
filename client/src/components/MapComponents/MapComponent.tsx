@@ -4,7 +4,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/MapComponent.scss";
-import { createArea, useDrawingTools } from "../../utils/drawingTools";
+import { useDrawingTools } from "../../utils/drawingTools";
 import {
   Coordinates,
   Document,
@@ -15,6 +15,7 @@ import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
 import { createMarker } from "../../utils/markersTools";
 import { PositionMode } from "../../utils/modes";
 import { createMunicipalArea } from "../../utils/municipalArea";
+import { createArea } from "../../utils/polygonsTools";
 import MapTypeSelector from "../MapTypeSelector";
 
 interface MapComponentProps {
@@ -48,6 +49,12 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     google.maps.Polygon[] | undefined
   >(undefined);
   const [drawingMode, setDrawingMode] = useState<string>("");
+  const [drawingManager, setDrawingManager] = useState<
+    google.maps.drawing.DrawingManager | undefined
+  >(undefined);
+  const [drawnPolygon, setDrawnPolygon] = useState<
+    google.maps.Polygon | undefined
+  >(undefined);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -201,36 +208,74 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   }, [positionMode]);
 
   useEffect(() => {
-    if (docSelected && saved && positionMode === PositionMode.Update) {
-      if (polygonArea) {
-        const includePath = polygonArea.getPath(); // Contorno principale
-        const excludePaths = polygonArea.getPaths().getArray().slice(1); // Tutti i buchi (exclude)
+    if (docSelected && saved && positionMode !== PositionMode.None) {
+      if (positionMode === PositionMode.Update) {
+        if (polygonArea) {
+          const includePath = polygonArea.getPath(); // Contorno principale
+          const excludePaths = polygonArea.getPaths().getArray().slice(1); // Tutti i buchi (exclude)
 
-        // Creazione del nuovo oggetto PolygonArea
-        const newPolygonArea: PolygonArea = {
-          include: includePath.getArray().map((latLng) => ({
-            latitude: latLng.lat(),
-            longitude: latLng.lng(),
-          })),
-          exclude: excludePaths.map((excludePath) =>
-            excludePath.getArray().map((latLng) => ({
+          // Creazione del nuovo oggetto PolygonArea
+          const newPolygonArea: PolygonArea = {
+            include: includePath.getArray().map((latLng) => ({
               latitude: latLng.lat(),
               longitude: latLng.lng(),
             })),
-          ),
-        };
+            exclude: excludePaths.map((excludePath) =>
+              excludePath.getArray().map((latLng) => ({
+                latitude: latLng.lat(),
+                longitude: latLng.lng(),
+              })),
+            ),
+          };
 
-        // Conferma modifica posizione
-        handleEditPositionModeConfirm(docSelected, newPolygonArea);
-      } else if (newMarkerPosition) {
-        handleEditPositionModeConfirm(docSelected, newMarkerPosition);
+          // Conferma modifica posizione
+          handleEditPositionModeConfirm(docSelected, newPolygonArea);
+        } else if (newMarkerPosition) {
+          handleEditPositionModeConfirm(docSelected, newMarkerPosition);
+        }
+      } else {
+        if (!drawnPolygon || !drawingManager) return;
+
+        const paths = drawnPolygon.getPaths().getArray();
+        const include: Coordinates[] = [];
+        const exclude: Coordinates[][] = [];
+        paths.forEach((path, index) => {
+          const pathArray = path.getArray().map((latLng) => ({
+            latitude: latLng.lat(),
+            longitude: latLng.lng(),
+          }));
+          // First path is the main polygon (included area)
+          if (index === 0) {
+            include.push(...pathArray);
+          } else {
+            // Subsequent paths are holes (excluded areas)
+            exclude.push(pathArray);
+          }
+        });
+        // Create the new PolygonArea structure
+        const newPolygonArea: PolygonArea = {
+          include,
+          exclude,
+        };
+        // Update the document form state with the new area
+        setDocumentFormSelected((prev) => ({
+          ...prev,
+          coordinates: undefined,
+          area: newPolygonArea,
+        }));
+        // Finalizing the drawing process
+        drawingManager.setDrawingMode(null);
+        setdocumentSelected(null);
+        setModalOpen(true);
+        drawnPolygon.setMap(null);
       }
     }
+
     setSaved(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saved]);
 
-  useDrawingTools(map, () => setdocumentSelected);
+  useDrawingTools(map, setDrawingManager, setDrawnPolygon);
 
   useEffect(() => {
     if (municipalArea && municipalArea.length > 0) {
@@ -323,10 +368,12 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                 : "Draw a polygon on the map, where you want to update the position of the document selected"}
             </h3>
           )}
-          {positionMode === PositionMode.Update && (
+          {(positionMode === PositionMode.Update ||
+            positionMode === PositionMode.Insert) && (
             <button
               className="edit-area-btn"
               onClick={() => {
+                console.log("Ho premuto saved");
                 setSaved(true);
               }}
             >

@@ -2,11 +2,11 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { FC, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import "../../styles/MapComponentsStyles/Minimap.scss";
-import { createArea } from "../../utils/drawingTools";
 import { Coordinates, Document, PolygonArea } from "../../utils/interfaces";
 import { libraries, mapOptions } from "../../utils/map";
 import { createMarker } from "../../utils/markersTools";
 import { PositionMode } from "../../utils/modes";
+import { createArea } from "../../utils/polygonsTools";
 
 interface MinimapProps {
   documentSelected: Document | null;

@@ -1,19 +1,133 @@
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { useAppContext } from "../context/appContext";
-import { useDocumentFormContext } from "../context/DocumentFormContext";
-import { Document, PolygonArea } from "./interfaces";
 import { PositionMode } from "./modes";
+
+// export const useDrawingTools = (
+//   map: google.maps.Map | null,
+//   setDrawingManager: Dispatch<
+//     SetStateAction<google.maps.drawing.DrawingManager>
+//   >,
+//   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon>>,
+// ) => {
+//   const { positionMode } = useAppContext();
+//   const [mainPolygon, setMainPolygon] = useState<google.maps.Polygon | null>(
+//     null,
+//   );
+
+//   useEffect(() => {
+//     if (!map || positionMode !== PositionMode.Insert) return;
+
+//     const drawingManager = new google.maps.drawing.DrawingManager({
+//       drawingMode: google.maps.drawing.OverlayType.POLYGON,
+//       drawingControl: false,
+//       polygonOptions: {
+//         fillColor: "#fecb00",
+//         fillOpacity: 0.5,
+//         strokeWeight: 4,
+//         editable: true,
+//         strokeColor: "#fecb00",
+//         zIndex: 1,
+//       },
+//     });
+
+//     drawingManager.setMap(map);
+//     console.log(drawingManager);
+//     setDrawingManager(drawingManager);
+
+//     document.getElementById("polygon-btn")?.addEventListener("click", () => {
+//       drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+//     });
+
+//     document.getElementById("marker-btn")?.addEventListener("click", () => {
+//       drawingManager.setDrawingMode(null);
+//     });
+
+//     const overlayCompleteListener = google.maps.event.addListener(
+//       drawingManager,
+//       "overlaycomplete",
+//       async (event: google.maps.drawing.OverlayCompleteEvent) => {
+//         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
+//           const polygon = event.overlay as google.maps.Polygon;
+//           const path = polygon.getPath().getArray();
+
+//           if (!mainPolygon) {
+//             // Se non esiste un poligono principale, questo diventa il principale
+//             setMainPolygon(polygon);
+//             setDrawnPolygon(polygon);
+//             return;
+//           }
+
+//           if (isPolygonInsidePolygon(polygon, mainPolygon)) {
+//             // Se il poligono è dentro il principale, trattalo come un buco
+//             const mainPaths = mainPolygon.getPaths();
+//             mainPaths.push(new google.maps.MVCArray(path));
+//             polygon.setMap(null); // Rimuovi il poligono-buco dalla mappa
+//           } else {
+//             // Se il poligono è più grande del principale
+//             const mainBounds = calculatePolygonBounds(mainPolygon);
+//             const newBounds = calculatePolygonBounds(polygon);
+
+//             if (isPolygonLarger(newBounds, mainBounds)) {
+//               // Cancella il poligono principale precedente
+//               mainPolygon.setMap(null);
+//               setMainPolygon(polygon);
+//               setDrawnPolygon(polygon);
+//             } else {
+//               // Se non è valido (es. un buco più grande), cancella il poligono e mostra errore
+//               alert("Error: The hole can't be larger than the main Polygon!");
+//               polygon.setMap(null);
+//             }
+//           }
+//         }
+//       },
+//     );
+
+//     return () => {
+//       google.maps.event.removeListener(overlayCompleteListener);
+//       drawingManager.setMap(null);
+//     };
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [map, positionMode]);
+
+// Funzione per calcolare i limiti di un poligono
+function calculatePolygonBounds(polygon: google.maps.Polygon) {
+  const bounds = new google.maps.LatLngBounds();
+  const paths = polygon.getPaths().getArray();
+  paths.forEach((path) => {
+    path.getArray().forEach((latLng) => bounds.extend(latLng));
+  });
+  return bounds;
+}
+
+// Funzione per confrontare le dimensioni di due bounds
+function isPolygonLarger(
+  newBounds: google.maps.LatLngBounds,
+  existingBounds: google.maps.LatLngBounds,
+): boolean {
+  const newArea =
+    (newBounds.getNorthEast().lat() - newBounds.getSouthWest().lat()) *
+    (newBounds.getNorthEast().lng() - newBounds.getSouthWest().lng());
+  const existingArea =
+    (existingBounds.getNorthEast().lat() -
+      existingBounds.getSouthWest().lat()) *
+    (existingBounds.getNorthEast().lng() - existingBounds.getSouthWest().lng());
+  return newArea > existingArea;
+}
+// };
 
 export const useDrawingTools = (
   map: google.maps.Map | null,
-  setdocumentSelected: Dispatch<SetStateAction<Document | null>>,
+  setDrawingManager: Dispatch<
+    SetStateAction<google.maps.drawing.DrawingManager | undefined>
+  >,
+  setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
 ) => {
-  const { setModalOpen, positionMode } = useAppContext();
-  const { setDocumentFormSelected } = useDocumentFormContext();
+  const { positionMode } = useAppContext();
 
   useEffect(() => {
     if (!map || positionMode !== PositionMode.Insert) return;
 
+    // Inizializzazione del DrawingManager
     const drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: google.maps.drawing.OverlayType.POLYGON,
       drawingControl: false,
@@ -28,172 +142,78 @@ export const useDrawingTools = (
     });
 
     drawingManager.setMap(map);
+    setDrawingManager(drawingManager); // Aggiorniamo lo stato con il DrawingManager
 
-    document.getElementById("polygon-btn")?.addEventListener("click", () => {
-      drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
-    });
+    let mainPolygon: google.maps.Polygon | null = null; // Poligono principale
 
-    document.getElementById("marker-btn")?.addEventListener("click", () => {
-      drawingManager.setDrawingMode(null);
-    });
-
+    // Listener per l'evento di completamento del disegno
     const overlayCompleteListener = google.maps.event.addListener(
       drawingManager,
       "overlaycomplete",
-      async (event: google.maps.drawing.OverlayCompleteEvent) => {
+      (event: google.maps.drawing.OverlayCompleteEvent) => {
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
-          const polygon = event.overlay as google.maps.Polygon;
-          const path = polygon.getPath();
-          const newPolygonArea: PolygonArea = {
-            include: path.getArray().map((latLng) => ({
-              latitude: latLng.lat(),
-              longitude: latLng.lng(),
-            })),
-            exclude: [],
-          };
-          setDocumentFormSelected((prev) => ({
-            ...prev,
-            coordinates: undefined,
-            area: newPolygonArea,
-          }));
-          drawingManager.setDrawingMode(null);
-          setdocumentSelected(null);
-          setModalOpen(true);
-          polygon.setMap(null);
+          const newPolygon = event.overlay as google.maps.Polygon;
+          const path = newPolygon.getPath().getArray();
+          const rewindPath = rewindRing(path, true); // Assicuriamoci che il path sia coerente
+          newPolygon.setPath(rewindPath);
+
+          if (!mainPolygon) {
+            // Se non esiste un poligono principale, impostiamolo
+            mainPolygon = newPolygon;
+            setDrawnPolygon(mainPolygon);
+          } else {
+            // Se esiste un poligono principale, controlliamo cosa fare
+            if (isPolygonInsidePolygon(newPolygon, mainPolygon)) {
+              // Il nuovo poligono è un buco, aggiungiamolo al poligono principale
+              const adjustedPath = rewindRing(path, false); // Rewind per il buco
+              mainPolygon
+                .getPaths()
+                .push(new google.maps.MVCArray(adjustedPath)); // Aggiungiamo il buco
+              newPolygon.setMap(null); // Rimuoviamo il poligono dalla mappa
+              setDrawnPolygon(mainPolygon); // Aggiorniamo lo stato
+            } else {
+              // Il nuovo poligono non è un buco, mostriamo un errore
+              newPolygon.setMap(null); // Rimuoviamo il nuovo poligono
+              alert(
+                "Error: You can only create holes inside the main polygon. Please try again.",
+              );
+            }
+          }
         }
       },
     );
 
+    // Cleanup del listener e del DrawingManager
     return () => {
       google.maps.event.removeListener(overlayCompleteListener);
       drawingManager.setMap(null);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map, positionMode]);
 };
 
-export const createArea = (
-  doc: Document,
-  map: google.maps.Map,
-  positionMode: PositionMode,
-): google.maps.Polygon | null => {
-  if (!doc.area) return null;
-  const { include, exclude } = parseAreaPaths(doc.area);
+// Funzione per verificare se un poligono è dentro un altro
+function isPolygonInsidePolygon(
+  innerPolygon: google.maps.Polygon,
+  outerPolygon: google.maps.Polygon,
+): boolean {
+  const points = innerPolygon.getPath().getArray();
+  return points.every((point) =>
+    google.maps.geometry.poly.containsLocation(point, outerPolygon),
+  );
+}
 
-  if (include.length === 0) {
-    console.error("Invalid include paths for document", doc);
-    return null;
-  }
-
-  const area = new google.maps.Polygon({
-    paths: [include, ...exclude],
-    fillColor: "#fecb00",
-    fillOpacity: 0.5,
-    strokeWeight: 4,
-    strokeColor: "#fecb00",
-    zIndex: 1,
-    clickable: true,
-    draggable: positionMode === PositionMode.Update,
-    editable: positionMode === PositionMode.Update,
-  });
-
-  area.setMap(map);
-
-  return area;
-};
-
-export const clearAreas = (areas: google.maps.Polygon[]) => {
-  areas.forEach((area) => area.setMap(null));
-};
-
-export const getPolygonCentroid = (polygonArea: {
-  include: { latitude: number; longitude: number }[];
-}): { lat: number; lng: number } => {
-  const coordinates = polygonArea.include;
-
-  if (coordinates.length < 3) {
-    throw new Error("A polygon must have at least three vertices.");
-  }
-
+// Funzione per calcolare l'orientamento del poligono (reversa o meno)
+function rewindRing(
+  ring: google.maps.LatLng[],
+  clockwise: boolean,
+): google.maps.LatLng[] {
   let area = 0;
-  let centroidX = 0;
-  let centroidY = 0;
-
-  const n = coordinates.length;
-
-  for (let i = 0; i < n; i++) {
-    const x1 = coordinates[i].longitude;
-    const y1 = coordinates[i].latitude;
-    const x2 = coordinates[(i + 1) % n].longitude;
-    const y2 = coordinates[(i + 1) % n].latitude;
-
-    const crossProduct = x1 * y2 - x2 * y1;
-
-    area += crossProduct;
-    centroidX += (x1 + x2) * crossProduct;
-    centroidY += (y1 + y2) * crossProduct;
+  for (let i = 0, len = ring.length, j = len - 1; i < len; j = i++) {
+    area += (ring[i].lng() - ring[j].lng()) * (ring[j].lat() + ring[i].lat());
   }
-
-  area *= 0.5;
-
-  if (area === 0) {
-    throw new Error("The polygon has zero area and is likely degenerate.");
+  if (area >= 0 !== clockwise) {
+    ring.reverse();
   }
-
-  centroidX /= 6 * area;
-  centroidY /= 6 * area;
-
-  return { lat: centroidY, lng: centroidX };
-};
-
-// Calcola l'area del poligono per determinare l'orientamento
-const calculatePolygonArea = (coordinates: { lat: number; lng: number }[]) => {
-  let area = 0;
-  for (let i = 0; i < coordinates.length; i++) {
-    const j = (i + 1) % coordinates.length;
-    area +=
-      coordinates[i].lng * coordinates[j].lat -
-      coordinates[j].lng * coordinates[i].lat;
-  }
-  return area / 2;
-};
-
-// Verifica se il poligono è orientato in senso orario
-const isClockwise = (coordinates: { lat: number; lng: number }[]) =>
-  calculatePolygonArea(coordinates) < 0;
-
-// Inverte le coordinate per cambiare l'orientamento
-const reverseCoordinates = (coordinates: { lat: number; lng: number }[]) =>
-  [...coordinates].reverse();
-
-export const parseAreaPaths = (area: PolygonArea) => {
-  const includePaths = (area.include || []).map((coord) => ({
-    lat: parseFloat(coord.latitude?.toString() || "NaN"),
-    lng: parseFloat(coord.longitude?.toString() || "NaN"),
-  }));
-
-  const excludePaths = (area.exclude || []).map((exclude) =>
-    exclude.map((coord) => ({
-      lat: parseFloat(coord.latitude?.toString() || "NaN"),
-      lng: parseFloat(coord.longitude?.toString() || "NaN"),
-    })),
-  );
-
-  const isValidLatLng = (coord: { lat: number; lng: number }) =>
-    !isNaN(coord.lat) && !isNaN(coord.lng);
-
-  const validIncludePaths = includePaths.filter(isValidLatLng);
-  const validExcludePaths = excludePaths.map((exclude) =>
-    exclude.filter(isValidLatLng),
-  );
-
-  // Orientamento corretto
-  const orientedIncludePaths = isClockwise(validIncludePaths)
-    ? reverseCoordinates(validIncludePaths)
-    : validIncludePaths;
-
-  const orientedExcludePaths = validExcludePaths.map((exclude) =>
-    !isClockwise(exclude) ? reverseCoordinates(exclude) : exclude,
-  );
-
-  return { include: orientedIncludePaths, exclude: orientedExcludePaths };
-};
+  return ring;
+}
