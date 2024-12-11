@@ -21,3 +21,24 @@
     background-color: Color.$second;
   }
 }
+
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track,
+.gm-style .gm-style-iw-d::-webkit-scrollbar-track-piece,
+.gm-style .gm-style-iw-c,
+.gm-style .gm-style-iw-tc::after {
+  background: Color.$first;
+}
+
+.info-window {
+  color: white;
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
+}
+
+.info-window.show {
+  opacity: 1;
+  transform: scale(1);
+}

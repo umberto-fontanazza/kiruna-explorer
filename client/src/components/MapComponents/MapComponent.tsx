@@ -3,7 +3,7 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
-import "../../styles/MapComponentsStyles/Map.scss";
+import "../../styles/MapComponentsStyles/MapComponent.scss";
 import { createArea, useDrawingTools } from "../../utils/drawingTools";
 import {
   Coordinates,
@@ -127,8 +127,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       setPolygonArea(area);
       return;
     }
-
-    //createMunicipalArea(map);
 
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
       .filter((doc) => {
@@ -341,9 +339,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           <button
             id="municipal-btn"
             onMouseEnter={() => {
-              if (!isHovered) {
+              if (!isHovered && map) {
                 setIsHovered(true);
-                const municipalPolygons = createMunicipalArea(map!);
+                const municipalPolygons = createMunicipalArea(map);
                 setMunicipalArea(municipalPolygons);
               }
             }}
