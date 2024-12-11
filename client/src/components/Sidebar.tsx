@@ -25,7 +25,7 @@ const Sidebar: FC<SidebarProps> = (props) => {
             setShowTooltipUploads(false);
             setVisualLinks(false);
             props.setSidebarOpen(false);
-            props.setDocument(null);
+            setTimeout(() => props.setDocument(null), 300);
           }}
         >
           <img className="btn-close-img" src="x.png" alt="Close" />

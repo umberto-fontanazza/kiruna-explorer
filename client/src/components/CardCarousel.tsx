@@ -23,7 +23,7 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
   documents,
   setLocation,
 }) => {
-  const { setPositionMode } = useAppContext();
+  const { setPositionMode, setShowTooltipUploads } = useAppContext();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef = useRef<any>(null);
 
@@ -40,6 +40,7 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
         swiperRef.current?.swiper.slideTo(index);
       }
     }
+    setShowTooltipUploads(false);
   }, [docSelected]);
 
   //TODO: Ema you have to fix this for filters
