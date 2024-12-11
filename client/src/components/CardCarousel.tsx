@@ -43,11 +43,18 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
   }, [docSelected]);
 
   useEffect(() => {
-    if (!docSelected && documents && documents.length > 0) {
-      setDocSelected(documents[0]);
-      swiperRef.current?.swiper.slideTo(0);
-    } else if (docSelected && documents && documents.includes(docSelected)) {
-      //swiperRef.current?.swiper.slideTo(0);
+    if (documents && documents.length > 0) {
+      if (!docSelected) {
+        setDocSelected(documents[0]);
+        swiperRef.current?.swiper.slideTo(0);
+      } else {
+        const index = documents.findIndex((doc) => doc.id === docSelected.id);
+        if (index !== -1) {
+          swiperRef.current?.swiper.slideTo(index);
+        } else {
+          swiperRef.current?.swiper.slideTo(0);
+        }
+      }
     }
   }, [documents]);
 
