@@ -3,4 +3,5 @@ export enum Stakeholder {
   Lkab = "lkab",
   Residents = "residents",
   WhiteArkitekter = "white_arkitekter",
+  Others = "others",
 }
