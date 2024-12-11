@@ -33,11 +33,18 @@ const UploadEditModal: React.FC<UploadEditModal> = ({
     try {
       if (linkedDocs?.includes(docId)) {
         // Unlink document
-        await API.updateUploadLinks(openEditForm.uploadId, undefined, [docId]);
+        await API.editUpload(openEditForm.uploadId, undefined, undefined, [
+          docId,
+        ]);
         setLinkedDocs((prev) => prev.filter((id) => id !== docId));
       } else {
         // Link document
-        await API.updateUploadLinks(openEditForm.uploadId, [docId]);
+        await API.editUpload(
+          openEditForm.uploadId,
+          undefined,
+          [docId],
+          undefined,
+        );
         setLinkedDocs((prev) =>
           Array.isArray(prev) ? [...prev, docId] : [docId],
         );

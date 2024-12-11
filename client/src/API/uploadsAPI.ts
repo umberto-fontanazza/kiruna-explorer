@@ -102,29 +102,6 @@ async function editUpload(
   }
 }
 
-export const updateUploadLinks = async (
-  id: number,
-  bindDocumentIds?: number[],
-  decoupleDocumentIds?: number[],
-): Promise<void> => {
-  try {
-    const requestBody = { bindDocumentIds, decoupleDocumentIds };
-    const response = await fetch(baseURL + `/uploads/${id}`, {
-      method: "PATCH",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(requestBody),
-    });
-    if (!response.ok) {
-      throw new Error("Error linking documents to upload");
-    }
-  } catch (error) {
-    throw new Error("Error linking documents to upload: " + error);
-  }
-};
-
 async function deleteUpload(uploadId: number): Promise<void> {
   const response = await fetch(baseURL + `/uploads/${uploadId}`, {
     method: "DELETE",
@@ -142,5 +119,4 @@ export const uploadAPI = {
   addUpload,
   editUpload,
   deleteUpload,
-  updateUploadLinks,
 };

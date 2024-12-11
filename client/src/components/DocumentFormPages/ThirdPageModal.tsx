@@ -60,7 +60,7 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
   ) => {
     e.preventDefault();
     try {
-      await API.deleteUpload(uploadId);
+      await API.editUpload(uploadId, undefined, undefined, [documentForm.id!]);
       setOldUploads((prev) => prev.filter((upload) => upload.id !== uploadId));
     } catch (error) {
       console.error("Error removing old file:", error);

@@ -171,7 +171,9 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
                       </ul>
                     ) : (
                       <ul>
-                        <li>No Original Resources</li>
+                        <li className="tooltip-no-item">
+                          No Original Resources for this Document
+                        </li>
                       </ul>
                     )}
                   </div>
