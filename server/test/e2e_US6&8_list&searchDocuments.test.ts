@@ -9,7 +9,9 @@ import { Stakeholder } from "../src/model/stakeholder";
 import { loginAsPlanner } from "./utils";
 dotenv.config();
 
-// End to end testing for user story 6
+// End to end testing for user story 6: As an Urban Planner, I want to list all documents
+// End to end testing for user story 8: As an Urban Planner, I want to search documents so that i can find what i am interested in
+
 let plannerCookie: string;
 
 beforeAll(async () => {

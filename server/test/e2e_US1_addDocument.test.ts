@@ -9,7 +9,7 @@ import { Stakeholder } from "../src/model/stakeholder";
 import { loginAsPlanner } from "./utils";
 dotenv.config();
 
-// End to end testing
+// End to end testing: As an Urban Planner, I want to add a new document description
 let plannerCookie: string;
 
 beforeAll(async () => {

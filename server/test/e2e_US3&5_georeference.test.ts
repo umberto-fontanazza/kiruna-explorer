@@ -8,7 +8,8 @@ import { ScaleType } from "../src/model/scale";
 import { loginAsPlanner } from "./utils";
 dotenv.config();
 
-// End to end testing
+// End to end testing: US3: As an Urban Planner, I want to georeference a document (possibly at insertion time), So that I can study its relationship to the territory
+// US5: As an Urban Planner, I want to adjust/define the georeferencing of a document on the map so that I can study its relationship to the territory
 let plannerCookie: string;
 
 beforeAll(async () => {

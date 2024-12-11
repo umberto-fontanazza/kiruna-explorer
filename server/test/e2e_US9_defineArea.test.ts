@@ -6,6 +6,7 @@ import { DocumentType } from "../src/model/document";
 import { ScaleType } from "../src/model/scale";
 import { countEntriesInTable, loginAsPlanner } from "./utils";
 
+// End to end test for story 9: As an Urban Planner, i want to define the geolocated area of a document on the map
 let documentId: number;
 let plannerCookie: string;
 const validDocument = {

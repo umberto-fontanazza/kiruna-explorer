@@ -9,7 +9,8 @@ import { Stakeholder } from "../src/model/stakeholder";
 import { loginAsPlanner, loginAsResident } from "./utils";
 dotenv.config();
 
-// End to end testing for user stroy 4
+// End to end testing for user story 4: As a resident/visitor/urban planner, I want to view the documents on the map so that I can see to which position or area they relate.
+
 let plannerCookie: string;
 let residentCookie: string;
 jest.setTimeout(10000);
