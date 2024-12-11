@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { FC, useContext, useEffect, useState } from "react";
 import API from "../API/API";
 import MapComponent from "../components/MapComponents/MapComponent";
@@ -9,13 +8,7 @@ import { authContext } from "../context/auth";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/Map.scss";
-import {
-  Document,
-  DocumentType,
-  ScaleType,
-  Stakeholder,
-} from "../utils/interfaces";
-import { kirunaCoordinates } from "../utils/map";
+import { Document } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
 
 const HomeMap: FC = (): JSX.Element => {
@@ -39,42 +32,59 @@ const HomeMap: FC = (): JSX.Element => {
     const fetchDocuments = async () => {
       try {
         const documents: Document[] = await API.getDocuments();
-        const documentWithHole: Document = {
-          id: 1,
-          title: "Area with Hole",
-          description:
-            "This document defines a polygonal area with an excluded inner area (hole).",
-          type: DocumentType.Design,
-          scale: {
-            type: ScaleType.ArchitecturalScale,
-            ratio: 1.0,
-          },
-          stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Lkab],
-          coordinates: kirunaCoordinates,
-          area: {
-            include: [
-              { latitude: 67.8558, longitude: 20.2253 }, // Vertex 1 (Outer polygon)
-              { latitude: 67.8582, longitude: 20.2327 }, // Vertex 2
-              { latitude: 67.8605, longitude: 20.2259 }, // Vertex 3
-              { latitude: 67.8581, longitude: 20.2198 }, // Vertex 4
-              { latitude: 67.8558, longitude: 20.2253 }, // Closing the loop
-            ],
-            exclude: [
-              [
-                { latitude: 67.857, longitude: 20.2265 }, // Inner hole Vertex 1
-                { latitude: 67.8574, longitude: 20.228 }, // Inner hole Vertex 2
-                { latitude: 67.858, longitude: 20.2267 }, // Inner hole Vertex 3
-                { latitude: 67.8575, longitude: 20.2252 }, // Inner hole Vertex 4
-                { latitude: 67.857, longitude: 20.2265 }, // Closing the inner loop
-              ],
-            ],
-          },
-          issuanceDate: dayjs(),
-          links: [],
-        };
+        // const documentWithHole: Document = {
+        //   id: 500,
+        //   title: "Area with Hole",
+        //   description:
+        //     "This document defines a polygonal area with an excluded inner area (hole).",
+        //   type: DocumentType.Design,
+        //   scale: {
+        //     type: ScaleType.ArchitecturalScale,
+        //     ratio: 1.0,
+        //   },
+        //   stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Lkab],
+        //   coordinates: kirunaCoordinates,
+        //   area: {
+        //     include: [
+        //       { latitude: 67.8558, longitude: 20.2253 }, // Vertex 1 (Outer polygon)
+        //       { latitude: 67.8582, longitude: 20.2327 }, // Vertex 2
+        //       { latitude: 67.8605, longitude: 20.2259 }, // Vertex 3
+        //       { latitude: 67.8581, longitude: 20.2198 }, // Vertex 4
+        //       { latitude: 67.8558, longitude: 20.2253 }, // Closing the loop
+        //     ],
+        //     exclude: [
+        //       // Primo buco
+        //       [
+        //         { latitude: 67.8572, longitude: 20.2257 }, // Vertex 1
+        //         { latitude: 67.8574, longitude: 20.2262 }, // Vertex 2
+        //         { latitude: 67.8578, longitude: 20.2258 }, // Vertex 3
+        //         { latitude: 67.8575, longitude: 20.2254 }, // Vertex 4
+        //         { latitude: 67.8572, longitude: 20.2257 }, // Closing the loop
+        //       ],
+        //       // Secondo buco
+        //       [
+        //         { latitude: 67.8562, longitude: 20.228 }, // Vertex 1
+        //         { latitude: 67.8565, longitude: 20.2285 }, // Vertex 2
+        //         { latitude: 67.857, longitude: 20.228 }, // Vertex 3
+        //         { latitude: 67.8567, longitude: 20.2275 }, // Vertex 4
+        //         { latitude: 67.8562, longitude: 20.228 }, // Closing the loop
+        //       ],
+        //       // Terzo buco
+        //       [
+        //         { latitude: 67.858, longitude: 20.222 }, // Vertex 1
+        //         { latitude: 67.8583, longitude: 20.2225 }, // Vertex 2
+        //         { latitude: 67.8586, longitude: 20.222 }, // Vertex 3
+        //         { latitude: 67.8583, longitude: 20.2215 }, // Vertex 4
+        //         { latitude: 67.858, longitude: 20.222 }, // Closing the loop
+        //       ],
+        //     ],
+        //   },
+        //   issuanceDate: dayjs(),
+        //   links: [],
+        // };
 
-        const updateDocs = [...documents, documentWithHole];
-        setDocuments(updateDocs);
+        // const updateDocs = [...documents, documentWithHole];
+        setDocuments(documents);
       } catch (err) {
         console.error(err);
       }

@@ -203,14 +203,24 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   useEffect(() => {
     if (docSelected && saved && positionMode === PositionMode.Update) {
       if (polygonArea) {
-        const path = polygonArea.getPath();
+        const includePath = polygonArea.getPath(); // Contorno principale
+        const excludePaths = polygonArea.getPaths().getArray().slice(1); // Tutti i buchi (exclude)
+
+        // Creazione del nuovo oggetto PolygonArea
         const newPolygonArea: PolygonArea = {
-          include: path.getArray().map((latLng) => ({
+          include: includePath.getArray().map((latLng) => ({
             latitude: latLng.lat(),
             longitude: latLng.lng(),
           })),
-          exclude: [],
+          exclude: excludePaths.map((excludePath) =>
+            excludePath.getArray().map((latLng) => ({
+              latitude: latLng.lat(),
+              longitude: latLng.lng(),
+            })),
+          ),
         };
+
+        // Conferma modifica posizione
         handleEditPositionModeConfirm(docSelected, newPolygonArea);
       } else if (newMarkerPosition) {
         handleEditPositionModeConfirm(docSelected, newMarkerPosition);
