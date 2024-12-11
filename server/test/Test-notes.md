@@ -9,7 +9,7 @@
 - type: DocumentType \*
 - scale_type: ScaleType/scale_ratio: number \*
 - stakeholders: Stakeholder[]
-- issuanceTime: Date (Some documents do not have it)
+- issuanceDate: Date (Some documents do not have it)
 - coordinates: Coordinates (Will be modified with other user stories)
 - Language (Will be mandatory from user story 7 onwards)
 - Pages (Will be modified with User Story 7)
@@ -97,10 +97,10 @@
 8. View all documents as a Urban Planner and filter by multiple fields, Type, scale and issuance date (max and min). DONE (OK)
 9. Try to view all documents filtered with wrong type.
 10. Try to view all documents filtered with wrong scale.
-11. Try to view all documents filtered with wrong issuanceTime (max).
-12. Try to view all documents filtered with wrong issuanceTime (min).
+11. Try to view all documents filtered with wrong issuanceDate (max).
+12. Try to view all documents filtered with wrong issuanceDate (min).
 13. Try to view all documents filtered with wrong type and scale.
-14. Try to view all documents filtered with wrong type and issuanceTime (max).
+14. Try to view all documents filtered with wrong type and issuanceDate (max).
 
 ## US 7. As an Urban Planner I want to add one or more original resources for a document.
 

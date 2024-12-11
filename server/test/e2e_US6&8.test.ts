@@ -27,7 +27,7 @@ describe("Testing story 6", () => {
     type: DocumentType.Informative,
     scale: { type: ScaleType.BlueprintsOrEffect },
     stakeholders: [Stakeholder.KirunaKommun],
-    issuanceTime: "2021-12-12",
+    issuanceDate: "2021-12-12",
     coordinates: { latitude: 45, longitude: 30 },
   };
   let testDocId6: number;
@@ -69,7 +69,7 @@ describe("Testing story 6", () => {
     expect(Array.isArray(response.body)).toBe(true);
   });
 
-  test("US 6.4 GET /documents with   issuanceTime filter", async () => {
+  test("US 6.4 GET /documents with issuanceDate filter", async () => {
     const response = await request(app)
       .get("/documents")
       .query({ maxIssuanceDate: "2023-12-31", minIssuanceDate: "2023-01-01" })
@@ -96,7 +96,7 @@ describe("Testing story 6", () => {
     expect(Array.isArray(response.body)).toBe(true);
   });
 
-  test("US 6.7 GET /documents with Type and   issuanceTime filters", async () => {
+  test("US 6.7 GET /documents with Type and issuanceDate filters", async () => {
     const response = await request(app)
       .get("/documents")
       .query({
@@ -151,7 +151,7 @@ describe("Testing story 6", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
-  test("US 6.11 GET with wrong   issuanceTime as Urban Planner", async () => {
+  test("US 6.11 GET with wrong issuanceDate as Urban Planner", async () => {
     const response = await request(app)
       .get("/documents/")
       .query({ maxIssuanceDate: "Wrong" })
@@ -159,7 +159,7 @@ describe("Testing story 6", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
-  test("US 6.12 GET with wrong   issuanceTime as Urban Planner", async () => {
+  test("US 6.12 GET with wrong issuanceDate as Urban Planner", async () => {
     const response = await request(app)
       .get("/documents/")
       .query({ minIssuanceDate: "Wrong" })
@@ -175,7 +175,7 @@ describe("Testing story 6", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
-  test("US 6.14 GET with wrong type and   issuanceTime as Urban Planner", async () => {
+  test("US 6.14 GET with wrong type and issuanceDate as Urban Planner", async () => {
     const response = await request(app)
       .get("/documents/")
       .query({ type: "Wrong", maxIssuanceDate: "Wrong" })

@@ -25,7 +25,7 @@ describe("Testing story 3 and 5", () => {
     description: "This one will be tested with coordinates",
     scale: { type: ScaleType.Text },
     type: DocumentType.Informative,
-    issuanceTime: "2021-12-12",
+    issuanceDate: "2021-12-12",
   };
   const wrongCoordinates = {
     latitude: 120,
