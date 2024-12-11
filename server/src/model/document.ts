@@ -162,7 +162,7 @@ export class Document {
     title = $1, description = $2, type = $3, scale_type = $4, 
     scale_ratio = $5, stakeholders = $6, coordinates = ST_Point($7, $8)::geography, 
     area_id = $9,
-    issuance_date = $10 WHERE id = $11`;
+    issuance_time = $10 WHERE id = $11`;
     const scaleRow: ScaleRow = this.scale.intoDatabaseRow();
     const result = await Database.query(sql, [
       this.title,
