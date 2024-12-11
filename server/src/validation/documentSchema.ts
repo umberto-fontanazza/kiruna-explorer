@@ -6,6 +6,7 @@ import { ScaleType } from "../model/scale";
 import { Stakeholder } from "../model/stakeholder";
 import { areaSchema } from "./areaSchema";
 import { coordinatesSchema } from "./coordinatesSchema";
+import { timeParser } from "./timeParser";
 dayjs.extend(customParseFormat);
 
 export const idRequestParam = z.object({
@@ -73,7 +74,7 @@ export const postBody = z
     stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
     coordinates: coordinatesSchema.optional(),
     area: areaSchema.optional(),
-    issuanceDate: z.string().date().optional(),
+    issuanceTime: z.string().transform(timeParser).optional(),
   })
   .strict()
   .refine((body) => !(body.coordinates && body.area), {
@@ -90,7 +91,7 @@ export const patchBody = z
     stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
     coordinates: coordinatesSchema.optional(),
     area: areaSchema.optional(),
-    issuanceDate: z.string().date().optional(),
+    issuanceTime: z.string().transform(timeParser).optional(),
   })
   .strict()
   .refine((body) => !(body.coordinates && body.area), {

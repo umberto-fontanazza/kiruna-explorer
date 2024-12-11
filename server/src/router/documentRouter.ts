@@ -90,8 +90,8 @@ documentRouter.post(
       stakeholders,
       coordinates,
       area,
-      issuanceDate,
-    } = request.body as PostBody;
+      issuanceTime,
+    } = request.locals!.bodyParsedData as PostBody;
     const insertedDocument = await Document.insert(
       title,
       description,
@@ -100,7 +100,7 @@ documentRouter.post(
       stakeholders,
       coordinates,
       area && (await Area.insert(area)),
-      issuanceDate ? dayjs(issuanceDate, "YYYY-MM-DD", true) : undefined,
+      issuanceTime as [Dayjs, Dayjs],
     );
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
     return;
@@ -123,8 +123,8 @@ documentRouter.patch(
       stakeholders,
       coordinates,
       area,
-      issuanceDate,
-    } = request.body as PatchBody;
+      issuanceTime,
+    } = request.locals!.bodyParsedData as PatchBody;
     let document: Document;
     try {
       document = await Document.get(id);
@@ -144,9 +144,9 @@ documentRouter.patch(
     document.stakeholders = stakeholders || document.stakeholders;
     document.coordinates = coordinates || document.coordinates;
     if (area) await document.setArea(await Area.insert(area as AreaBody));
-    document.issuanceDate = issuanceDate
-      ? dayjs(issuanceDate, "YYYY-MM-DD", true)
-      : document.issuanceDate;
+    document.issuanceTime = issuanceTime
+      ? (issuanceTime as [Dayjs, Dayjs])
+      : document.issuanceTime;
     await document.update();
     response.status(StatusCodes.NO_CONTENT).send();
     return;

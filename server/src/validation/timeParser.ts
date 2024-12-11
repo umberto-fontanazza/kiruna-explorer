@@ -57,3 +57,13 @@ const precisionFormat = {
   month: "YYYY-MM",
   year: "YYYY",
 };
+
+export const timeFormatter = (timeInterval: [Dayjs, Dayjs]): string => {
+  const [begin, end] = timeInterval;
+  let precision: TimePrecision;
+  if (end.diff(begin, "month") > 1) precision = "year";
+  else if (end.diff(begin, "day") > 1) precision = "month";
+  else precision = "day";
+  const format = precisionFormat[precision];
+  return begin.format(format);
+};
