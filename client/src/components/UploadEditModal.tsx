@@ -88,6 +88,11 @@ const UploadEditModal: React.FC<UploadEditModal> = ({
               <p>No documents available.</p>
             )}
           </div>
+          <div className="legend">
+            <small>
+              <strong>Linked:</strong> Document already linked. Click to unlink.
+            </small>
+          </div>
         </div>
       </div>
     </div>
