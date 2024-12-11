@@ -145,6 +145,26 @@ export const getPolygonCentroid = (polygonArea: {
   return { lat: centroidY, lng: centroidX };
 };
 
+// Calcola l'area del poligono per determinare l'orientamento
+const calculatePolygonArea = (coordinates: { lat: number; lng: number }[]) => {
+  let area = 0;
+  for (let i = 0; i < coordinates.length; i++) {
+    const j = (i + 1) % coordinates.length;
+    area +=
+      coordinates[i].lng * coordinates[j].lat -
+      coordinates[j].lng * coordinates[i].lat;
+  }
+  return area / 2;
+};
+
+// Verifica se il poligono è orientato in senso orario
+const isClockwise = (coordinates: { lat: number; lng: number }[]) =>
+  calculatePolygonArea(coordinates) < 0;
+
+// Inverte le coordinate per cambiare l'orientamento
+const reverseCoordinates = (coordinates: { lat: number; lng: number }[]) =>
+  [...coordinates].reverse();
+
 export const parseAreaPaths = (area: PolygonArea) => {
   const includePaths = (area.include || []).map((coord) => ({
     lat: parseFloat(coord.latitude?.toString() || "NaN"),
@@ -166,5 +186,14 @@ export const parseAreaPaths = (area: PolygonArea) => {
     exclude.filter(isValidLatLng),
   );
 
-  return { include: validIncludePaths, exclude: validExcludePaths };
+  // Orientamento corretto
+  const orientedIncludePaths = isClockwise(validIncludePaths)
+    ? reverseCoordinates(validIncludePaths)
+    : validIncludePaths;
+
+  const orientedExcludePaths = validExcludePaths.map((exclude) =>
+    !isClockwise(exclude) ? reverseCoordinates(exclude) : exclude,
+  );
+
+  return { include: orientedIncludePaths, exclude: orientedExcludePaths };
 };
