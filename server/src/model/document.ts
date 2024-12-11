@@ -133,6 +133,11 @@ export class Document {
       coordinates.latitude && coordinates.longitude && coordinates;
     const area = area_id !== null && (await Area.get(area_id));
 
+    const issuanceTime: [Dayjs, Dayjs] | undefined = issuance_time && [
+      dayjs(issuance_time[0]),
+      dayjs(issuance_time[1]),
+    ];
+
     return new Document(
       id,
       title,
@@ -142,7 +147,7 @@ export class Document {
       stakeholders || undefined,
       checkedCoordinates || undefined,
       area || undefined,
-      [dayjs(issuance_time[0]), dayjs(issuance_time[1])],
+      issuanceTime,
       Link.fromJsonbField(links),
     );
   }
