@@ -21,6 +21,9 @@ const DocumentsList = () => {
   const [docSelected, setDocSelected] = useState<Document | undefined>(
     undefined,
   );
+  const [searchBarDocument, setSearchBarDocument] = useState<
+    Document | undefined
+  >(undefined);
   const [documentLocation, setDocumentLocation] = useState<
     Coordinates | PolygonArea | null
   >(null);
@@ -48,8 +51,20 @@ const DocumentsList = () => {
         console.error(err);
       }
     };
-    fetchDocuments();
-  }, [isDeleted, isSubmit, filters, handleEditPositionModeConfirm]);
+
+    if (!searchBarDocument) {
+      fetchDocuments();
+    } else {
+      setDocSelected(searchBarDocument);
+      setDocuments([searchBarDocument]);
+    }
+  }, [
+    isDeleted,
+    isSubmit,
+    filters,
+    handleEditPositionModeConfirm,
+    searchBarDocument,
+  ]);
 
   const handleCloseMap = () => {
     setDocumentLocation(null);
@@ -61,7 +76,7 @@ const DocumentsList = () => {
       <div className="doc-lists">
         <div className="header">
           <h1 className="title">Documents List</h1>
-          <SearchBar setSelectedSuggestion={setDocSelected} />
+          <SearchBar setSelectedSuggestion={setSearchBarDocument} />
           <FiltersList setFilters={setFilters} />
         </div>
         <ControlledCarousel
