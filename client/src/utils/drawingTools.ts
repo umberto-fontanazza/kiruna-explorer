@@ -1,5 +1,7 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
+import { useDocumentFormContext } from "../context/DocumentFormContext";
+import { Document } from "./interfaces";
 import { PositionMode } from "./modes";
 
 // export const useDrawingTools = (
@@ -90,29 +92,29 @@ import { PositionMode } from "./modes";
 //   }, [map, positionMode]);
 
 // Funzione per calcolare i limiti di un poligono
-function calculatePolygonBounds(polygon: google.maps.Polygon) {
-  const bounds = new google.maps.LatLngBounds();
-  const paths = polygon.getPaths().getArray();
-  paths.forEach((path) => {
-    path.getArray().forEach((latLng) => bounds.extend(latLng));
-  });
-  return bounds;
-}
+// function calculatePolygonBounds(polygon: google.maps.Polygon) {
+//   const bounds = new google.maps.LatLngBounds();
+//   const paths = polygon.getPaths().getArray();
+//   paths.forEach((path) => {
+//     path.getArray().forEach((latLng) => bounds.extend(latLng));
+//   });
+//   return bounds;
+// }
 
-// Funzione per confrontare le dimensioni di due bounds
-function isPolygonLarger(
-  newBounds: google.maps.LatLngBounds,
-  existingBounds: google.maps.LatLngBounds,
-): boolean {
-  const newArea =
-    (newBounds.getNorthEast().lat() - newBounds.getSouthWest().lat()) *
-    (newBounds.getNorthEast().lng() - newBounds.getSouthWest().lng());
-  const existingArea =
-    (existingBounds.getNorthEast().lat() -
-      existingBounds.getSouthWest().lat()) *
-    (existingBounds.getNorthEast().lng() - existingBounds.getSouthWest().lng());
-  return newArea > existingArea;
-}
+// // Funzione per confrontare le dimensioni di due bounds
+// function isPolygonLarger(
+//   newBounds: google.maps.LatLngBounds,
+//   existingBounds: google.maps.LatLngBounds,
+// ): boolean {
+//   const newArea =
+//     (newBounds.getNorthEast().lat() - newBounds.getSouthWest().lat()) *
+//     (newBounds.getNorthEast().lng() - newBounds.getSouthWest().lng());
+//   const existingArea =
+//     (existingBounds.getNorthEast().lat() -
+//       existingBounds.getSouthWest().lat()) *
+//     (existingBounds.getNorthEast().lng() - existingBounds.getSouthWest().lng());
+//   return newArea > existingArea;
+// }
 // };
 
 export const useDrawingTools = (
@@ -121,15 +123,26 @@ export const useDrawingTools = (
     SetStateAction<google.maps.drawing.DrawingManager | undefined>
   >,
   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
+  setdocumentSelected: Dispatch<SetStateAction<Document | null>>,
 ) => {
   const { positionMode } = useAppContext();
+  const { setModalOpen } = useAppContext();
+  const { setDocumentFormSelected, setIsSubmit } = useDocumentFormContext();
+  const [currentMarker, setCurrentMarker] = useState<google.maps.Marker | null>(
+    null,
+  );
+  const [mainPolygon, setMainPolygon] = useState<google.maps.Polygon | null>(
+    null,
+  );
+  const [drawingMode, setDrawingMode] =
+    useState<google.maps.drawing.OverlayType | null>(null);
 
   useEffect(() => {
     if (!map || positionMode !== PositionMode.Insert) return;
 
     // Inizializzazione del DrawingManager
     const drawingManager = new google.maps.drawing.DrawingManager({
-      drawingMode: google.maps.drawing.OverlayType.POLYGON,
+      drawingMode: drawingMode,
       drawingControl: false,
       polygonOptions: {
         fillColor: "#fecb00",
@@ -142,9 +155,27 @@ export const useDrawingTools = (
     });
 
     drawingManager.setMap(map);
-    setDrawingManager(drawingManager); // Aggiorniamo lo stato con il DrawingManager
+    setDrawingManager(drawingManager);
 
-    let mainPolygon: google.maps.Polygon | null = null; // Poligono principale
+    document.getElementById("polygon-btn")?.addEventListener("click", () => {
+      if (currentMarker) {
+        currentMarker.setMap(null);
+        setCurrentMarker(null);
+      }
+      setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+    });
+
+    document.getElementById("marker-btn")?.addEventListener("click", () => {
+      if (currentMarker) {
+        currentMarker.setMap(null);
+        setCurrentMarker(null);
+      }
+      if (mainPolygon) {
+        mainPolygon.setMap(null);
+        setMainPolygon(null);
+      }
+      setDrawingMode(google.maps.drawing.OverlayType.MARKER);
+    });
 
     // Listener per l'evento di completamento del disegno
     const overlayCompleteListener = google.maps.event.addListener(
@@ -159,8 +190,12 @@ export const useDrawingTools = (
 
           if (!mainPolygon) {
             // Se non esiste un poligono principale, impostiamolo
-            mainPolygon = newPolygon;
-            setDrawnPolygon(mainPolygon);
+            const firstPoly = newPolygon;
+            setMainPolygon(newPolygon);
+            firstPoly.setEditable(true);
+            firstPoly.setDraggable(true);
+
+            setDrawnPolygon(firstPoly);
           } else {
             // Se esiste un poligono principale, controlliamo cosa fare
             if (isPolygonInsidePolygon(newPolygon, mainPolygon)) {
@@ -170,6 +205,8 @@ export const useDrawingTools = (
                 .getPaths()
                 .push(new google.maps.MVCArray(adjustedPath)); // Aggiungiamo il buco
               newPolygon.setMap(null); // Rimuoviamo il poligono dalla mappa
+              mainPolygon.setEditable(true);
+              mainPolygon.setDraggable(true);
               setDrawnPolygon(mainPolygon); // Aggiorniamo lo stato
             } else {
               // Il nuovo poligono non è un buco, mostriamo un errore
@@ -178,18 +215,47 @@ export const useDrawingTools = (
                 "Error: You can only create holes inside the main polygon. Please try again.",
               );
             }
+            setDrawingMode(null);
           }
         }
+      },
+    );
+
+    const markerCompleteListener = google.maps.event.addListener(
+      drawingManager,
+      "markercomplete",
+      (marker: google.maps.Marker) => {
+        const latLng = marker.getPosition();
+        if (!latLng) return;
+
+        const lat = latLng.lat();
+        const lng = latLng.lng();
+
+        setDocumentFormSelected((prev) => ({
+          ...prev,
+          coordinates: { latitude: lat, longitude: lng },
+          area: undefined,
+        }));
+
+        if (positionMode === PositionMode.Insert) {
+          setdocumentSelected(null);
+          setModalOpen(true);
+        }
+
+        setIsSubmit(false);
+        setCurrentMarker(marker);
+        setDrawingMode(null);
       },
     );
 
     // Cleanup del listener e del DrawingManager
     return () => {
       google.maps.event.removeListener(overlayCompleteListener);
+      google.maps.event.removeListener(markerCompleteListener);
       drawingManager.setMap(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, positionMode]);
+  }, [map, positionMode, currentMarker, mainPolygon, drawingMode]);
 };
 
 // Funzione per verificare se un poligono è dentro un altro

@@ -62,44 +62,44 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     libraries: libraries,
   });
 
-  useEffect(() => {
-    if (positionMode === PositionMode.None && polygonArea) {
-      polygonArea?.setMap(null);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [positionMode]);
+  // useEffect(() => {
+  //   if (positionMode === PositionMode.None && polygonArea) {
+  //     polygonArea?.setMap(null);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [positionMode]);
 
-  const onMapClick = (event: google.maps.MapMouseEvent) => {
-    if (!event.latLng) return;
+  // const onMapClick = (event: google.maps.MapMouseEvent) => {
+  //   if (!event.latLng) return;
 
-    const lat = event.latLng.lat();
-    const lng = event.latLng.lng();
+  //   const lat = event.latLng.lat();
+  //   const lng = event.latLng.lng();
 
-    setDocumentFormSelected((prev) => ({
-      ...prev,
-      coordinates: { latitude: lat, longitude: lng },
-      area: undefined,
-    }));
+  //   setDocumentFormSelected((prev) => ({
+  //     ...prev,
+  //     coordinates: { latitude: lat, longitude: lng },
+  //     area: undefined,
+  //   }));
 
-    if (positionMode === PositionMode.Insert) {
-      // Insert Document Position flow
-      setdocumentSelected(null);
-      setModalOpen(true);
-    }
+  //   if (positionMode === PositionMode.Insert) {
+  //     // Insert Document Position flow
+  //     setdocumentSelected(null);
+  //     setModalOpen(true);
+  //   }
 
-    setIsSubmit(false);
-  };
+  //   setIsSubmit(false);
+  // };
 
-  useEffect(() => {
-    if (!isLoaded || !map || positionMode === PositionMode.None) return;
+  // useEffect(() => {
+  //   if (!isLoaded || !map || positionMode === PositionMode.None) return;
 
-    map.addListener("click", onMapClick);
+  //   map.addListener("click", onMapClick);
 
-    return () => {
-      google.maps.event.clearInstanceListeners(map);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [positionMode]);
+  //   return () => {
+  //     google.maps.event.clearInstanceListeners(map);
+  //   };
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [positionMode]);
 
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
@@ -234,6 +234,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           handleEditPositionModeConfirm(docSelected, newMarkerPosition);
         }
       } else {
+        console.log(drawnPolygon);
         if (!drawnPolygon || !drawingManager) return;
 
         const paths = drawnPolygon.getPaths().getArray();
@@ -275,7 +276,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saved]);
 
-  useDrawingTools(map, setDrawingManager, setDrawnPolygon);
+  useDrawingTools(map, setDrawingManager, setDrawnPolygon, setdocumentSelected);
 
   useEffect(() => {
     if (municipalArea && municipalArea.length > 0) {

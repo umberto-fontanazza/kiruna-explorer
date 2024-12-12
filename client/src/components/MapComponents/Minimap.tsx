@@ -54,13 +54,19 @@ const Minimap: FC<MinimapProps> = ({
   useEffect(() => {
     if (documentSelected && saved && positionMode === PositionMode.Update) {
       if (polygonArea) {
-        const path = polygonArea.getPath();
+        const includePath = polygonArea.getPath(); // Contorno principale
+        const excludePaths = polygonArea.getPaths().getArray().slice(1); // Tutti i buchi (exclude)
         const newPolygonArea: PolygonArea = {
-          include: path.getArray().map((latLng) => ({
+          include: includePath.getArray().map((latLng) => ({
             latitude: latLng.lat(),
             longitude: latLng.lng(),
           })),
-          exclude: [],
+          exclude: excludePaths.map((excludePath) =>
+            excludePath.getArray().map((latLng) => ({
+              latitude: latLng.lat(),
+              longitude: latLng.lng(),
+            })),
+          ),
         };
         handleEditPositionModeConfirm(documentSelected, newPolygonArea);
         polygonArea?.setMap(null);
