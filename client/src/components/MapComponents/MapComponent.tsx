@@ -55,51 +55,16 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [drawnPolygon, setDrawnPolygon] = useState<
     google.maps.Polygon | undefined
   >(undefined);
+  const [drawnMarker, setDrawnMarker] = useState<
+    google.maps.Marker | undefined
+  >(undefined);
+  const [activeButton, setActiveButton] = useState<string>("");
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries: libraries,
   });
-
-  // useEffect(() => {
-  //   if (positionMode === PositionMode.None && polygonArea) {
-  //     polygonArea?.setMap(null);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [positionMode]);
-
-  // const onMapClick = (event: google.maps.MapMouseEvent) => {
-  //   if (!event.latLng) return;
-
-  //   const lat = event.latLng.lat();
-  //   const lng = event.latLng.lng();
-
-  //   setDocumentFormSelected((prev) => ({
-  //     ...prev,
-  //     coordinates: { latitude: lat, longitude: lng },
-  //     area: undefined,
-  //   }));
-
-  //   if (positionMode === PositionMode.Insert) {
-  //     // Insert Document Position flow
-  //     setdocumentSelected(null);
-  //     setModalOpen(true);
-  //   }
-
-  //   setIsSubmit(false);
-  // };
-
-  // useEffect(() => {
-  //   if (!isLoaded || !map || positionMode === PositionMode.None) return;
-
-  //   map.addListener("click", onMapClick);
-
-  //   return () => {
-  //     google.maps.event.clearInstanceListeners(map);
-  //   };
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [positionMode]);
 
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
@@ -197,22 +162,35 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     return () => {
       markerCluster.clearMarkers();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, map, documents]);
 
+  //TODO: Check all the states that are unused from now
   useEffect(() => {
     if (positionMode === PositionMode.None) {
+      if (municipalArea) {
+        municipalArea?.forEach((area) => area.setMap(null));
+      }
+      drawnPolygon?.setMap(null);
+      drawnMarker?.setMap(null);
+      drawingManager?.setMap(null);
+      setActiveButton("");
       polygonArea?.setMap(null);
       setNewMarkerPosition(null);
+      setDrawnMarker(undefined);
+      setDrawnPolygon(undefined);
       setPolygonArea(null);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionMode]);
 
   useEffect(() => {
-    if (docSelected && saved && positionMode !== PositionMode.None) {
-      if (positionMode === PositionMode.Update) {
+    console.log(docSelected, saved, positionMode);
+    if (saved && positionMode !== PositionMode.None) {
+      if (positionMode === PositionMode.Update && docSelected) {
         if (polygonArea) {
-          const includePath = polygonArea.getPath(); // Contorno principale
-          const excludePaths = polygonArea.getPaths().getArray().slice(1); // Tutti i buchi (exclude)
+          const includePath = polygonArea.getPath();
+          const excludePaths = polygonArea.getPaths().getArray().slice(1);
 
           // Creazione del nuovo oggetto PolygonArea
           const newPolygonArea: PolygonArea = {
@@ -234,49 +212,74 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           handleEditPositionModeConfirm(docSelected, newMarkerPosition);
         }
       } else {
-        console.log(drawnPolygon);
-        if (!drawnPolygon || !drawingManager) return;
-
-        const paths = drawnPolygon.getPaths().getArray();
-        const include: Coordinates[] = [];
-        const exclude: Coordinates[][] = [];
-        paths.forEach((path, index) => {
-          const pathArray = path.getArray().map((latLng) => ({
-            latitude: latLng.lat(),
-            longitude: latLng.lng(),
+        if (drawnPolygon && drawingManager) {
+          const paths = drawnPolygon.getPaths().getArray();
+          const include: Coordinates[] = [];
+          const exclude: Coordinates[][] = [];
+          paths.forEach((path, index) => {
+            const pathArray = path.getArray().map((latLng) => ({
+              latitude: latLng.lat(),
+              longitude: latLng.lng(),
+            }));
+            // First path is the main polygon (included area)
+            if (index === 0) {
+              include.push(...pathArray);
+            } else {
+              // Subsequent paths are holes (excluded areas)
+              exclude.push(pathArray);
+            }
+          });
+          // Create the new PolygonArea structure
+          const newPolygonArea: PolygonArea = {
+            include,
+            exclude,
+          };
+          // Update the document form state with the new area
+          setDocumentFormSelected((prev) => ({
+            ...prev,
+            coordinates: undefined,
+            area: newPolygonArea,
           }));
-          // First path is the main polygon (included area)
-          if (index === 0) {
-            include.push(...pathArray);
-          } else {
-            // Subsequent paths are holes (excluded areas)
-            exclude.push(pathArray);
+          // Finalizing the drawing process
+          drawingManager.setDrawingMode(null);
+          setdocumentSelected(null);
+          setModalOpen(true);
+          drawnPolygon.setMap(null);
+        } else if (drawnMarker && drawingManager) {
+          const latLng = drawnMarker.getPosition();
+          if (!latLng) return;
+
+          const lat = latLng.lat();
+          const lng = latLng.lng();
+
+          setDocumentFormSelected((prev) => ({
+            ...prev,
+            coordinates: { latitude: lat, longitude: lng },
+            area: undefined,
+          }));
+
+          if (positionMode === PositionMode.Insert) {
+            setdocumentSelected(null);
+            setModalOpen(true);
           }
-        });
-        // Create the new PolygonArea structure
-        const newPolygonArea: PolygonArea = {
-          include,
-          exclude,
-        };
-        // Update the document form state with the new area
-        setDocumentFormSelected((prev) => ({
-          ...prev,
-          coordinates: undefined,
-          area: newPolygonArea,
-        }));
-        // Finalizing the drawing process
-        drawingManager.setDrawingMode(null);
-        setdocumentSelected(null);
-        setModalOpen(true);
-        drawnPolygon.setMap(null);
+
+          setIsSubmit(false);
+        } else {
+          handleMunicipalAreaButton();
+        }
       }
     }
-
     setSaved(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saved]);
 
-  useDrawingTools(map, setDrawingManager, setDrawnPolygon, setdocumentSelected);
+  useDrawingTools(
+    map,
+    setDrawingManager,
+    setDrawnPolygon,
+    setDrawnMarker,
+    setdocumentSelected,
+  );
 
   useEffect(() => {
     if (municipalArea && municipalArea.length > 0) {
@@ -292,6 +295,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       // Adatta la mappa ai confini calcolati
       map?.fitBounds(bounds);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [municipalArea]);
 
   const handleMunicipalAreaButton = () => {
@@ -343,8 +347,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     }
   };
 
-  const [isHovered, setIsHovered] = useState(false);
-
   return isLoaded ? (
     <section id="map">
       <MapTypeSelector mapType={mapType} setMapType={setMapType} />
@@ -388,34 +390,51 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         <div className="drawing-controls">
           <button
             id="municipal-btn"
-            onMouseEnter={() => {
-              if (!isHovered && map) {
-                setIsHovered(true);
+            className={activeButton === "municipal-btn" ? "active" : ""}
+            onClick={() => {
+              setActiveButton("municipal-btn");
+              if (map) {
+                drawnPolygon?.setMap(null);
+                drawnMarker?.setMap(null);
                 const municipalPolygons = createMunicipalArea(map);
                 setMunicipalArea(municipalPolygons);
               }
             }}
-            onMouseLeave={() => {
-              if (isHovered) {
-                setIsHovered(false);
-                municipalArea?.forEach((area) => area.setMap(null));
-                setMunicipalArea(undefined);
-              }
-            }}
-            onClick={handleMunicipalAreaButton}
           >
             <div className="municipal-container">
               <span className="material-symbols-outlined">location_city</span>
               <h4>Municipal Area</h4>
             </div>
           </button>
-          <button id="polygon-btn" onClick={() => setDrawingMode("polygon")}>
+          <button
+            id="polygon-btn"
+            className={activeButton === "polygon-btn" ? "active" : ""}
+            onClick={() => {
+              setActiveButton("polygon-btn");
+              if (municipalArea) {
+                municipalArea?.forEach((area) => area.setMap(null));
+                setMunicipalArea(undefined);
+              }
+              setDrawingMode("polygon");
+            }}
+          >
             <div className="polygon-container">
               <span className="material-symbols-outlined">polyline</span>
-              <h4>Polygon</h4>
+              <h4>{drawnPolygon ? "Add a Hole" : "Polygon"}</h4>
             </div>
           </button>
-          <button id="marker-btn" onClick={() => setDrawingMode("marker")}>
+          <button
+            id="marker-btn"
+            className={activeButton === "marker-btn" ? "active" : ""}
+            onClick={() => {
+              setActiveButton("marker-btn");
+              if (municipalArea) {
+                municipalArea?.forEach((area) => area.setMap(null));
+                setMunicipalArea(undefined);
+              }
+              setDrawingMode("marker");
+            }}
+          >
             <div className="marker-container">
               <span className="material-symbols-outlined">explore_nearby</span>
               <h4>Marker</h4>

@@ -125,9 +125,7 @@
   display: flex;
   gap: 1rem;
 
-  #municipal-btn,
-  #polygon-btn,
-  #marker-btn {
+  button {
     border-radius: 1rem;
     width: 13vw;
     height: 6.5vh;
@@ -137,11 +135,23 @@
     cursor: pointer;
     transition:
       background-color 0.3s ease,
-      color 0.3s ease;
+      color 0.3s ease,
+      transform 0.2s ease;
 
     &:hover {
       background-color: #bfbfac;
       color: Color.$first;
+    }
+
+    &.active {
+      background-color: #fecb00; /* Colore di sfondo attivo */
+      border: 0.2rem solid Color.$first; /* Colore del bordo attivo */
+      transform: scale(1.05); /* Ingrandimento leggero per feedback visivo */
+    }
+
+    .material-symbols-outlined {
+      color: inherit; /* Cambia colore in base al bottone */
+      transform: scale(1.5);
     }
   }
 
@@ -150,10 +160,6 @@
   .marker-container {
     display: flex;
     align-items: center;
-
-    .material-symbols-outlined {
-      transform: scale(1.5);
-    }
 
     h4 {
       font-size: 1.2rem;

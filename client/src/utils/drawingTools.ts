@@ -1,121 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
-import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { Document } from "./interfaces";
 import { PositionMode } from "./modes";
-
-// export const useDrawingTools = (
-//   map: google.maps.Map | null,
-//   setDrawingManager: Dispatch<
-//     SetStateAction<google.maps.drawing.DrawingManager>
-//   >,
-//   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon>>,
-// ) => {
-//   const { positionMode } = useAppContext();
-//   const [mainPolygon, setMainPolygon] = useState<google.maps.Polygon | null>(
-//     null,
-//   );
-
-//   useEffect(() => {
-//     if (!map || positionMode !== PositionMode.Insert) return;
-
-//     const drawingManager = new google.maps.drawing.DrawingManager({
-//       drawingMode: google.maps.drawing.OverlayType.POLYGON,
-//       drawingControl: false,
-//       polygonOptions: {
-//         fillColor: "#fecb00",
-//         fillOpacity: 0.5,
-//         strokeWeight: 4,
-//         editable: true,
-//         strokeColor: "#fecb00",
-//         zIndex: 1,
-//       },
-//     });
-
-//     drawingManager.setMap(map);
-//     console.log(drawingManager);
-//     setDrawingManager(drawingManager);
-
-//     document.getElementById("polygon-btn")?.addEventListener("click", () => {
-//       drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
-//     });
-
-//     document.getElementById("marker-btn")?.addEventListener("click", () => {
-//       drawingManager.setDrawingMode(null);
-//     });
-
-//     const overlayCompleteListener = google.maps.event.addListener(
-//       drawingManager,
-//       "overlaycomplete",
-//       async (event: google.maps.drawing.OverlayCompleteEvent) => {
-//         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
-//           const polygon = event.overlay as google.maps.Polygon;
-//           const path = polygon.getPath().getArray();
-
-//           if (!mainPolygon) {
-//             // Se non esiste un poligono principale, questo diventa il principale
-//             setMainPolygon(polygon);
-//             setDrawnPolygon(polygon);
-//             return;
-//           }
-
-//           if (isPolygonInsidePolygon(polygon, mainPolygon)) {
-//             // Se il poligono è dentro il principale, trattalo come un buco
-//             const mainPaths = mainPolygon.getPaths();
-//             mainPaths.push(new google.maps.MVCArray(path));
-//             polygon.setMap(null); // Rimuovi il poligono-buco dalla mappa
-//           } else {
-//             // Se il poligono è più grande del principale
-//             const mainBounds = calculatePolygonBounds(mainPolygon);
-//             const newBounds = calculatePolygonBounds(polygon);
-
-//             if (isPolygonLarger(newBounds, mainBounds)) {
-//               // Cancella il poligono principale precedente
-//               mainPolygon.setMap(null);
-//               setMainPolygon(polygon);
-//               setDrawnPolygon(polygon);
-//             } else {
-//               // Se non è valido (es. un buco più grande), cancella il poligono e mostra errore
-//               alert("Error: The hole can't be larger than the main Polygon!");
-//               polygon.setMap(null);
-//             }
-//           }
-//         }
-//       },
-//     );
-
-//     return () => {
-//       google.maps.event.removeListener(overlayCompleteListener);
-//       drawingManager.setMap(null);
-//     };
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, [map, positionMode]);
-
-// Funzione per calcolare i limiti di un poligono
-// function calculatePolygonBounds(polygon: google.maps.Polygon) {
-//   const bounds = new google.maps.LatLngBounds();
-//   const paths = polygon.getPaths().getArray();
-//   paths.forEach((path) => {
-//     path.getArray().forEach((latLng) => bounds.extend(latLng));
-//   });
-//   return bounds;
-// }
-
-// // Funzione per confrontare le dimensioni di due bounds
-// function isPolygonLarger(
-//   newBounds: google.maps.LatLngBounds,
-//   existingBounds: google.maps.LatLngBounds,
-// ): boolean {
-//   const newArea =
-//     (newBounds.getNorthEast().lat() - newBounds.getSouthWest().lat()) *
-//     (newBounds.getNorthEast().lng() - newBounds.getSouthWest().lng());
-//   const existingArea =
-//     (existingBounds.getNorthEast().lat() -
-//       existingBounds.getSouthWest().lat()) *
-//     (existingBounds.getNorthEast().lng() - existingBounds.getSouthWest().lng());
-//   return newArea > existingArea;
-// }
-// };
 
 export const useDrawingTools = (
   map: google.maps.Map | null,
@@ -123,11 +9,11 @@ export const useDrawingTools = (
     SetStateAction<google.maps.drawing.DrawingManager | undefined>
   >,
   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
+  setDrawnMarker: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
   setdocumentSelected: Dispatch<SetStateAction<Document | null>>,
 ) => {
   const { positionMode } = useAppContext();
   const { setModalOpen } = useAppContext();
-  const { setDocumentFormSelected, setIsSubmit } = useDocumentFormContext();
   const [currentMarker, setCurrentMarker] = useState<google.maps.Marker | null>(
     null,
   );
@@ -185,11 +71,10 @@ export const useDrawingTools = (
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
           const newPolygon = event.overlay as google.maps.Polygon;
           const path = newPolygon.getPath().getArray();
-          const rewindPath = rewindRing(path, true); // Assicuriamoci che il path sia coerente
+          const rewindPath = rewindRing(path, true);
           newPolygon.setPath(rewindPath);
 
           if (!mainPolygon) {
-            // Se non esiste un poligono principale, impostiamolo
             const firstPoly = newPolygon;
             setMainPolygon(newPolygon);
             firstPoly.setEditable(true);
@@ -225,25 +110,8 @@ export const useDrawingTools = (
       drawingManager,
       "markercomplete",
       (marker: google.maps.Marker) => {
-        const latLng = marker.getPosition();
-        if (!latLng) return;
-
-        const lat = latLng.lat();
-        const lng = latLng.lng();
-
-        setDocumentFormSelected((prev) => ({
-          ...prev,
-          coordinates: { latitude: lat, longitude: lng },
-          area: undefined,
-        }));
-
-        if (positionMode === PositionMode.Insert) {
-          setdocumentSelected(null);
-          setModalOpen(true);
-        }
-
-        setIsSubmit(false);
         setCurrentMarker(marker);
+        setDrawnMarker(marker);
         setDrawingMode(null);
       },
     );
