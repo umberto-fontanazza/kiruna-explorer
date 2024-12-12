@@ -83,7 +83,10 @@ function SearchBar({ setSelectedSuggestion }: SearchBarProps) {
         src="search-bar-x.png"
         className="search-icon-x"
         alt="Clear search"
-        onClick={() => setQuery("")}
+        onClick={() => {
+          setQuery("");
+          setSelectedSuggestion(undefined);
+        }}
         onKeyDown={(e) => {
           if (e.key === "Enter" || e.key === " ") {
             setQuery("");
