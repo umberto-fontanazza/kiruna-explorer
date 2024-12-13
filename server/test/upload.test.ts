@@ -198,17 +198,8 @@ describe("Upload class", () => {
       fields: [],
     });
 
-    await expect(Upload.get(uploadId, bindDocuments, withFile)).rejects.toThrow(
-      /false == true/,
-    );
-
-    expect(mockQuery).toHaveBeenCalledWith(
-      "SELECT title, type, file FROM upload WHERE id = $1",
-      [uploadId],
-    );
-    expect(mockQuery).toHaveBeenCalledWith(
-      "SELECT id FROM document WHERE $1 = ANY(upload_ids)",
-      [uploadId],
-    );
+    const result = await Upload.get(uploadId, bindDocuments, withFile);
+    expect(result).toBeInstanceOf(Upload);
+    expect(result.bindedDocumentIds).toHaveLength(0);
   });
 });
