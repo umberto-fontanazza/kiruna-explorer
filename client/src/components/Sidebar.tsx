@@ -14,7 +14,7 @@ interface SidebarProps {
 }
 
 const Sidebar: FC<SidebarProps> = (props) => {
-  const { setVisualLinks } = useAppContext();
+  const { setVisualLinks, setShowTooltipUploads } = useAppContext();
   return (
     <>
       <div className="container-btns">
@@ -22,9 +22,10 @@ const Sidebar: FC<SidebarProps> = (props) => {
         <button
           className="btn-close-sidebar"
           onClick={() => {
+            setShowTooltipUploads(false);
             setVisualLinks(false);
             props.setSidebarOpen(false);
-            props.setDocument(null);
+            setTimeout(() => props.setDocument(null), 300);
           }}
         >
           <img className="btn-close-img" src="x.png" alt="Close" />
