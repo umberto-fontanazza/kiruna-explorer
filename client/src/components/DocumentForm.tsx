@@ -24,9 +24,7 @@ const DocumentForm = () => {
   const [tableLinks, setTableLinks] = useState<Link[]>(
     documentFormSelected?.links || [],
   );
-  const [filesToUpload, setFilesToUpload] = useState<Upload[] | undefined>(
-    undefined,
-  );
+  const [filesToUpload, setFilesToUpload] = useState<Upload[]>([]);
   const [errors, setErrors] = useState<Record<string, string> | null>(null);
 
   const validateFirstPage = (): boolean => {

@@ -33,11 +33,13 @@ const UploadEditModal: React.FC<UploadEditModal> = ({
     try {
       if (linkedDocs?.includes(docId)) {
         // Unlink document
-        await API.updateUploadLinks(openEditForm.uploadId, undefined, [docId]);
+        await API.editUpload(openEditForm.uploadId, undefined, undefined, [
+          docId,
+        ]);
         setLinkedDocs((prev) => prev.filter((id) => id !== docId));
       } else {
         // Link document
-        await API.updateUploadLinks(openEditForm.uploadId, [docId]);
+        await API.editUpload(openEditForm.uploadId, undefined, [docId]);
         setLinkedDocs((prev) =>
           Array.isArray(prev) ? [...prev, docId] : [docId],
         );
@@ -64,22 +66,29 @@ const UploadEditModal: React.FC<UploadEditModal> = ({
           <h3>Select documents to link/unlink with the upload.</h3>
           <div className="documents-list">
             {documents.length > 0 ? (
-              documents.map((doc) => (
-                <div key={doc.id} className="document-item">
-                  <span>{doc.title}</span>
-                  <button
-                    className={`link-btn ${
-                      linkedDocs?.includes(doc.id) ? "linked" : ""
-                    }`}
-                    onClick={() => handleLinkToggle(doc.id)}
-                  >
-                    {linkedDocs?.includes(doc.id) ? "Linked" : "Link"}
-                  </button>
-                </div>
-              ))
+              documents
+                .sort((a, b) => a.title.localeCompare(b.title))
+                .map((doc) => (
+                  <div key={doc.id} className="document-item">
+                    <span>{doc.title}</span>
+                    <button
+                      className={`link-btn ${
+                        linkedDocs?.includes(doc.id) ? "linked" : ""
+                      }`}
+                      onClick={() => handleLinkToggle(doc.id)}
+                    >
+                      {linkedDocs?.includes(doc.id) ? "Linked" : "Link"}
+                    </button>
+                  </div>
+                ))
             ) : (
               <p>No documents available.</p>
             )}
+          </div>
+          <div className="legend">
+            <small>
+              <strong>Linked:</strong> Document already linked. Click to unlink.
+            </small>
           </div>
         </div>
       </div>
