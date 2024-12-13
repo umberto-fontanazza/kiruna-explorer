@@ -14,10 +14,10 @@ const Home = () => {
 
           {/* Info + bottoni sulla destra */}
           <div className="info">
-            <h1>
+            <h4>
               Discover the city that is shifting to become UNESCO heritage in
               2029.
-            </h1>
+            </h4>
             <p>
               Explore the map, discover the details of the buildings and follow
               the entire transformation of the city.

@@ -40,6 +40,32 @@ body,
   overflow-y: auto;
 }
 
+h1 {
+  font-size: 8.5ch;
+  font-family: "SwedenSansBold", sans-serif;
+}
+
+h2 {
+  font-size: 7ch;
+  font-family: "SwedenSansBold", sans-serif;
+}
+
+h3 {
+  font-size: 5.5ch;
+}
+
+h4 {
+  font-size: 4ch;
+}
+
+h5 {
+  font-size: 2.5ch;
+}
+
+h6 {
+  font-size: 1ch;
+}
+
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -60,10 +86,6 @@ body,
 
 ::-webkit-scrollbar-thumb:hover {
   background: Color.$first-hover;
-}
-
-button {
-  cursor: pointer;
 }
 
 .color-design_services {
@@ -100,6 +122,7 @@ button {
   padding: 0.8em;
   transition: 350ms ease;
   border-radius: 0.5em;
+  cursor: pointer;
 
   &.primary {
     border: none;

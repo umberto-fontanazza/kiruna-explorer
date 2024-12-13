@@ -42,11 +42,6 @@
       align-items: flex-start;
       justify-content: flex-start;
       padding-bottom: 30vh;
-
-      h1 {
-        font-family: "SwedenSansBold", sans-serif;
-        font-size: 5rem;
-      }
     }
   }
 
@@ -58,10 +53,6 @@
     align-items: flex-end;
     gap: 1.5rem;
     font-family: "SwedenSansBold", sans-serif;
-
-    h1 {
-      font-size: 2rem;
-    }
 
     p {
       font-size: 1.5rem;
@@ -101,10 +92,9 @@
   align-items: center;
   padding: 1vw 1vh;
   gap: 1rem;
-  font-family: "SwedenSansBold", sans-serif;
 
   .login-card {
-    background-image: url("../../public/architettura.jpg");
+    background-image: url("architettura.jpg");
     background-size: cover;
     background-position: center;
     display: flex;
@@ -118,7 +108,6 @@
     gap: 3rem;
 
     h2 {
-      font-size: 6rem;
       text-shadow:
         -1px -1px 0 #000,
         1px -1px 0 #000,

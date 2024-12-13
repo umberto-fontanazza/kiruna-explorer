@@ -55,7 +55,7 @@ const LoginForm: FC = (): JSX.Element => {
             <br />
             Where tales of the Arctic come alive.
             <br />
-            Embark on a journey through Kiruna’s history,
+            Embark on a journey through Kiruna's history,
             <br />
             A place where Sweden's heart and heritage thrive.
             <br />
@@ -68,7 +68,7 @@ const LoginForm: FC = (): JSX.Element => {
           <button className="back-home-btn" onClick={() => nav("/home")}>
             <span className="material-symbols-outlined">home</span>
           </button>
-          <h2>Welcome Back!</h2>
+          <h3>Welcome Back!</h3>
           <Form onSubmit={handleSubmit}>
             <Form.Label htmlFor="email">Email</Form.Label>
             <Form.Control
