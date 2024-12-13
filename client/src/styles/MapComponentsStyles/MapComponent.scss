@@ -144,13 +144,13 @@
     }
 
     &.active {
-      background-color: #fecb00; /* Colore di sfondo attivo */
-      border: 0.2rem solid Color.$first; /* Colore del bordo attivo */
-      transform: scale(1.05); /* Ingrandimento leggero per feedback visivo */
+      background-color: Color.$second;
+      border: 0.2rem solid Color.$first;
+      transform: scale(1.05);
     }
 
     .material-symbols-outlined {
-      color: inherit; /* Cambia colore in base al bottone */
+      color: inherit;
       transform: scale(1.5);
     }
   }

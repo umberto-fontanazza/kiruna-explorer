@@ -165,7 +165,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, map, documents]);
 
-  //TODO: Check all the states that are unused from now
   useEffect(() => {
     if (positionMode === PositionMode.None) {
       if (municipalArea) {
@@ -179,6 +178,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       setNewMarkerPosition(null);
       setDrawnMarker(undefined);
       setDrawnPolygon(undefined);
+      setDrawingManager(undefined);
       setPolygonArea(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -269,6 +269,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         }
       }
     }
+    setDrawingManager(undefined);
     setSaved(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saved]);
@@ -278,7 +279,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     setDrawingManager,
     setDrawnPolygon,
     setDrawnMarker,
-    setdocumentSelected,
+    setActiveButton,
   );
 
   useEffect(() => {
@@ -411,6 +412,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             className={activeButton === "polygon-btn" ? "active" : ""}
             onClick={() => {
               setActiveButton("polygon-btn");
+              map?.setZoom(11);
+              map?.setCenter(kirunaCoords);
               if (municipalArea) {
                 municipalArea?.forEach((area) => area.setMap(null));
                 setMunicipalArea(undefined);
@@ -428,6 +431,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             className={activeButton === "marker-btn" ? "active" : ""}
             onClick={() => {
               setActiveButton("marker-btn");
+              map?.setZoom(11);
+              map?.setCenter(kirunaCoords);
               if (municipalArea) {
                 municipalArea?.forEach((area) => area.setMap(null));
                 setMunicipalArea(undefined);

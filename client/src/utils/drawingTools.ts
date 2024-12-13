@@ -1,6 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
-import { Document } from "./interfaces";
 import { PositionMode } from "./modes";
 
 export const useDrawingTools = (
@@ -10,10 +9,9 @@ export const useDrawingTools = (
   >,
   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
   setDrawnMarker: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
-  setdocumentSelected: Dispatch<SetStateAction<Document | null>>,
+  setActiveButton: Dispatch<SetStateAction<string>>,
 ) => {
   const { positionMode } = useAppContext();
-  const { setModalOpen } = useAppContext();
   const [currentMarker, setCurrentMarker] = useState<google.maps.Marker | null>(
     null,
   );
@@ -24,6 +22,12 @@ export const useDrawingTools = (
     useState<google.maps.drawing.OverlayType | null>(null);
 
   useEffect(() => {
+    if (!map || positionMode === PositionMode.None) {
+      setCurrentMarker(null);
+      setMainPolygon(null);
+      setDrawingMode(null);
+      return;
+    }
     if (!map || positionMode !== PositionMode.Insert) return;
 
     // Inizializzazione del DrawingManager
@@ -44,6 +48,7 @@ export const useDrawingTools = (
     setDrawingManager(drawingManager);
 
     document.getElementById("polygon-btn")?.addEventListener("click", () => {
+      setDrawnMarker(undefined);
       if (currentMarker) {
         currentMarker.setMap(null);
         setCurrentMarker(null);
@@ -52,12 +57,13 @@ export const useDrawingTools = (
     });
 
     document.getElementById("marker-btn")?.addEventListener("click", () => {
+      setDrawnPolygon(undefined);
       if (currentMarker) {
         currentMarker.setMap(null);
         setCurrentMarker(null);
       }
       if (mainPolygon) {
-        mainPolygon.setMap(null);
+        mainPolygon?.setMap(null);
         setMainPolygon(null);
       }
       setDrawingMode(google.maps.drawing.OverlayType.MARKER);
@@ -100,8 +106,10 @@ export const useDrawingTools = (
                 "Error: You can only create holes inside the main polygon. Please try again.",
               );
             }
-            setDrawingMode(null);
           }
+          setActiveButton("");
+          setDrawingManager(undefined);
+          setDrawingMode(null);
         }
       },
     );
@@ -110,6 +118,7 @@ export const useDrawingTools = (
       drawingManager,
       "markercomplete",
       (marker: google.maps.Marker) => {
+        setActiveButton("");
         setCurrentMarker(marker);
         setDrawnMarker(marker);
         setDrawingMode(null);
