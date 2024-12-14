@@ -1,7 +1,51 @@
 import { Cluster } from "@googlemaps/markerclusterer";
 import { CustomMarker, Document, fromDocumentTypeToIcon } from "./interfaces";
 
-const createClusterIconContent = (count: number, zoomLevel: number) => {
+const haveSameCoordinates = (documents: Document[]): boolean => {
+  if (documents.length === 0) return false;
+
+  const coordinates = documents[0].coordinates;
+  if (!coordinates) return false;
+
+  const { latitude: lat, longitude: lng } = coordinates;
+
+  return documents.every(
+    (doc) =>
+      doc.coordinates?.latitude === lat && doc.coordinates?.longitude === lng,
+  );
+};
+
+const haveSameArea = (documents: Document[]): boolean => {
+  if (documents.length === 0) return false;
+
+  const area = documents[0].area;
+  if (!area) return false;
+
+  return documents.every((doc) => doc.area === area);
+};
+
+const samePosition = (documents: Document[]): boolean => {
+  const filteredDocuments = documents.filter(
+    (doc): doc is Document => doc !== undefined,
+  );
+
+  if (filteredDocuments.length === 0) return false;
+
+  const hasArea = filteredDocuments.every((doc) => doc.area !== undefined);
+  const hasCoordinates = filteredDocuments.every(
+    (doc) => doc.coordinates !== undefined,
+  );
+
+  if (hasArea) {
+    return haveSameArea(filteredDocuments);
+  } else if (hasCoordinates) {
+    return haveSameCoordinates(filteredDocuments);
+  }
+
+  return false;
+};
+
+const createClusterIconContent = (count: number, isSamePosition: boolean) => {
   const div = document.createElement("div");
 
   const svgNamespace = "http://www.w3.org/2000/svg";
@@ -10,14 +54,16 @@ const createClusterIconContent = (count: number, zoomLevel: number) => {
   svg.setAttribute("height", "80");
   svg.setAttribute("viewBox", "0 0 50 50");
 
-  const isZoomedIn = zoomLevel >= 15;
-  const outerCircleColor = isZoomedIn
-    ? "rgba(254, 188, 0, 0.3)"
+  const outerCircleColor = isSamePosition
+    ? "rgba(254, 152, 0, 0.3)"
     : "rgba(33, 150, 243, 0.3)";
-  const middleCircleColor = isZoomedIn
-    ? "rgba(254, 188, 0, 0.6)"
+
+  const middleCircleColor = isSamePosition
+    ? "rgba(254, 152, 0, 0.6)"
     : "rgba(33, 150, 243, 0.6)";
-  const innerCircleColor = isZoomedIn ? "#fecb00" : "#2196f3";
+  const innerCircleColor = isSamePosition
+    ? "rgb(254, 152, 0)"
+    : "rgb(33, 150, 243)";
 
   const createCircle = (r: number, color: string) => {
     const circle = document.createElementNS(svgNamespace, "circle");
@@ -50,11 +96,11 @@ const createClusterIconContent = (count: number, zoomLevel: number) => {
 const createAdvancedMarker = (
   position: google.maps.LatLng,
   count: number,
-  zoomLevel: number,
+  isSamePosition: boolean,
 ) => {
   return new google.maps.marker.AdvancedMarkerElement({
     position,
-    content: createClusterIconContent(count, zoomLevel),
+    content: createClusterIconContent(count, isSamePosition),
   });
 };
 
@@ -63,8 +109,12 @@ export const renderClusterMarker = (
   stats: any,
   map: google.maps.Map,
 ) => {
-  const zoom = map.getZoom() ?? 0;
-  return createAdvancedMarker(cluster.position, cluster.count, zoom);
+  const clusterDocuments =
+    cluster.markers?.map((marker) => (marker as CustomMarker).document) || [];
+  const result = samePosition(
+    clusterDocuments.filter((doc): doc is Document => doc !== undefined),
+  );
+  return createAdvancedMarker(cluster.position, cluster.count, result);
 };
 
 const createDocumentElement = (
@@ -107,15 +157,15 @@ export const handleClusterClick = (
 ) => {
   const currentZoom = map?.getZoom() ?? 0;
 
-  if (cluster.bounds && currentZoom < 15) {
-    const newZoom = Math.min(currentZoom + 3, 16);
-    map?.fitBounds(cluster.bounds);
-    map?.setZoom(newZoom);
-  } else if (currentZoom >= 15) {
+  const clusterDocuments =
+    cluster.markers?.map((marker) => (marker as CustomMarker).document) || [];
+
+  const result = samePosition(
+    clusterDocuments.filter((doc): doc is Document => doc !== undefined),
+  );
+
+  if (result) {
     const position = cluster.position;
-    const clusterDocuments = cluster.markers?.map(
-      (marker) => (marker as CustomMarker).document,
-    );
 
     const content = document.createElement("div");
     content.className = "info-cluster";
@@ -138,5 +188,11 @@ export const handleClusterClick = (
 
     setTimeout(() => content.classList.add("show"), 0);
     setInfoWindow(newInfoWindow);
+  } else {
+    const newZoom = Math.min(currentZoom + 3, 16);
+    if (cluster.bounds) {
+      map?.fitBounds(cluster.bounds);
+    }
+    map?.setZoom(newZoom);
   }
 };
