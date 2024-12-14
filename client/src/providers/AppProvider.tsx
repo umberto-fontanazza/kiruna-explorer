@@ -67,6 +67,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
             area: newPos,
           };
         }
+        console.log(updateDocument);
         await API.updateDocument(updateDocument);
       } catch (err) {
         console.error(err);

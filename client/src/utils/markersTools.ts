@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import "../styles/MapComponentsStyles/markers.scss";
-import { Coordinates, Document, fromDocumentTypeToIcon } from "./interfaces";
+import { Document, fromDocumentTypeToIcon } from "./interfaces";
 import { kirunaCoords } from "./map";
 import { PositionMode } from "./modes";
 import { createArea, getPolygonCentroid } from "./polygonsTools";
@@ -10,7 +10,7 @@ export const createMarker = (
   linked: boolean = false,
   map: google.maps.Map,
   positionMode: PositionMode,
-  setNewMarkerPosition?: Dispatch<SetStateAction<Coordinates | null>>,
+  setDrawnMarker?: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
 ): google.maps.marker.AdvancedMarkerElement => {
@@ -61,7 +61,7 @@ export const createMarker = (
         hoverArea.setMap(null);
         hoverArea = null;
       }
-      infoWindow.close(); // Nasconde l'InfoWindow
+      infoWindow.close();
       content.classList.remove("show");
     });
   }
@@ -89,17 +89,17 @@ export const createMarker = (
     });
   }
 
-  if (positionMode === PositionMode.Update && setNewMarkerPosition) {
+  if (positionMode === PositionMode.Update && setDrawnMarker) {
     marker.addListener("dragend", (event: google.maps.MapMouseEvent) => {
       if (event.latLng) {
         const newLatLng = {
           lat: event.latLng.lat(),
           lng: event.latLng.lng(),
         };
-        setNewMarkerPosition({
-          latitude: newLatLng.lat,
-          longitude: newLatLng.lng,
+        const newMarker = new google.maps.Marker({
+          position: newLatLng,
         });
+        setDrawnMarker(newMarker);
       }
     });
   }

@@ -88,6 +88,7 @@ async function updateDocument(document: Document): Promise<void> {
     links: undefined,
     issuanceDate: document.issuanceDate?.format("YYYY-MM-DD") || undefined,
   };
+  console.log(responseBody);
   const response = await fetch(baseURL + `/documents/${document.id}`, {
     method: "PATCH",
     credentials: "include",

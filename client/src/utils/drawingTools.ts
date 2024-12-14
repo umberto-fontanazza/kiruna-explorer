@@ -5,6 +5,7 @@ import { PositionMode } from "./modes";
 export const useDrawingTools = (
   map: google.maps.Map | null,
   drawnPolygon: google.maps.Polygon | undefined,
+  drawnMarker: google.maps.Marker | undefined,
   setDrawingManager: Dispatch<
     SetStateAction<google.maps.drawing.DrawingManager | undefined>
   >,
@@ -13,15 +14,11 @@ export const useDrawingTools = (
   setActiveButton: Dispatch<SetStateAction<string>>,
 ) => {
   const { positionMode } = useAppContext();
-  const [currentMarker, setCurrentMarker] = useState<google.maps.Marker | null>(
-    null,
-  );
   const [drawingMode, setDrawingMode] =
     useState<google.maps.drawing.OverlayType | null>(null);
 
   useEffect(() => {
     if (!map || positionMode === PositionMode.None) {
-      setCurrentMarker(null);
       setDrawingMode(null);
       return;
     }
@@ -45,18 +42,18 @@ export const useDrawingTools = (
 
     document.getElementById("polygon-btn")?.addEventListener("click", () => {
       setDrawnMarker(undefined);
-      if (currentMarker) {
-        currentMarker.setMap(null);
-        setCurrentMarker(null);
+      if (drawnMarker) {
+        drawnMarker.setMap(null);
+        setDrawnMarker(undefined);
       }
       setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
     });
 
     document.getElementById("marker-btn")?.addEventListener("click", () => {
       setDrawnPolygon(undefined);
-      if (currentMarker) {
-        currentMarker.setMap(null);
-        setCurrentMarker(null);
+      if (drawnMarker) {
+        drawnMarker.setMap(null);
+        setDrawnMarker(undefined);
       }
       if (drawnPolygon) {
         drawnPolygon.setMap(null);
@@ -112,20 +109,18 @@ export const useDrawingTools = (
       "markercomplete",
       (marker: google.maps.Marker) => {
         setActiveButton("");
-        setCurrentMarker(marker);
         setDrawnMarker(marker);
         setDrawingMode(null);
       },
     );
 
-    // Cleanup del listener e del DrawingManager
     return () => {
       google.maps.event.removeListener(overlayCompleteListener);
       google.maps.event.removeListener(markerCompleteListener);
       drawingManager.setMap(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, positionMode, currentMarker, drawnPolygon, drawingMode]);
+  }, [map, positionMode, drawnMarker, drawnPolygon, drawingMode]);
 };
 
 // Funzione per verificare se un poligono è dentro un altro

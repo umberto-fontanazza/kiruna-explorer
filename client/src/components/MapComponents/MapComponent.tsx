@@ -39,8 +39,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [markers, setMarkers] = useState<
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
-  const [newMarkerPosition, setNewMarkerPosition] =
-    useState<Coordinates | null>(null);
   const [saved, setSaved] = useState(false);
   const [municipalArea, setMunicipalArea] = useState<
     google.maps.Polygon[] | undefined
@@ -116,7 +114,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           visualLinks && doc.id !== docSelected?.id,
           map,
           positionMode,
-          setNewMarkerPosition,
+          setDrawnMarker,
           setdocumentSelected,
           setSidebarOpen,
         ),
@@ -148,7 +146,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           const newZoom = Math.min(
             (currentZoom ?? 0) + 1,
             (map.getZoom() ?? 0) + 2,
-          ); // Set new zoom level, (default zooms is the maximum zoom level)
+          );
 
           map.fitBounds(cluster.bounds);
           map.setZoom(newZoom);
@@ -183,7 +181,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       drawnMarker?.setMap(null);
       drawingManager?.setMap(null);
       setActiveButton("");
-      setNewMarkerPosition(null);
+      setDrawnMarker(undefined);
       setDrawnMarker(undefined);
       setDrawnPolygon(undefined);
       setDrawingManager(undefined);
@@ -192,8 +190,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   }, [positionMode]);
 
   useEffect(() => {
-    console.log(docSelected, saved, positionMode);
-
     if (!saved || positionMode === PositionMode.None) {
       resetDrawingState();
       return;
@@ -220,7 +216,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const handleUpdateMode = () => {
     if (drawnPolygon) {
       handlePolygonUpdate();
-    } else if (newMarkerPosition) {
+    } else if (drawnMarker) {
       handleMarkerUpdate();
     }
   };
@@ -259,7 +255,19 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   // Funzione per gestire l'aggiornamento di un marker esistente
   const handleMarkerUpdate = () => {
-    handleEditPositionModeConfirm(docSelected!, newMarkerPosition!);
+    const markerPos = drawnMarker?.getPosition();
+
+    if (!markerPos) {
+      alert("Marker position is undefined");
+      return;
+    }
+
+    const posToUpdate: Coordinates = {
+      latitude: markerPos.lat(),
+      longitude: markerPos.lng(),
+    };
+
+    handleEditPositionModeConfirm(docSelected!, posToUpdate);
   };
 
   // Funzione per gestire l'inserimento o modifica di un poligono
@@ -274,9 +282,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         longitude: latLng.lng(),
       }));
       if (index === 0) {
-        include.push(...pathArray); // Primo percorso: area principale
+        include.push(...pathArray);
       } else {
-        exclude.push(pathArray); // Altri percorsi: buchi
+        exclude.push(pathArray);
       }
     });
 
@@ -323,6 +331,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   useDrawingTools(
     map,
     drawnPolygon,
+    drawnMarker,
     setDrawingManager,
     setDrawnPolygon,
     setDrawnMarker,
@@ -391,6 +400,59 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     }
   };
 
+  const handleMunicipalButtonClick = () => {
+    setActiveButton("municipal-btn");
+
+    if (!map) return;
+
+    // Nascondi poligoni o marker esistenti
+    drawnPolygon?.setMap(null);
+    drawnMarker?.setMap(null);
+
+    // Crea l'area municipale
+    const municipalPolygons = createMunicipalArea(map);
+    setMunicipalArea(municipalPolygons);
+
+    // Resetta il drawing manager
+    drawingManager?.setDrawingMode(null);
+    setDrawingMode("");
+  };
+
+  const handlePolygonButtonClick = () => {
+    setActiveButton("polygon-btn");
+
+    if (positionMode !== PositionMode.Update) {
+      map?.setZoom(11);
+      map?.setCenter(kirunaCoords);
+    }
+
+    // Rimuovi eventuali aree municipali esistenti
+    if (municipalArea) {
+      municipalArea.forEach((area) => area.setMap(null));
+      setMunicipalArea(undefined);
+    }
+
+    // Cambia la modalità di disegno in POLYGON
+    drawingManager?.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+    setDrawingMode("polygon");
+  };
+
+  const handleMarkerButtonClick = () => {
+    setActiveButton("marker-btn");
+
+    // Centra la mappa sulle coordinate di default
+    if (positionMode !== PositionMode.Update) {
+      map?.setZoom(11);
+      map?.setCenter(kirunaCoords);
+    }
+
+    if (municipalArea) {
+      municipalArea.forEach((area) => area.setMap(null));
+      setMunicipalArea(undefined);
+    }
+    setDrawingMode("marker");
+  };
+
   return isLoaded ? (
     <section id="map">
       <MapTypeSelector mapType={mapType} setMapType={setMapType} />
@@ -435,17 +497,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           <button
             id="municipal-btn"
             className={activeButton === "municipal-btn" ? "active" : ""}
-            onClick={() => {
-              setActiveButton("municipal-btn");
-              if (map) {
-                drawnPolygon?.setMap(null);
-                drawnMarker?.setMap(null);
-                const municipalPolygons = createMunicipalArea(map);
-                setMunicipalArea(municipalPolygons);
-                drawingManager?.setDrawingMode(null);
-                setDrawingMode("");
-              }
-            }}
+            onClick={handleMunicipalButtonClick}
           >
             <div className="municipal-container">
               <span className="material-symbols-outlined">location_city</span>
@@ -455,19 +507,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           <button
             id="polygon-btn"
             className={activeButton === "polygon-btn" ? "active" : ""}
-            onClick={() => {
-              setActiveButton("polygon-btn");
-              map?.setZoom(11);
-              map?.setCenter(kirunaCoords);
-              if (municipalArea) {
-                municipalArea?.forEach((area) => area.setMap(null));
-                setMunicipalArea(undefined);
-              }
-              drawingManager?.setDrawingMode(
-                google.maps.drawing.OverlayType.POLYGON,
-              );
-              setDrawingMode("polygon");
-            }}
+            onClick={handlePolygonButtonClick}
           >
             <div className="polygon-container">
               <span className="material-symbols-outlined">polyline</span>
@@ -477,16 +517,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           <button
             id="marker-btn"
             className={activeButton === "marker-btn" ? "active" : ""}
-            onClick={() => {
-              setActiveButton("marker-btn");
-              map?.setZoom(11);
-              map?.setCenter(kirunaCoords);
-              if (municipalArea) {
-                municipalArea?.forEach((area) => area.setMap(null));
-                setMunicipalArea(undefined);
-              }
-              setDrawingMode("marker");
-            }}
+            onClick={handleMarkerButtonClick}
           >
             <div className="marker-container">
               <span className="material-symbols-outlined">explore_nearby</span>
