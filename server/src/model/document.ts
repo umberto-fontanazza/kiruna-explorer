@@ -1,13 +1,13 @@
 import { strict as assert } from "assert";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import { Database } from "../database";
 import { DocumentNotFound } from "../error/documentError";
 import { Coordinates } from "../validation/coordinatesSchema";
-import { timeFormatter } from "../validation/timeParser";
 import { Area } from "./area";
 import { Link, LinkResponseBody, LinkType } from "./link";
 import { Scale, ScaleRow, ScaleType } from "./scale";
 import { Stakeholder } from "./stakeholder";
+import { TimeInterval } from "./timeInterval";
 
 type DocumentDbRow = {
   id: number;
@@ -76,7 +76,7 @@ export class Document {
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
   private _area?: Area;
-  issuanceTime?: [Dayjs, Dayjs];
+  issuanceTime?: TimeInterval;
   links?: LinkResponseBody[];
 
   constructor(
@@ -88,7 +88,7 @@ export class Document {
     stakeholders?: Stakeholder[],
     coordinates?: Coordinates,
     area?: Area,
-    issuanceTime?: [Dayjs, Dayjs],
+    issuanceTime?: TimeInterval,
     links?: LinkResponseBody[],
   ) {
     this.id = id;
@@ -133,10 +133,8 @@ export class Document {
       coordinates.latitude && coordinates.longitude && coordinates;
     const area = area_id !== null && (await Area.get(area_id));
 
-    const issuanceTime: [Dayjs, Dayjs] | undefined = issuance_time && [
-      dayjs(issuance_time[0]),
-      dayjs(issuance_time[1]),
-    ];
+    const issuanceTime: TimeInterval | undefined =
+      issuance_time && TimeInterval.fromDatabase(issuance_time);
 
     return new Document(
       id,
@@ -179,7 +177,7 @@ export class Document {
       this.coordinates?.longitude || null, // BEWARE ORDERING: https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples-in-gis-services#:~:text=PostGIS%20expects%20lng/lat.
       this.coordinates?.latitude || null,
       this.area?.id || null,
-      this.issuanceTime?.map((dJs) => dJs.toDate()) || null,
+      this.issuanceTime?.toDatabase() || null,
       this.id,
     ]);
     if (result.rowCount != 1) throw new Error("Failed db update");
@@ -193,7 +191,7 @@ export class Document {
     stakeholders?: Stakeholder[],
     coordinates?: Coordinates,
     area?: Area,
-    issuanceTime?: [Dayjs, Dayjs],
+    issuanceTime?: TimeInterval,
   ): Promise<Document> {
     const scaleRow: ScaleRow = scale.intoDatabaseRow();
     const result = await Database.query(
@@ -208,7 +206,7 @@ export class Document {
         coordinates?.longitude || null,
         coordinates?.latitude || null,
         area?.id || null,
-        issuanceTime?.map((dJs) => dJs.toDate()) || null,
+        issuanceTime?.toDatabase() || null,
       ],
     );
     const documentId: number = result.rows[0].id;
@@ -282,9 +280,7 @@ export class Document {
       ...this,
       area: this.area?.toResponseBody(),
       _area: undefined, //TODO: ho bisogno di un po' di refactoring
-      issuanceTime: this.issuanceTime
-        ? timeFormatter(this.issuanceTime!)
-        : undefined,
+      issuanceTime: this.issuanceTime ? this.issuanceTime.format() : undefined,
       stakeholders:
         this.stakeholders?.length === 0 ? undefined : this.stakeholders,
     };

@@ -12,6 +12,7 @@ import {
 import { Area } from "../model/area";
 import { Document, DocumentType } from "../model/document";
 import { Scale, ScaleType } from "../model/scale";
+import { TimeInterval } from "../model/timeInterval";
 import { AreaBody } from "../validation/areaSchema";
 import {
   getQueryParameters,
@@ -100,7 +101,7 @@ documentRouter.post(
       stakeholders,
       coordinates,
       area && (await Area.insert(area)),
-      issuanceTime as [Dayjs, Dayjs],
+      issuanceTime as TimeInterval,
     );
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
     return;
@@ -145,7 +146,7 @@ documentRouter.patch(
     document.coordinates = coordinates || document.coordinates;
     if (area) await document.setArea(await Area.insert(area as AreaBody));
     document.issuanceTime = issuanceTime
-      ? (issuanceTime as [Dayjs, Dayjs])
+      ? (issuanceTime as TimeInterval)
       : document.issuanceTime;
     await document.update();
     response.status(StatusCodes.NO_CONTENT).send();
