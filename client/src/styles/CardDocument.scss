@@ -64,6 +64,45 @@
             background-color: rgb(82, 82, 82);
           }
         }
+
+        .tooltip {
+          position: absolute;
+          background-color: #fff;
+          border: 1px solid #ddd;
+          border-radius: 5px;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+          padding: 10px;
+          z-index: 1000;
+          top: 100%;
+          right: 0%;
+          min-width: 150px;
+        }
+
+        .tooltip ul {
+          list-style: none;
+          margin: 0;
+          padding: 0;
+        }
+
+        .tooltip-item {
+          background: none;
+          border: none;
+          color: Color.$first;
+          cursor: pointer;
+          text-align: left;
+          padding: 5px 10px;
+        }
+
+        .tooltip-item:hover {
+          text-decoration: underline;
+        }
+
+        .tooltip-no-item {
+          text-align: center;
+          color: #c12e2a;
+          font-family: "SwedenSansBold", sans-serif;
+          font-size: 12px;
+        }
       }
     }
   }
@@ -250,4 +289,8 @@
 span.material-symbols-outlined {
   font-size: 1.5rem;
   transition: font-size 0.3s ease;
+}
+
+.btn-download-container {
+  position: relative;
 }

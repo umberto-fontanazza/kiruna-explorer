@@ -101,6 +101,7 @@ export enum Stakeholder {
   Lkab = "lkab",
   Residents = "residents",
   WhiteArkitekter = "white_arkitekter",
+  Others = "others",
 }
 
 export const stakeholdersOptions = [
@@ -108,6 +109,7 @@ export const stakeholdersOptions = [
   { value: Stakeholder.KirunaKommun, label: "Kiruna kommun" },
   { value: Stakeholder.Residents, label: "Residents" },
   { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
+  { value: Stakeholder.Others, label: "Others" },
 ];
 
 export enum UploadType {

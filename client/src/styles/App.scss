@@ -37,6 +37,7 @@ body,
 #root {
   font-family: "SwedenSans", sans-serif;
   height: 100vh;
+  overflow-y: auto;
 }
 
 ::-webkit-scrollbar {

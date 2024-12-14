@@ -1,5 +1,5 @@
 import { FC, useContext } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { authContext } from "../context/auth";
 import "../styles/NavHeader.scss"; // Importiamo il file SCSS personalizzato
 
@@ -11,10 +11,14 @@ const NavHeader: FC = (): JSX.Element => {
   return (
     <nav className="nav-header">
       <div className="nav-title-btns">
-        <span className="brand">Kiruna eXplorer.</span>
+        <span className="brand">
+          <Link style={{ color: "white" }} to={"/home"}>
+            Kiruna eXplorer.
+          </Link>
+        </span>
         <button
           className={location.pathname === "/home" ? "active" : ""}
-          onClick={() => navigate("/home")}
+          onClick={() => navigate("/map")}
         >
           Map
         </button>

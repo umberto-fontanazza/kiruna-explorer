@@ -10,6 +10,7 @@ export const createMarker = (
   linked: boolean = false,
   map: google.maps.Map,
   positionMode: PositionMode,
+  setShowTooltipUploads: Dispatch<SetStateAction<boolean>>,
   setNewMarkerPosition?: Dispatch<SetStateAction<Coordinates | null>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
@@ -33,28 +34,36 @@ export const createMarker = (
     map,
     position: position,
     content: markerDivChild,
-    title: doc.title,
     gmpDraggable: positionMode === PositionMode.Update,
   });
 
   let hoverArea: google.maps.Polygon | null = null;
 
+  const content = document.createElement("div");
+  content.innerHTML = doc.title;
+  content.classList.add("info-window");
+
+  const infoWindow = new google.maps.InfoWindow({
+    headerDisabled: true,
+    content: content,
+  });
+
   if (positionMode === PositionMode.None) {
-    // Event listener per il mouseover
     marker.content?.addEventListener("mouseenter", () => {
       if (doc.area && map) {
         hoverArea = createArea(doc, map, positionMode);
       }
-      //TODO: Heeelp
-      //createMunicipalArea(map);
+      infoWindow.open(map, marker);
+      setTimeout(() => content.classList.add("show"), 0);
     });
 
-    // Event listener per il mouseout
     marker.content?.addEventListener("mouseleave", () => {
       if (hoverArea) {
         hoverArea.setMap(null);
         hoverArea = null;
       }
+      infoWindow.close(); // Nasconde l'InfoWindow
+      content.classList.remove("show");
     });
   }
 
@@ -66,6 +75,7 @@ export const createMarker = (
     marker.addListener("click", () => {
       setSidebarOpen(true);
       setdocumentSelected(doc);
+      setShowTooltipUploads(false);
 
       const newCenter = doc.coordinates
         ? {

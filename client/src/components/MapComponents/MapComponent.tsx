@@ -3,7 +3,7 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
-import "../../styles/MapComponentsStyles/Map.scss";
+import "../../styles/MapComponentsStyles/MapComponent.scss";
 import { createArea, useDrawingTools } from "../../utils/drawingTools";
 import {
   Coordinates,
@@ -22,10 +22,17 @@ interface MapComponentProps {
   docSelected: Document | null;
   setSidebarOpen: Dispatch<SetStateAction<boolean>>;
   setdocumentSelected: Dispatch<SetStateAction<Document | null>>;
+  setShowTooltipUploads: Dispatch<SetStateAction<boolean>>;
 }
 
 const MapComponent: FC<MapComponentProps> = (props) => {
-  const { documents, docSelected, setSidebarOpen, setdocumentSelected } = props;
+  const {
+    documents,
+    docSelected,
+    setSidebarOpen,
+    setdocumentSelected,
+    setShowTooltipUploads,
+  } = props;
   const {
     visualLinks,
     positionMode,
@@ -121,8 +128,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       return;
     }
 
-    //createMunicipalArea(map);
-
     const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
       .filter((doc) => {
         if (positionMode === PositionMode.Update) {
@@ -137,6 +142,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           visualLinks && doc.id !== docSelected?.id,
           map,
           positionMode,
+          setShowTooltipUploads,
           setNewMarkerPosition,
           setdocumentSelected,
           setSidebarOpen,
@@ -333,9 +339,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           <button
             id="municipal-btn"
             onMouseEnter={() => {
-              if (!isHovered) {
+              if (!isHovered && map) {
                 setIsHovered(true);
-                const municipalPolygons = createMunicipalArea(map!);
+                const municipalPolygons = createMunicipalArea(map);
                 setMunicipalArea(municipalPolygons);
               }
             }}
