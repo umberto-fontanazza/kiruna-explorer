@@ -90,7 +90,7 @@ export const postBody = z
     stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
     coordinates: coordinatesSchema.optional(),
     area: areaSchema.optional(),
-    issuanceTime: z.string().transform(timeParser).optional(),
+    issuanceTime: z.string().transform(timeParser),
   })
   .strict()
   .refine((body) => !(body.coordinates && body.area), {
