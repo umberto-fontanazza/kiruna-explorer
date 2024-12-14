@@ -23,9 +23,9 @@ const UploadModal: React.FC<UploadModal> = ({
 
     try {
       await Promise.all(
-        uploads.map((upload) =>
-          API.addUpload(upload.title, upload.type, upload.file),
-        ),
+        uploads.map(async (upload) => {
+          await API.addUpload(upload.title, upload.type, upload.file);
+        }),
       );
       retrieveUploads();
       setFilesToUpload([]);

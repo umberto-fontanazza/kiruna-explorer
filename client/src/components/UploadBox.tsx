@@ -1,5 +1,7 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { AlertType } from "../utils/alertType";
 import { Upload, UploadType } from "../utils/interfaces";
+import Alert, { AlertHandle } from "./Alert";
 
 interface UploadBoxProps {
   setFilesToUpload: Dispatch<SetStateAction<Upload[]>>;
@@ -7,6 +9,8 @@ interface UploadBoxProps {
 
 const UploadBox: React.FC<UploadBoxProps> = ({ setFilesToUpload }) => {
   const setDragActive = useState(false)[1];
+
+  const alertRef = useRef<AlertHandle>(null);
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -42,6 +46,15 @@ const UploadBox: React.FC<UploadBoxProps> = ({ setFilesToUpload }) => {
   };
 
   const handleFileUpload = (file: File) => {
+    // Checks if file is not larger than 10mb
+    if (file.size > 1024 * 1024 * 10) {
+      alertRef.current?.showAlert(
+        `Error uploading file: "${file.name}". \nThe file is too large (max 10mb). Please reduce its size.`,
+        AlertType.Error,
+      );
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = () => {
       const base64String = reader.result?.toString().split(",")[1];
@@ -65,17 +78,24 @@ const UploadBox: React.FC<UploadBoxProps> = ({ setFilesToUpload }) => {
   };
 
   return (
-    <div
-      className="upload-box"
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-    >
-      <p>Drag and drop the original resources here</p>
-      <button className="upload-btn" type="button" onClick={handleButtonClick}>
-        Select File
-      </button>
-    </div>
+    <>
+      <Alert ref={alertRef} timeout={5000} />
+      <div
+        className="upload-box"
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+      >
+        <p>Drag and drop the original resources here</p>
+        <button
+          className="upload-btn"
+          type="button"
+          onClick={handleButtonClick}
+        >
+          Select File
+        </button>
+      </div>
+    </>
   );
 };
 

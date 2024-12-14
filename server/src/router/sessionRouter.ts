@@ -1,10 +1,10 @@
-import { Router, Request, Response, NextFunction } from "express";
-import passport from "passport";
+import { NextFunction, Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
-import { User } from "../model/user";
-import { validateBody } from "../middleware/validation";
-import { postBody } from "../validation/sessionSchema";
+import passport from "passport";
 import { isLoggedIn, isLoggedOut } from "../middleware/auth";
+import { validateBody } from "../middleware/validation";
+import { User } from "../model/user";
+import { postBody } from "../validation/sessionSchema";
 
 export const sessionRouter: Router = Router();
 
