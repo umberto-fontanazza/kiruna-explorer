@@ -32,7 +32,7 @@ const DocumentForm = () => {
 
     if (!validateDate(documentFormSelected.issuanceTime || "")) {
       errors.issuanceTime =
-        "Invalid date or invalid date format.<br/>Please use YYYY, YYYY-MM or YYYY-MM-DD.";
+        "Invalid date or invalid date format.<br/>Please use YYYY, YYYY/MM or YYYY/MM/DD.";
     }
 
     setErrors(errors);

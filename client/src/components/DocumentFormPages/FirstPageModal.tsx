@@ -136,7 +136,7 @@ const FirstPageModal: FC<FirstPageModalProps> = ({
             <input
               id="issuance-time"
               type="text"
-              placeholder="YYYY, YYYY-MM, or YYYY-MM-DD"
+              placeholder="YYYY, YYYY/MM, or YYYY/MM/DD"
               value={documentForm.issuanceTime || ""}
               onChange={(e) => {
                 setDocumentForm((prev) => ({
