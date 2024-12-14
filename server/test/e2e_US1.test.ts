@@ -26,14 +26,11 @@ describe("Testing story 1", () => {
     description: "This one will be tested for mandatory fields",
     type: DocumentType.Prescriptive,
     scale: { type: ScaleType.Text },
+    issuanceTime: "2024-12",
   };
   const testDocAllFields1 = {
-    title: "All fields test",
-    description: "This one will be tested for all fields",
-    type: DocumentType.Informative,
-    scale: { type: ScaleType.BlueprintsOrEffect },
+    ...testDocMandatoryFields1,
     stakeholders: [Stakeholder.KirunaKommun],
-    issuanceTime: "2021-12-12",
     coordinates: { latitude: 45, longitude: 30 },
   };
   let testDocId1: number;

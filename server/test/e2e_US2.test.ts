@@ -28,6 +28,7 @@ describe("Testing story 2", () => {
     type: DocumentType.Prescriptive,
     scale: { type: ScaleType.Text },
     stakeholders: [Stakeholder.Residents],
+    issuanceTime: "2024-12",
   };
   const targetDocument2 = {
     title: "Target Document",
