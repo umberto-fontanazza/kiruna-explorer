@@ -17,7 +17,7 @@ const NavHeader: FC = (): JSX.Element => {
           </Link>
         </span>
         <button
-          className={location.pathname === "/home" ? "active" : ""}
+          className={location.pathname === "/map" ? "active" : ""}
           onClick={() => navigate("/map")}
         >
           Map

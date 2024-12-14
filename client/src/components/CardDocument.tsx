@@ -17,7 +17,7 @@ import {
   fromDocumentTypeToIcon,
   stakeholdersOptions,
 } from "../utils/interfaces";
-import { capitalizeFirstLetter } from "../utils/utils";
+import { capitalizeFirstLetter, formatDate } from "../utils/utils";
 
 interface CardDocumentProps {
   document: Document | null;
@@ -234,8 +234,8 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         <h4>
           Issuance Date:&nbsp;
           <span>
-            {props.document?.issuanceDate?.isValid()
-              ? props.document?.issuanceDate?.format("MMMM D, YYYY")
+            {props.document?.issuanceTime
+              ? formatDate(props.document.issuanceTime)
               : "-"}
           </span>
         </h4>

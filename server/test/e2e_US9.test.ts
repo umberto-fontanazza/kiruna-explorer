@@ -14,6 +14,7 @@ const validDocument = {
     "This document was create to test insertion and retrieval of documents with areas",
   type: DocumentType.Informative,
   scale: { type: ScaleType.BlueprintsOrEffect },
+  issuanceTime: "2024-12",
 };
 
 const validAreaBody = {
