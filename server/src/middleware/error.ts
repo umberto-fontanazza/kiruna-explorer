@@ -7,7 +7,7 @@ import { UserError } from "../error/userError";
  * it handles unhandled errors
  */
 export function sinkErrorHandler(
-  error: any,
+  error: Error,
   request: Request,
   response: Response,
   next: NextFunction,
