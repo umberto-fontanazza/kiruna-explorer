@@ -4,6 +4,7 @@ import { PositionMode } from "./modes";
 
 export const useDrawingTools = (
   map: google.maps.Map | null,
+  drawnPolygon: google.maps.Polygon | undefined,
   setDrawingManager: Dispatch<
     SetStateAction<google.maps.drawing.DrawingManager | undefined>
   >,
@@ -15,20 +16,15 @@ export const useDrawingTools = (
   const [currentMarker, setCurrentMarker] = useState<google.maps.Marker | null>(
     null,
   );
-  const [mainPolygon, setMainPolygon] = useState<google.maps.Polygon | null>(
-    null,
-  );
   const [drawingMode, setDrawingMode] =
     useState<google.maps.drawing.OverlayType | null>(null);
 
   useEffect(() => {
     if (!map || positionMode === PositionMode.None) {
       setCurrentMarker(null);
-      setMainPolygon(null);
       setDrawingMode(null);
       return;
     }
-    if (!map || positionMode !== PositionMode.Insert) return;
 
     // Inizializzazione del DrawingManager
     const drawingManager = new google.maps.drawing.DrawingManager({
@@ -62,9 +58,9 @@ export const useDrawingTools = (
         currentMarker.setMap(null);
         setCurrentMarker(null);
       }
-      if (mainPolygon) {
-        mainPolygon?.setMap(null);
-        setMainPolygon(null);
+      if (drawnPolygon) {
+        drawnPolygon.setMap(null);
+        setDrawnPolygon(undefined);
       }
       setDrawingMode(google.maps.drawing.OverlayType.MARKER);
     });
@@ -80,25 +76,22 @@ export const useDrawingTools = (
           const rewindPath = rewindRing(path, true);
           newPolygon.setPath(rewindPath);
 
-          if (!mainPolygon) {
-            const firstPoly = newPolygon;
-            setMainPolygon(newPolygon);
-            firstPoly.setEditable(true);
-            firstPoly.setDraggable(true);
-
-            setDrawnPolygon(firstPoly);
+          if (!drawnPolygon) {
+            newPolygon.setEditable(true);
+            newPolygon.setDraggable(true);
+            setDrawnPolygon(newPolygon);
           } else {
             // Se esiste un poligono principale, controlliamo cosa fare
-            if (isPolygonInsidePolygon(newPolygon, mainPolygon)) {
+            if (isPolygonInsidePolygon(newPolygon, drawnPolygon)) {
               // Il nuovo poligono è un buco, aggiungiamolo al poligono principale
               const adjustedPath = rewindRing(path, false); // Rewind per il buco
-              mainPolygon
+              drawnPolygon
                 .getPaths()
                 .push(new google.maps.MVCArray(adjustedPath)); // Aggiungiamo il buco
               newPolygon.setMap(null); // Rimuoviamo il poligono dalla mappa
-              mainPolygon.setEditable(true);
-              mainPolygon.setDraggable(true);
-              setDrawnPolygon(mainPolygon); // Aggiorniamo lo stato
+              drawnPolygon.setEditable(true);
+              drawnPolygon.setDraggable(true);
+              setDrawnPolygon(drawnPolygon); // Aggiorniamo lo stato
             } else {
               // Il nuovo poligono non è un buco, mostriamo un errore
               newPolygon.setMap(null); // Rimuoviamo il nuovo poligono
@@ -132,7 +125,7 @@ export const useDrawingTools = (
       drawingManager.setMap(null);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [map, positionMode, currentMarker, mainPolygon, drawingMode]);
+  }, [map, positionMode, currentMarker, drawnPolygon, drawingMode]);
 };
 
 // Funzione per verificare se un poligono è dentro un altro
@@ -147,7 +140,7 @@ function isPolygonInsidePolygon(
 }
 
 // Funzione per calcolare l'orientamento del poligono (reversa o meno)
-function rewindRing(
+export function rewindRing(
   ring: google.maps.LatLng[],
   clockwise: boolean,
 ): google.maps.LatLng[] {

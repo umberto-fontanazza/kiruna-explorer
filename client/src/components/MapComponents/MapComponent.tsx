@@ -4,7 +4,7 @@ import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/MapComponent.scss";
-import { useDrawingTools } from "../../utils/drawingTools";
+import { rewindRing, useDrawingTools } from "../../utils/drawingTools";
 import {
   Coordinates,
   Document,
@@ -42,9 +42,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [newMarkerPosition, setNewMarkerPosition] =
     useState<Coordinates | null>(null);
   const [saved, setSaved] = useState(false);
-  const [polygonArea, setPolygonArea] = useState<google.maps.Polygon | null>(
-    null,
-  );
   const [municipalArea, setMunicipalArea] = useState<
     google.maps.Polygon[] | undefined
   >(undefined);
@@ -89,7 +86,19 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
     if (positionMode === PositionMode.Update && docSelected?.area) {
       const area = createArea(docSelected, map, positionMode);
-      setPolygonArea(area);
+      if (area) {
+        const paths = area.getPaths();
+        const adjustedPaths = new google.maps.MVCArray(
+          paths.getArray().map((path, index) => {
+            const rewindClockwise = index === 0; // Il primo path è esterno (clockwise)
+            return new google.maps.MVCArray(
+              rewindRing(path.getArray(), rewindClockwise),
+            );
+          }),
+        );
+        area.setPaths(adjustedPaths); // Setta i percorsi corretti
+        setDrawnPolygon(area);
+      }
       return;
     }
 
@@ -174,12 +183,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       drawnMarker?.setMap(null);
       drawingManager?.setMap(null);
       setActiveButton("");
-      polygonArea?.setMap(null);
       setNewMarkerPosition(null);
       setDrawnMarker(undefined);
       setDrawnPolygon(undefined);
       setDrawingManager(undefined);
-      setPolygonArea(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionMode]);
@@ -188,9 +195,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     console.log(docSelected, saved, positionMode);
     if (saved && positionMode !== PositionMode.None) {
       if (positionMode === PositionMode.Update && docSelected) {
-        if (polygonArea) {
-          const includePath = polygonArea.getPath();
-          const excludePaths = polygonArea.getPaths().getArray().slice(1);
+        if (drawnPolygon) {
+          const includePath = drawnPolygon.getPath();
+          const excludePaths = drawnPolygon.getPaths().getArray().slice(1);
 
           // Creazione del nuovo oggetto PolygonArea
           const newPolygonArea: PolygonArea = {
@@ -244,7 +251,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           drawingManager.setDrawingMode(null);
           setdocumentSelected(null);
           setModalOpen(true);
-          drawnPolygon.setMap(null);
+          //drawnPolygon.setMap(null);
         } else if (drawnMarker && drawingManager) {
           const latLng = drawnMarker.getPosition();
           if (!latLng) return;
@@ -276,6 +283,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   useDrawingTools(
     map,
+    drawnPolygon,
     setDrawingManager,
     setDrawnPolygon,
     setDrawnMarker,
@@ -387,7 +395,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         </div>
       )}
 
-      {positionMode === PositionMode.Insert && (
+      {positionMode !== PositionMode.None && (
         <div className="drawing-controls">
           <button
             id="municipal-btn"
