@@ -174,6 +174,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       renderer: {
         render: renderClusterMarker,
       },
+      algorithmOptions: { maxZoom: 18 },
       onClusterClick: (event, cluster, map) =>
         handleClusterClick(
           event,
@@ -385,6 +386,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             ...mapOptions.mapTypeControlOptions,
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
           },
+          maxZoom: 19,
         }}
         center={kirunaCoords}
         onLoad={setMap}
