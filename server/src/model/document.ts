@@ -41,8 +41,8 @@ const buildSqlWhere = (
   const sqlFilters = [
     "type =",
     "scale_type =",
-    "issuance_date <=",
-    "issuance_date >=",
+    "issuance_time[1] <=", // begin of interval
+    "issuance_time[2] >=", // end of interval
   ];
   const [sqlWithWildcards, args] = [
     type,
