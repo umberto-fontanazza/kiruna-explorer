@@ -1,10 +1,18 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import "../../App";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/MapComponent.scss";
+import { AlertType } from "../../utils/alertType";
 import {
   handleClusterClick,
   renderClusterMarker,
@@ -21,6 +29,7 @@ import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
 import { createMarker } from "../../utils/markersTools";
 import { PositionMode } from "../../utils/modes";
 import { createArea } from "../../utils/polygonsTools";
+import Alert, { AlertHandle } from "../Alert";
 import DrawingControls from "../DrawingControls";
 import MapTypeSelector from "../MapTypeSelector";
 
@@ -71,6 +80,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [infoWindow, setInfoWindow] = useState<google.maps.InfoWindow | null>(
     null,
   );
+
+  const alertRef = useRef<AlertHandle>(null);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -305,6 +316,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       }
     });
 
+    if (include.length <= 2) {
+      alertRef.current?.showAlert(
+        "The Polygon must have three edges, try again!",
+        AlertType.Error,
+      );
+      return;
+    }
+
     const newPolygonArea: PolygonArea = { include, exclude };
 
     setDocumentFormSelected((prev) => ({
@@ -351,6 +370,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     setDrawnPolygon,
     setDrawnMarker,
     setActiveButton,
+    alertRef,
   );
 
   useEffect(() => {
@@ -410,6 +430,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   return isLoaded ? (
     <section id="map">
+      <Alert ref={alertRef} timeout={3000} />
       <MapTypeSelector mapType={mapType} setMapType={setMapType} />
       {positionMode !== PositionMode.None && (
         <div className="insert-mode">
