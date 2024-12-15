@@ -229,7 +229,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   // Funzione per resettare lo stato di disegno
   const resetDrawingState = () => {
-    //setDrawingManager(undefined);
     setSaved(false);
   };
 
@@ -388,7 +387,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     setDrawnPolygon,
     setDrawnMarker,
     setActiveButton,
-    alertRef,
   );
 
   useEffect(() => {

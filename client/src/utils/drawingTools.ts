@@ -1,11 +1,4 @@
-import {
-  Dispatch,
-  RefObject,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
-import { AlertHandle } from "../components/Alert";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { AlertType } from "./alertType";
 import { PositionMode } from "./modes";
@@ -20,9 +13,8 @@ export const useDrawingTools = (
   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
   setDrawnMarker: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
   setActiveButton: Dispatch<SetStateAction<string>>,
-  alertRef: RefObject<AlertHandle>,
 ) => {
-  const { positionMode } = useAppContext();
+  const { positionMode, alertRef } = useAppContext();
   const [drawingMode, setDrawingMode] =
     useState<google.maps.drawing.OverlayType | null>(null);
 
