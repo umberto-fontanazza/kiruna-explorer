@@ -117,7 +117,7 @@
 
 .drawing-controls {
   position: fixed;
-  width: var(--shared-width);
+  height: 6.5vh;
   z-index: 1;
   bottom: 2rem;
   left: 50%;
@@ -128,7 +128,6 @@
   button {
     border-radius: 1rem;
     width: 13vw;
-    height: 6.5vh;
     background-color: Color.$third;
     color: Color.$first;
     border: 0.2rem solid Color.$first;
@@ -159,19 +158,12 @@
   .polygon-container,
   .marker-container {
     display: flex;
+    justify-content: center;
     align-items: center;
+    gap: 1rem;
 
     h4 {
       font-size: 1.2rem;
     }
-  }
-
-  .municipal-container {
-    justify-content: space-around;
-  }
-
-  .polygon-container,
-  .marker-container {
-    justify-content: space-evenly;
   }
 }

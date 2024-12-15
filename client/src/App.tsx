@@ -15,9 +15,11 @@ import HomeMap from "./routes/Map";
 import UploadsList from "./routes/UploadsList";
 import "./styles/App.scss";
 import { User } from "./utils/interfaces";
+import { PositionMode } from "./utils/modes";
 const App: FC = () => {
   const [user, setUser] = useState<User | null>(null);
-  const { isPopupOpen, modalOpen } = useAppContext();
+  const { isPopupOpen, modalOpen, positionMode, setPositionMode } =
+    useAppContext();
 
   useEffect(() => {
     (async () => {
@@ -38,6 +40,7 @@ const App: FC = () => {
   const logout = async () => {
     await API.logout();
     setUser(null);
+    if (positionMode != PositionMode.None) setPositionMode(PositionMode.None);
   };
 
   return (

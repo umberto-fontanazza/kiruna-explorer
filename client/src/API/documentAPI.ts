@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { Document, Filters } from "../utils/interfaces";
 import { baseURL } from "./API";
 
@@ -31,7 +30,9 @@ async function getDocuments(filters?: Filters): Promise<Document[]> {
   const documents = await response.json();
   return documents.map((doc: any) => ({
     ...doc,
-    issuanceDate: dayjs(doc.issuanceDate),
+    issuanceTime: doc.issuanceTime
+      ? doc.issuanceTime.replace(/-/g, "/")
+      : undefined,
   }));
 }
 
@@ -41,8 +42,12 @@ async function getDocumentById(id: number): Promise<Document> {
     throw new Error("Error in fetching document by id");
   }
   const document = await response.json();
-  document.issuanceDate = dayjs(document.issuanceDate);
-  return document;
+  return {
+    ...document,
+    issuanceTime: document.issuanceTime
+      ? document.issuanceTime.replace(/-/g, "/")
+      : undefined,
+  };
 }
 
 /**
@@ -55,11 +60,11 @@ async function addDocument(document: Omit<Document, "id">): Promise<number> {
       "Only one of 'coordinates' or 'area' must be provided, not both.",
     );
   }
-  const responseBody = {
+  const requestBody = {
     ...document,
     id: undefined,
+    issuanceTime: document.issuanceTime?.replace(/\//g, "-"),
     links: undefined,
-    issuanceDate: document.issuanceDate?.format("YYYY-MM-DD") || undefined,
   };
   const response = await fetch(baseURL + `/documents`, {
     method: "POST",
@@ -67,7 +72,7 @@ async function addDocument(document: Omit<Document, "id">): Promise<number> {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(responseBody),
+    body: JSON.stringify(requestBody),
   });
   if (!response.ok) {
     throw new Error("Error creating document");
@@ -82,20 +87,19 @@ async function updateDocument(document: Document): Promise<void> {
       "Only one of 'coordinates' or 'area' must be provided, not both.",
     );
   }
-  const responseBody = {
+  const requestBody = {
     ...document,
     id: undefined,
+    issuanceTime: document.issuanceTime?.replace(/\//g, "-"),
     links: undefined,
-    issuanceDate: document.issuanceDate?.format("YYYY-MM-DD") || undefined,
   };
-  console.log(responseBody);
   const response = await fetch(baseURL + `/documents/${document.id}`, {
     method: "PATCH",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(responseBody),
+    body: JSON.stringify(requestBody),
   });
   if (!response.ok) {
     throw new Error(`Error requesting PATCH /documents/${document.id}`);

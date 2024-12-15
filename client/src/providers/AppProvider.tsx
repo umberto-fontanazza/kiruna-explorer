@@ -9,11 +9,13 @@ interface AppContextType {
   editDocumentMode: boolean;
   isPopupOpen: boolean;
   positionMode: PositionMode;
+  showTooltipUploads: boolean;
   visualLinks: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEditDocumentMode: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setPositionMode: React.Dispatch<React.SetStateAction<PositionMode>>;
+  setShowTooltipUploads: React.Dispatch<React.SetStateAction<boolean>>;
   setVisualLinks: React.Dispatch<React.SetStateAction<boolean>>;
   handleCancelPopup: () => void;
   handleEditPositionModeConfirm: (
@@ -32,6 +34,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editDocumentMode, setEditDocumentMode] = useState<boolean>(false);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+  const [showTooltipUploads, setShowTooltipUploads] = useState<boolean>(false);
 
   // Questo controlla solo il cambio di una scritta
   const [positionMode, setPositionMode] = useState<PositionMode>(
@@ -83,11 +86,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         editDocumentMode,
         isPopupOpen,
         positionMode,
+        showTooltipUploads,
         visualLinks,
         setModalOpen,
         setEditDocumentMode,
         setIsPopupOpen,
         setPositionMode,
+        setShowTooltipUploads,
         setVisualLinks,
         //Functions
         handleCancelPopup,

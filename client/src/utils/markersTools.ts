@@ -10,7 +10,8 @@ export const createMarker = (
   linked: boolean = false,
   map: google.maps.Map,
   positionMode: PositionMode,
-  setDrawnMarker?: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
+  setDrawnMarker: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
+  setShowTooltipUploads?: Dispatch<SetStateAction<boolean>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
 ): google.maps.marker.AdvancedMarkerElement => {
@@ -74,6 +75,7 @@ export const createMarker = (
     marker.addListener("click", () => {
       setSidebarOpen(true);
       setdocumentSelected(doc);
+      if (setShowTooltipUploads) setShowTooltipUploads(false);
 
       const newCenter = doc.coordinates
         ? {
