@@ -10,6 +10,7 @@ export const createMarker = (
   linked: boolean = false,
   map: google.maps.Map,
   positionMode: PositionMode,
+  setShowTooltipUploads: Dispatch<SetStateAction<boolean>>,
   setNewMarkerPosition?: Dispatch<SetStateAction<Coordinates | null>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
@@ -33,7 +34,6 @@ export const createMarker = (
     map,
     position: position,
     content: markerDivChild,
-    title: doc.title,
     gmpDraggable: positionMode === PositionMode.Update,
   });
 
@@ -75,6 +75,7 @@ export const createMarker = (
     marker.addListener("click", () => {
       setSidebarOpen(true);
       setdocumentSelected(doc);
+      setShowTooltipUploads(false);
 
       const newCenter = doc.coordinates
         ? {
