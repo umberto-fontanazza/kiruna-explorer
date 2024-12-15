@@ -21,15 +21,11 @@ const color = d3.scaleOrdinal(d3.schemeCategory10);
 interface DiagramProps {
   documents: Document[];
 }
-// const [width, height] = [1920, 1080]; //TODO: get container size
-
-const pointColor = "#ff0000";
 
 const updateSvg = (ref: MutableRefObject<SVGElement | null>) => {
   const svg = ref.current;
   if (!svg) return;
   const d3sel = d3.select(svg);
-  console.log("Updating");
 
   d3sel
     .selectAll("g.documents")
