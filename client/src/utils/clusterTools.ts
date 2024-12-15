@@ -188,6 +188,9 @@ export const handleClusterClick = (
 
     setTimeout(() => content.classList.add("show"), 0);
     setInfoWindow(newInfoWindow);
+
+    map?.setCenter(position);
+    map?.panTo(position);
   } else {
     const newZoom = Math.min(currentZoom + 3, 16);
     if (cluster.bounds) {

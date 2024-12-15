@@ -386,7 +386,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             ...mapOptions.mapTypeControlOptions,
             style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
           },
-          maxZoom: 19,
         }}
         center={kirunaCoords}
         onLoad={setMap}
