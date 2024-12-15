@@ -5,6 +5,18 @@ import { mockDocks } from "../utils/mockDocs";
 
 type SVGElement = SVGSVGElement;
 
+const rangeExtractor = (
+  arr: { x: number; y: number }[],
+): [number, number, number, number] => {
+  const [minX, maxX, minY, maxY] = [
+    Math.min(...arr.map((e) => e.x)),
+    Math.max(...arr.map((e) => e.x)),
+    Math.min(...arr.map((e) => e.y)),
+    Math.max(...arr.map((e) => e.y)),
+  ];
+  return [minX, maxX, minY, maxY];
+};
+
 const positions = [
   { x: 50, y: 200 },
   { x: 200, y: 50 },
@@ -16,7 +28,8 @@ const data = mockDocks.map((d, i) => ({
   y: positions[i].y,
 }));
 
-const color = d3.scaleOrdinal(d3.schemeCategory10);
+const [minX, maxX, minY, maxY] = rangeExtractor(data);
+const [width, heigth] = [maxX - minX, maxY - minY];
 
 interface DiagramProps {
   documents: Document[];
@@ -32,9 +45,8 @@ const updateSvg = (ref: MutableRefObject<SVGElement | null>) => {
     .selectAll("*")
     .data(data)
     .join("circle")
-    .attr("r", 20)
-    .attr("cx", (d) => d.x)
-    .attr("cy", (d) => d.y);
+    .attr("cx", (d) => `${((d.x - minX) * 100) / width}%`)
+    .attr("cy", (d) => `${((d.y - minY) * 100) / heigth}%`);
 };
 
 const Diagram: FC<DiagramProps> = ({ documents }) => {
