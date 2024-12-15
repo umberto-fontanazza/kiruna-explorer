@@ -81,6 +81,21 @@ const DrawingControls: FC<DrawingControlsProps> = ({
     setDrawingMode("marker");
   };
 
+  const handleExistingButtonClick = () => {
+    setActiveButton("existing-btn");
+
+    if (positionMode !== PositionMode.Update) {
+      map?.setZoom(11);
+      map?.setCenter(kirunaCoords);
+    }
+
+    if (municipalArea) {
+      municipalArea.forEach((area) => area.setMap(null));
+      setMunicipalArea(undefined);
+    }
+    setDrawingMode("existing");
+  };
+
   return (
     positionMode !== PositionMode.None && (
       <div className="drawing-controls">
@@ -112,6 +127,16 @@ const DrawingControls: FC<DrawingControlsProps> = ({
           <div className="marker-container">
             <span className="material-symbols-outlined">explore_nearby</span>
             <h4>Marker</h4>
+          </div>
+        </button>
+        <button
+          id="existing-btn"
+          className={activeButton === "existing-btn" ? "active" : ""}
+          onClick={handleExistingButtonClick}
+        >
+          <div className="existing-container">
+            <h4 className="material-symbols-outlined">category_search</h4>
+            <h4>Existing Points & Areas</h4>
           </div>
         </button>
       </div>
