@@ -1,11 +1,11 @@
 import { StatusCodes } from "http-status-codes";
-import { Database } from "../src/database";
-import { loginAsPlanner } from "./utils";
-import { DocumentType } from "../src/model/document";
-import { ScaleType } from "../src/model/scale";
-import { LinkType } from "../src/model/link";
-import app from "../src/app";
 import request from "supertest";
+import app from "../src/app";
+import { Database } from "../src/database";
+import { DocumentType } from "../src/model/document";
+import { LinkType } from "../src/model/link";
+import { ScaleType } from "../src/model/scale";
+import { loginAsPlanner } from "./utils";
 
 let plannerCookie: string;
 const document = {
@@ -13,6 +13,7 @@ const document = {
   description: "Created to test self linking bad requests",
   type: DocumentType.Prescriptive,
   scale: { type: ScaleType.Text },
+  issuanceTime: "2024-12",
 };
 
 beforeAll(async () => {

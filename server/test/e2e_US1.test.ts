@@ -26,14 +26,11 @@ describe("Testing story 1", () => {
     description: "This one will be tested for mandatory fields",
     type: DocumentType.Prescriptive,
     scale: { type: ScaleType.Text },
+    issuanceTime: "2024-12",
   };
   const testDocAllFields1 = {
-    title: "All fields test",
-    description: "This one will be tested for all fields",
-    type: DocumentType.Informative,
-    scale: { type: ScaleType.BlueprintsOrEffect },
+    ...testDocMandatoryFields1,
     stakeholders: [Stakeholder.KirunaKommun],
-    issuanceDate: "2021-12-12",
     coordinates: { latitude: 45, longitude: 30 },
   };
   let testDocId1: number;
@@ -87,7 +84,7 @@ describe("Testing story 1", () => {
       .send({
         coordinates: { latitude: 45, longitude: 30 },
         stakeholders: [Stakeholder.KirunaKommun],
-        issuanceDate: "2021-12-12",
+        issuanceTime: "2021-12-12",
       });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
@@ -182,7 +179,7 @@ describe("Testing story 1", () => {
         type: DocumentType.Design,
         scale: { type: ScaleType.BlueprintsOrEffect },
         stakeholders: [Stakeholder.Lkab],
-        issuanceDate: "2021-12-30",
+        issuanceTime: "2021-12-30",
         coordinates: { latitude: 20, longitude: 40 },
       });
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
@@ -207,7 +204,7 @@ describe("Testing story 1", () => {
       .set("Cookie", plannerCookie)
       .send({
         stakeholders: [Stakeholder.Residents],
-        issuanceDate: "2023-12-30",
+        issuanceTime: "2023-12-30",
         coordinates: { latitude: 20, longitude: 40 },
       });
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
@@ -301,12 +298,12 @@ describe("Testing story 1", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
-  test("US1.17 PATCH with wrong issuanceDate", async () => {
+  test("US1.17 PATCH with wrong   issuanceTime", async () => {
     const response = await request(app)
       .patch(`/documents/${testDocId1}`)
       .set("Cookie", plannerCookie)
       .send({
-        issuanceDate: "Wrong date",
+        issuanceTime: "Wrong date",
       });
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });

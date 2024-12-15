@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { Dispatch, FC, SetStateAction } from "react";
 import {
   Document,
@@ -9,25 +8,22 @@ import {
   stakeholdersOptions,
 } from "../../utils/interfaces";
 
-import { capitalizeFirstLetter } from "../../utils/utils";
+import { Tooltip } from "react-tooltip";
+import { capitalizeFirstLetter, validateDate } from "../../utils/utils";
 
 interface FirstPageModalProps {
   documentForm: DocumentForm;
   setDocumentForm: Dispatch<SetStateAction<DocumentForm>>;
+  errors: Record<string, string> | null;
+  setErrors: Dispatch<SetStateAction<Record<string, string> | null>>;
 }
 
 const FirstPageModal: FC<FirstPageModalProps> = ({
   documentForm,
   setDocumentForm,
+  errors,
+  setErrors,
 }) => {
-  const onDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setDocumentForm((prev) => ({
-      ...prev,
-      issuanceDate: value ? dayjs(value) : (prev.issuanceDate ?? undefined),
-    }));
-  };
-
   const onCheckboxChange = (event: {
     target: { value: string; checked: boolean };
   }) => {
@@ -137,17 +133,38 @@ const FirstPageModal: FC<FirstPageModalProps> = ({
         </div>
 
         <div className="form-row">
-          <div className="form-group issuance-date">
-            <label htmlFor="issuance-date">Issuance Date</label>
+          <div className="form-group issuance-time">
+            <label htmlFor="issuance-time">Issuance Date *</label>
             <input
-              id="issuance-date"
-              type="date"
-              value={
-                documentForm.issuanceDate
-                  ? documentForm.issuanceDate?.format("YYYY-MM-DD")
-                  : ""
-              }
-              onChange={onDateChange}
+              id="issuance-time"
+              type="text"
+              placeholder="YYYY, YYYY/MM, or YYYY/MM/DD"
+              value={documentForm.issuanceTime || ""}
+              onChange={(e) => {
+                setDocumentForm((prev) => ({
+                  ...prev,
+                  issuanceTime: e.target.value,
+                }));
+                if (
+                  errors &&
+                  errors.issuanceTime &&
+                  validateDate(e.target.value || "")
+                ) {
+                  setErrors((previousErrors) => ({
+                    ...previousErrors,
+                    issuanceTime: "",
+                  }));
+                }
+              }}
+              data-tooltip-id="issuance-time-tooltip"
+              data-tooltip-html={errors?.issuanceTime || ""}
+              data-tooltip-place="bottom"
+            />
+
+            <Tooltip
+              id="issuance-time-tooltip"
+              className={errors?.issuanceTime ? "tooltip-error" : ""}
+              isOpen={!!errors?.issuanceTime}
             />
           </div>
 

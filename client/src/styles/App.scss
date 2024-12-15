@@ -37,6 +37,7 @@ body,
 #root {
   font-family: "SwedenSans", sans-serif;
   height: 100vh;
+  overflow-y: auto;
 }
 
 ::-webkit-scrollbar {
@@ -118,4 +119,17 @@ button {
 
 select {
   cursor: pointer;
+}
+
+.form-error {
+  margin: 1rem 0;
+  color: #dc3545;
+  text-align: center;
+}
+
+.tooltip-error {
+  font-size: 1.1rem !important;
+  text-align: center;
+  background-color: #dc3545 !important;
+  opacity: 1 !important;
 }

@@ -70,6 +70,7 @@ describe("Testing with coordinates", () => {
     description: "This one will be tested with coordinates",
     type: DocumentType.Informative,
     scale: { type: ScaleType.BlueprintsOrEffect },
+    issuanceTime: "2024-12",
   };
   const wrongCoordinates = {
     latitude: 120,

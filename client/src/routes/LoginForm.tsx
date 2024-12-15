@@ -1,5 +1,4 @@
 import { FC, useContext, useRef, useState } from "react";
-import { Form } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { authContext } from "../context/auth";
 import "../styles/LoginForm.scss";
@@ -18,14 +17,14 @@ const LoginForm: FC = (): JSX.Element => {
 
   if (user) {
     // interrupt rendering
-    nav("/home");
+    nav("/map");
   }
 
-  const handleSubmit = async (event: { preventDefault: () => void }) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await login(email, password);
-      nav("/home");
+      nav("/map");
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_: unknown) {
       setErrors({ login: "Email and/or password wrong" });
@@ -69,9 +68,9 @@ const LoginForm: FC = (): JSX.Element => {
             <span className="material-symbols-outlined">home</span>
           </button>
           <h2>Welcome Back!</h2>
-          <Form onSubmit={handleSubmit}>
-            <Form.Label htmlFor="email">Email</Form.Label>
-            <Form.Control
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="email">Email</label>
+            <input
               type="email"
               id="email"
               name="email"
@@ -79,12 +78,11 @@ const LoginForm: FC = (): JSX.Element => {
               value={email}
               onChange={(ev) => setEmail(ev.target.value)}
               required
-              className="input-email"
-              isInvalid={errors.login ? true : false}
+              className={`input-email ${errors.login ? "is-invalid" : ""}`}
             />
 
-            <Form.Label htmlFor="password">Password</Form.Label>
-            <Form.Control
+            <label htmlFor="password">Password</label>
+            <input
               type="password"
               id="password"
               name="password"
@@ -92,11 +90,10 @@ const LoginForm: FC = (): JSX.Element => {
               value={password}
               onChange={(ev) => setPassword(ev.target.value)}
               required
-              className="input-password"
-              isInvalid={errors.login ? true : false}
+              className={`input-password ${errors.login ? "is-invalid" : ""}`}
             />
 
-            <p className="m-0 text-danger text-center">{errors.login}</p>
+            <p className="form-error">{errors.login}</p>
 
             <div className="forgot-password">
               <a
@@ -111,7 +108,7 @@ const LoginForm: FC = (): JSX.Element => {
               </a>
             </div>
             <button type="submit">Login</button>
-          </Form>
+          </form>
 
           <div className="signup">
             Doesn’t have an account?{" "}

@@ -1,7 +1,8 @@
 @use "Color";
 
 .upload-container {
-  height: 90%;
+  background: linear-gradient(#005293, #005293, #005293, #005293, #fecb00);
+  height: 90vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
