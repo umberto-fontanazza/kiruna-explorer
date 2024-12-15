@@ -143,4 +143,3 @@ describe("Testing story 4", () => {
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });
 });
-

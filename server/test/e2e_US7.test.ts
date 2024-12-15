@@ -290,4 +290,3 @@ describe("Testing story 7", () => {
       .set("Cookie", plannerCookie);
   });
 });
-
