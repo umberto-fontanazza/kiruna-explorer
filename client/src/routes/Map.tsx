@@ -1,5 +1,6 @@
 import { FC, useContext, useEffect, useState } from "react";
 import API from "../API/API";
+import Diagram from "../components/Diagram";
 import MapComponent from "../components/MapComponents/MapComponent";
 import NavHeader from "../components/NavHeader";
 import Sidebar from "../components/Sidebar";
@@ -131,6 +132,7 @@ const HomeMap: FC = (): JSX.Element => {
           }
         </div>
       </div>
+      <Diagram />
     </>
   );
 };

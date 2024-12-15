@@ -1,0 +1,11 @@
+#diagram {
+  width: 100vw;
+  height: 100vh;
+  border: 2px solid brown;
+
+  g.documents {
+    stroke-width: 3;
+    stroke: #000;
+    fill: red;
+  }
+}
