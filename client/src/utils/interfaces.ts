@@ -1,7 +1,12 @@
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import { kirunaCoordinates } from "./map";
 
 /************************** INTERFACES ****************************/
+
+export interface CustomMarker extends google.maps.marker.AdvancedMarkerElement {
+  document?: Document;
+}
+
 export interface Coordinates {
   latitude: number;
   longitude: number;
@@ -17,7 +22,7 @@ export interface Document {
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
   area?: PolygonArea;
-  issuanceDate?: Dayjs;
+  issuanceTime?: string;
   links?: Link[];
 }
 
@@ -131,7 +136,7 @@ export const documentFormDefaults: DocumentForm = {
   stakeholders: [],
   scale: null,
   type: null,
-  issuanceDate: undefined,
+  issuanceTime: undefined,
   links: [],
   coordinates: kirunaCoordinates,
 };
@@ -148,7 +153,7 @@ export const createDocumentStateFromExisting = (
     ratio: docSelected.scale?.ratio,
   },
   type: docSelected.type,
-  issuanceDate: dayjs(docSelected.issuanceDate),
+  issuanceTime: docSelected.issuanceTime,
   links: docSelected.links,
   coordinates: docSelected.coordinates,
 });

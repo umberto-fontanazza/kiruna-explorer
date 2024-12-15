@@ -19,7 +19,7 @@ export const mapOptions = {
     mapTypeIds: ["satellite", "roadmap", "hybrid", "terrain"],
   },
   minZoom: 7,
-  maxZoom: 20,
+  maxZoom: 18,
   fullscreenControl: false,
   restriction: {
     latLngBounds: kirunaBoundaries,

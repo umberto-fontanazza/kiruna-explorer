@@ -29,7 +29,7 @@ describe("Testing story 6", () => {
     type: DocumentType.Informative,
     scale: { type: ScaleType.BlueprintsOrEffect },
     stakeholders: [Stakeholder.KirunaKommun],
-    issuanceDate: "2021-12-12",
+    issuanceTime: "2021-12-12",
     coordinates: { latitude: 45, longitude: 30 },
   };
   let testDocId6: number;
@@ -71,7 +71,7 @@ describe("Testing story 6", () => {
     expect(Array.isArray(response.body)).toBe(true);
   });
 
-  test("US 6.4 GET /documents with issuanceDate filter", async () => {
+  test("US 6.4 GET /documents with   issuanceTime filter", async () => {
     const response = await request(app)
       .get("/documents")
       .query({ maxIssuanceDate: "2023-12-31", minIssuanceDate: "2023-01-01" })
@@ -98,7 +98,7 @@ describe("Testing story 6", () => {
     expect(Array.isArray(response.body)).toBe(true);
   });
 
-  test("US 6.7 GET /documents with Type and issuanceDate filters", async () => {
+  test("US 6.7 GET /documents with Type and   issuanceTime filters", async () => {
     const response = await request(app)
       .get("/documents")
       .query({
