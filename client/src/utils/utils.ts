@@ -9,7 +9,7 @@ export function capitalizeFirstLetter(str: string): string {
 
 export function validateDate(value: string): boolean {
   const validYear = /^\d{4}$/.test(value);
-  const validYearMonth = /^\d{4}\/\d{2}$/.test(value);
+  const validYearMonth = dayjs(value, "YYYY/MM", true).isValid();
   const validFullDate = dayjs(value, "YYYY/MM/DD", true).isValid();
   return validYear || validYearMonth || validFullDate;
 }

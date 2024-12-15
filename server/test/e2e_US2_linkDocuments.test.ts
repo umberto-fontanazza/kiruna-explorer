@@ -10,7 +10,7 @@ import { Stakeholder } from "../src/model/stakeholder";
 import { loginAsPlanner } from "./utils";
 dotenv.config();
 
-// End to end testing
+// End to end testing: As an Urban Planner, I want to link documents to each other So that i can study their relationships
 let plannerCookie: string;
 
 beforeAll(async () => {

@@ -18,7 +18,7 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-app.use(express.json());
+app.use(express.json({ limit: "15mb" })); // Why 15? https://en.wikipedia.org/wiki/Base64
 app.use(morgan("dev"));
 
 const corsOptions = {
