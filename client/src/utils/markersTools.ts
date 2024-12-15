@@ -1,7 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
 import "../styles/MapComponentsStyles/markers.scss";
 import { createArea, getPolygonCentroid } from "./drawingTools";
-import { Coordinates, Document, fromDocumentTypeToIcon } from "./interfaces";
+import {
+  Coordinates,
+  CustomMarker,
+  Document,
+  fromDocumentTypeToIcon,
+} from "./interfaces";
 import { kirunaCoords } from "./map";
 import { PositionMode } from "./modes";
 
@@ -30,12 +35,14 @@ export const createMarker = (
         lng: doc.coordinates?.longitude ?? 0,
       };
 
-  const marker = new google.maps.marker.AdvancedMarkerElement({
+  const marker: CustomMarker = new google.maps.marker.AdvancedMarkerElement({
     map,
     position: position,
     content: markerDivChild,
     gmpDraggable: positionMode === PositionMode.Update,
   });
+
+  marker.document = doc;
 
   let hoverArea: google.maps.Polygon | null = null;
 
@@ -62,7 +69,7 @@ export const createMarker = (
         hoverArea.setMap(null);
         hoverArea = null;
       }
-      infoWindow.close(); // Nasconde l'InfoWindow
+      infoWindow.close();
       content.classList.remove("show");
     });
   }
