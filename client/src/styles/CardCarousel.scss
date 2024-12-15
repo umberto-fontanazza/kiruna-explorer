@@ -1,0 +1,24 @@
+@use "Color";
+
+.doc-lists {
+  .not-found {
+    height: 60vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    font-family: "SwedenSansBold", sans-serif;
+  }
+}
+.swiper {
+  width: 100%;
+  height: 80vh;
+}
+
+.swiper-slide {
+  background-position: center;
+  background-size: cover;
+  width: 500px;
+  height: 60vh;
+}

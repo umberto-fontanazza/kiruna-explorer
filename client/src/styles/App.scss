@@ -33,18 +33,23 @@
 }
 
 html,
-body {
+body,
+#root {
   font-family: "SwedenSans", sans-serif;
+  height: 100vh;
+  overflow-y: auto;
 }
 
 ::-webkit-scrollbar {
-  width: 12px;
+  width: 10px;
 }
 
 ::-webkit-scrollbar-track {
   background: #f0f4f8;
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
+  border-radius: 12px;
+  margin-top: 4px;
+  margin-bottom: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -54,7 +59,7 @@ body {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: Color.$dark-main;
+  background: Color.$first-hover;
 }
 
 button {
@@ -77,4 +82,54 @@ button {
 }
 .color-find_in_page {
   color: green;
+}
+
+.hidden {
+  visibility: hidden;
+}
+
+input,
+select,
+textarea {
+  border-radius: 0.5em;
+  border: none;
+}
+
+button {
+  font-family: "SwedenSansBold", sans-serif;
+  padding: 0.8em;
+  transition: 350ms ease;
+  border-radius: 0.5em;
+
+  &.primary {
+    border: none;
+    color: Color.$third;
+    background-color: Color.$first;
+  }
+
+  &:hover {
+    transform: scale(1.02);
+  }
+
+  &:active {
+    transform: scale(0.98);
+    filter: brightness(0.8);
+  }
+}
+
+select {
+  cursor: pointer;
+}
+
+.form-error {
+  margin: 1rem 0;
+  color: #dc3545;
+  text-align: center;
+}
+
+.tooltip-error {
+  font-size: 1.1rem !important;
+  text-align: center;
+  background-color: #dc3545 !important;
+  opacity: 1 !important;
 }

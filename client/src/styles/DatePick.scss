@@ -1,0 +1,27 @@
+@use "Color";
+
+.date-filters {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  label {
+    font-size: 2ch;
+  }
+
+  .start,
+  .end {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+
+    input {
+      height: 3vh;
+      color: Color.$first;
+      padding: 0.5rem;
+      border-radius: 1rem;
+    }
+  }
+}

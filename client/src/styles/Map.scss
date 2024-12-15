@@ -1,94 +1,78 @@
 @use "Color";
 
-#map {
-  width: 100%;
-  height: 100%;
+.body-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 90%;
+  overflow-y: auto;
 
-  .document-icon {
-    border: 2px solid Color.$first;
-    border-radius: 50%;
-    width: 8vh;
-    height: 8vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: Color.$third;
-
-    cursor: pointer;
-
-    &.linked {
-      background-color: Color.$second;
-      border: 2px solid green;
-    }
-
-    &:hover {
-      background-color: Color.$second;
-    }
-
-    .doc-img {
-      width: 4vh;
-      height: 4vh;
-    }
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    pointer-events: auto;
   }
 
-  .insert-mode {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 2%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 1rem;
-    border-radius: 1rem;
-    box-shadow: 0 4% 8% rgba(0, 0, 0, 0.2);
+  .map {
+    width: 100%;
+    height: 92vh;
+    position: relative;
+    transition: width 0.3s linear;
 
-    h2,
-    h3 {
+    &.with-sidebar {
+      width: 70%;
+    }
+
+    .button-overlay {
+      position: fixed;
+      bottom: 2rem;
+      left: 1rem;
       display: flex;
       justify-content: center;
       align-items: center;
-      margin: 0;
-      padding: 0.2rem 0;
-      text-align: center;
+
+      .doc-btn {
+        border-radius: 1rem;
+        width: 13vw;
+        height: 7vh;
+        background-color: Color.$third;
+        color: Color.$first;
+        border: 0.2rem solid Color.$first;
+        padding: 0;
+        cursor: pointer;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+
+        &:hover {
+          background-color: #bfbfac;
+          color: Color.$first;
+        }
+
+        .add-container,
+        .back-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
+          padding: 0 1rem;
+
+          .material-symbols-outlined {
+            transform: scale(1.5);
+          }
+
+          h4 {
+            font-family: "SwedenSansBold", sans-serif;
+            margin-bottom: 0;
+            font-size: 1.3rem;
+          }
+        }
+      }
     }
-
-    h2 {
-      font-family: "SwedenSansBold", sans-serif;
-      font-size: 1.5rem;
-      color: Color.$first;
-    }
-
-    h3 {
-      font-family: "SwedenSans", sans-serif;
-      font-size: 1rem;
-      color: Color.$first;
-    }
-  }
-
-  .size {
-    transform: scale(1.5);
-  }
-
-  select.map-types {
-    position: absolute;
-    z-index: 1;
-    top: 2%;
-    left: 1.3%;
-    padding: 0.5rem 1ch;
-    border-radius: 1rem;
-    border: 0.2rem solid Color.$first;
-    background-color: Color.$third;
-    color: Color.$first;
-    font-family: "SwedenSansBold", sans-serif;
-    font-size: 1.3rem;
-  }
-
-  #google-map {
-    width: 100%;
-    height: 100%;
   }
 }

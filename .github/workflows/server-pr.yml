@@ -1,0 +1,47 @@
+# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
+
+name: Check format + lint + test for PRs affecting server folder
+
+on:
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "server/**"
+
+jobs:
+  server-check:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [20.x] # let's save runners some work for now [18.x , 20.x, 22.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+          cache-dependency-path: server/package-lock.json
+      - name: npm install for ci
+        run: npm ci
+        working-directory: server
+      - name: check formatting
+        run: npm run format-check
+        working-directory: server
+      - name: check linting
+        run: npm run lint-check
+        working-directory: server
+      - name: run tests
+        env:
+          DB_HOST: ${{ vars.DB_HOST }}
+          DB_NAME: ${{ vars.DB_NAME }}
+          DB_USER: ${{ vars.DB_USER }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_TEST_NAME: ${{ vars.DB_TEST_NAME }}
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET}}
+        run: npm test
+        working-directory: server

@@ -1,31 +1,15 @@
 import { Dayjs } from "dayjs";
+import { kirunaCoordinates } from "./map";
 
-export interface User {
-  email: string;
-  name: string;
-  surname: string;
-  role: UserRole;
-}
+/************************** INTERFACES ****************************/
 
-export enum UserRole {
-  Developer = "developer",
-  Planner = "planner",
-  Resident = "resident",
-  Visitor = "visitor",
+export interface CustomMarker extends google.maps.marker.AdvancedMarkerElement {
+  document?: Document;
 }
 
 export interface Coordinates {
   latitude: number;
   longitude: number;
-}
-
-export interface LoginErrors {
-  login?: string;
-}
-
-export interface Link {
-  targetDocumentId: number;
-  type: LinkType[];
 }
 
 export interface Document {
@@ -37,16 +21,63 @@ export interface Document {
   // optional fields below
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
-  issuanceDate?: Dayjs;
+  area?: PolygonArea;
+  issuanceTime?: string;
   links?: Link[];
 }
 
-export enum LinkType {
-  Direct = "direct",
-  Collateral = "collateral",
-  Projection = "projection",
-  Update = "update",
+export interface DocumentForm extends Omit<Document, "id" | "scale" | "type"> {
+  id: number | null;
+  scale: Scale | null;
+  type: DocumentType | null;
 }
+
+export interface Filters {
+  type: DocumentType | undefined;
+  scaleType: ScaleType | undefined;
+  maxIssuanceDate: Dayjs | undefined;
+  minIssuanceDate: Dayjs | undefined;
+}
+
+export interface Link {
+  targetDocumentId: number;
+  linkTypes: LinkType[];
+}
+
+export interface LoginErrors {
+  login?: string;
+}
+
+export interface PolygonData {
+  polygon: google.maps.Polygon;
+  coordinates: { lat: number; lng: number }[];
+}
+
+export interface PolygonArea {
+  include: Coordinates[];
+  exclude: Coordinates[][];
+}
+
+export interface Scale {
+  type: ScaleType;
+  ratio?: number;
+}
+
+export interface Upload {
+  id: number | undefined;
+  title: string;
+  type: UploadType;
+  file: string;
+}
+
+export interface User {
+  email: string;
+  name: string;
+  surname: string;
+  role: UserRole;
+}
+
+/************************ ENUM ***************************/
 
 export enum DocumentType {
   Design = "design",
@@ -56,13 +87,76 @@ export enum DocumentType {
   Technical = "technical",
 }
 
-export const documentTypeDisplay: { [key in DocumentType]: string } = {
-  [DocumentType.Design]: "Design",
-  [DocumentType.Informative]: "Informative",
-  [DocumentType.MaterialEffect]: "Material effect",
-  [DocumentType.Prescriptive]: "Prescriptive",
-  [DocumentType.Technical]: "Technical",
+export enum LinkType {
+  Direct = "direct",
+  Collateral = "collateral",
+  Projection = "projection",
+  Update = "update",
+}
+
+export enum ScaleType {
+  ArchitecturalScale = "architectural_scale",
+  BlueprintsOrEffect = "blueprints/effects",
+  Concept = "concept",
+  Text = "text",
+}
+
+export enum Stakeholder {
+  KirunaKommun = "kiruna_kommun",
+  Lkab = "lkab",
+  Residents = "residents",
+  WhiteArkitekter = "white_arkitekter",
+  Others = "others",
+}
+
+export const stakeholdersOptions = [
+  { value: Stakeholder.Lkab, label: "LKAB" },
+  { value: Stakeholder.KirunaKommun, label: "Kiruna kommun" },
+  { value: Stakeholder.Residents, label: "Residents" },
+  { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
+  { value: Stakeholder.Others, label: "Others" },
+];
+
+export enum UploadType {
+  OriginalResource = "original_resource",
+  Attachment = "attachment",
+}
+
+export enum UserRole {
+  Developer = "developer",
+  Planner = "planner",
+  Resident = "resident",
+  Visitor = "visitor",
+}
+
+export const documentFormDefaults: DocumentForm = {
+  id: null,
+  title: "",
+  description: "",
+  stakeholders: [],
+  scale: null,
+  type: null,
+  issuanceTime: undefined,
+  links: [],
+  coordinates: kirunaCoordinates,
 };
+
+export const createDocumentStateFromExisting = (
+  docSelected: Document,
+): Document => ({
+  id: docSelected.id,
+  title: docSelected.title,
+  description: docSelected.description,
+  stakeholders: docSelected.stakeholders,
+  scale: {
+    type: docSelected.scale?.type,
+    ratio: docSelected.scale?.ratio,
+  },
+  type: docSelected.type,
+  issuanceTime: docSelected.issuanceTime,
+  links: docSelected.links,
+  coordinates: docSelected.coordinates,
+});
 
 export const fromDocumentTypeToIcon = new Map<DocumentType | undefined, string>(
   [
@@ -71,36 +165,5 @@ export const fromDocumentTypeToIcon = new Map<DocumentType | undefined, string>(
     [DocumentType.MaterialEffect, "construction"],
     [DocumentType.Prescriptive, "find_in_page"],
     [DocumentType.Technical, "settings"],
-  ]
+  ],
 );
-
-export enum Stakeholder {
-  KirunaKommun = "kiruna_kommun",
-  Lkab = "lkab",
-  Residents = "residents",
-  WhiteArkitekter = "white_arkitekter",
-}
-
-export const stakeholderDisplay: { [key in Stakeholder]: string } = {
-  [Stakeholder.KirunaKommun]: "Kiruna kommun",
-  [Stakeholder.Lkab]: "LKAB",
-  [Stakeholder.Residents]: "Residents",
-  [Stakeholder.WhiteArkitekter]: "White Arkitekter",
-};
-
-export interface Scale {
-  type: ScaleType;
-  ratio?: number;
-}
-
-export enum ScaleType {
-  BlueprintsOrEffect = "blueprints/effects",
-  Text = "text",
-  Ratio = "ratio",
-}
-
-export const scaleTypeDisplay: { [key in ScaleType]: string } = {
-  [ScaleType.BlueprintsOrEffect]: "Blueprints/effects",
-  [ScaleType.Text]: "Text",
-  [ScaleType.Ratio]: "Ratio",
-};

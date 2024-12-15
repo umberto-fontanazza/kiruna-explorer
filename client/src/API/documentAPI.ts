@@ -1,16 +1,38 @@
-import dayjs from "dayjs";
-import { Document } from "../utils/interfaces";
+import { Document, Filters } from "../utils/interfaces";
 import { baseURL } from "./API";
 
-async function getDocuments(): Promise<Document[]> {
-  const response = await fetch(baseURL + "/documents");
+async function getDocuments(filters?: Filters): Promise<Document[]> {
+  const params = new URLSearchParams();
+  if (filters) {
+    if (filters.type) params.append("type", filters.type);
+    if (filters.scaleType) params.append("scaleType", filters.scaleType);
+    if (filters.maxIssuanceDate)
+      params.append(
+        "maxIssuanceDate",
+        filters.maxIssuanceDate.format("YYYY-MM-DD"),
+      );
+    if (filters.minIssuanceDate)
+      params.append(
+        "minIssuanceDate",
+        filters.minIssuanceDate.format("YYYY-MM-DD"),
+      );
+  }
+
+  const response = await fetch(`${baseURL}/documents?${params.toString()}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
   if (!response.ok) {
     throw new Error("Error in fetching documents");
   }
   const documents = await response.json();
   return documents.map((doc: any) => ({
     ...doc,
-    issuanceDate: dayjs(doc.issuanceDate),
+    issuanceTime: doc.issuanceTime
+      ? doc.issuanceTime.replace(/-/g, "/")
+      : undefined,
   }));
 }
 
@@ -19,25 +41,30 @@ async function getDocumentById(id: number): Promise<Document> {
   if (!response.ok) {
     throw new Error("Error in fetching document by id");
   }
-  const documents = await response.json();
-  return documents.map((doc: any) => ({
-    ...doc,
-    issuanceDate: dayjs(doc.issuanceDate),
-  }));
+  const document = await response.json();
+  return {
+    ...document,
+    issuanceTime: document.issuanceTime
+      ? document.issuanceTime.replace(/-/g, "/")
+      : undefined,
+  };
 }
 
-//TODO: the param document is not actually of type document
-//because it musn't have an id or a links field
 /**
  * @param document
  * @returns id of the document just added
  */
-async function addDocument(document: Document): Promise<number> {
-  const responseBody = {
+async function addDocument(document: Omit<Document, "id">): Promise<number> {
+  if (document.coordinates && document.area) {
+    throw new Error(
+      "Only one of 'coordinates' or 'area' must be provided, not both.",
+    );
+  }
+  const requestBody = {
     ...document,
     id: undefined,
+    issuanceTime: document.issuanceTime?.replace(/\//g, "-"),
     links: undefined,
-    issuanceDate: document.issuanceDate?.format("YYYY-MM-DD") || undefined,
   };
   const response = await fetch(baseURL + `/documents`, {
     method: "POST",
@@ -45,7 +72,7 @@ async function addDocument(document: Document): Promise<number> {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(responseBody),
+    body: JSON.stringify(requestBody),
   });
   if (!response.ok) {
     throw new Error("Error creating document");
@@ -55,11 +82,16 @@ async function addDocument(document: Document): Promise<number> {
 }
 
 async function updateDocument(document: Document): Promise<void> {
-  const responseBody = {
+  if (document.coordinates && document.area) {
+    throw new Error(
+      "Only one of 'coordinates' or 'area' must be provided, not both.",
+    );
+  }
+  const requestBody = {
     ...document,
     id: undefined,
+    issuanceTime: document.issuanceTime?.replace(/\//g, "-"),
     links: undefined,
-    issuanceDate: document.issuanceDate?.format("YYYY-MM-DD") || undefined,
   };
   const response = await fetch(baseURL + `/documents/${document.id}`, {
     method: "PATCH",
@@ -67,7 +99,7 @@ async function updateDocument(document: Document): Promise<void> {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(responseBody),
+    body: JSON.stringify(requestBody),
   });
   if (!response.ok) {
     throw new Error(`Error requesting PATCH /documents/${document.id}`);

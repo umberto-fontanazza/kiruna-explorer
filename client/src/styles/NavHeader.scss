@@ -1,23 +1,30 @@
 @use "Color";
 
 .nav-header {
-  height: 8vh;
+  height: 10%;
   padding: 1rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: Color.$first;
 
-  .brand {
-    font-family: "SwedenSansBold", sans-serif;
-    font-size: 2rem;
-    font-weight: bold;
-    color: white;
-  }
-
-  .nav-btns {
+  .nav-title-btns {
     display: flex;
+    align-items: center;
+    justify-content: center;
     gap: 1rem;
+
+    .brand {
+      font-family: "SwedenSansBold", sans-serif;
+      font-size: 2rem;
+      font-weight: bold;
+      color: white;
+      margin-right: 2%;
+    }
+
+    button {
+      width: 100%;
+    }
   }
 
   > :last-child {
@@ -42,7 +49,8 @@
     border-radius: 1rem;
     transition: 300ms ease;
 
-    &:hover {
+    &:hover,
+    &.active {
       background-color: white;
       color: Color.$first;
       border: 0.1rem solid Color.$first;

@@ -1,0 +1,121 @@
+@use "Color";
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+
+  .popup {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 1rem;
+    width: 30%;
+    height: auto; // Eliminato altezza fissa
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+    h2 {
+      font-family: "SwedenSansBold", sans-serif;
+      color: Color.$first;
+      margin-bottom: 1rem;
+      font-size: 1.5rem; // Adattato per schermi piccoli
+    }
+
+    p {
+      font-family: "SwedenSans", sans-serif;
+      color: Color.$first;
+      margin-bottom: 1.5rem;
+      font-size: 1rem; // Adattato per leggibilità su schermi piccoli
+
+      strong {
+        font-family: "SwedenSansBold", sans-serif;
+      }
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 1rem;
+
+      @media screen and (max-width: 768px) {
+        flex-direction: column; // Bottoni in colonna su schermi stretti
+      }
+
+      button {
+        height: 2.5rem;
+        font-size: 0.9rem; // Adattato per schermi piccoli
+      }
+
+      .cancel-btn {
+        width: 100%;
+        background-color: #f0f0f0;
+        color: #333333;
+        border: 0.1rem solid #bcbcbc;
+        border-radius: 1rem;
+
+        &:hover {
+          background-color: #e0e0e0;
+          border: 0.1rem solid #bcbcbc;
+        }
+      }
+
+      .delete-btn {
+        width: 100%;
+        background-color: #d9534f;
+        border: 0.1rem solid #d9534f;
+        color: white;
+        border-radius: 1rem;
+
+        &:hover {
+          background-color: #c12e2a;
+          border: 0.1rem solid #c12e2a;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 1024px) {
+    .popup {
+      width: 40%; // Popup più grande su tablet
+      padding: 1.5rem;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    .popup {
+      width: 80%; // Popup quasi a schermo intero su mobile
+      padding: 1rem;
+
+      h2 {
+        font-size: 1.25rem; // Font ridotto per dispositivi piccoli
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .popup {
+      width: 90%; // Margini ridotti su dispositivi molto piccoli
+      padding: 0.8rem;
+
+      h2 {
+        font-size: 1.2rem;
+      }
+
+      p {
+        font-size: 0.85rem;
+      }
+    }
+  }
+}

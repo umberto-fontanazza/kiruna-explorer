@@ -1,84 +1,75 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import API from "../API/API";
+import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/SearchBar.scss";
-import { Document, Link, LinkType } from "../utils/interfaces";
-
+import { Document } from "../utils/interfaces";
 interface SearchBarProps {
-  documents: Document[];
-  tableLinks: Link[];
-  setTableLinks: React.Dispatch<React.SetStateAction<Link[]>>;
+  setSelectedSuggestion: React.Dispatch<
+    React.SetStateAction<Document | undefined>
+  >;
 }
 
-function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
-  const [query, setQuery] = useState(""); // user input
-  const [selectedDocument, setSelectedDocument] = useState<Document>();
-  const [type, setType] = useState(LinkType.Direct); // link type
+function SearchBar({ setSelectedSuggestion }: SearchBarProps) {
+  const { searchableDocuments, setSearchableDocuments } =
+    useDocumentFormContext();
+  const [query, setQuery] = useState("");
+
   const [filteredSuggestions, setFilteredSuggestions] = useState<Document[]>(
-    []
+    [],
   );
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const handleChange = (e: { target: { value: string } }) => {
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const documents: Document[] = await API.getDocuments();
+        setSearchableDocuments(documents);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchDocuments();
+  }, []);
+
+  const filterSuggestions = (query: string): Document[] => {
+    if (query.length < 2) {
+      return [];
+    }
+
+    const lowerCaseQuery = query.toLowerCase();
+
+    return searchableDocuments
+      .filter((doc) => {
+        const titleWords = doc.title.toLowerCase().split(/\s+/);
+
+        return lowerCaseQuery
+          .split(/\s+/)
+          .every((queryPart) =>
+            titleWords.some((titleWord) => titleWord.startsWith(queryPart)),
+          );
+      })
+      .sort((a, b) => a.title.localeCompare(b.title));
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const userInput = e.target.value;
     setQuery(userInput);
 
-    const filtered = documents.filter((document) =>
-      document.title.toLowerCase().includes(userInput.toLowerCase())
-    );
-    setFilteredSuggestions(filtered);
+    setFilteredSuggestions(filterSuggestions(userInput));
     setShowSuggestions(true);
   };
 
-  const selectSuggestion = async (suggestion: Document) => {
-    setQuery(suggestion.title);
-    await setSelectedDocument(suggestion);
+  const selectSuggestion = (suggestion: Document) => {
+    const updatedQuery = suggestion.title;
+    setQuery(updatedQuery);
+    setSelectedSuggestion(suggestion);
+    setFilteredSuggestions(filterSuggestions(updatedQuery));
     setShowSuggestions(false);
   };
 
-  interface HandleAddLinkEvent {
-    preventDefault: () => void;
-  }
-
-  const handleAddLink = (e: HandleAddLinkEvent) => {
-    e.preventDefault();
-    if (selectedDocument?.id !== undefined && type !== undefined) {
-      const targetDocumentId = selectedDocument.id;
-      const target = tableLinks.find(
-        (link) => link.targetDocumentId === targetDocumentId
-      );
-
-      if (target) {
-        setTableLinks((prev: Link[]) => {
-          const updatedLinks = prev.map((link) => {
-            if (link.targetDocumentId === targetDocumentId) {
-              if (!link.type.includes(type)) {
-                return {
-                  ...link,
-                  type: [...link.type, type],
-                };
-              }
-            }
-            return link; // If the link is not the one to update, return it as it is
-          });
-
-          // Return the updated links
-          return updatedLinks;
-        });
-      } else {
-        setTableLinks((prev: Link[]) => {
-          return [
-            ...prev,
-            {
-              targetDocumentId: targetDocumentId,
-              type: [type],
-            },
-          ];
-        });
-      }
-    }
-  };
-
   return (
-    <div className="search-bar">
+    <div id="search-input-container">
+      <img src="magnifying-glass-blue.png" className="search-icon-mg" />
       <input
         type="text"
         className="search-input"
@@ -86,43 +77,37 @@ function SearchBar({ documents, tableLinks, setTableLinks }: SearchBarProps) {
         value={query}
         onChange={handleChange}
         onFocus={() => setShowSuggestions(true)}
-        onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+        onBlur={() => setShowSuggestions(false)}
       />
-
+      <img
+        src="search-bar-x.png"
+        className="search-icon-x"
+        alt="Clear search"
+        onClick={() => {
+          setQuery("");
+          setSelectedSuggestion(undefined);
+        }}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            setQuery("");
+          }
+        }}
+      />
       {showSuggestions && filteredSuggestions.length > 0 && (
-        <div className="form-group">
-          {filteredSuggestions.slice(0, 5).map((suggestion, index) => (
-            <div
-              key={index}
-              onClick={() => selectSuggestion(suggestion)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  selectSuggestion(suggestion);
-                }
-              }}
+        <div className="suggestions-dropdown">
+          {filteredSuggestions.slice(0, 5).map((suggestion) => (
+            <option
+              key={suggestion.id}
               className="suggestion-item"
-              onMouseDown={(e) => e.preventDefault()} // Prevent input from losing focus
-              tabIndex={0} // Make the div focusable
-              role="button" // Indicates that the div is acting as a button
+              onMouseDown={() => selectSuggestion(suggestion)}
+              tabIndex={0}
+              role="button"
             >
               {suggestion.title}
-            </div>
+            </option>
           ))}
         </div>
       )}
-      <select
-        onChange={(e) => {
-          setType(e.target.value as LinkType);
-        }}
-      >
-        <option value={LinkType.Direct}>Direct</option>
-        <option value={LinkType.Collateral}>Collateral</option>
-        <option value={LinkType.Projection}>Projection</option>
-        <option value={LinkType.Update}>Update</option>
-      </select>
-      <button onClick={(e) => handleAddLink(e)}>
-        <span>Add Link</span>
-      </button>
     </div>
   );
 }

@@ -1,18 +1,39 @@
 import { FC, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { authContext } from "../context/auth";
 import "../styles/NavHeader.scss"; // Importiamo il file SCSS personalizzato
 
 const NavHeader: FC = (): JSX.Element => {
+  const location = useLocation();
   const { user, logout } = useContext(authContext);
   const navigate = useNavigate();
 
   return (
     <nav className="nav-header">
-      <span className="brand">Kiruna eXplorer.</span>
-      <div className="nav-btns">
-        <button onClick={() => navigate("/home")}>Home</button>
-        <button onClick={() => navigate("/documents")}>Documents</button>
+      <div className="nav-title-btns">
+        <span className="brand">
+          <Link style={{ color: "white" }} to={"/home"}>
+            Kiruna eXplorer.
+          </Link>
+        </span>
+        <button
+          className={location.pathname === "/map" ? "active" : ""}
+          onClick={() => navigate("/map")}
+        >
+          Map
+        </button>
+        <button
+          className={location.pathname === "/documents" ? "active" : ""}
+          onClick={() => navigate("/documents")}
+        >
+          Documents
+        </button>
+        <button
+          className={location.pathname === "/uploads" ? "active" : ""}
+          onClick={() => navigate("/uploads")}
+        >
+          Uploads
+        </button>
       </div>
       <div className={`${user ? "logged-in" : ""}`}>
         {user ? <span className="user-name">Hi {user.name}!</span> : null}

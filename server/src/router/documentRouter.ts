@@ -1,34 +1,63 @@
+import dayjs, { Dayjs } from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Document } from "../model/document";
 import { DocumentNotFound } from "../error/documentError";
-import { linkRouter } from "./linkRouter";
+import { isLoggedIn, isPlanner } from "../middleware/auth";
 import {
-  validateRequestParameters,
   validateBody,
+  validateQueryParameters,
+  validateRequestParameters,
 } from "../middleware/validation";
+import { Area } from "../model/area";
+import { Document, DocumentType } from "../model/document";
+import { Scale, ScaleType } from "../model/scale";
+import { TimeInterval } from "../model/timeInterval";
+import { AreaBody } from "../validation/areaSchema";
 import {
+  getQueryParameters,
   idRequestParam,
   PatchBody,
   patchBody,
   postBody,
   PostBody,
 } from "../validation/documentSchema";
-import { Scale } from "../model/scale";
-import { isLoggedIn, isPlanner } from "../middleware/auth";
-import dayjs from "dayjs";
-import customParseFormat from "dayjs/plugin/customParseFormat";
+import { linkRouter } from "./linkRouter";
 dayjs.extend(customParseFormat);
 
 export const documentRouter: Router = Router();
 
 documentRouter.use("/:id/links", linkRouter);
 
-documentRouter.get("/", async (request: Request, response: Response) => {
-  const all: Document[] = await Document.all();
-  response.status(StatusCodes.OK).send(all.map((d) => d.toResponseBody()));
-  return;
-});
+documentRouter.get(
+  "/",
+  validateQueryParameters(getQueryParameters),
+  async (request: Request, response: Response) => {
+    const {
+      type,
+      scaleType,
+      maxIssuanceDate: maxDate,
+      minIssuanceDate: minDate,
+    } = request.query;
+    const [maxIssuanceDate, minIssuanceDate] = (
+      [maxDate, minDate] as (string | undefined)[]
+    )
+      .map((d) => dayjs(d, "YYYY-MM-DD", true))
+      .map((d: Dayjs) => (d.isValid() ? d : undefined));
+    const filters = {
+      type: type as DocumentType,
+      scaleType: scaleType as ScaleType,
+      maxIssuanceDate,
+      minIssuanceDate,
+    };
+    const someFilter = Object.values(filters).some((d) => d);
+    const all: Document[] = await Document.all(
+      someFilter ? filters : undefined,
+    );
+    response.status(StatusCodes.OK).send(all.map((d) => d.toResponseBody()));
+    return;
+  },
+);
 
 documentRouter.get(
   "/:id",
@@ -61,8 +90,9 @@ documentRouter.post(
       scale,
       stakeholders,
       coordinates,
-      issuanceDate,
-    } = request.body as PostBody;
+      area,
+      issuanceTime,
+    } = request.locals!.bodyParsedData as PostBody;
     const insertedDocument = await Document.insert(
       title,
       description,
@@ -70,7 +100,8 @@ documentRouter.post(
       new Scale(scale.type, scale.ratio),
       stakeholders,
       coordinates,
-      issuanceDate ? dayjs(issuanceDate, "YYYY-MM-DD", true) : undefined,
+      area && (await Area.insert(area)),
+      issuanceTime as TimeInterval,
     );
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
     return;
@@ -92,8 +123,9 @@ documentRouter.patch(
       scale,
       stakeholders,
       coordinates,
-      issuanceDate,
-    } = request.body as PatchBody;
+      area,
+      issuanceTime,
+    } = request.locals!.bodyParsedData as PatchBody;
     let document: Document;
     try {
       document = await Document.get(id);
@@ -112,9 +144,10 @@ documentRouter.patch(
     document.scale = (parsedScale! as Scale) || document.scale;
     document.stakeholders = stakeholders || document.stakeholders;
     document.coordinates = coordinates || document.coordinates;
-    document.issuanceDate = issuanceDate
-      ? dayjs(issuanceDate, "YYYY-MM-DD", true)
-      : document.issuanceDate;
+    if (area) await document.setArea(await Area.insert(area as AreaBody));
+    document.issuanceTime = issuanceTime
+      ? (issuanceTime as TimeInterval)
+      : document.issuanceTime;
     await document.update();
     response.status(StatusCodes.NO_CONTENT).send();
     return;

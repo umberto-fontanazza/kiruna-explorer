@@ -1,0 +1,24 @@
+@use "Color";
+
+.filters {
+  font-family: "SwedenSansBold", sans-serif;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+
+  .filter {
+    display: flex;
+
+    #document-type,
+    #scale-type {
+      border-radius: 1rem;
+    }
+
+    select {
+      color: Color.$first;
+      padding: 0.5rem;
+    }
+  }
+}

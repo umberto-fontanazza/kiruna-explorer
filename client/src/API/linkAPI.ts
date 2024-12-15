@@ -24,7 +24,7 @@ async function getLinks(documentId: number): Promise<Link[]> {
 async function putLink(
   sourceDocumentId: number,
   targetDocumentId: number,
-  linkTypes: LinkType[]
+  linkTypes: LinkType[],
 ): Promise<void> {
   const response = await fetch(
     baseURL + `/documents/${sourceDocumentId}/links`,
@@ -35,11 +35,11 @@ async function putLink(
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ targetDocumentId, linkTypes }),
-    }
+    },
   );
   if (!response.ok) {
     throw new Error(
-      `Failed to PUT /documents/${sourceDocumentId}/links with target ${targetDocumentId}`
+      `Failed to PUT /documents/${sourceDocumentId}/links with target ${targetDocumentId}`,
     );
   }
 }
@@ -50,7 +50,7 @@ async function putLink(
  */
 async function deleteLink(
   sourceDocumentId: number,
-  targetDocumentId: number
+  targetDocumentId: number,
 ): Promise<void> {
   const relativeURL = `/documents/${sourceDocumentId}/links/?targetDocumentId=${targetDocumentId}`;
   const response = await fetch(baseURL + relativeURL, {

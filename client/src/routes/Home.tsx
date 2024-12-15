@@ -1,180 +1,119 @@
-import { FC, useContext, useEffect, useState } from "react";
-import API from "../API/API";
-import MapComponent from "../components/Map";
-import ModalForm from "../components/ModalAddDocument";
-import NavHeader from "../components/NavHeader";
-import Sidebar from "../components/Sidebar";
-import { authContext } from "../context/auth";
+import { useNavigate } from "react-router-dom";
 import "../styles/Home.scss";
-import { Document } from "../utils/interfaces";
 
-const Home: FC = (): JSX.Element => {
-  const { user } = useContext(authContext);
-  // State to hold list of documents
-  const [documents, setDocuments] = useState<Document[]>([]);
-  // State to control sidebar visibility
-  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
-  // State for selected document
-  const [docSelected, setDocSelected] = useState<Document | null>(null);
-  // State to control modal for adding documents
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
-
-  const [visualizeLinks, setVisualizeLinks] = useState<boolean>(false);
-  const [insertMode, setInsertMode] = useState<boolean>(false);
-
-  const [newPosition, setNewPosition] = useState<{ lat: number; lng: number }>({
-    lat: -1,
-    lng: -1,
-  });
-
-  // Fetch documents on component mount
-  useEffect(() => {
-    const fetchDocuments = async () => {
-      try {
-        const documents: Document[] = await API.getDocuments();
-        setDocuments(documents);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchDocuments();
-  }, []);
-
-  // Handle Add Document button click to open modal
-  const handleAddButton = () => {
-    setInsertMode(true);
-    setSidebarOpen(false);
-  };
-
-  const closeInsertMode = () => {
-    setInsertMode(false);
-  };
-
-  // Handle form submission for new document
-  const handleAddNewDocument = async (newDocument: Document) => {
-    setModalOpen(false);
-    const id = await API.addDocument(newDocument);
-    console.log(newDocument.links);
-    newDocument.links?.forEach(async (link) => {
-      await API.putLink(link.targetDocumentId, id, link.type);
-      documents.map(async (doc) => {
-        if (doc.id === link.targetDocumentId) {
-          doc.links = await API.getLinks(doc.id);
-        }
-      });
-    });
-    const updatedDocument = { ...newDocument, id: id };
-    setDocuments([...documents, updatedDocument]);
-  };
-
+const Home = () => {
+  const nav = useNavigate();
   return (
-    <>
-      {/* Navigation Header */}
-      <NavHeader />
+    <body className="home-body">
+      <div className="home">
+        <div className="header">
+          {/* Titolo sulla sinistra */}
+          <div className="hero-title">
+            <h1>Kiruna eXplorer.</h1>
+          </div>
 
-      <div className="body-container">
-        {/* Map Component with overlay button for adding documents */}
-        <div className="map">
-          {
-            <MapComponent
-              documents={documents}
-              documentSelected={docSelected}
-              setSidebarOpen={setSidebarOpen}
-              setDocSelected={setDocSelected}
-              setModalOpen={setModalOpen}
-              setNewPos={setNewPosition}
-              visualLinks={visualizeLinks}
-              insertMode={insertMode}
-            />
-          }
-          {user && (
-            <div className="button-overlay">
-              <button
-                className="doc-btn"
-                onClick={!insertMode ? handleAddButton : closeInsertMode}
-              >
-                {insertMode ? (
-                  <div className="add-container">
-                    <span className="material-symbols-outlined">
-                      arrow_back
-                    </span>
-                    <h4>Back</h4>
-                  </div>
-                ) : (
-                  <div className="back-container">
-                    <span className="material-symbols-outlined">note_add</span>
-                    <h4>Add new Document</h4>
-                  </div>
-                )}
-              </button>
+          {/* Info + bottoni sulla destra */}
+          <div className="info">
+            <h1>
+              Discover the city that is shifting to become UNESCO heritage in
+              2029.
+            </h1>
+            <p>
+              Explore the map, discover the details of the buildings and follow
+              the entire transformation of the city.
+            </p>
+            <div className="hero-btns">
+              <button onClick={() => nav("/map")}>View Map</button>
+              <button onClick={() => nav("/diagram")}>View Diagram</button>
             </div>
-          )}
+          </div>
         </div>
-        {/* Table to see the list of all documents */}
-        {
-          // <table className="table-documents">
-          //   <thead>
-          //     <tr>
-          //       <th>Icon</th>
-          //       <th>Title</th>
-          //       <th>Info</th>
-          //     </tr>
-          //   </thead>
-          //   <tbody>
-          //     {documents.map((document) => (
-          //       <tr key={document.id}>
-          //         <td>
-          //           <img
-          //             className="doc-icon"
-          //             src={`/document-${document.type}-icon.png`}
-          //             alt="Document icon"
-          //           />
-          //         </td>
-          //         <td className="doc-title">{document.title}</td>
-          //         <td>
-          //           <button
-          //             className="icon-info"
-          //             onClick={() => {
-          //               console.log(documents);
-          //               setSidebarOpen(true);
-          //               setDocSelected(document);
-          //             }}
-          //           >
-          //             Info
-          //           </button>
-          //         </td>
-          //       </tr>
-          //     ))}
-          //   </tbody>
-          // </table>
-        }
 
-        {/* Sidebar to show document details */}
-        <div className={`sidebar ${sidebarOpen ? "open" : ""}`}>
-          {
-            <Sidebar
-              setSidebarOpen={setSidebarOpen}
-              document={docSelected}
-              documents={documents}
-              visualLinks={visualizeLinks}
-              setVisualLinks={setVisualizeLinks}
-              setDocuments={setDocuments}
-              setDocument={setDocSelected}
-            />
-          }
+        <div className="hero-content">
+          <div className="login-card">
+            <h2>Are you an Urban Planner?</h2>
+            <button className="urb-login" onClick={() => nav("/login")}>
+              Login
+            </button>
+          </div>
+          <div className="features-cards">
+            <div className="map-feature">
+              <span className="material-symbols-outlined">map</span>
+              <h3>View Documents Directly on the Map</h3>
+              <p>
+                Effortlessly explore building plans, historical data, and future
+                projections directly on the map. No more switching
+                tabs—everything you need is just a click away for a seamless and
+                immersive experience.
+              </p>
+            </div>
+            <div className="edit-feature">
+              <span className="material-symbols-outlined">edit_document</span>
+              <h3>Edit Documents</h3>
+              <p>
+                Update, adjust, and refine documents in real-time with our Edit
+                Document feature. Make changes directly within the platform,
+                ensuring accuracy and efficiency without interruptions. Stay in
+                control and keep your work seamless.
+              </p>
+            </div>
+            <div className="diagram-feature">
+              <span className="material-symbols-outlined">monitoring</span>
+              <h3>Study Documents Using the Diagram</h3>
+              <p>
+                Visualize and study key documents like never before with our
+                "Study Documents Using the Diagram" feature. Dive into detailed,
+                interactive diagrams that bring clarity to complex data, making
+                analysis easier and more intuitive.
+              </p>
+            </div>
+            <div className="documents-feature">
+              <span className="material-symbols-outlined">edit_location</span>
+              <h3>Edit Documents Position</h3>
+              <p>
+                With our "Edit Document Position" feature, you can seamlessly
+                reposition documents to align with your workflow. Organize,
+                adjust, and fine-tune placements directly on the platform for a
+                more efficient and customized experience.
+              </p>
+            </div>
+          </div>
         </div>
+        <footer>
+          <div className="footer-container">
+            <div className="footer-title">
+              <h3>Kiruna eXplorer.</h3>
+              <div className="footer-social">
+                <a
+                  href="https://github.com/umberto-fontanazza/kiruna-explorer"
+                  target="_blank"
+                  aria-label="GitHub Repository"
+                >
+                  <img src="../../public/github-mark.svg" alt="GitHub" />
+                </a>
+                <a
+                  href="https://it.wikipedia.org/wiki/Kiruna"
+                  target="_blank"
+                  aria-label="Kiruna su Wikipedia"
+                >
+                  <img src="../../public/wikipedia-logo.svg" alt="Wikipedia" />
+                </a>
+                <a
+                  href="https://www.instagram.com/umberto.fontanazza/"
+                  target="_blank"
+                  aria-label="Stavo facendo un po' di refactoring"
+                >
+                  <img src="../../public/ig-logo.svg" alt="Instagram" />
+                </a>
+              </div>
+            </div>
+            <p className="footer-credits">
+              © 2024 Kiruna Explorer. Created by Group 15.
+            </p>
+          </div>
+        </footer>
       </div>
-
-      {/* Modal for adding a new document */}
-      <ModalForm
-        modalOpen={modalOpen}
-        onClose={() => setModalOpen(false)}
-        onSubmit={handleAddNewDocument}
-        documents={documents}
-        newPos={newPosition}
-        closeInsertMode={closeInsertMode}
-      />
-    </>
+    </body>
   );
 };
 
