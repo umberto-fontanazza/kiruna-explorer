@@ -113,15 +113,17 @@ const FirstPageModal: FC<FirstPageModalProps> = ({
                 type="number"
                 min="1"
                 value={documentForm.scale?.ratio}
-                onChange={(e) =>
+                onChange={(e) => {
+                  const value = e.target.value;
+                  const numericValue = value === "" ? 1 : Number(value);
                   setDocumentForm((prev) => ({
                     ...prev,
                     scale: {
                       ...(prev.scale as Scale),
-                      ratio: Number(e.target.value),
+                      ratio: Number(numericValue),
                     },
-                  }))
-                }
+                  }));
+                }}
                 required={
                   documentForm.scale?.type === ScaleType.ArchitecturalScale
                 }
