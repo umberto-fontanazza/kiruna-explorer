@@ -96,25 +96,6 @@
   }
 }
 
-.cluster-icon {
-  width: 5rem;
-  height: 5rem;
-  border-radius: 50%;
-  color: Color.$first;
-  background-size: contain;
-  text-align: center;
-  line-height: 5.3rem;
-  font-family: "SwedenSansBold", sans-serif;
-  font-size: 1.6em;
-  justify-content: center;
-  background-image: url("https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m2.png");
-  -moz-transform: scale(1.5);
-  -ms-transform: scale(1.5);
-  -o-transform: scale(1.5);
-  -webkit-transform: scale(1.5);
-  transform: scale(1.5);
-}
-
 .drawing-controls {
   position: fixed;
   height: 6.5vh;
@@ -125,9 +106,7 @@
   display: flex;
   gap: 1rem;
 
-  #municipal-btn,
-  #polygon-btn,
-  #marker-btn {
+  button {
     border-radius: 1rem;
     width: 13vw;
     background-color: Color.$third;
@@ -136,11 +115,23 @@
     cursor: pointer;
     transition:
       background-color 0.3s ease,
-      color 0.3s ease;
+      color 0.3s ease,
+      transform 0.2s ease;
 
     &:hover {
       background-color: #bfbfac;
       color: Color.$first;
+    }
+
+    &.active {
+      background-color: Color.$second;
+      border: 0.2rem solid Color.$first;
+      transform: scale(1.05);
+    }
+
+    .material-symbols-outlined {
+      color: inherit;
+      transform: scale(1.5);
     }
   }
 
@@ -152,12 +143,53 @@
     align-items: center;
     gap: 1rem;
 
-    .material-symbols-outlined {
-      transform: scale(1.5);
-    }
-
     h4 {
       font-size: 1.2rem;
     }
+  }
+}
+
+.info-cluster {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  color: white;
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
+}
+
+.info-cluster.hide {
+  opacity: 0;
+  transform: scale(0.9);
+  transition:
+    opacity 0.3s ease-in-out,
+    transform 0.3s ease-in-out;
+}
+
+.info-cluster.show {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.doc-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-content: flex-start;
+  font-family: "SwedenSansBold", sans-serif;
+  background-color: white;
+  padding: 0.7rem;
+  color: Color.$first;
+  border: 0.1rem solid Color.$first;
+  border-radius: 1rem;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: Color.$third;
   }
 }
