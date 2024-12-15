@@ -88,3 +88,56 @@
 ## US 6. As an Urban Planner I want to list all documents
 
 1. View all documents as a Urban Planner. DONE (OK)
+2. View all documents as a Urban Planner and filter by Type. DONE (OK)
+3. View all documents as a Urban Planner and filter by scale. DONE (OK)
+4. View all documents as a Urban Planner and filter by issuance date (max and min). DONE (OK)
+5. View all documents as a Urban Planner and filter by issuance date (max). DONE (OK)
+6. View all documents as a Urban Planner and filter by issuance date (min). DONE (OK)
+7. View all documents as a Urban Planner and filter by multiple fields, Type and issuance date (max and min). DONE (OK)
+8. View all documents as a Urban Planner and filter by multiple fields, Type, scale and issuance date (max and min). DONE (OK)
+9. Try to view all documents filtered with wrong type.
+10. Try to view all documents filtered with wrong scale.
+11. Try to view all documents filtered with wrong issuanceDate (max).
+12. Try to view all documents filtered with wrong issuanceDate (min).
+13. Try to view all documents filtered with wrong type and scale.
+14. Try to view all documents filtered with wrong type and issuanceDate (max).
+
+## US 7. As an Urban Planner I want to add one or more original resources for a document.
+
+1. Create a resource for a specific document, as urban planner. DONE (OK)
+2. Create a resource for a specific document, without being urban planner. DONE (UNAUTHORIZED)
+3. Create a resource for a specific document, as urban planner, but that document does not exist. DONE (BAD_REQUEST)
+4. Create a resource for a specific document, as urban planner, with invalid fields. DONE (BAD_REQUEST)
+5. Create a resource for a specific document, as urban planner, with missing documentIds. DONE (CREATED)
+6. Create a resource for a specific document, as urban planner, with missing fields. DONE (BAD_REQUEST)
+7. View all the resources for a specific document, as urban planner. DONE (OK)
+8. Try to view all the resource without bein urban planner. DONE (OK)
+9. View all the resources for a specific document, as urban planner, but that document does not exist. DONE (BAD_REQUEST)
+10. View all the resources for a specific document, as urban planner, but that document does not have any upload. DONE (ERROR HERE)
+11. Upload a resource for a specific document, as Urban Planner DONE (CREATED)
+12. Upload a resource for a specific document, without being Urban Planner. DONE (UNAUTHORIZED)
+13. Upload a resource for a specific document, as Urban Planner, with invalid id. DONE (BAD_REQUEST)
+14. Upload a resource for a specific document, as Urban Planner, with invalid title. DONE (BAD_REQUEST)
+15. Delete a resource for a specific document, as Urban Planner. DONE (NO_CONTENT)
+16. Delete a resource for a specific document, without being Urban Planner. DONE (UNAUTHORIZED)
+17. Delete a resource for a specific document, as Urban Planner, with invalid id. DONE (BAD_REQUEST)
+
+## US 8. As an Urban Planner I want to search documents So that I can find what I am interested in
+
+All the filter part are writed in the US6, im waiting to do the search bar.
+
+## US 9. As an Urban Planner I want to define the geolocated area of a document on the map
+
+1. Create a document, as urban planner, defining area AND coordinates. DONE (BAD_REQUEST)
+2. Create a document, as a visitor, defining area AND coordinates. DONE (UNAUTHORIZED)
+3. Create a document, as Urban planner defining Area, but without include field. DONE (BAD_REQUEST)
+4. Create a document, as Urban planner defining Area, but without exclude field. DONE (BAD_REQUEST)
+5. Create a document defining valid area, but without being urban planner. DONE (UNAUTHORIZED)
+6. Create a document defining valid area, as Urban planner. DONE (CREATED)
+7. View the document just created. DONE (OK)
+8. View the document just created, as Urban planner. DONE (OK)
+9. Update the document, as Urban planner. DONE(OK)
+10. Update the document, as Visitor. DONE(UNAUTHORIZED)
+11. Update the document, as Urban planner, with invalid area. DONE (BAD_RQEUEST)
+12. Update the document, as Urban Planner, with area and coordinates. DONE(BAD_REQUEST)
+13. Delete the document, as Urban Planner. DONE(NO_CONTENT)
