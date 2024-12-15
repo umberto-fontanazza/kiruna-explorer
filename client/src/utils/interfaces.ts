@@ -2,6 +2,11 @@ import { Dayjs } from "dayjs";
 import { kirunaCoordinates } from "./map";
 
 /************************** INTERFACES ****************************/
+
+export interface CustomMarker extends google.maps.marker.AdvancedMarkerElement {
+  document?: Document;
+}
+
 export interface Coordinates {
   latitude: number;
   longitude: number;

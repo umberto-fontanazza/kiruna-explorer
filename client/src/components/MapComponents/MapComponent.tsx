@@ -1,12 +1,18 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import "../../App";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/MapComponent.scss";
-import { rewindRing, useDrawingTools } from "../../utils/drawingTools";
+import { createArea, rewindRing, useDrawingTools } from "../../utils/drawingTools";
+import {
+  handleClusterClick,
+  renderClusterMarker,
+} from "../../utils/clusterTools";
 import {
   Coordinates,
+  CustomMarker,
   Document,
   Link,
   PolygonArea,
@@ -51,6 +57,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     google.maps.Polygon[] | undefined
   >(undefined);
   const [drawingMode, setDrawingMode] = useState<string>("");
+
   const [drawingManager, setDrawingManager] = useState<
     google.maps.drawing.DrawingManager | undefined
   >(undefined);
@@ -61,12 +68,62 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     google.maps.Marker | undefined
   >(undefined);
   const [activeButton, setActiveButton] = useState<string>("");
+  const [infoWindow, setInfoWindow] = useState<google.maps.InfoWindow | null>(
+    null,
+  );
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries: libraries,
   });
+
+  useEffect(() => {
+    if (positionMode === PositionMode.None && polygonArea) {
+      polygonArea?.setMap(null);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positionMode]);
+
+  const onMapClick = (event: google.maps.MapMouseEvent) => {
+    if (!event.latLng) return;
+
+    const lat = event.latLng.lat();
+    const lng = event.latLng.lng();
+
+    setDocumentFormSelected((prev) => ({
+      ...prev,
+      coordinates: { latitude: lat, longitude: lng },
+      area: undefined,
+    }));
+
+    if (positionMode === PositionMode.Insert) {
+      // Insert Document Position flow
+      setdocumentSelected(null);
+      setModalOpen(true);
+    }
+
+    setIsSubmit(false);
+  };
+
+  useEffect(() => {
+    if (!map || !isLoaded || !infoWindow) return;
+    map.addListener("click", () => {
+      infoWindow.close();
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [infoWindow]);
+
+  useEffect(() => {
+    if (!isLoaded || !map || positionMode === PositionMode.None) return;
+
+    map.addListener("click", onMapClick);
+
+    return () => {
+      google.maps.event.clearInstanceListeners(map);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [positionMode]);
 
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
@@ -107,12 +164,12 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       return;
     }
 
-    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
+    const newMarkers: CustomMarker[] = documents
       .filter((doc) => {
         if (positionMode === PositionMode.Update) {
           return doc.id === docSelected?.id;
         }
-        return doc.coordinates || doc.area;
+        return doc.coordinates || doc.area; //Position mode None
       })
       .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
       .map((doc) =>
@@ -134,32 +191,18 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       markers: newMarkers,
       map,
       renderer: {
-        render: ({ count, position }) => {
-          return new google.maps.marker.AdvancedMarkerElement({
-            position,
-            title: count.toString(),
-            content: (() => {
-              const div = document.createElement("div");
-              div.className = "cluster-icon";
-              div.textContent = count.toString();
-              return div;
-            })(),
-          });
-        },
+        render: renderClusterMarker,
       },
-      onClusterClick: (event, cluster, map) => {
-        if (cluster.bounds) {
-          const currentZoom = map.getZoom();
-
-          const newZoom = Math.min(
-            (currentZoom ?? 0) + 1,
-            (map.getZoom() ?? 0) + 2,
-          );
-
-          map.fitBounds(cluster.bounds);
-          map.setZoom(newZoom);
-        }
-      },
+      algorithmOptions: { maxZoom: 18 },
+      onClusterClick: (event, cluster, map) =>
+        handleClusterClick(
+          event,
+          cluster,
+          map,
+          setdocumentSelected,
+          setSidebarOpen,
+          setInfoWindow,
+        ),
     });
 
     setMarkers(newMarkers);
