@@ -106,17 +106,17 @@ body {
       font-weight: bold;
     }
 
+    input.is-invalid {
+      border-color: #dc3545;
+      box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
+    }
+
     .input-email {
       padding: 1.5vmin;
       font-size: 1.8vmin;
       margin-bottom: 2vmin;
       border: 0.2vmin solid #ddd;
       border-radius: 1vmin;
-
-      &.is-invalid {
-        border-color: #dc3545;
-        box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
-      }
     }
 
     .input-password {
@@ -124,11 +124,6 @@ body {
       font-size: 1.8vmin;
       border: 0.2vmin solid #ddd;
       border-radius: 1vmin;
-
-      &.is-invalid {
-        border-color: #dc3545;
-        box-shadow: 0 0 5px rgba(220, 53, 69, 0.5);
-      }
     }
 
     input:focus {
