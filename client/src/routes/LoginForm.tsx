@@ -1,4 +1,4 @@
-import { FC, useContext, useRef, useState } from "react";
+import { FC, useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Alert, { AlertHandle } from "../components/Alert";
 import { authContext } from "../context/auth";
@@ -16,10 +16,9 @@ const LoginForm: FC = (): JSX.Element => {
 
   const alertRef = useRef<AlertHandle>(null);
 
-  if (user) {
-    // interrupt rendering
-    nav("/map");
-  }
+  useEffect(() => {
+    if (user) nav("/map");
+  }, [nav, user]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
