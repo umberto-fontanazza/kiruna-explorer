@@ -85,27 +85,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionMode]);
 
-  const onMapClick = (event: google.maps.MapMouseEvent) => {
-    if (!event.latLng) return;
-
-    const lat = event.latLng.lat();
-    const lng = event.latLng.lng();
-
-    setDocumentFormSelected((prev) => ({
-      ...prev,
-      coordinates: { latitude: lat, longitude: lng },
-      area: undefined,
-    }));
-
-    if (positionMode === PositionMode.Insert) {
-      // Insert Document Position flow
-      setdocumentSelected(null);
-      setModalOpen(true);
-    }
-
-    setIsSubmit(false);
-  };
-
   useEffect(() => {
     if (!map || !isLoaded || !infoWindow) return;
     map.addListener("click", () => {
@@ -113,17 +92,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [infoWindow]);
-
-  useEffect(() => {
-    if (!isLoaded || !map || positionMode === PositionMode.None) return;
-
-    map.addListener("click", onMapClick);
-
-    return () => {
-      google.maps.event.clearInstanceListeners(map);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [positionMode]);
 
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
@@ -259,7 +227,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   // Funzione per resettare lo stato di disegno
   const resetDrawingState = () => {
-    setDrawingManager(undefined);
+    //setDrawingManager(undefined);
     setSaved(false);
   };
 
