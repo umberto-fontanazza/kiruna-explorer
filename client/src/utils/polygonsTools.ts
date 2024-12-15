@@ -75,7 +75,6 @@ export const getPolygonCentroid = (polygonArea: {
   return { lat: centroidY, lng: centroidX };
 };
 
-// Calcola l'area del poligono per determinare l'orientamento
 const calculatePolygonArea = (coordinates: { lat: number; lng: number }[]) => {
   let area = 0;
   for (let i = 0; i < coordinates.length; i++) {
@@ -87,11 +86,9 @@ const calculatePolygonArea = (coordinates: { lat: number; lng: number }[]) => {
   return area / 2;
 };
 
-// Verifica se il poligono è orientato in senso orario
 const isClockwise = (coordinates: { lat: number; lng: number }[]) =>
   calculatePolygonArea(coordinates) < 0;
 
-// Inverte le coordinate per cambiare l'orientamento
 const reverseCoordinates = (coordinates: { lat: number; lng: number }[]) =>
   [...coordinates].reverse();
 
@@ -116,7 +113,6 @@ export const parseAreaPaths = (area: PolygonArea) => {
     exclude.filter(isValidLatLng),
   );
 
-  // Orientamento corretto
   const orientedIncludePaths = isClockwise(validIncludePaths)
     ? reverseCoordinates(validIncludePaths)
     : validIncludePaths;

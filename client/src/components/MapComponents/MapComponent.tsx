@@ -95,13 +95,13 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         const paths = area.getPaths();
         const adjustedPaths = new google.maps.MVCArray(
           paths.getArray().map((path, index) => {
-            const rewindClockwise = index === 0; // Il primo path è esterno (clockwise)
+            const rewindClockwise = index === 0;
             return new google.maps.MVCArray(
               rewindRing(path.getArray(), rewindClockwise),
             );
           }),
         );
-        area.setPaths(adjustedPaths); // Setta i percorsi corretti
+        area.setPaths(adjustedPaths);
         setDrawnPolygon(area);
       }
       return;
@@ -261,7 +261,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     handleEditPositionModeConfirm(docSelected!, newPolygonArea);
   };
 
-  // Funzione per gestire l'aggiornamento di un marker esistente
   const handleMarkerUpdate = () => {
     const markerPos = drawnMarker?.getPosition();
 
@@ -278,7 +277,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     handleEditPositionModeConfirm(docSelected!, posToUpdate);
   };
 
-  // Funzione per gestire l'inserimento o modifica di un poligono
   const handlePolygonInsertOrEdit = () => {
     const paths = drawnPolygon!.getPaths().getArray();
     const include: Coordinates[] = [];
@@ -307,14 +305,12 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     finalizePolygonInsertOrEdit();
   };
 
-  // Funzione per completare l'inserimento o modifica di un poligono
   const finalizePolygonInsertOrEdit = () => {
     drawingManager!.setDrawingMode(null);
     setdocumentSelected(null);
     setModalOpen(true);
   };
 
-  // Funzione per gestire l'inserimento di un marker
   const handleMarkerInsert = () => {
     const latLng = drawnMarker!.getPosition();
     if (!latLng) return;
@@ -357,7 +353,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         });
       });
 
-      // Adatta la mappa ai confini calcolati
       map?.fitBounds(bounds);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -365,14 +360,13 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   const handleMunicipalArea = () => {
     if (municipalArea) {
-      // Trasforma municipalArea in un PolygonArea
       const newPolygonArea: PolygonArea = {
         include: [],
         exclude: [],
       };
 
       municipalArea.forEach((polygon, i) => {
-        const paths = polygon.getPaths(); // Ottiene i percorsi (outer + inner)
+        const paths = polygon.getPaths();
 
         if (i === 16) {
           paths.forEach((path, j) => {
@@ -382,17 +376,13 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             }));
 
             if (i === 16 && j === 0) {
-              console.log(coordinates);
-              // Primo percorso: include
               newPolygonArea.include = coordinates;
             } else {
-              // Percorsi successivi: exclude
               newPolygonArea.exclude.push(coordinates);
             }
           });
         }
       });
-      // Aggiorna il documento selezionato con l'area calcolata
       setDocumentFormSelected((prev) => ({
         ...prev,
         coordinates: undefined,
@@ -400,7 +390,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       }));
 
       if (positionMode === PositionMode.Insert) {
-        // Inserimento nuovo documento
         setdocumentSelected(null);
         setModalOpen(true);
       }
@@ -437,7 +426,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             <button
               className="edit-area-btn"
               onClick={() => {
-                console.log("Ho premuto saved");
                 setSaved(true);
               }}
             >

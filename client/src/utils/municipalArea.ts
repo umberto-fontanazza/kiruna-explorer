@@ -51,7 +51,7 @@ export const createMunicipalArea = (
 
       // Crea il poligono
       const municipalPolygon = new google.maps.Polygon({
-        paths: [validOuterCoords, ...validInnerCoords], // Outer + Inner Paths
+        paths: [validOuterCoords, ...validInnerCoords],
         fillColor: "#fecb00",
         fillOpacity: 0.5,
         strokeWeight: 4,
@@ -59,14 +59,11 @@ export const createMunicipalArea = (
         zIndex: 1,
       });
 
-      // Mostra il poligono sulla mappa
       municipalPolygon.setMap(map);
 
-      // Aggiungi il poligono all'array
       municipalPolygons.push(municipalPolygon);
     });
   });
 
-  // Ritorna tutti i poligoni creati
   return municipalPolygons;
 };

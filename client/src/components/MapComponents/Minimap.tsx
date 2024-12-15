@@ -66,9 +66,7 @@ const Minimap: FC<MinimapProps> = ({
           setDrawnMarker,
         );
       } else {
-        // Qui dovrebbe essere giusto non fare nulla
         createArea(documentSelected, minimap, positionMode);
-        //setDrawnPolygon(area);
       }
     }
   }, [documentLocation, minimap, documentSelected, positionMode]);

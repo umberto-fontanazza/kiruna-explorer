@@ -23,7 +23,6 @@ export const useDrawingTools = (
       return;
     }
 
-    // Inizializzazione del DrawingManager
     const drawingManager = new google.maps.drawing.DrawingManager({
       drawingMode: drawingMode,
       drawingControl: false,
@@ -62,7 +61,6 @@ export const useDrawingTools = (
       setDrawingMode(google.maps.drawing.OverlayType.MARKER);
     });
 
-    // Listener per l'evento di completamento del disegno
     const overlayCompleteListener = google.maps.event.addListener(
       drawingManager,
       "overlaycomplete",
@@ -78,20 +76,17 @@ export const useDrawingTools = (
             newPolygon.setDraggable(true);
             setDrawnPolygon(newPolygon);
           } else {
-            // Se esiste un poligono principale, controlliamo cosa fare
             if (isPolygonInsidePolygon(newPolygon, drawnPolygon)) {
-              // Il nuovo poligono è un buco, aggiungiamolo al poligono principale
-              const adjustedPath = rewindRing(path, false); // Rewind per il buco
+              const adjustedPath = rewindRing(path, false);
               drawnPolygon
                 .getPaths()
-                .push(new google.maps.MVCArray(adjustedPath)); // Aggiungiamo il buco
-              newPolygon.setMap(null); // Rimuoviamo il poligono dalla mappa
+                .push(new google.maps.MVCArray(adjustedPath));
+              newPolygon.setMap(null);
               drawnPolygon.setEditable(true);
               drawnPolygon.setDraggable(true);
-              setDrawnPolygon(drawnPolygon); // Aggiorniamo lo stato
+              setDrawnPolygon(drawnPolygon);
             } else {
-              // Il nuovo poligono non è un buco, mostriamo un errore
-              newPolygon.setMap(null); // Rimuoviamo il nuovo poligono
+              newPolygon.setMap(null);
               alert(
                 "Error: You can only create holes inside the main polygon. Please try again.",
               );
@@ -123,7 +118,6 @@ export const useDrawingTools = (
   }, [map, positionMode, drawnMarker, drawnPolygon, drawingMode]);
 };
 
-// Funzione per verificare se un poligono è dentro un altro
 function isPolygonInsidePolygon(
   innerPolygon: google.maps.Polygon,
   outerPolygon: google.maps.Polygon,
@@ -134,7 +128,6 @@ function isPolygonInsidePolygon(
   );
 }
 
-// Funzione per calcolare l'orientamento del poligono (reversa o meno)
 export function rewindRing(
   ring: google.maps.LatLng[],
   clockwise: boolean,

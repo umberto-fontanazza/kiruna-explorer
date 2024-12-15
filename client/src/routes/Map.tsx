@@ -33,7 +33,6 @@ const HomeMap: FC = (): JSX.Element => {
     const fetchDocuments = async () => {
       try {
         const documents: Document[] = await API.getDocuments();
-        console.log(documents);
         setDocuments(documents);
       } catch (err) {
         console.error(err);
