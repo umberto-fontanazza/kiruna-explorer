@@ -265,7 +265,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             }));
 
             if (i === 16 && j === 0) {
-              console.log(coordinates);
               // Primo percorso: include
               newPolygonArea.include = coordinates;
             } else {

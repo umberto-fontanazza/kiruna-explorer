@@ -78,18 +78,15 @@
       background-color: Color.$second;
       color: Color.$first-hover;
       padding: 0.8rem 1.5rem;
-      font-family: "SwedenSansBold", sans-serif;
       font-size: 2rem;
-      transition: all 0.3s ease;
 
       &:hover {
-        transform: scale(1.05);
+        transform: scale(1.1);
         background-color: Color.$second;
       }
 
       &:active {
         transform: scale(0.95);
-        filter: brightness(0.9);
       }
     }
   }
@@ -130,7 +127,8 @@
       color: Color.$first-hover;
       align-self: center;
       background-color: Color.$second;
-      width: 20ch;
+      width: 50%;
+      font-size: 2ch;
       border-radius: 1rem;
     }
   }
