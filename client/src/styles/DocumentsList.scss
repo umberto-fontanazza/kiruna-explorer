@@ -5,6 +5,10 @@
   height: 100vh;
   overflow-y: hidden;
 
+  .overlay {
+    z-index: 2;
+  }
+
   .doc-lists {
     height: 100%;
     display: flex;
