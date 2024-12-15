@@ -1,21 +1,30 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
-import { useDocumentFormContext } from "../context/DocumentFormContext";
-import { Document, PolygonArea } from "./interfaces";
 import { PositionMode } from "./modes";
 
 export const useDrawingTools = (
   map: google.maps.Map | null,
-  setdocumentSelected: Dispatch<SetStateAction<Document | null>>,
+  drawnPolygon: google.maps.Polygon | undefined,
+  drawnMarker: google.maps.Marker | undefined,
+  setDrawingManager: Dispatch<
+    SetStateAction<google.maps.drawing.DrawingManager | undefined>
+  >,
+  setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
+  setDrawnMarker: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
+  setActiveButton: Dispatch<SetStateAction<string>>,
 ) => {
-  const { setModalOpen, positionMode } = useAppContext();
-  const { setDocumentFormSelected } = useDocumentFormContext();
+  const { positionMode } = useAppContext();
+  const [drawingMode, setDrawingMode] =
+    useState<google.maps.drawing.OverlayType | null>(null);
 
   useEffect(() => {
-    if (!map || positionMode !== PositionMode.Insert) return;
+    if (!map || positionMode === PositionMode.None) {
+      setDrawingMode(null);
+      return;
+    }
 
     const drawingManager = new google.maps.drawing.DrawingManager({
-      drawingMode: google.maps.drawing.OverlayType.POLYGON,
+      drawingMode: drawingMode,
       drawingControl: false,
       polygonOptions: {
         fillColor: "#fecb00",
@@ -28,143 +37,107 @@ export const useDrawingTools = (
     });
 
     drawingManager.setMap(map);
+    setDrawingManager(drawingManager);
 
     document.getElementById("polygon-btn")?.addEventListener("click", () => {
-      drawingManager.setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
+      setDrawnMarker(undefined);
+      if (drawnMarker) {
+        drawnMarker.setMap(null);
+        setDrawnMarker(undefined);
+      }
+      setDrawingMode(google.maps.drawing.OverlayType.POLYGON);
     });
 
     document.getElementById("marker-btn")?.addEventListener("click", () => {
-      drawingManager.setDrawingMode(null);
+      setDrawnPolygon(undefined);
+      if (drawnMarker) {
+        drawnMarker.setMap(null);
+        setDrawnMarker(undefined);
+      }
+      if (drawnPolygon) {
+        drawnPolygon.setMap(null);
+        setDrawnPolygon(undefined);
+      }
+      setDrawingMode(google.maps.drawing.OverlayType.MARKER);
     });
 
     const overlayCompleteListener = google.maps.event.addListener(
       drawingManager,
       "overlaycomplete",
-      async (event: google.maps.drawing.OverlayCompleteEvent) => {
+      (event: google.maps.drawing.OverlayCompleteEvent) => {
         if (event.type === google.maps.drawing.OverlayType.POLYGON) {
-          const polygon = event.overlay as google.maps.Polygon;
-          const path = polygon.getPath();
-          const newPolygonArea: PolygonArea = {
-            include: path.getArray().map((latLng) => ({
-              latitude: latLng.lat(),
-              longitude: latLng.lng(),
-            })),
-            exclude: [],
-          };
-          setDocumentFormSelected((prev) => ({
-            ...prev,
-            coordinates: undefined,
-            area: newPolygonArea,
-          }));
-          drawingManager.setDrawingMode(null);
-          setdocumentSelected(null);
-          setModalOpen(true);
-          polygon.setMap(null);
+          const newPolygon = event.overlay as google.maps.Polygon;
+          const path = newPolygon.getPath().getArray();
+          const rewindPath = rewindRing(path, true);
+          newPolygon.setPath(rewindPath);
+
+          if (!drawnPolygon) {
+            newPolygon.setEditable(true);
+            newPolygon.setDraggable(true);
+            setDrawnPolygon(newPolygon);
+          } else {
+            if (isPolygonInsidePolygon(newPolygon, drawnPolygon)) {
+              const adjustedPath = rewindRing(path, false);
+              drawnPolygon
+                .getPaths()
+                .push(new google.maps.MVCArray(adjustedPath));
+              newPolygon.setMap(null);
+              drawnPolygon.setEditable(true);
+              drawnPolygon.setDraggable(true);
+              setDrawnPolygon(drawnPolygon);
+            } else {
+              newPolygon.setMap(null);
+              alert(
+                "Error: You can only create holes inside the main polygon. Please try again.",
+              );
+            }
+          }
+          setActiveButton("");
+          setDrawingManager(undefined);
+          setDrawingMode(null);
         }
+      },
+    );
+
+    const markerCompleteListener = google.maps.event.addListener(
+      drawingManager,
+      "markercomplete",
+      (marker: google.maps.Marker) => {
+        setActiveButton("");
+        setDrawnMarker(marker);
+        setDrawingMode(null);
       },
     );
 
     return () => {
       google.maps.event.removeListener(overlayCompleteListener);
+      google.maps.event.removeListener(markerCompleteListener);
       drawingManager.setMap(null);
     };
-  }, [map, positionMode]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [map, positionMode, drawnMarker, drawnPolygon, drawingMode]);
 };
 
-export const createArea = (
-  doc: Document,
-  map: google.maps.Map,
-  positionMode: PositionMode,
-): google.maps.Polygon | null => {
-  if (!doc.area) return null;
-  const { include, exclude } = parseAreaPaths(doc.area);
+function isPolygonInsidePolygon(
+  innerPolygon: google.maps.Polygon,
+  outerPolygon: google.maps.Polygon,
+): boolean {
+  const points = innerPolygon.getPath().getArray();
+  return points.every((point) =>
+    google.maps.geometry.poly.containsLocation(point, outerPolygon),
+  );
+}
 
-  if (include.length === 0) {
-    console.error("Invalid include paths for document", doc);
-    return null;
-  }
-
-  const area = new google.maps.Polygon({
-    paths: [include, ...exclude],
-    fillColor: "#fecb00",
-    fillOpacity: 0.5,
-    strokeWeight: 4,
-    strokeColor: "#fecb00",
-    zIndex: 1,
-    clickable: true,
-    draggable: positionMode === PositionMode.Update,
-    editable: positionMode === PositionMode.Update,
-  });
-
-  area.setMap(map);
-
-  return area;
-};
-
-export const clearAreas = (areas: google.maps.Polygon[]) => {
-  areas.forEach((area) => area.setMap(null));
-};
-
-export const getPolygonCentroid = (polygonArea: {
-  include: { latitude: number; longitude: number }[];
-}): { lat: number; lng: number } => {
-  const coordinates = polygonArea.include;
-
-  if (coordinates.length < 3) {
-    throw new Error("A polygon must have at least three vertices.");
-  }
-
+export function rewindRing(
+  ring: google.maps.LatLng[],
+  clockwise: boolean,
+): google.maps.LatLng[] {
   let area = 0;
-  let centroidX = 0;
-  let centroidY = 0;
-
-  const n = coordinates.length;
-
-  for (let i = 0; i < n; i++) {
-    const x1 = coordinates[i].longitude;
-    const y1 = coordinates[i].latitude;
-    const x2 = coordinates[(i + 1) % n].longitude;
-    const y2 = coordinates[(i + 1) % n].latitude;
-
-    const crossProduct = x1 * y2 - x2 * y1;
-
-    area += crossProduct;
-    centroidX += (x1 + x2) * crossProduct;
-    centroidY += (y1 + y2) * crossProduct;
+  for (let i = 0, len = ring.length, j = len - 1; i < len; j = i++) {
+    area += (ring[i].lng() - ring[j].lng()) * (ring[j].lat() + ring[i].lat());
   }
-
-  area *= 0.5;
-
-  if (area === 0) {
-    throw new Error("The polygon has zero area and is likely degenerate.");
+  if (area >= 0 !== clockwise) {
+    ring.reverse();
   }
-
-  centroidX /= 6 * area;
-  centroidY /= 6 * area;
-
-  return { lat: centroidY, lng: centroidX };
-};
-
-export const parseAreaPaths = (area: PolygonArea) => {
-  const includePaths = (area.include || []).map((coord) => ({
-    lat: parseFloat(coord.latitude?.toString() || "NaN"),
-    lng: parseFloat(coord.longitude?.toString() || "NaN"),
-  }));
-
-  const excludePaths = (area.exclude || []).map((exclude) =>
-    exclude.map((coord) => ({
-      lat: parseFloat(coord.latitude?.toString() || "NaN"),
-      lng: parseFloat(coord.longitude?.toString() || "NaN"),
-    })),
-  );
-
-  const isValidLatLng = (coord: { lat: number; lng: number }) =>
-    !isNaN(coord.lat) && !isNaN(coord.lng);
-
-  const validIncludePaths = includePaths.filter(isValidLatLng);
-  const validExcludePaths = excludePaths.map((exclude) =>
-    exclude.filter(isValidLatLng),
-  );
-
-  return { include: validIncludePaths, exclude: validExcludePaths };
-};
+  return ring;
+}

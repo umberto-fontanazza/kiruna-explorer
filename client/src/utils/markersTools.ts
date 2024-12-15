@@ -1,17 +1,17 @@
 import { Dispatch, SetStateAction } from "react";
 import "../styles/MapComponentsStyles/markers.scss";
-import { createArea, getPolygonCentroid } from "./drawingTools";
-import { Coordinates, Document, fromDocumentTypeToIcon } from "./interfaces";
+import { CustomMarker, Document, fromDocumentTypeToIcon } from "./interfaces";
 import { kirunaCoords } from "./map";
 import { PositionMode } from "./modes";
+import { createArea, getPolygonCentroid } from "./polygonsTools";
 
 export const createMarker = (
   doc: Document,
   linked: boolean = false,
   map: google.maps.Map,
   positionMode: PositionMode,
-  setShowTooltipUploads: Dispatch<SetStateAction<boolean>>,
-  setNewMarkerPosition?: Dispatch<SetStateAction<Coordinates | null>>,
+  setDrawnMarker: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
+  setShowTooltipUploads?: Dispatch<SetStateAction<boolean>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
 ): google.maps.marker.AdvancedMarkerElement => {
@@ -30,12 +30,14 @@ export const createMarker = (
         lng: doc.coordinates?.longitude ?? 0,
       };
 
-  const marker = new google.maps.marker.AdvancedMarkerElement({
+  const marker: CustomMarker = new google.maps.marker.AdvancedMarkerElement({
     map,
     position: position,
     content: markerDivChild,
     gmpDraggable: positionMode === PositionMode.Update,
   });
+
+  marker.document = doc;
 
   let hoverArea: google.maps.Polygon | null = null;
 
@@ -62,7 +64,7 @@ export const createMarker = (
         hoverArea.setMap(null);
         hoverArea = null;
       }
-      infoWindow.close(); // Nasconde l'InfoWindow
+      infoWindow.close();
       content.classList.remove("show");
     });
   }
@@ -75,7 +77,7 @@ export const createMarker = (
     marker.addListener("click", () => {
       setSidebarOpen(true);
       setdocumentSelected(doc);
-      setShowTooltipUploads(false);
+      if (setShowTooltipUploads) setShowTooltipUploads(false);
 
       const newCenter = doc.coordinates
         ? {
@@ -91,17 +93,17 @@ export const createMarker = (
     });
   }
 
-  if (positionMode === PositionMode.Update && setNewMarkerPosition) {
+  if (positionMode === PositionMode.Update && setDrawnMarker) {
     marker.addListener("dragend", (event: google.maps.MapMouseEvent) => {
       if (event.latLng) {
         const newLatLng = {
           lat: event.latLng.lat(),
           lng: event.latLng.lng(),
         };
-        setNewMarkerPosition({
-          latitude: newLatLng.lat,
-          longitude: newLatLng.lng,
+        const newMarker = new google.maps.Marker({
+          position: newLatLng,
         });
+        setDrawnMarker(newMarker);
       }
     });
   }

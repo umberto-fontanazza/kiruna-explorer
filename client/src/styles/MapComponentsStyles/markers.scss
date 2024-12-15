@@ -27,6 +27,7 @@
   font-family: "SwedenSans", sans-serif;
   font-size: 2.5ch;
   background: Color.$first;
+  border-radius: 1rem;
 }
 
 .gm-style-iw-d {
@@ -50,4 +51,8 @@
 .info-window.show {
   opacity: 1;
   transform: scale(1);
+}
+
+.iw-type-image {
+  padding-top: 2px;
 }
