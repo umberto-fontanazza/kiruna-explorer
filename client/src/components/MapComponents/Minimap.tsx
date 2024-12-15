@@ -2,11 +2,13 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { FC, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import "../../styles/MapComponentsStyles/Minimap.scss";
-import { createArea } from "../../utils/drawingTools";
+import { useDrawingTools } from "../../utils/drawingTools";
 import { Coordinates, Document, PolygonArea } from "../../utils/interfaces";
 import { libraries, mapOptions } from "../../utils/map";
 import { createMarker } from "../../utils/markersTools";
 import { PositionMode } from "../../utils/modes";
+import { createArea } from "../../utils/polygonsTools";
+import DrawingControls from "../DrawingControls";
 
 interface MinimapProps {
   documentSelected: Document | null;
@@ -22,17 +24,36 @@ const Minimap: FC<MinimapProps> = ({
   const { positionMode, setPositionMode, handleEditPositionModeConfirm } =
     useAppContext();
   const [minimap, setMinimap] = useState<google.maps.Map | null>(null);
-  const [polygonArea, setPolygonArea] = useState<google.maps.Polygon | null>(
-    null,
-  );
-  const [newMarkerPosition, setNewMarkerPosition] =
-    useState<Coordinates | null>(null);
+  const [drawnPolygon, setDrawnPolygon] = useState<
+    google.maps.Polygon | undefined
+  >(undefined);
+  const [drawnMarker, setDrawnMarker] = useState<
+    google.maps.Marker | undefined
+  >(undefined);
+  const [drawingManager, setDrawingManager] = useState<
+    google.maps.drawing.DrawingManager | undefined
+  >(undefined);
+  const [municipalArea, setMunicipalArea] = useState<
+    google.maps.Polygon[] | undefined
+  >(undefined);
+  const [drawingMode, setDrawingMode] = useState<string>("");
+  const [activeButton, setActiveButton] = useState<string>("");
   const [saved, setSaved] = useState<boolean>(false);
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries: libraries,
   });
+
+  useDrawingTools(
+    minimap,
+    drawnPolygon,
+    drawnMarker,
+    setDrawingManager,
+    setDrawnPolygon,
+    setDrawnMarker,
+    setActiveButton,
+  );
 
   useEffect(() => {
     if (documentSelected && minimap) {
@@ -42,33 +63,49 @@ const Minimap: FC<MinimapProps> = ({
           false,
           minimap,
           positionMode,
-          setNewMarkerPosition,
+          setDrawnMarker,
         );
       } else {
-        const area = createArea(documentSelected, minimap, positionMode);
-        setPolygonArea(area);
+        createArea(documentSelected, minimap, positionMode);
       }
     }
   }, [documentLocation, minimap, documentSelected, positionMode]);
 
   useEffect(() => {
     if (documentSelected && saved && positionMode === PositionMode.Update) {
-      if (polygonArea) {
-        const path = polygonArea.getPath();
+      if (drawnPolygon) {
+        const includePath = drawnPolygon.getPath();
+        const excludePaths = drawnPolygon.getPaths().getArray().slice(1);
         const newPolygonArea: PolygonArea = {
-          include: path.getArray().map((latLng) => ({
+          include: includePath.getArray().map((latLng) => ({
             latitude: latLng.lat(),
             longitude: latLng.lng(),
           })),
-          exclude: [],
+          exclude: excludePaths.map((excludePath) =>
+            excludePath.getArray().map((latLng) => ({
+              latitude: latLng.lat(),
+              longitude: latLng.lng(),
+            })),
+          ),
         };
         handleEditPositionModeConfirm(documentSelected, newPolygonArea);
-        polygonArea?.setMap(null);
-      } else if (newMarkerPosition) {
-        handleEditPositionModeConfirm(documentSelected, newMarkerPosition);
+        drawnPolygon?.setMap(null);
+      } else if (drawnMarker) {
+        const markerPos = drawnMarker?.getPosition();
+
+        if (!markerPos) {
+          alert("Marker position is undefined");
+          return;
+        }
+
+        const posToUpdate: Coordinates = {
+          latitude: markerPos.lat(),
+          longitude: markerPos.lng(),
+        };
+        handleEditPositionModeConfirm(documentSelected, posToUpdate);
       }
-      setNewMarkerPosition(null);
-      setPolygonArea(null);
+      setDrawnMarker(undefined);
+      setDrawnPolygon(undefined);
       setSaved(false);
       onClose();
     }
@@ -114,8 +151,8 @@ const Minimap: FC<MinimapProps> = ({
   };
 
   const handleCloseButton = () => {
-    setNewMarkerPosition(null);
-    setPolygonArea(null);
+    setDrawnMarker(undefined);
+    setDrawnPolygon(undefined);
     setPositionMode(PositionMode.None);
     onClose();
   };
@@ -149,6 +186,18 @@ const Minimap: FC<MinimapProps> = ({
             )}
           </div>
         )}
+        <DrawingControls
+          positionMode={positionMode}
+          activeButton={activeButton}
+          setActiveButton={setActiveButton}
+          map={minimap}
+          drawnPolygon={drawnPolygon}
+          drawnMarker={drawnMarker}
+          drawingManager={drawingManager}
+          setDrawingMode={setDrawingMode}
+          municipalArea={municipalArea}
+          setMunicipalArea={setMunicipalArea}
+        />
         <GoogleMap
           id="minimap"
           zoom={9}
