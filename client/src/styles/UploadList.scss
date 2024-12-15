@@ -1,7 +1,7 @@
 @use "Color";
 
 .upload-container {
-  background: linear-gradient(#005293, #005293, #005293, #005293, #fecb00);
+  background: linear-gradient(#005293 85%, #fecb00);
   height: 90vh;
   display: flex;
   flex-direction: column;
@@ -28,12 +28,11 @@
   }
 
   .upload-table {
-    min-width: 60%;
-    max-width: 90%;
+    display: block;
     border-collapse: collapse;
     border-spacing: 0;
     border-radius: 10px;
-    overflow: hidden;
+    overflow: auto;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.8);
     font-family: "SwedenSansBold", sans-serif;
 
