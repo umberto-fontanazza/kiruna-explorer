@@ -1,13 +1,6 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
-import {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import "../../App";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
@@ -29,7 +22,6 @@ import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
 import { createMarker } from "../../utils/markersTools";
 import { PositionMode } from "../../utils/modes";
 import { createArea } from "../../utils/polygonsTools";
-import Alert, { AlertHandle } from "../Alert";
 import DrawingControls from "../DrawingControls";
 import MapTypeSelector from "../MapTypeSelector";
 
@@ -52,6 +44,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const {
     visualLinks,
     positionMode,
+    alertRef,
     setModalOpen,
     handleEditPositionModeConfirm,
   } = useAppContext();
@@ -80,8 +73,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [infoWindow, setInfoWindow] = useState<google.maps.InfoWindow | null>(
     null,
   );
-
-  const alertRef = useRef<AlertHandle>(null);
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -249,16 +240,42 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     } else if (drawnMarker) {
       handleMarkerUpdate();
     }
+    alertRef.current?.showAlert(
+      "Position succesfully updated!",
+      AlertType.Success,
+      3000,
+    );
   };
 
   // Funzione per gestire il disegno o modifica (Insert/Edit)
   const handleInsertOrEditMode = () => {
-    if (drawnPolygon && drawingManager) {
-      handlePolygonInsertOrEdit();
+    if (municipalArea) {
+      handleMunicipalArea();
+      alertRef.current?.showAlert(
+        "Municipal area attached to the document",
+        AlertType.Info,
+        2500,
+      );
     } else if (drawnMarker && drawingManager) {
       handleMarkerInsert();
+      alertRef.current?.showAlert(
+        "Marker attached to the document",
+        AlertType.Info,
+        2500,
+      );
+    } else if (drawnPolygon && drawingManager) {
+      handlePolygonInsertOrEdit();
+      alertRef.current?.showAlert(
+        "Polygon area attached to the document",
+        AlertType.Info,
+        2500,
+      );
     } else {
-      handleMunicipalArea();
+      alertRef.current?.showAlert(
+        "You cannot save the document without selecting an area type. \n Please choose either Municipal Area, Polygon, or Marker before saving.",
+        AlertType.Error,
+        5000,
+      );
     }
   };
 
@@ -320,6 +337,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       alertRef.current?.showAlert(
         "The Polygon must have three edges, try again!",
         AlertType.Error,
+        3000,
       );
       return;
     }
@@ -430,7 +448,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   return isLoaded ? (
     <section id="map">
-      <Alert ref={alertRef} timeout={3000} />
       <MapTypeSelector mapType={mapType} setMapType={setMapType} />
       {positionMode !== PositionMode.None && (
         <div className="insert-mode">

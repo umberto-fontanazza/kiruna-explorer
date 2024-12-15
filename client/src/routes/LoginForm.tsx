@@ -1,6 +1,6 @@
-import { FC, useContext, useEffect, useRef, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Alert, { AlertHandle } from "../components/Alert";
+import { useAppContext } from "../context/appContext";
 import { authContext } from "../context/auth";
 import "../styles/LoginForm.scss";
 import { AlertType } from "../utils/alertType";
@@ -8,13 +8,12 @@ import { LoginErrors } from "../utils/interfaces";
 
 const LoginForm: FC = (): JSX.Element => {
   const { user, login } = useContext(authContext);
+  const { alertRef } = useAppContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<LoginErrors>({});
 
   const nav = useNavigate();
-
-  const alertRef = useRef<AlertHandle>(null);
 
   useEffect(() => {
     if (user) nav("/map");
@@ -32,12 +31,11 @@ const LoginForm: FC = (): JSX.Element => {
   };
 
   const handleNotImplemented = (message: string) => {
-    alertRef.current?.showAlert(message, AlertType.Error);
+    alertRef.current?.showAlert(message, AlertType.Error, 3000);
   };
 
   return (
     <div className="form">
-      <Alert ref={alertRef} />
       <div className="login-container">
         <div className="left-panel">
           <h1>Kiruna eXplorer.</h1>

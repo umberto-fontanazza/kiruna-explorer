@@ -1,6 +1,7 @@
-import { FC, useContext, useEffect, useState } from "react";
+import { FC, useContext, useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import API from "../API/API";
+import { AlertHandle } from "../components/Alert";
 import MapComponent from "../components/MapComponents/MapComponent";
 import NavHeader from "../components/NavHeader";
 import Sidebar from "../components/Sidebar";
@@ -25,6 +26,7 @@ const HomeMap: FC = (): JSX.Element => {
   const { isSubmit } = useDocumentFormContext();
   const [documents, setDocuments] = useState<Document[]>([]);
   const [docSelected, setDocSelected] = useState<Document | null>(null);
+  const alertRef = useRef<AlertHandle>(null);
 
   // State to control sidebar visibility.
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);

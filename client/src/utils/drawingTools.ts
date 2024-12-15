@@ -99,6 +99,7 @@ export const useDrawingTools = (
               alertRef.current?.showAlert(
                 "You can only create holes inside the main polygon. Please try again.",
                 AlertType.Error,
+                3000,
               );
             }
           }

@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import API from "./API/API";
+import Alert from "./components/Alert";
 import DocumentForm from "./components/DocumentForm";
 import NotFound from "./components/NotFound";
 import Popup from "./components/Popup";
@@ -18,7 +19,7 @@ import { User } from "./utils/interfaces";
 import { PositionMode } from "./utils/modes";
 const App: FC = () => {
   const [user, setUser] = useState<User | null>(null);
-  const { isPopupOpen, modalOpen, positionMode, setPositionMode } =
+  const { isPopupOpen, modalOpen, positionMode, alertRef, setPositionMode } =
     useAppContext();
 
   useEffect(() => {
@@ -52,6 +53,7 @@ const App: FC = () => {
               path="/"
               element={
                 <>
+                  <Alert ref={alertRef} />
                   {isPopupOpen && <Popup />}
                   {modalOpen && <DocumentForm />}
                   <Outlet />
