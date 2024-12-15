@@ -5,11 +5,11 @@ import "../../App";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/MapComponent.scss";
-import { createArea, rewindRing, useDrawingTools } from "../../utils/drawingTools";
 import {
   handleClusterClick,
   renderClusterMarker,
 } from "../../utils/clusterTools";
+import { rewindRing, useDrawingTools } from "../../utils/drawingTools";
 import {
   Coordinates,
   CustomMarker,
@@ -79,8 +79,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   });
 
   useEffect(() => {
-    if (positionMode === PositionMode.None && polygonArea) {
-      polygonArea?.setMap(null);
+    if (positionMode === PositionMode.None && drawnPolygon) {
+      drawnPolygon?.setMap(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionMode]);

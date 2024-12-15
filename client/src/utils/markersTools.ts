@@ -1,12 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 import "../styles/MapComponentsStyles/markers.scss";
-import { createArea, getPolygonCentroid } from "./drawingTools";
-import {
-  Coordinates,
-  CustomMarker,
-  Document,
-  fromDocumentTypeToIcon,
-} from "./interfaces";
+import { CustomMarker, Document, fromDocumentTypeToIcon } from "./interfaces";
 import { kirunaCoords } from "./map";
 import { PositionMode } from "./modes";
 import { createArea, getPolygonCentroid } from "./polygonsTools";
