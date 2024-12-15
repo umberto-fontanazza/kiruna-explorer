@@ -1,0 +1,78 @@
+@use "Color";
+
+.body-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 90%;
+  overflow-y: auto;
+
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 2;
+    pointer-events: auto;
+  }
+
+  .map {
+    width: 100%;
+    height: 92vh;
+    position: relative;
+    transition: width 0.3s linear;
+
+    &.with-sidebar {
+      width: 70%;
+    }
+
+    .button-overlay {
+      position: fixed;
+      bottom: 2rem;
+      left: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .doc-btn {
+        border-radius: 1rem;
+        width: 13vw;
+        height: 7vh;
+        background-color: Color.$third;
+        color: Color.$first;
+        border: 0.2rem solid Color.$first;
+        padding: 0;
+        cursor: pointer;
+        transition:
+          background-color 0.3s ease,
+          color 0.3s ease;
+
+        &:hover {
+          background-color: #bfbfac;
+          color: Color.$first;
+        }
+
+        .add-container,
+        .back-container {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 1rem;
+          padding: 0 1rem;
+
+          .material-symbols-outlined {
+            transform: scale(1.5);
+          }
+
+          h4 {
+            font-family: "SwedenSansBold", sans-serif;
+            margin-bottom: 0;
+            font-size: 1.3rem;
+          }
+        }
+      }
+    }
+  }
+}

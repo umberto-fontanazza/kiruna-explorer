@@ -1,7 +1,12 @@
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import { kirunaCoordinates } from "./map";
 
 /************************** INTERFACES ****************************/
+
+export interface CustomMarker extends google.maps.marker.AdvancedMarkerElement {
+  document?: Document;
+}
+
 export interface Coordinates {
   latitude: number;
   longitude: number;
@@ -16,7 +21,8 @@ export interface Document {
   // optional fields below
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
-  issuanceDate?: Dayjs;
+  area?: PolygonArea;
+  issuanceTime?: string;
   links?: Link[];
 }
 
@@ -42,21 +48,26 @@ export interface LoginErrors {
   login?: string;
 }
 
+export interface PolygonData {
+  polygon: google.maps.Polygon;
+  coordinates: { lat: number; lng: number }[];
+}
+
+export interface PolygonArea {
+  include: Coordinates[];
+  exclude: Coordinates[][];
+}
+
 export interface Scale {
   type: ScaleType;
   ratio?: number;
 }
 
 export interface Upload {
-  id: number;
+  id: number | undefined;
   title: string;
   type: UploadType;
   file: string;
-}
-
-export interface UploadForm {
-  title: string;
-  data: string;
 }
 
 export interface User {
@@ -95,6 +106,7 @@ export enum Stakeholder {
   Lkab = "lkab",
   Residents = "residents",
   WhiteArkitekter = "white_arkitekter",
+  Others = "others",
 }
 
 export const stakeholdersOptions = [
@@ -102,6 +114,7 @@ export const stakeholdersOptions = [
   { value: Stakeholder.KirunaKommun, label: "Kiruna kommun" },
   { value: Stakeholder.Residents, label: "Residents" },
   { value: Stakeholder.WhiteArkitekter, label: "White Arkitekter" },
+  { value: Stakeholder.Others, label: "Others" },
 ];
 
 export enum UploadType {
@@ -123,7 +136,7 @@ export const documentFormDefaults: DocumentForm = {
   stakeholders: [],
   scale: null,
   type: null,
-  issuanceDate: undefined,
+  issuanceTime: undefined,
   links: [],
   coordinates: kirunaCoordinates,
 };
@@ -140,7 +153,7 @@ export const createDocumentStateFromExisting = (
     ratio: docSelected.scale?.ratio,
   },
   type: docSelected.type,
-  issuanceDate: dayjs(docSelected.issuanceDate),
+  issuanceTime: docSelected.issuanceTime,
   links: docSelected.links,
   coordinates: docSelected.coordinates,
 });

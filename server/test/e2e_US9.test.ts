@@ -223,3 +223,4 @@ describe("Testing areas for document router", () => {
     expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });
 });
+

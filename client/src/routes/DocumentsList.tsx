@@ -4,17 +4,29 @@ import ControlledCarousel from "../components/CardCarousel";
 import FiltersList from "../components/FiltersList";
 import Minimap from "../components/MapComponents/Minimap";
 import NavHeader from "../components/NavHeader";
+import SearchBar from "../components/SearchBar";
+import { useAppContext } from "../context/appContext";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/DocumentsList.scss";
-import { Coordinates, Document, Filters } from "../utils/interfaces";
+import {
+  Coordinates,
+  Document,
+  Filters,
+  PolygonArea,
+} from "../utils/interfaces";
 
 const DocumentsList = () => {
   const [documents, setDocuments] = useState<Document[]>([]);
-  const [documentCoordinates, setDocumentCoordinates] = useState<Coordinates>({
-    latitude: -1,
-    longitude: -1,
-  });
+  const [docSelected, setDocSelected] = useState<Document | undefined>(
+    undefined,
+  );
+  const [searchBarDocument, setSearchBarDocument] = useState<
+    Document | undefined
+  >(undefined);
+  const [documentLocation, setDocumentLocation] = useState<
+    Coordinates | PolygonArea | null
+  >(null);
   const [filters, setFilters] = useState<Filters>({
     type: undefined,
     scaleType: undefined,
@@ -23,24 +35,39 @@ const DocumentsList = () => {
   });
   const { isDeleted } = usePopupContext();
   const { isSubmit } = useDocumentFormContext();
+  const { handleEditPositionModeConfirm } = useAppContext();
 
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
         const documents: Document[] = await API.getDocuments(filters);
-        setDocuments(documents);
+        const sortedDocuments = documents.sort((a, b) =>
+          a.title.localeCompare(b.title, undefined, {
+            sensitivity: "base",
+          }),
+        );
+        setDocuments(sortedDocuments);
       } catch (err) {
         console.error(err);
       }
     };
-    fetchDocuments();
-  }, [isDeleted, isSubmit, filters]);
+
+    if (!searchBarDocument) {
+      fetchDocuments();
+    } else {
+      setDocSelected(searchBarDocument);
+      setDocuments([searchBarDocument]);
+    }
+  }, [
+    isDeleted,
+    isSubmit,
+    filters,
+    handleEditPositionModeConfirm,
+    searchBarDocument,
+  ]);
 
   const handleCloseMap = () => {
-    setDocumentCoordinates({
-      latitude: -1,
-      longitude: -1,
-    });
+    setDocumentLocation(null);
   };
 
   return (
@@ -49,23 +76,21 @@ const DocumentsList = () => {
       <div className="doc-lists">
         <div className="header">
           <h1 className="title">Documents List</h1>
-          <div className="searchbar-container">
-            <input type="text" className="searchbar" placeholder="Search..." />
-            <button className="search-button">
-              <span className="material-symbols-outlined">search</span>
-            </button>
-          </div>
+          <SearchBar setSelectedSuggestion={setSearchBarDocument} />
           <FiltersList setFilters={setFilters} />
         </div>
         <ControlledCarousel
+          docSelected={docSelected}
+          setDocSelected={setDocSelected}
           documents={documents}
-          setCoordinates={setDocumentCoordinates}
+          setLocation={setDocumentLocation}
         />
       </div>
-      {documentCoordinates && documentCoordinates.latitude !== -1 && (
+      {documentLocation && docSelected && (
         <Minimap
-          coordinates={documentCoordinates}
-          onClose={() => handleCloseMap()}
+          documentSelected={docSelected}
+          documentLocation={documentLocation}
+          onClose={handleCloseMap}
         />
       )}
     </div>

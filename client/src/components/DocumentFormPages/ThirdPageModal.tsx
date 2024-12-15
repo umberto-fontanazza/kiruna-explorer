@@ -1,13 +1,16 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import API from "../../API/API";
 import "../../styles/DocumentFormPagesStyles/ThirdPageModal.scss";
-import { DocumentForm, Link, UploadForm } from "../../utils/interfaces";
+import { DocumentForm, Link, Upload } from "../../utils/interfaces";
+import UploadBox from "../UploadBox";
+import UploadTable from "../UploadTable";
 
 interface ThirdPageModalProps {
   documentForm: DocumentForm;
-  filesToUpload: UploadForm[] | null;
+  filesToUpload: Upload[];
   tableLinks: Link[];
   goBack: Dispatch<SetStateAction<number>>;
-  setFilesToUpload: Dispatch<SetStateAction<UploadForm[] | null>>;
+  setFilesToUpload: Dispatch<SetStateAction<Upload[]>>;
 }
 
 const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
@@ -16,116 +19,96 @@ const ThirdPageModal: React.FC<ThirdPageModalProps> = ({
   filesToUpload,
   setFilesToUpload,
 }) => {
-  const [dragActive, setDragActive] = useState(false);
+  const [oldUploads, setOldUploads] = useState<Upload[]>([]);
 
-  const handleFileUpload = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64String = reader.result?.toString().split(",")[1];
-      if (base64String) {
-        const defaultTitle = file.name;
-        setFilesToUpload((prev) => [
-          ...(prev || []),
-          { title: defaultTitle, data: base64String },
-        ]);
+  useEffect(() => {
+    const fetchUploads = async () => {
+      if (documentForm?.id) {
+        try {
+          const uploads = await API.getUploads(documentForm.id);
+          const formattedUploads = uploads.map((upload) => ({
+            id: upload.id,
+            title: upload.title,
+            type: upload.type,
+            file: "",
+          }));
+          setOldUploads(formattedUploads);
+        } catch (error) {
+          console.error("Error fetching uploads:", error);
+        }
       }
     };
-    reader.onerror = (error) => {
-      console.error("Error converting file to Base64:", error);
-    };
-    reader.readAsDataURL(file);
-  };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(true);
-  };
+    fetchUploads();
+  }, [documentForm.id]);
 
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-  };
-
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFileUpload(e.dataTransfer.files[0]);
-    }
-  };
-
-  const handleButtonClick = () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.onchange = (e: Event) => {
-      const target = e.target as HTMLInputElement;
-      if (target.files && target.files[0]) {
-        handleFileUpload(target.files[0]);
-      }
-    };
-    input.click();
-  };
-
-  const handleRemoveFile = (index: number) => {
-    setFilesToUpload((prev) => prev?.filter((_, i) => i !== index) || null);
-  };
-
-  const handleEditTitle = (index: number, newTitle: string) => {
-    setFilesToUpload(
-      (prev) =>
-        prev?.map((file, i) =>
-          i === index ? { ...file, title: newTitle } : file,
-        ) || null,
+  const handleEditUploadOldTitle = async (
+    uploadId: number,
+    newTitle: string,
+  ) => {
+    await API.editUpload(uploadId, newTitle);
+    setOldUploads((prev) =>
+      prev.map((upload) =>
+        upload.id === uploadId ? { ...upload, title: newTitle } : upload,
+      ),
     );
+  };
+
+  const handleRemoveOldFile = async (
+    uploadId: number,
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+  ) => {
+    e.preventDefault();
+    try {
+      await API.editUpload(uploadId, undefined, undefined, [documentForm.id!]);
+      setOldUploads((prev) => prev.filter((upload) => upload.id !== uploadId));
+    } catch (error) {
+      console.error("Error removing old file:", error);
+    }
   };
 
   return (
     <>
       <div className="form-content">
         <h2>Upload Files</h2>
-        <div
-          className="upload-box"
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
-          onDrop={handleDrop}
-        >
-          <p>Drag and drop the original resources here</p>
-          <button
-            className="upload-btn"
-            type="button"
-            onClick={handleButtonClick}
-          >
-            Select File
-          </button>
-        </div>
+        <UploadBox setFilesToUpload={setFilesToUpload} />
 
-        {filesToUpload && filesToUpload.length > 0 && (
+        {filesToUpload.length > 0 || oldUploads.length > 0 ? (
           <div className="uploaded-files">
             <h3>Uploaded Files:</h3>
             <ul>
-              {filesToUpload.map((file, index) => (
-                <li key={index} className="uploaded-file-item">
+              {oldUploads.map((upload) => (
+                <li key={upload.id} className="uploaded-file-item">
                   <p>Title:</p>{" "}
                   <input
                     type="text"
-                    value={file.title}
-                    onChange={(e) => handleEditTitle(index, e.target.value)}
+                    value={upload.title}
+                    onChange={(e) =>
+                      upload.id !== undefined &&
+                      handleEditUploadOldTitle(upload.id, e.target.value)
+                    }
                   />
                   <br />
                   <button
                     className="remove-btn"
-                    onClick={() => handleRemoveFile(index)}
+                    onClick={(e) => {
+                      if (upload.id !== undefined)
+                        handleRemoveOldFile(upload.id, e);
+                    }}
                   >
                     Remove
                   </button>
                 </li>
               ))}
+              {filesToUpload && filesToUpload.length > 0 && (
+                <UploadTable
+                  filesToUpload={filesToUpload}
+                  setFilesToUpload={setFilesToUpload}
+                />
+              )}
             </ul>
           </div>
-        )}
+        ) : null}
       </div>
       <div className="actions">
         <button className="back" onClick={() => goBack((p) => p - 1)}>

@@ -1,5 +1,5 @@
 import { strict as assert } from "assert";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 import { Database } from "../database";
 import { DocumentNotFound } from "../error/documentError";
 import { Coordinates } from "../validation/coordinatesSchema";
@@ -7,6 +7,7 @@ import { Area } from "./area";
 import { Link, LinkResponseBody, LinkType } from "./link";
 import { Scale, ScaleRow, ScaleType } from "./scale";
 import { Stakeholder } from "./stakeholder";
+import { TimeInterval } from "./timeInterval";
 
 type DocumentDbRow = {
   id: number;
@@ -18,7 +19,7 @@ type DocumentDbRow = {
   stakeholders: Stakeholder[];
   coordinates: Coordinates;
   area_id: number | null;
-  issuance_date: Date;
+  issuance_time: [Date, Date];
   links: Record<string, LinkType[]>;
 };
 
@@ -40,8 +41,8 @@ const buildSqlWhere = (
   const sqlFilters = [
     "type =",
     "scale_type =",
-    "issuance_date <=",
-    "issuance_date >=",
+    "issuance_time[1] <=", // begin of interval
+    "issuance_time[2] >=", // end of interval
   ];
   const [sqlWithWildcards, args] = [
     type,
@@ -75,7 +76,7 @@ export class Document {
   stakeholders?: Stakeholder[];
   coordinates?: Coordinates;
   private _area?: Area;
-  issuanceDate?: Dayjs;
+  issuanceTime?: TimeInterval;
   links?: LinkResponseBody[];
 
   constructor(
@@ -87,7 +88,7 @@ export class Document {
     stakeholders?: Stakeholder[],
     coordinates?: Coordinates,
     area?: Area,
-    issuanceDate?: Dayjs,
+    issuanceTime?: TimeInterval,
     links?: LinkResponseBody[],
   ) {
     this.id = id;
@@ -98,7 +99,7 @@ export class Document {
     this.stakeholders = stakeholders;
     this.coordinates = coordinates;
     if (area) this.setArea(area);
-    this.issuanceDate = issuanceDate;
+    this.issuanceTime = issuanceTime;
     this.links = links;
   }
 
@@ -115,14 +116,13 @@ export class Document {
       stakeholders,
       coordinates,
       area_id,
-      issuance_date,
+      issuance_time,
       links,
     } = dbRow;
     assert(typeof title === "string");
     assert(typeof description === "string");
     assert(typeof type === "string");
     assert(typeof scale_type === "string");
-    assert(!issuance_date || issuance_date instanceof Date);
 
     const scale: Scale = Scale.fromDatabaseRow({
       scale_type,
@@ -133,6 +133,9 @@ export class Document {
       coordinates.latitude && coordinates.longitude && coordinates;
     const area = area_id !== null && (await Area.get(area_id));
 
+    const issuanceTime: TimeInterval | undefined =
+      issuance_time && TimeInterval.fromDatabase(issuance_time);
+
     return new Document(
       id,
       title,
@@ -142,7 +145,7 @@ export class Document {
       stakeholders || undefined,
       checkedCoordinates || undefined,
       area || undefined,
-      dayjs(issuance_date) || undefined,
+      issuanceTime,
       Link.fromJsonbField(links),
     );
   }
@@ -162,7 +165,7 @@ export class Document {
     title = $1, description = $2, type = $3, scale_type = $4, 
     scale_ratio = $5, stakeholders = $6, coordinates = ST_Point($7, $8)::geography, 
     area_id = $9,
-    issuance_date = $10 WHERE id = $11`;
+    issuance_time = $10 WHERE id = $11`;
     const scaleRow: ScaleRow = this.scale.intoDatabaseRow();
     const result = await Database.query(sql, [
       this.title,
@@ -174,7 +177,7 @@ export class Document {
       this.coordinates?.longitude || null, // BEWARE ORDERING: https://stackoverflow.com/questions/7309121/preferred-order-of-writing-latitude-longitude-tuples-in-gis-services#:~:text=PostGIS%20expects%20lng/lat.
       this.coordinates?.latitude || null,
       this.area?.id || null,
-      (this.issuanceDate?.isValid() && this.issuanceDate?.toDate()) || null,
+      this.issuanceTime?.toDatabase() || null,
       this.id,
     ]);
     if (result.rowCount != 1) throw new Error("Failed db update");
@@ -188,11 +191,11 @@ export class Document {
     stakeholders?: Stakeholder[],
     coordinates?: Coordinates,
     area?: Area,
-    issuanceDate?: Dayjs,
+    issuanceTime?: TimeInterval,
   ): Promise<Document> {
     const scaleRow: ScaleRow = scale.intoDatabaseRow();
     const result = await Database.query(
-      "INSERT INTO document(title, description, type, scale_type, scale_ratio, stakeholders, coordinates, area_id, issuance_date) VALUES($1, $2, $3, $4, $5, $6, ST_Point($7, $8)::geography, $9, $10) RETURNING id;",
+      "INSERT INTO document(title, description, type, scale_type, scale_ratio, stakeholders, coordinates, area_id, issuance_time) VALUES($1, $2, $3, $4, $5, $6, ST_Point($7, $8)::geography, $9, $10) RETURNING id;",
       [
         title,
         description,
@@ -203,7 +206,7 @@ export class Document {
         coordinates?.longitude || null,
         coordinates?.latitude || null,
         area?.id || null,
-        issuanceDate?.toDate() || null,
+        issuanceTime?.toDatabase() || null,
       ],
     );
     const documentId: number = result.rows[0].id;
@@ -276,7 +279,8 @@ export class Document {
     return {
       ...this,
       area: this.area?.toResponseBody(),
-      issuanceDate: this.issuanceDate?.format("YYYY-MM-DD") || undefined,
+      _area: undefined, //TODO: ho bisogno di un po' di refactoring
+      issuanceTime: this.issuanceTime ? this.issuanceTime.format() : undefined,
       stakeholders:
         this.stakeholders?.length === 0 ? undefined : this.stakeholders,
     };

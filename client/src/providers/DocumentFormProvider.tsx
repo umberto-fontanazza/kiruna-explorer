@@ -8,29 +8,27 @@ import {
 } from "react";
 import API from "../API/API";
 import {
-  Coordinates,
   Document,
   DocumentForm,
   documentFormDefaults,
   Link,
   LinkType,
-  UploadForm,
+  Upload,
   UploadType,
 } from "../utils/interfaces";
 
 interface DocumentFormContextType {
-  coordinates: Coordinates;
   searchableDocuments: Document[];
   documentFormSelected: DocumentForm;
   isSubmit: boolean;
-  setCoordinates: Dispatch<SetStateAction<Coordinates>>;
   setSearchableDocuments: Dispatch<SetStateAction<Document[]>>;
   setDocumentFormSelected: Dispatch<SetStateAction<DocumentForm>>;
   setIsSubmit: Dispatch<SetStateAction<boolean>>;
-  handleAddNewDocument: (newDocument: DocumentForm, file: UploadForm[]) => void;
+  handleAddNewDocument: (newDocument: DocumentForm, file: Upload[]) => void;
   handleUpdateDocument: (
     document: DocumentForm,
     oldDocumentLinks: Link[] | undefined,
+    filesToUpload: Upload[] | undefined,
   ) => void;
 }
 
@@ -41,10 +39,6 @@ export const DocumentFormContext = createContext<
 export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [coordinates, setCoordinates] = useState<Coordinates>({
-    latitude: -1,
-    longitude: -1,
-  });
   const [searchableDocuments, setSearchableDocuments] = useState<Document[]>(
     [],
   );
@@ -55,13 +49,13 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
 
   const handleAddNewDocument = async (
     newDocument: DocumentForm,
-    uploads?: UploadForm[],
+    uploads?: Upload[],
   ) => {
     if (!newDocument.id) {
       const id = await API.addDocument(newDocument as Document);
       newDocument.links?.forEach(
         async (link: { targetDocumentId: number; linkTypes: LinkType[] }) => {
-          await API.putLink(link.targetDocumentId, id, link.linkTypes);
+          await API.putLink(id, link.targetDocumentId, link.linkTypes);
           searchableDocuments.map(async (doc) => {
             if (doc.id === link.targetDocumentId) {
               doc.links = await API.getLinks(doc.id);
@@ -75,7 +69,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
             await API.addUpload(
               upload.title,
               UploadType.OriginalResource,
-              upload.data,
+              upload.file,
               [id],
             ),
         );
@@ -89,6 +83,7 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
   const handleUpdateDocument = async (
     document: DocumentForm,
     oldDocumentLinks: Link[] | undefined,
+    filesToUpload: Upload[] | undefined,
   ) => {
     if (document.id) {
       try {
@@ -116,6 +111,15 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
             await API.deleteLink(document.id!, link.targetDocumentId);
           }
         }
+
+        if (filesToUpload) {
+          filesToUpload.forEach(
+            async (file) =>
+              await API.addUpload(file.title, file.type, file.file, [
+                document.id!,
+              ]),
+          );
+        }
       } catch (err) {
         console.error(err);
       }
@@ -128,8 +132,6 @@ export const DocumentFormProvider: FC<{ children: ReactNode }> = ({
   return (
     <DocumentFormContext.Provider
       value={{
-        coordinates,
-        setCoordinates,
         searchableDocuments,
         setSearchableDocuments,
         documentFormSelected,

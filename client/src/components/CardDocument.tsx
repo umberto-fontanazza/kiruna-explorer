@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useContext } from "react";
+import { Dispatch, FC, SetStateAction, useContext, useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { authContext } from "../context/auth";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
@@ -11,19 +11,22 @@ import {
   Document,
   DocumentForm,
   Link,
+  PolygonArea,
   ScaleType,
   Upload,
   fromDocumentTypeToIcon,
   stakeholdersOptions,
 } from "../utils/interfaces";
-import { capitalizeFirstLetter } from "../utils/utils";
+import { capitalizeFirstLetter, formatDate } from "../utils/utils";
 
 interface CardDocumentProps {
   document: Document | null;
   toEditPos: () => void;
   showMapButton: boolean;
   isDocSelected: boolean;
-  setMinimapCoord: Dispatch<SetStateAction<Coordinates>> | null;
+  setMinimapCoord: Dispatch<
+    SetStateAction<Coordinates | PolygonArea | null>
+  > | null;
 }
 
 const CardDocument: FC<CardDocumentProps> = (props) => {
@@ -31,57 +34,66 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   const {
     setIsPopupOpen,
     setModalOpen,
+    showTooltipUploads,
     visualLinks,
     setVisualLinks,
     setEditDocumentMode,
+    setShowTooltipUploads,
   } = useAppContext();
   const { setDocumentToDelete, setIsDeleted } = usePopupContext();
-  const { setDocumentFormSelected, setCoordinates } = useDocumentFormContext();
+  const { setDocumentFormSelected } = useDocumentFormContext();
 
-  const handleDownload = async () => {
-    try {
-      if (!props.document) {
-        console.error("Document is null");
-        return;
-      }
+  const [uploadsById, setUploadsByID] = useState<Upload[]>([]);
 
-      const response: Upload[] = await API.getUploads(
-        props.document.id,
-        "include",
-      );
-
-      if (!response || response.length === 0) {
-        console.warn("No files found in the response.");
-        alert("The document does not contain any original resources.");
-        return;
-      }
-
-      response.forEach((upload) => {
-        try {
-          const binaryString = atob(upload.file);
-
-          const byteArray = Uint8Array.from(binaryString, (char) =>
-            char.charCodeAt(0),
-          );
-
-          const blob = new Blob([byteArray], {
-            type: "application/octet-stream",
-          });
-
-          const url = window.URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = upload.title || "download";
-          a.click();
-          window.URL.revokeObjectURL(url);
-        } catch (downloadError) {
-          console.error(
-            `Error processing file ${upload.title}:`,
-            downloadError,
-          );
-          alert(`Failed to download ${upload.title}.`);
+  const handleShowUploads = async () => {
+    if (!showTooltipUploads) {
+      try {
+        if (!props.document) {
+          console.error("Document is null");
+          return;
         }
-      });
+        const response: Upload[] = await API.getUploads(props.document.id);
+        setUploadsByID(response);
+        setShowTooltipUploads(true);
+      } catch (err) {
+        console.error("Error fetching all uploads: " + err);
+      }
+    } else {
+      setShowTooltipUploads(false);
+      setUploadsByID([]);
+    }
+  };
+
+  const handleDownload = async (uploadId: number) => {
+    try {
+      const upload = await API.getUploadById(uploadId);
+
+      if (!upload) {
+        console.error("File not found");
+        return;
+      }
+
+      try {
+        const binaryString = atob(upload.file);
+
+        const byteArray = Uint8Array.from(binaryString, (char) =>
+          char.charCodeAt(0),
+        );
+
+        const blob = new Blob([byteArray], {
+          type: "application/octet-stream",
+        });
+
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = upload.title || "download";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      } catch (downloadError) {
+        console.error(`Error processing file ${upload.title}:`, downloadError);
+        alert(`Failed to download ${upload.title}.`);
+      }
     } catch (error) {
       console.error("Download error:", error);
       alert("An error occurred during the download process. Please try again.");
@@ -91,19 +103,24 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   const getDocumentCoordinates = () => {
     if (props.document?.coordinates) {
       props.setMinimapCoord?.(props.document.coordinates);
+    } else if (props.document?.area) {
+      props.setMinimapCoord?.(props.document.area);
     }
   };
 
   const handleEditButton = () => {
+    setShowTooltipUploads(false);
     setEditDocumentMode(true);
     setModalOpen(true);
     setDocumentFormSelected(props.document as DocumentForm);
     if (props.document?.coordinates) {
-      setCoordinates(props.document.coordinates);
+      //TODO: I have to handle this
+      //setCoordinates(props.document.coordinates);
     }
   };
 
   const handleDeleteButton = () => {
+    setShowTooltipUploads(false);
     setIsPopupOpen(true);
     setDocumentToDelete(props.document);
     setIsDeleted(false);
@@ -129,13 +146,42 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
                   <span className="material-symbols-outlined">map</span>
                 </button>
               )}
-              <button
-                className="btn-download"
-                onClick={handleDownload}
-                title="Download original resources"
-              >
-                <span className="material-symbols-outlined">file_save</span>
-              </button>
+              <div className="btn-download-container">
+                <button
+                  className="btn-download"
+                  onClick={handleShowUploads}
+                  title="Download original resources"
+                >
+                  <span className="material-symbols-outlined">file_save</span>
+                </button>
+                {showTooltipUploads && (
+                  <div className="tooltip">
+                    {uploadsById.length > 0 ? (
+                      <ul>
+                        {uploadsById.map((upload) => (
+                          <li key={upload.id}>
+                            <button
+                              className="tooltip-item"
+                              onClick={() =>
+                                upload.id !== undefined &&
+                                handleDownload(upload.id)
+                              }
+                            >
+                              {upload.title}
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <ul>
+                        <li className="tooltip-no-item">
+                          No Original Resources for this Document
+                        </li>
+                      </ul>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
@@ -188,8 +234,8 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         <h4>
           Issuance Date:&nbsp;
           <span>
-            {props.document?.issuanceDate?.isValid()
-              ? props.document?.issuanceDate?.format("MMMM D, YYYY")
+            {props.document?.issuanceTime
+              ? formatDate(props.document.issuanceTime)
               : "-"}
           </span>
         </h4>

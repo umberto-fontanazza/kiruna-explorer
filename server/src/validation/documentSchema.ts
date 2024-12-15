@@ -1,9 +1,29 @@
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { z } from "zod";
+import { TimeIntervalParseFailed } from "../error/timeIntervalError";
 import { DocumentType } from "../model/document";
 import { ScaleType } from "../model/scale";
 import { Stakeholder } from "../model/stakeholder";
+import { TimeInterval } from "../model/timeInterval";
 import { areaSchema } from "./areaSchema";
 import { coordinatesSchema } from "./coordinatesSchema";
+dayjs.extend(customParseFormat);
+
+const timeParser = (timeStr: string, ctx: z.RefinementCtx) => {
+  let parseResult: TimeInterval;
+  try {
+    parseResult = TimeInterval.parse(timeStr);
+  } catch (exception) {
+    if (!(exception instanceof TimeIntervalParseFailed)) throw exception;
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: `Failed to parse ${timeStr}`,
+    });
+    return z.NEVER;
+  }
+  return parseResult;
+};
 
 export const idRequestParam = z.object({
   id: z.coerce.number().int().positive(),
@@ -49,7 +69,16 @@ export const getQueryParameters = z
     maxIssuanceDate: z.string().date().optional(),
     minIssuanceDate: z.string().date().optional(),
   })
-  .strict();
+  .strict()
+  .refine(
+    (query) => {
+      if (!query.maxIssuanceDate || !query.minIssuanceDate) return true;
+      const min = dayjs(query.minIssuanceDate, "YYYY-MM-DD", true);
+      const max = dayjs(query.maxIssuanceDate, "YYYY-MM-DD", true);
+      return !min.isAfter(max);
+    },
+    { message: "maxIssuanceDate must be >= minIssuanceDate" },
+  );
 
 export type PostBody = z.infer<typeof postBody>;
 export const postBody = z
@@ -61,7 +90,7 @@ export const postBody = z
     stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
     coordinates: coordinatesSchema.optional(),
     area: areaSchema.optional(),
-    issuanceDate: z.string().date().optional(),
+    issuanceTime: z.string().transform(timeParser),
   })
   .strict()
   .refine((body) => !(body.coordinates && body.area), {
@@ -78,7 +107,7 @@ export const patchBody = z
     stakeholders: z.array(z.nativeEnum(Stakeholder)).optional(),
     coordinates: coordinatesSchema.optional(),
     area: areaSchema.optional(),
-    issuanceDate: z.string().date().optional(),
+    issuanceTime: z.string().transform(timeParser).optional(),
   })
   .strict()
   .refine((body) => !(body.coordinates && body.area), {

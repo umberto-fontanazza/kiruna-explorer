@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/DocumentForm.scss";
-import { documentFormDefaults, Link, UploadForm } from "../utils/interfaces";
+import { documentFormDefaults, Link, Upload } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
+import { validateDate } from "../utils/utils";
 import FirstPageModal from "./DocumentFormPages/FirstPageModal";
 import SecondPageModal from "./DocumentFormPages/SecondPageModal";
 import ThirdPageModal from "./DocumentFormPages/ThirdPageModal";
@@ -13,27 +14,30 @@ const DocumentForm = () => {
   const { setModalOpen, setEditDocumentMode, setPositionMode } =
     useAppContext();
   const {
-    coordinates,
     documentFormSelected,
     setDocumentFormSelected,
     handleAddNewDocument,
     handleUpdateDocument,
   } = useDocumentFormContext();
+
   const [page, setPage] = useState<number>(1);
   const [tableLinks, setTableLinks] = useState<Link[]>(
     documentFormSelected?.links || [],
   );
-  const [uploadedFiles, setUploadedFiles] = useState<UploadForm[] | null>(null);
+  const [filesToUpload, setFilesToUpload] = useState<Upload[]>([]);
+  const [errors, setErrors] = useState<Record<string, string> | null>(null);
 
-  useEffect(() => {
-    setDocumentFormSelected((prev) => ({
-      ...prev,
-      coordinates: {
-        latitude: coordinates.latitude,
-        longitude: coordinates.longitude,
-      },
-    }));
-  }, [coordinates]);
+  const validateFirstPage = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (!validateDate(documentFormSelected.issuanceTime || "")) {
+      errors.issuanceTime =
+        "Invalid date or invalid date format.<br/>Please use YYYY, YYYY/MM or YYYY/MM/DD.";
+    }
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -45,7 +49,7 @@ const DocumentForm = () => {
           ...documentFormSelected,
           links: tableLinks,
         },
-        uploadedFiles ?? [],
+        filesToUpload ?? [],
       );
     }
 
@@ -54,9 +58,9 @@ const DocumentForm = () => {
       handleUpdateDocument(
         { ...documentFormSelected, links: tableLinks },
         documentFormSelected.links,
+        filesToUpload,
       );
     }
-
     resetForm(false);
   };
 
@@ -77,12 +81,9 @@ const DocumentForm = () => {
       onSubmit={(ev) => {
         ev.preventDefault();
         if (page === 1) {
-          setPage(2);
-        } else if (page === 2) {
-          setPage(3);
-        } else {
-          handleFormSubmit(ev);
-        }
+          if (validateFirstPage()) setPage(2);
+        } else if (page === 2) setPage(3);
+        else handleFormSubmit(ev);
       }}
     >
       <button className="close" onClick={() => resetForm(true)}>
@@ -103,6 +104,8 @@ const DocumentForm = () => {
         <FirstPageModal
           documentForm={documentFormSelected}
           setDocumentForm={setDocumentFormSelected}
+          errors={errors}
+          setErrors={setErrors}
         />
       )}
       {page === 2 && (
@@ -117,9 +120,9 @@ const DocumentForm = () => {
         <ThirdPageModal
           documentForm={documentFormSelected}
           tableLinks={tableLinks}
-          filesToUpload={uploadedFiles}
+          filesToUpload={filesToUpload}
           goBack={setPage}
-          setFilesToUpload={setUploadedFiles}
+          setFilesToUpload={setFilesToUpload}
         />
       )}
     </form>
@@ -127,5 +130,3 @@ const DocumentForm = () => {
 };
 
 export default DocumentForm;
-
-//onClick={handleFormSubmit}

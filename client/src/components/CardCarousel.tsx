@@ -1,29 +1,79 @@
-import { Dispatch, FC, SetStateAction, useRef, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useRef } from "react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import { useAppContext } from "../context/appContext";
 import "../styles/CardCarousel.scss";
-import { Coordinates, Document } from "../utils/interfaces";
+import { Coordinates, Document, PolygonArea } from "../utils/interfaces";
+import { PositionMode } from "../utils/modes";
 import CardDocument from "./CardDocument";
 
 interface CardCarouselProps {
+  docSelected: Document | undefined;
+  setDocSelected: Dispatch<SetStateAction<Document | undefined>>;
   documents: Document[] | null;
-  setCoordinates: Dispatch<SetStateAction<Coordinates>>;
+  setLocation: Dispatch<SetStateAction<Coordinates | PolygonArea | null>>;
 }
 
 const ControlledCarousel: FC<CardCarouselProps> = ({
+  docSelected,
+  setDocSelected,
   documents,
-  setCoordinates,
+  setLocation,
 }) => {
-  const [docSelected, setDocSelected] = useState<Document | null>(null);
+  const { setPositionMode, setShowTooltipUploads } = useAppContext();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const swiperRef = useRef<any>(null);
 
-  const handleCardClick = (doc: Document, index: number) => {
-    setDocSelected(doc);
-    swiperRef.current?.swiper.slideTo(index);
+  useEffect(() => {
+    if (documents && documents.length > 0 && !docSelected) {
+      setDocSelected(documents[0]);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (docSelected && documents) {
+      const index = documents.findIndex((doc) => doc.id === docSelected.id);
+      if (index !== -1) {
+        swiperRef.current?.swiper.slideTo(index);
+      }
+    }
+    setShowTooltipUploads(false);
+  }, [docSelected]);
+
+  useEffect(() => {
+    if (documents && documents.length > 0) {
+      if (!docSelected) {
+        setDocSelected(documents[0]);
+      } else {
+        const index = documents.findIndex((doc) => doc.id === docSelected.id);
+        if (index !== -1) {
+          swiperRef.current?.swiper.slideTo(index);
+        } else {
+          setDocSelected(documents[0]);
+        }
+      }
+    }
+  }, [documents]);
+
+  const handleSlideChange = () => {
+    if (swiperRef.current && documents) {
+      const currentIndex = swiperRef.current.swiper.realIndex;
+      setDocSelected(documents[currentIndex]);
+    }
+  };
+
+  const handleEditPos = () => {
+    if (docSelected) {
+      if (docSelected.coordinates) {
+        setLocation(docSelected.coordinates);
+      } else if (docSelected.area) {
+        setLocation(docSelected.area);
+      }
+    }
+    setPositionMode(PositionMode.Update);
   };
 
   return (
@@ -41,8 +91,9 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
           navigation={true}
           modules={[Pagination, Navigation]}
           className="mySwiper"
+          onSlideChange={handleSlideChange}
         >
-          {documents.map((doc, index) => (
+          {documents.map((doc) => (
             <SwiperSlide key={doc.id}>
               <div
                 className={`card-container ${
@@ -50,19 +101,19 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
                 }`}
                 role="button"
                 tabIndex={0}
-                onClick={() => handleCardClick(doc, index)}
+                onClick={() => setDocSelected(doc)}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
-                    handleCardClick(doc, index);
+                    setDocSelected(doc);
                   }
                 }}
               >
                 <CardDocument
                   document={doc}
-                  toEditPos={() => {}}
+                  toEditPos={handleEditPos}
                   showMapButton={true}
                   isDocSelected={docSelected?.id === doc.id}
-                  setMinimapCoord={setCoordinates}
+                  setMinimapCoord={setLocation}
                 />
               </div>
             </SwiperSlide>

@@ -1,6 +1,6 @@
 import React, { createContext, ReactNode, useState } from "react";
 import API from "../API/API";
-import { Coordinates, Document } from "../utils/interfaces";
+import { Coordinates, Document, PolygonArea } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
 
 // Definizione del tipo per il contesto
@@ -9,16 +9,18 @@ interface AppContextType {
   editDocumentMode: boolean;
   isPopupOpen: boolean;
   positionMode: PositionMode;
+  showTooltipUploads: boolean;
   visualLinks: boolean;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEditDocumentMode: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setPositionMode: React.Dispatch<React.SetStateAction<PositionMode>>;
+  setShowTooltipUploads: React.Dispatch<React.SetStateAction<boolean>>;
   setVisualLinks: React.Dispatch<React.SetStateAction<boolean>>;
   handleCancelPopup: () => void;
   handleEditPositionModeConfirm: (
     docSelected: Document,
-    newPos: Coordinates,
+    newPos: Coordinates | PolygonArea,
   ) => void;
 }
 
@@ -32,6 +34,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [editDocumentMode, setEditDocumentMode] = useState<boolean>(false);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+  const [showTooltipUploads, setShowTooltipUploads] = useState<boolean>(false);
 
   // Questo controlla solo il cambio di una scritta
   const [positionMode, setPositionMode] = useState<PositionMode>(
@@ -45,17 +48,28 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
 
   const handleEditPositionModeConfirm = async (
     docSelected: Document,
-    newPos: Coordinates,
+    newPos: Coordinates | PolygonArea,
   ) => {
     if (docSelected) {
       try {
-        const updateDocument = {
-          ...docSelected,
-          coordinates: {
-            latitude: newPos.latitude,
-            longitude: newPos.longitude,
-          },
-        };
+        let updateDocument;
+
+        if ("latitude" in newPos && "longitude" in newPos) {
+          updateDocument = {
+            ...docSelected,
+            coordinates: {
+              latitude: newPos.latitude,
+              longitude: newPos.longitude,
+            },
+            area: undefined,
+          };
+        } else {
+          updateDocument = {
+            ...docSelected,
+            coordinates: undefined,
+            area: newPos,
+          };
+        }
         await API.updateDocument(updateDocument);
       } catch (err) {
         console.error(err);
@@ -71,11 +85,13 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         editDocumentMode,
         isPopupOpen,
         positionMode,
+        showTooltipUploads,
         visualLinks,
         setModalOpen,
         setEditDocumentMode,
         setIsPopupOpen,
         setPositionMode,
+        setShowTooltipUploads,
         setVisualLinks,
         //Functions
         handleCancelPopup,

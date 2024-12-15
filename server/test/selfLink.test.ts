@@ -43,3 +43,4 @@ test("Linking a document with itself should return a BAD_REQUEST", async () => {
   expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   await request(app).del(`/documents/${id}`);
 });
+

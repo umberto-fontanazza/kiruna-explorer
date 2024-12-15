@@ -80,3 +80,4 @@ describe("Database", () => {
     expect(setTypeParserMock).toHaveBeenCalledWith(58509, expect.any(Function));
   });
 });
+

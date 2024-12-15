@@ -2,11 +2,13 @@ import { Upload, UploadType } from "../utils/interfaces";
 import { baseURL } from "./API";
 
 async function getUploads(
-  documentId: number,
+  documentId?: number,
   file?: string,
 ): Promise<Upload[]> {
   const params = new URLSearchParams();
-  params.append("documentId", documentId.toString());
+  if (documentId !== undefined) {
+    params.append("documentId", documentId.toString());
+  }
   if (file) params.append("file", file);
   const response = await fetch(baseURL + `/uploads?` + params.toString(), {
     method: "GET",
@@ -26,15 +28,38 @@ async function getUploadById(uploadId: number): Promise<Upload> {
   if (!response.ok) {
     throw new Error("Error in fetching upload by id");
   }
-  const file: Upload = await response.json();
-  return file;
+
+  const {
+    id,
+    title,
+    type,
+    file,
+  }: { id: number; title: string; type: UploadType; file: string } =
+    await response.json();
+
+  return {
+    id,
+    title,
+    type,
+    file,
+  };
+}
+
+async function getBindedDocuments(uploadId: number): Promise<number[]> {
+  const queryParams = "?bindedDocumentIds=include";
+  const response = await fetch(baseURL + `/uploads/${uploadId}${queryParams}`);
+  if (!response.ok) {
+    throw new Error("Error in fetching binded documents");
+  }
+  const res = await response.json();
+  return res.bindedDocumentIds;
 }
 
 async function addUpload(
   title: string,
   type: UploadType,
   file: string,
-  documentsIds: number[],
+  documentsIds?: number[],
 ): Promise<number> {
   const requestBody = {
     title: title,
@@ -65,7 +90,7 @@ async function editUpload(
 ): Promise<void> {
   const requestBody = { title, bindDocumentIds, decoupleDocumentIds };
   const response = await fetch(baseURL + `/uploads/${uploadId}`, {
-    method: "POST",
+    method: "PATCH",
     credentials: "include",
     headers: {
       "Content-Type": "application/json",
@@ -90,6 +115,7 @@ async function deleteUpload(uploadId: number): Promise<void> {
 export const uploadAPI = {
   getUploads,
   getUploadById,
+  getBindedDocuments,
   addUpload,
   editUpload,
   deleteUpload,

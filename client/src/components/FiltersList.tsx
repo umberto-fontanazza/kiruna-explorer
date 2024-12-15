@@ -16,6 +16,7 @@ const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
           <select
             id="document-type"
             required
+            defaultValue={"default"}
             onChange={(e) => {
               setFilters((prev) => ({
                 ...prev,
@@ -23,11 +24,11 @@ const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
               }));
             }}
           >
-            <option disabled selected hidden value="">
+            <option disabled hidden value="default">
               Select document type
             </option>
             {Object.values(DocumentType).map((value) => (
-              <option value={value}>
+              <option key={value} value={value}>
                 {capitalizeFirstLetter(value).replace(/_/, " ")}
               </option>
             ))}
@@ -37,6 +38,7 @@ const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
         <div className="filter">
           <select
             id="scale-type"
+            defaultValue={"default"}
             onChange={(e) => {
               setFilters((prev) => ({
                 ...prev,
@@ -44,11 +46,11 @@ const FiltersList: FC<FiltersListProps> = ({ setFilters }) => {
               }));
             }}
           >
-            <option disabled selected hidden value="">
+            <option disabled hidden value="default">
               Select scale type
             </option>
             {Object.values(ScaleType).map((value) => (
-              <option value={value}>
+              <option key={value} value={value}>
                 {capitalizeFirstLetter(value).replace(/_/, " ")}
               </option>
             ))}
