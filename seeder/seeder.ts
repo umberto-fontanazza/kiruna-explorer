@@ -1,9 +1,38 @@
-import request from "supertest";
-import app from "../src/app"; // Ensure your app path is correct
-import { DocumentType } from "../src/model/document"; // Make sure paths are correct
-import { ScaleType } from "../src/model/scale"; // Make sure paths are correct
-import { Stakeholder } from "../src/model/stakeholder"; // Make sure paths are correct
-import { loginAsPlanner } from "../test/utils";
+import { DocumentType } from "../server/src/model/document";
+import { ScaleType } from "../server/src/model/scale";
+import { Stakeholder } from "../server/src/model/stakeholder";
+
+async function loginAsPlanner() {
+  try {
+    // Autenticazione dell'utente per ottenere il cookie di sessione
+    const response = await fetch("http://localhost:3000/sessions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: "testurban.planner@gmail.com",
+        password: "plannerPassword",
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to log in");
+    }
+
+    const cookies = response.headers.get("set-cookie");
+    const sessionCookie = cookies?.split(";")[0] || "";
+
+    if (!sessionCookie) {
+      throw new Error("Session cookie not found");
+    }
+
+    return sessionCookie;
+  } catch (error) {
+    console.error("Error during login:", error);
+    throw error;
+  }
+}
 
 // Funzione per svuotare il database
 async function clearDatabase() {
@@ -11,25 +40,34 @@ async function clearDatabase() {
     const plannerCookie = await loginAsPlanner();
 
     // Step 1: Get all documents
-    const response = await request(app)
-      .get("/documents/") // Adjust the endpoint to fetch all documents
-      .set("Cookie", plannerCookie); // Add necessary authentication cookies
+    const response = await fetch("http://localhost:3000/documents/", {
+      method: "GET",
+      headers: {
+        Cookie: plannerCookie,
+      },
+    });
 
-    if (response.status !== 200) {
+    if (!response.ok) {
       console.error("Failed to retrieve documents.");
       return;
     }
 
-    const documents: any[] = response.body; // Assuming the response contains an array of documents
+    const documents: any[] = await response.json(); // Assuming the response contains an array of documents
     console.log(`Retrieved ${documents.length} documents.`);
 
     // Step 2: Delete each document by ID
     for (const doc of documents) {
-      const deleteResponse = await request(app)
-        .delete(`/documents/${doc.id}`) // Delete document by ID
-        .set("Cookie", plannerCookie); // Ensure you set the cookie for authentication
+      const deleteResponse = await fetch(
+        `http://localhost:3000/documents/${doc.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Cookie: plannerCookie,
+          },
+        }
+      );
 
-      if (deleteResponse.status !== 200) {
+      if (!deleteResponse.ok) {
         console.error(`Failed to delete document with ID: ${doc.id}`);
       } else {
         console.log(`Deleted document with ID: ${doc.id}`);
@@ -174,12 +212,16 @@ async function populateDatabase() {
 
     // Loop over the documents and send a POST request for each one
     for (const document of newDocuments) {
-      const response = await request(app)
-        .post("/documents/") // Adjust the endpoint as needed
-        .set("Cookie", plannerCookie) // Ensure to add the cookie for authentication
-        .send(document); // Send the document object to the API
+      const response = await fetch("http://localhost:3000/documents/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: plannerCookie,
+        },
+        body: JSON.stringify(document), // Send the document object to the API
+      });
 
-      if (response.status !== 201) {
+      if (!response.ok) {
         console.error(`Failed to add document: ${document.title}`);
       } else {
         console.log(`Document added: ${document.title}`);
