@@ -456,7 +456,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                 ? "Select a point on the map, where you want to add a new Document"
                 : drawingMode === "polygon"
                   ? "Draw a polygon on the map, where you want to add a new Document"
-                  : "Select a document on the map to place the new Document in the same point or area"}
+                  : drawingMode === "existing"
+                    ? "Select a document on the map to place the new Document in the same point or area"
+                    : "Municipal Area Selected"}
             </h3>
           )}
           {positionMode === PositionMode.Update && (
@@ -465,7 +467,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                 ? "Select a point on the map, where you want to update the position of the document selected"
                 : drawingMode === "polygon"
                   ? "Draw a polygon on the map, where you want to update the position of the document selected"
-                  : "Select a document on the map to update the position of the Document to the same point or area"}
+                  : drawingMode === "existing"
+                    ? "Select a document on the map to update the Document position to the same point or area of another Document"
+                    : "Municipal Area Selected"}
             </h3>
           )}
           {(positionMode === PositionMode.Update ||
