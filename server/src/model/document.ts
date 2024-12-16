@@ -97,8 +97,7 @@ export class Document {
     this.type = type;
     this.scale = scale;
     this.stakeholders = stakeholders;
-    //FIXME:
-    this._coordinates = coordinates;
+    if (coordinates) this.setCoordinates(coordinates);
     if (area) this.setArea(area);
     this.issuanceTime = issuanceTime;
     this.links = links;
@@ -155,7 +154,7 @@ export class Document {
     return this._area;
   }
   async setArea(area?: Area): Promise<void> {
-    if (this._coordinates && area) await this.setCoordinates(undefined);
+    if (this._coordinates && area) await this.setCoordinates();
     if (this._area) {
       await this._area.delete();
     }
@@ -167,7 +166,7 @@ export class Document {
   }
 
   async setCoordinates(coordinates?: Coordinates): Promise<void> {
-    if (coordinates && this._area) await this.setArea(undefined);
+    if (coordinates && this._area) await this.setArea();
     this._coordinates = coordinates;
   }
 
