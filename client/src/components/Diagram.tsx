@@ -18,12 +18,6 @@ const linksExtractor = (
       ),
     )
     .filter((l) => l.target > l.source);
-
-const links = [
-  { source: 0, target: 1 },
-  { source: 0, target: 2 },
-];
-
 interface DiagramProps {
   documents: Document[];
   onDocumentClick: (d: Document) => void;
