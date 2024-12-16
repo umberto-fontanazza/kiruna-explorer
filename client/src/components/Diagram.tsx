@@ -30,7 +30,13 @@ const data = mockDocks.map((d, i) => ({
 
 const [minX, maxX, minY, maxY] = rangeExtractor(data);
 const [width, heigth] = [maxX - minX, maxY - minY];
+const padPercentage = 5; /** if padPercentage is 5 it means we have 2.5% padding left and right */
+const padAbsolute = (width * padPercentage) / 2 / 100;
+const [padMinX, padMaxX] = [minX - padAbsolute, maxX + padAbsolute];
 
+function toPercentage(value: number, min: number, max: number): number {
+  return ((value - min) * 100) / (max - min);
+}
 interface DiagramProps {
   documents: Document[];
 }
@@ -45,8 +51,8 @@ const updateSvg = (ref: MutableRefObject<SVGElement | null>) => {
     .selectAll("*")
     .data(data)
     .join("circle")
-    .attr("cx", (d) => `${((d.x - minX) * 100) / width}%`)
-    .attr("cy", (d) => `${((d.y - minY) * 100) / heigth}%`);
+    .attr("cx", (d) => `${toPercentage(d.x, padMinX, padMaxX)}%`)
+    .attr("cy", (d) => `${toPercentage(d.y, minY, maxY)}%`);
 };
 
 const Diagram: FC<DiagramProps> = ({ documents }) => {
