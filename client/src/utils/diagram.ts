@@ -3,6 +3,7 @@ import { MutableRefObject } from "react";
 import {
   DiagramLink,
   DiagramNode,
+  DISCRETE_RANGE,
   IndexedLink,
   xyExtractor,
 } from "./diagramNode";
@@ -19,8 +20,11 @@ const rangeExtractor = (
     Math.min(...arr.map((e) => e.y)),
     Math.max(...arr.map((e) => e.y)),
   ];
-  return [minX, maxX, minY, maxY];
+  return [minX, maxX, minY - DISCRETE_RANGE / 2, maxY + DISCRETE_RANGE / 2];
 };
+
+const maxRatioExtractor = (docs: Document[]): number =>
+  Math.max(...(docs.map((d) => d.scale.ratio).filter((r) => r) as number[]));
 
 /**
  * @param docs
@@ -53,14 +57,13 @@ export const updateSvg = (
   rawLinks: DiagramLink[],
   onClick: (d: Document) => void,
 ) => {
-  const data: DiagramNode[] = xyExtractor(documents);
+  const maxRatio = maxRatioExtractor(documents);
+  const data: DiagramNode[] = xyExtractor(documents, maxRatio);
   const links: IndexedLink[] = indexLinks(documents, rawLinks);
   const [minX, maxX, minY, maxY] = rangeExtractor(data);
   const [width, heigth] = [maxX - minX, maxY - minY];
   const padXAbsolute = (width * padX) / 2 / 100;
-  const padYAbsolute = (heigth * padY) / 2 / 100;
   const [padMinX, padMaxX] = [minX - padXAbsolute, maxX + padXAbsolute];
-  const [padMinY, padMaxY] = [minY - padYAbsolute, maxY + padYAbsolute];
 
   const svg = ref.current;
   if (!svg) return;
@@ -72,7 +75,7 @@ export const updateSvg = (
     .data(data)
     .join("circle")
     .attr("cx", (data) => toPercentage(data.x, padMinX, padMaxX))
-    .attr("cy", (data) => toPercentage(data.y, padMinY, padMaxY))
+    .attr("cy", (data) => toPercentage(data.y, minY, maxY))
     .on("click", (e) => {
       const data = e.target.__data__;
       onClick(data.ref);
@@ -84,6 +87,6 @@ export const updateSvg = (
     .join("line")
     .attr("x1", (link) => toPercentage(data[link.source].x, padMinX, padMaxX))
     .attr("x2", (link) => toPercentage(data[link.target].x, padMinX, padMaxX))
-    .attr("y1", (link) => toPercentage(data[link.source].y, padMinY, padMaxY))
-    .attr("y2", (link) => toPercentage(data[link.target].y, padMinY, padMaxY));
+    .attr("y1", (link) => toPercentage(data[link.source].y, minY, maxY))
+    .attr("y2", (link) => toPercentage(data[link.target].y, minY, maxY));
 };

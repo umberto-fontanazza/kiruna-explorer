@@ -90,4 +90,15 @@ export const mockDocks: Document[] = [
     },
     issuanceDate: dayjs("2024-12-21"),
   },
+  {
+    id: 8,
+    title: "Document 8",
+    description: "Description of document 8",
+    type: DocumentType.Design,
+    scale: {
+      type: ScaleType.ArchitecturalScale,
+      ratio: 1,
+    },
+    issuanceDate: dayjs("2024-12-21"),
+  },
 ];

@@ -2,8 +2,8 @@ import { FC, useEffect, useRef } from "react";
 import "../styles/Diagram.scss";
 import { SVGElement, updateSvg } from "../utils/diagram";
 import { DiagramLink } from "../utils/diagramNode";
-import { Document, Link } from "../utils/interfaces";
-import { capitalizeFirstLetter } from "../utils/utils";
+import { Document, Link, ScaleType } from "../utils/interfaces";
+import { capitalizeFirstLetter, enumDefOrderComparator } from "../utils/utils";
 
 const linksExtractor = (docs: Document[]): DiagramLink[] =>
   docs
@@ -33,13 +33,13 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
   return (
     <section id="diagram">
       <div className="scale-types-container">
-        {[...new Set((documents ?? []).map((d) => d.scale.type))].map(
-          (scaleTName) => (
-            <span className="scale-type" key={scaleTName}>
+        {[...new Set((documents ?? []).map((d) => d.scale.type))]
+          .sort(enumDefOrderComparator(ScaleType))
+          .map((scaleTName) => (
+            <span className={`scale-type ${scaleTName}`} key={scaleTName}>
               {capitalizeFirstLetter(scaleTName).replace("_", " ")}
             </span>
-          ),
-        )}
+          ))}
       </div>
       <svg ref={svgRef}>
         <g className="links"></g>
