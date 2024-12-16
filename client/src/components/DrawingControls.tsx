@@ -45,7 +45,7 @@ const DrawingControls: FC<DrawingControlsProps> = ({
 
     // Resetta il drawing manager
     drawingManager?.setDrawingMode(null);
-    setDrawingMode("");
+    setDrawingMode("municipal");
   };
 
   const handlePolygonButtonClick = () => {
@@ -86,6 +86,9 @@ const DrawingControls: FC<DrawingControlsProps> = ({
   const handleExistingButtonClick = () => {
     setActiveButton("existing-btn");
 
+    drawnPolygon?.setMap(null);
+    drawnMarker?.setMap(null);
+
     if (positionMode !== PositionMode.Update) {
       map?.setZoom(11);
       map?.setCenter(kirunaCoords);
@@ -95,6 +98,7 @@ const DrawingControls: FC<DrawingControlsProps> = ({
       municipalArea.forEach((area) => area.setMap(null));
       setMunicipalArea(undefined);
     }
+    drawingManager?.setDrawingMode(null);
     setDrawingMode("existing");
   };
 

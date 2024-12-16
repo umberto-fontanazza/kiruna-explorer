@@ -1,6 +1,13 @@
 import { Dispatch, SetStateAction } from "react";
 import "../styles/MapComponentsStyles/markers.scss";
-import { CustomMarker, Document, fromDocumentTypeToIcon } from "./interfaces";
+import { rewindRing } from "./drawingTools";
+import {
+  Coordinates,
+  CustomMarker,
+  Document,
+  fromDocumentTypeToIcon,
+  PolygonArea,
+} from "./interfaces";
 import { kirunaCoords } from "./map";
 import { PositionMode } from "./modes";
 import { createArea, getPolygonCentroid } from "./polygonsTools";
@@ -10,7 +17,9 @@ export const createMarker = (
   linked: boolean = false,
   map: google.maps.Map,
   positionMode: PositionMode,
+  drawingMode: string,
   setDrawnMarker: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
+  setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
   setShowTooltipUploads?: Dispatch<SetStateAction<boolean>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
@@ -50,7 +59,10 @@ export const createMarker = (
     content: content,
   });
 
-  if (positionMode === PositionMode.None) {
+  if (
+    positionMode === PositionMode.None ||
+    (positionMode === PositionMode.Insert && drawingMode === "existing")
+  ) {
     marker.content?.addEventListener("mouseenter", () => {
       if (doc.area && map) {
         hoverArea = createArea(doc, map, positionMode);
@@ -75,10 +87,19 @@ export const createMarker = (
     positionMode !== PositionMode.Update
   ) {
     marker.addListener("click", () => {
-      setSidebarOpen(true);
-      setdocumentSelected(doc);
-      if (setShowTooltipUploads) setShowTooltipUploads(false);
-
+      if (drawingMode !== "existing") {
+        setSidebarOpen(true);
+        setdocumentSelected(doc);
+        if (setShowTooltipUploads) setShowTooltipUploads(false);
+      } else {
+        if (doc.area) {
+          const newPolygon = convertPolygonAreaToPolygon(doc.area, map);
+          setDrawnPolygon(newPolygon);
+        } else if (doc.coordinates) {
+          const newMarker = convertCoordinatesToMarkers(doc.coordinates, map);
+          setDrawnMarker(newMarker);
+        }
+      }
       const newCenter = doc.coordinates
         ? {
             lat: doc.coordinates.latitude,
@@ -110,3 +131,68 @@ export const createMarker = (
 
   return marker;
 };
+
+function convertPolygonAreaToPolygon(
+  polygonArea: PolygonArea,
+  map: google.maps.Map,
+): google.maps.Polygon {
+  // 1. Trasforma le coordinate incluse (include) e le escluse (exclude) in percorsi (paths)
+  const paths: google.maps.LatLngLiteral[][] = [];
+
+  // Aggiungi il path principale (inclusione)
+  const includePath = polygonArea.include.map((coord) => ({
+    lat: coord.latitude,
+    lng: coord.longitude,
+  }));
+  const includeLatLngs = includePath.map(
+    (coord) => new google.maps.LatLng(coord),
+  );
+  const orientedIncludePath = rewindRing(includeLatLngs, false); // Antiorario
+  paths.push(
+    orientedIncludePath.map((latLng) => ({
+      lat: latLng.lat(),
+      lng: latLng.lng(),
+    })),
+  );
+
+  // Aggiungi i percorsi esclusi (buchi)
+  polygonArea.exclude.forEach((excludedPath) => {
+    const excludePath = excludedPath.map((coord) => ({
+      lat: coord.latitude,
+      lng: coord.longitude,
+    }));
+    const excludeLatLngs = excludePath.map(
+      (coord) => new google.maps.LatLng(coord),
+    );
+    const orientedExcludePath = rewindRing(excludeLatLngs, true); // Orario
+    paths.push(
+      orientedExcludePath.map((latLng) => ({
+        lat: latLng.lat(),
+        lng: latLng.lng(),
+      })),
+    );
+  });
+
+  // 2. Crea e restituisci un oggetto google.maps.Polygon
+  const polygon = new google.maps.Polygon({
+    paths,
+    strokeColor: "rgb(0,255,0)",
+    strokeOpacity: 0.8,
+    strokeWeight: 2,
+    fillColor: "rgb(0,255,0)",
+    fillOpacity: 0.35,
+    map,
+  });
+
+  return polygon;
+}
+
+function convertCoordinatesToMarkers(
+  coordinates: Coordinates,
+  map: google.maps.Map,
+): google.maps.Marker {
+  // Crea il singolo marker
+  return new google.maps.Marker({
+    position: { lat: coordinates.latitude, lng: coordinates.longitude }, // Converte in LatLngLiteral
+  });
+}
