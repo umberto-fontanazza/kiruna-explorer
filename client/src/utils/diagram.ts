@@ -1,7 +1,12 @@
 import * as d3 from "d3";
 import { MutableRefObject } from "react";
-import { DiagramNode, xyExtractor } from "./diagramNode";
-import { Document, LinkType } from "./interfaces";
+import {
+  DiagramLink,
+  DiagramNode,
+  IndexedLink,
+  xyExtractor,
+} from "./diagramNode";
+import { Document } from "./interfaces";
 
 export type SVGElement = SVGSVGElement;
 
@@ -17,10 +22,12 @@ const rangeExtractor = (
   return [minX, maxX, minY, maxY];
 };
 
-const indexLinks = (
-  docs: Document[],
-  links: { source: number; target: number; type: LinkType }[],
-): { source: number; target: number; type: LinkType }[] => {
+/**
+ * @param docs
+ * @param links which have as source and target documentIds
+ * @returns links which have as source and target the index inside the docs array
+ */
+const indexLinks = (docs: Document[], links: IndexedLink[]): DiagramLink[] => {
   const hashMap: Record<string, number> = {};
   docs.forEach((d, idx) => {
     hashMap[`${d.id}`] = idx;
@@ -43,10 +50,11 @@ function toPercentage(value: number, min: number, max: number): string {
 export const updateSvg = (
   ref: MutableRefObject<SVGElement | null>,
   documents: Document[],
-  links: { source: number; target: number; type: LinkType }[],
+  rawLinks: DiagramLink[],
+  onClick: (d: Document) => void,
 ) => {
-  links = indexLinks(documents, links);
   const data: DiagramNode[] = xyExtractor(documents);
+  const links: IndexedLink[] = indexLinks(documents, rawLinks);
   const [minX, maxX, minY, maxY] = rangeExtractor(data);
   const [width, heigth] = [maxX - minX, maxY - minY];
   const padXAbsolute = (width * padX) / 2 / 100;
@@ -64,7 +72,11 @@ export const updateSvg = (
     .data(data)
     .join("circle")
     .attr("cx", (data) => toPercentage(data.x, padMinX, padMaxX))
-    .attr("cy", (data) => toPercentage(data.y, padMinY, padMaxY));
+    .attr("cy", (data) => toPercentage(data.y, padMinY, padMaxY))
+    .on("click", (e) => {
+      const data = e.target.__data__;
+      onClick(data.ref);
+    });
   d3sel
     .selectAll("g.links")
     .selectAll("*")

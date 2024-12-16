@@ -60,4 +60,34 @@ export const mockDocks: Document[] = [
     },
     issuanceDate: dayjs("2024-12-21"),
   },
+  {
+    id: 5,
+    title: "Document 5",
+    description: "Description of document 5",
+    type: DocumentType.Design,
+    scale: {
+      type: ScaleType.Text,
+    },
+    issuanceDate: dayjs("2024-12-21"),
+  },
+  {
+    id: 6,
+    title: "Document 6",
+    description: "Description of document 6",
+    type: DocumentType.Design,
+    scale: {
+      type: ScaleType.BlueprintsOrEffect,
+    },
+    issuanceDate: dayjs("2024-12-21"),
+  },
+  {
+    id: 7,
+    title: "Document 7",
+    description: "Description of document 7",
+    type: DocumentType.Design,
+    scale: {
+      type: ScaleType.Concept,
+    },
+    issuanceDate: dayjs("2024-12-21"),
+  },
 ];

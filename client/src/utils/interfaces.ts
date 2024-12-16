@@ -90,10 +90,10 @@ export enum LinkType {
 }
 
 export enum ScaleType {
+  Text = "text",
+  Concept = "concept",
   ArchitecturalScale = "architectural_scale",
   BlueprintsOrEffect = "blueprints/effects",
-  Concept = "concept",
-  Text = "text",
 }
 
 export enum Stakeholder {
