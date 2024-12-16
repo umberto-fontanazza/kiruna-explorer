@@ -26,7 +26,7 @@ export const mockDocks: Document[] = [
     type: DocumentType.Design,
     scale: {
       type: ScaleType.ArchitecturalScale,
-      ratio: 500,
+      ratio: 450,
     },
     issuanceDate: dayjs("2024-12-15"),
     links: [
@@ -44,9 +44,20 @@ export const mockDocks: Document[] = [
     type: DocumentType.Design,
     scale: {
       type: ScaleType.ArchitecturalScale,
-      ratio: 500,
+      ratio: 470,
     },
     issuanceDate: dayjs("2024-12-21"),
     links: [{ targetDocumentId: 2, linkTypes: [LinkType.Projection] }],
+  },
+  {
+    id: 4,
+    title: "Document 4",
+    description: "Description of document 4",
+    type: DocumentType.Design,
+    scale: {
+      type: ScaleType.ArchitecturalScale,
+      ratio: 100,
+    },
+    issuanceDate: dayjs("2024-12-21"),
   },
 ];

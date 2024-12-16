@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { MutableRefObject } from "react";
+import { DiagramNode, xyExtractor } from "./diagramNode";
 import { Document, LinkType } from "./interfaces";
 
 export type SVGElement = SVGSVGElement;
@@ -20,22 +21,16 @@ const indexLinks = (
   docs: Document[],
   links: { source: number; target: number; type: LinkType }[],
 ): { source: number; target: number; type: LinkType }[] => {
-  const mapping: Record<string, number> = {};
+  const hashMap: Record<string, number> = {};
   docs.forEach((d, idx) => {
-    mapping[`${d.id}`] = idx;
+    hashMap[`${d.id}`] = idx;
   });
   return links.map((l) => ({
-    source: mapping[l.source.toString()],
-    target: mapping[l.target.toString()],
+    source: hashMap[l.source.toString()],
+    target: hashMap[l.target.toString()],
     type: l.type,
   }));
 };
-
-const positions = [
-  { x: 50, y: 200 },
-  { x: 200, y: 50 },
-  { x: 300, y: 300 },
-];
 
 const [padX, padY] = [
   10, 20,
@@ -51,14 +46,7 @@ export const updateSvg = (
   links: { source: number; target: number; type: LinkType }[],
 ) => {
   links = indexLinks(documents, links);
-  const data: { x: number; y: number; ref: unknown }[] = documents
-    .slice(0, 3)
-    .map((d, i) => ({
-      ref: d,
-      x: positions[i].x,
-      y: positions[i].y,
-    }));
-
+  const data: DiagramNode[] = xyExtractor(documents);
   const [minX, maxX, minY, maxY] = rangeExtractor(data);
   const [width, heigth] = [maxX - minX, maxY - minY];
   const padXAbsolute = (width * padX) / 2 / 100;
