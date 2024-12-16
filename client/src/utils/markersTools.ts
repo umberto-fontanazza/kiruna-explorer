@@ -96,7 +96,10 @@ export const createMarker = (
           const newPolygon = convertPolygonAreaToPolygon(doc.area, map);
           setDrawnPolygon(newPolygon);
         } else if (doc.coordinates) {
-          const newMarker = convertCoordinatesToMarkers(doc.coordinates, map);
+          if (marker.content) {
+            (marker.content as HTMLElement).className = "document-icon iytig";
+          }
+          const newMarker = convertCoordinatesToMarkers(doc.coordinates);
           setDrawnMarker(newMarker);
         }
       }
@@ -132,7 +135,7 @@ export const createMarker = (
   return marker;
 };
 
-function convertPolygonAreaToPolygon(
+export function convertPolygonAreaToPolygon(
   polygonArea: PolygonArea,
   map: google.maps.Map,
 ): google.maps.Polygon {
@@ -187,9 +190,8 @@ function convertPolygonAreaToPolygon(
   return polygon;
 }
 
-function convertCoordinatesToMarkers(
+export function convertCoordinatesToMarkers(
   coordinates: Coordinates,
-  map: google.maps.Map,
 ): google.maps.Marker {
   // Crea il singolo marker
   return new google.maps.Marker({

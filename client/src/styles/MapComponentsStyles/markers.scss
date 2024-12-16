@@ -17,6 +17,11 @@
     border: 2px solid green;
   }
 
+  &.iytig {
+    background-color: rgb(0, 255, 0);
+    border: 2px solid green;
+  }
+
   &:hover {
     background-color: Color.$second;
   }

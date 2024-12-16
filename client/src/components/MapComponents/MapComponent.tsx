@@ -176,9 +176,12 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           event,
           cluster,
           map,
+          drawingMode,
           setdocumentSelected,
           setSidebarOpen,
           setInfoWindow,
+          drawingMode === "existing" ? setDrawnPolygon : undefined,
+          drawingMode === "existing" ? setDrawnMarker : undefined,
         ),
     });
 
