@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAppContext } from "../context/appContext";
+import { AlertType } from "./alertType";
 import { PositionMode } from "./modes";
 
 export const useDrawingTools = (
@@ -13,7 +14,7 @@ export const useDrawingTools = (
   setDrawnMarker: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
   setActiveButton: Dispatch<SetStateAction<string>>,
 ) => {
-  const { positionMode } = useAppContext();
+  const { positionMode, alertRef } = useAppContext();
   const [drawingMode, setDrawingMode] =
     useState<google.maps.drawing.OverlayType | null>(null);
 
@@ -87,8 +88,10 @@ export const useDrawingTools = (
               setDrawnPolygon(drawnPolygon);
             } else {
               newPolygon.setMap(null);
-              alert(
-                "Error: You can only create holes inside the main polygon. Please try again.",
+              alertRef.current?.showAlert(
+                "You can only create holes inside the main polygon. Please try again.",
+                AlertType.Error,
+                3000,
               );
             }
           }

@@ -89,21 +89,21 @@ const Home = () => {
                   target="_blank"
                   aria-label="GitHub Repository"
                 >
-                  <img src="../../public/github-mark.svg" alt="GitHub" />
+                  <img src="github-mark.svg" alt="GitHub" />
                 </a>
                 <a
                   href="https://it.wikipedia.org/wiki/Kiruna"
                   target="_blank"
                   aria-label="Kiruna su Wikipedia"
                 >
-                  <img src="../../public/wikipedia-logo.svg" alt="Wikipedia" />
+                  <img src="wikipedia-logo.svg" alt="Wikipedia" />
                 </a>
                 <a
                   href="https://www.instagram.com/umberto.fontanazza/"
                   target="_blank"
                   aria-label="Stavo facendo un po' di refactoring"
                 >
-                  <img src="../../public/ig-logo.svg" alt="Instagram" />
+                  <img src="ig-logo.svg" alt="Instagram" />
                 </a>
               </div>
             </div>

@@ -1,24 +1,23 @@
-import { FC, useContext, useRef, useState } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/appContext";
 import { authContext } from "../context/auth";
 import "../styles/LoginForm.scss";
+import { AlertType } from "../utils/alertType";
 import { LoginErrors } from "../utils/interfaces";
 
 const LoginForm: FC = (): JSX.Element => {
   const { user, login } = useContext(authContext);
+  const { alertRef } = useAppContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<LoginErrors>({});
 
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
-  const timeoutRef = useRef<number | null>(null);
-
   const nav = useNavigate();
 
-  if (user) {
-    // interrupt rendering
-    nav("/map");
-  }
+  useEffect(() => {
+    if (user) nav("/map");
+  }, [nav, user]);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -32,20 +31,11 @@ const LoginForm: FC = (): JSX.Element => {
   };
 
   const handleNotImplemented = (message: string) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    setAlertMessage(message);
-    timeoutRef.current = setTimeout(() => {
-      setAlertMessage(null);
-      timeoutRef.current = null;
-    }, 2000);
+    alertRef.current?.showAlert(message, AlertType.Error, 3000);
   };
 
   return (
     <div className="form">
-      {alertMessage && <div className="custom-alert">{alertMessage}</div>}
       <div className="login-container">
         <div className="left-panel">
           <h1>Kiruna eXplorer.</h1>

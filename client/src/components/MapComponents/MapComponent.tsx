@@ -5,6 +5,7 @@ import "../../App";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/MapComponent.scss";
+import { AlertType } from "../../utils/alertType";
 import {
   handleClusterClick,
   renderClusterMarker,
@@ -43,6 +44,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const {
     visualLinks,
     positionMode,
+    alertRef,
     setModalOpen,
     handleEditPositionModeConfirm,
   } = useAppContext();
@@ -85,27 +87,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionMode]);
 
-  const onMapClick = (event: google.maps.MapMouseEvent) => {
-    if (!event.latLng) return;
-
-    const lat = event.latLng.lat();
-    const lng = event.latLng.lng();
-
-    setDocumentFormSelected((prev) => ({
-      ...prev,
-      coordinates: { latitude: lat, longitude: lng },
-      area: undefined,
-    }));
-
-    if (positionMode === PositionMode.Insert) {
-      // Insert Document Position flow
-      setdocumentSelected(null);
-      setModalOpen(true);
-    }
-
-    setIsSubmit(false);
-  };
-
   useEffect(() => {
     if (!map || !isLoaded || !infoWindow) return;
     map.addListener("click", () => {
@@ -113,17 +94,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [infoWindow]);
-
-  useEffect(() => {
-    if (!isLoaded || !map || positionMode === PositionMode.None) return;
-
-    map.addListener("click", onMapClick);
-
-    return () => {
-      google.maps.event.clearInstanceListeners(map);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [positionMode]);
 
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
@@ -259,7 +229,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   // Funzione per resettare lo stato di disegno
   const resetDrawingState = () => {
-    setDrawingManager(undefined);
     setSaved(false);
   };
 
@@ -270,16 +239,42 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     } else if (drawnMarker) {
       handleMarkerUpdate();
     }
+    alertRef.current?.showAlert(
+      "Position succesfully updated!",
+      AlertType.Success,
+      3000,
+    );
   };
 
   // Funzione per gestire il disegno o modifica (Insert/Edit)
   const handleInsertOrEditMode = () => {
-    if (drawnPolygon && drawingManager) {
-      handlePolygonInsertOrEdit();
+    if (municipalArea) {
+      handleMunicipalArea();
+      alertRef.current?.showAlert(
+        "Municipal area attached to the document",
+        AlertType.Info,
+        2500,
+      );
     } else if (drawnMarker && drawingManager) {
       handleMarkerInsert();
+      alertRef.current?.showAlert(
+        "Marker attached to the document",
+        AlertType.Info,
+        2500,
+      );
+    } else if (drawnPolygon && drawingManager) {
+      handlePolygonInsertOrEdit();
+      alertRef.current?.showAlert(
+        "Polygon area attached to the document",
+        AlertType.Info,
+        2500,
+      );
     } else {
-      handleMunicipalArea();
+      alertRef.current?.showAlert(
+        "You cannot save the document without selecting an area type. \n Please choose either Municipal Area, Polygon, or Marker before saving.",
+        AlertType.Error,
+        5000,
+      );
     }
   };
 
@@ -336,6 +331,15 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         exclude.push(pathArray);
       }
     });
+
+    if (include.length <= 2) {
+      alertRef.current?.showAlert(
+        "The Polygon must have three edges, try again!",
+        AlertType.Error,
+        3000,
+      );
+      return;
+    }
 
     const newPolygonArea: PolygonArea = { include, exclude };
 

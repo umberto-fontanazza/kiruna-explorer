@@ -10,7 +10,7 @@ import { UploadType } from "../src/model/upload";
 import { loginAsPlanner } from "./utils";
 dotenv.config();
 
-// End to end testing
+// End to end testing story 7: As an Urban Planner, I want to add one or more original resources for a document
 let plannerCookie: string;
 
 beforeAll(async () => {
