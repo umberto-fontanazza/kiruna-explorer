@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { Document, DocumentType, ScaleType } from "./interfaces";
+import { Document, DocumentType, LinkType, ScaleType } from "./interfaces";
 
 export const mockDocks: Document[] = [
   {
@@ -12,6 +12,12 @@ export const mockDocks: Document[] = [
       ratio: 500,
     },
     issuanceDate: dayjs("2024-12-01"),
+    links: [
+      {
+        targetDocumentId: 2,
+        linkTypes: [LinkType.Collateral, LinkType.Direct],
+      },
+    ],
   },
   {
     id: 2,
@@ -23,6 +29,13 @@ export const mockDocks: Document[] = [
       ratio: 500,
     },
     issuanceDate: dayjs("2024-12-15"),
+    links: [
+      {
+        targetDocumentId: 1,
+        linkTypes: [LinkType.Collateral, LinkType.Direct],
+      },
+      { targetDocumentId: 3, linkTypes: [LinkType.Projection] },
+    ],
   },
   {
     id: 3,
@@ -34,5 +47,6 @@ export const mockDocks: Document[] = [
       ratio: 500,
     },
     issuanceDate: dayjs("2024-12-21"),
+    links: [{ targetDocumentId: 2, linkTypes: [LinkType.Projection] }],
   },
 ];

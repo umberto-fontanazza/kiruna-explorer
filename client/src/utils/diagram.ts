@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { MutableRefObject } from "react";
-import { Document } from "./interfaces";
+import { Document, LinkType } from "./interfaces";
 
 export type SVGElement = SVGSVGElement;
 
@@ -16,15 +16,25 @@ const rangeExtractor = (
   return [minX, maxX, minY, maxY];
 };
 
+const indexLinks = (
+  docs: Document[],
+  links: { source: number; target: number; type: LinkType }[],
+): { source: number; target: number; type: LinkType }[] => {
+  const mapping: Record<string, number> = {};
+  docs.forEach((d, idx) => {
+    mapping[`${d.id}`] = idx;
+  });
+  return links.map((l) => ({
+    source: mapping[l.source.toString()],
+    target: mapping[l.target.toString()],
+    type: l.type,
+  }));
+};
+
 const positions = [
   { x: 50, y: 200 },
   { x: 200, y: 50 },
   { x: 300, y: 300 },
-];
-
-const links = [
-  { source: 0, target: 1 },
-  { source: 0, target: 2 },
 ];
 
 const [padX, padY] = [
@@ -38,7 +48,9 @@ function toPercentage(value: number, min: number, max: number): string {
 export const updateSvg = (
   ref: MutableRefObject<SVGElement | null>,
   documents: Document[],
+  links: { source: number; target: number; type: LinkType }[],
 ) => {
+  links = indexLinks(documents, links);
   const data: { x: number; y: number; ref: unknown }[] = documents
     .slice(0, 3)
     .map((d, i) => ({
@@ -63,8 +75,8 @@ export const updateSvg = (
     .selectAll("*")
     .data(data)
     .join("circle")
-    .attr("cx", (d) => toPercentage(d.x, padMinX, padMaxX))
-    .attr("cy", (d) => toPercentage(d.y, padMinY, padMaxY));
+    .attr("cx", (data) => toPercentage(data.x, padMinX, padMaxX))
+    .attr("cy", (data) => toPercentage(data.y, padMinY, padMaxY));
   d3sel
     .selectAll("g.links")
     .selectAll("*")

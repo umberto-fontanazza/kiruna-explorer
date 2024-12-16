@@ -1,7 +1,28 @@
 import { FC, useEffect, useRef } from "react";
 import "../styles/Diagram.scss";
 import { SVGElement, updateSvg } from "../utils/diagram";
+import { Document, Link, LinkType } from "../utils/interfaces";
 import { mockDocks } from "../utils/mockDocs";
+
+const linksExtractor = (
+  docs: Document[],
+): { source: number; target: number; type: LinkType }[] =>
+  docs
+    .flatMap((d) =>
+      (d.links ?? []).flatMap((l: Link) =>
+        l.linkTypes.map((type) => ({
+          source: d.id,
+          target: l.targetDocumentId,
+          type: type,
+        })),
+      ),
+    )
+    .filter((l) => l.target > l.source);
+
+const links = [
+  { source: 0, target: 1 },
+  { source: 0, target: 2 },
+];
 
 interface DiagramProps {
   documents: Document[];
@@ -12,7 +33,10 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
   const svgRef = useRef<SVGElement | null>(null);
 
   useEffect(() => {
-    updateSvg(svgRef, mockDocks);
+    const docs = mockDocks;
+    const extractedLinks: { source: number; target: number; type: LinkType }[] =
+      linksExtractor(docs);
+    updateSvg(svgRef, docs, extractedLinks);
   }, [documents]);
 
   return (
