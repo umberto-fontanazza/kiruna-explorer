@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import { MutableRefObject } from "react";
-import { mockDocks } from "../utils/mockDocs";
+import { Document } from "./interfaces";
 
 export type SVGElement = SVGSVGElement;
 
@@ -21,32 +21,39 @@ const positions = [
   { x: 200, y: 50 },
   { x: 300, y: 300 },
 ];
-const data = mockDocks.map((d, i) => ({
-  ...d,
-  x: positions[i].x,
-  y: positions[i].y,
-}));
 
 const links = [
   { source: 0, target: 1 },
   { source: 0, target: 2 },
 ];
 
-const [minX, maxX, minY, maxY] = rangeExtractor(data);
-const [width, heigth] = [maxX - minX, maxY - minY];
 const [padX, padY] = [
   10, 20,
 ]; /** eg: if padX is 5 it means we have 2.5% padding left and right */
-const padXAbsolute = (width * padX) / 2 / 100;
-const padYAbsolute = (heigth * padY) / 2 / 100;
-const [padMinX, padMaxX] = [minX - padXAbsolute, maxX + padXAbsolute];
-const [padMinY, padMaxY] = [minY - padYAbsolute, maxY + padYAbsolute];
 
 function toPercentage(value: number, min: number, max: number): string {
   return `${((value - min) * 100) / (max - min)}%`;
 }
 
-export const updateSvg = (ref: MutableRefObject<SVGElement | null>) => {
+export const updateSvg = (
+  ref: MutableRefObject<SVGElement | null>,
+  documents: Document[],
+) => {
+  const data: { x: number; y: number; ref: unknown }[] = documents
+    .slice(0, 3)
+    .map((d, i) => ({
+      ref: d,
+      x: positions[i].x,
+      y: positions[i].y,
+    }));
+
+  const [minX, maxX, minY, maxY] = rangeExtractor(data);
+  const [width, heigth] = [maxX - minX, maxY - minY];
+  const padXAbsolute = (width * padX) / 2 / 100;
+  const padYAbsolute = (heigth * padY) / 2 / 100;
+  const [padMinX, padMaxX] = [minX - padXAbsolute, maxX + padXAbsolute];
+  const [padMinY, padMaxY] = [minY - padYAbsolute, maxY + padYAbsolute];
+
   const svg = ref.current;
   if (!svg) return;
   const d3sel = d3.select(svg);

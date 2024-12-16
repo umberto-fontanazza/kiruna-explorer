@@ -1,6 +1,7 @@
 import { FC, useEffect, useRef } from "react";
 import "../styles/Diagram.scss";
 import { SVGElement, updateSvg } from "../utils/diagram";
+import { mockDocks } from "../utils/mockDocs";
 
 interface DiagramProps {
   documents: Document[];
@@ -11,14 +12,19 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
   const svgRef = useRef<SVGElement | null>(null);
 
   useEffect(() => {
-    updateSvg(svgRef);
+    updateSvg(svgRef, mockDocks);
   }, [documents]);
 
   return (
-    <svg id="diagram" ref={svgRef}>
-      <g className="documents"></g>
-      <g className="links"></g>
-    </svg>
+    <section id="diagram">
+      <div className="labels-container">
+        <span className="label">Ratio</span>
+      </div>
+      <svg ref={svgRef}>
+        <g className="documents"></g>
+        <g className="links"></g>
+      </svg>
+    </section>
   );
 };
 
