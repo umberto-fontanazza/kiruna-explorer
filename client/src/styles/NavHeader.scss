@@ -7,6 +7,7 @@
   justify-content: space-between;
   align-items: center;
   background: Color.$first;
+  border-bottom: Color.$first-darker 1px solid;
 
   .nav-title-btns {
     display: flex;
@@ -30,7 +31,7 @@
   > :last-child {
     display: flex;
     align-items: center;
-    column-gap: 1rem;
+    gap: 1rem;
   }
 
   .user-name {

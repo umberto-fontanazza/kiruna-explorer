@@ -45,9 +45,6 @@
         border: 0.2rem solid Color.$first;
         padding: 0;
         cursor: pointer;
-        transition:
-          background-color 0.3s ease,
-          color 0.3s ease;
 
         &:hover {
           background-color: #bfbfac;

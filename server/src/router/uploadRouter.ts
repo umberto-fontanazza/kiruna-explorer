@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import { isLoggedIn, isPlanner } from "../middleware/auth";
 import {
@@ -19,8 +19,6 @@ import {
 } from "../validation/uploadSchema";
 
 export const uploadRouter: Router = Router();
-
-uploadRouter.use(express.json({ limit: "10mb" }));
 
 uploadRouter.get(
   "/",

@@ -19,21 +19,6 @@ body {
   background-color: #f7f7f7;
   max-height: fit-content;
 
-  .custom-alert {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 10px 20px;
-    border: 1px solid #f5c6cb;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-size: 2ch;
-    z-index: 1000;
-  }
-
   .login-container {
     display: flex;
     width: 100vw;

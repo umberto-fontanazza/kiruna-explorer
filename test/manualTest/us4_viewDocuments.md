@@ -17,7 +17,7 @@
 ### Scenario 1.3: See all documents on the map as Visitor
 
 - Type of user: Visitor
-- Precondition: User is not logged in.
+- Precondition: User is not logged in, user is on the map page..
 - Post condition: See all the icons for the available documents already georeferenced.
 
 ### Scenario 2.1: View the details of a specific document
