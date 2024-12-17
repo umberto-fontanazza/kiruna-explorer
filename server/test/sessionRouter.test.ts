@@ -113,12 +113,10 @@ describe("sessionRouter", () => {
         },
       );
 
-      const response = await request(app)
-        .post("/sessions")
-        .send({
-          email: process.env.SESSION_ROUTER_TEST_MAIL,
-          password: process.env.SESSION_ROUTER_WRONG_PASSWORD,
-        });
+      const response = await request(app).post("/sessions").send({
+        email: process.env.SESSION_ROUTER_TEST_MAIL,
+        password: process.env.SESSION_ROUTER_WRONG_PASSWORD,
+      });
       expect(response.status).toBe(StatusCodes.UNAUTHORIZED);
       expect(response.body).toEqual({ message: "Invalid credentials" });
     });
@@ -143,12 +141,10 @@ describe("sessionRouter", () => {
         },
       );
 
-      const response = await request(app)
-        .post("/sessions")
-        .send({
-          email: process.env.SESSION_ROUTER_TEST_MAIL,
-          password: process.env.SESSION_ROUTER_CORRECT_PASSWORD,
-        });
+      const response = await request(app).post("/sessions").send({
+        email: process.env.SESSION_ROUTER_TEST_MAIL,
+        password: process.env.SESSION_ROUTER_CORRECT_PASSWORD,
+      });
       expect(response.status).toBe(StatusCodes.CREATED);
       expect(response.body).toMatchObject({
         email: process.env.SESSION_ROUTER_TEST_MAIL,
@@ -160,12 +156,10 @@ describe("sessionRouter", () => {
 
     it("should return 401 if user already logged in", async () => {
       const app = createApp(true);
-      const response = await request(app)
-        .post("/sessions")
-        .send({
-          email: process.env.SESSION_ROUTER_TEST_MAIL,
-          password: process.env.SESSION_ROUTER_CORRECT_PASSWORD,
-        });
+      const response = await request(app).post("/sessions").send({
+        email: process.env.SESSION_ROUTER_TEST_MAIL,
+        password: process.env.SESSION_ROUTER_CORRECT_PASSWORD,
+      });
       expect(response.status).toBe(StatusCodes.UNAUTHORIZED);
       expect(response.body).toEqual({ error: "User is already logged in." });
     });
@@ -184,12 +178,10 @@ describe("sessionRouter", () => {
         },
       );
 
-      const response = await request(app)
-        .post("/sessions")
-        .send({
-          email: process.env.SESSION_ROUTER_TEST_MAIL,
-          password: process.env.SESSION_ROUTER_PASSWORD,
-        });
+      const response = await request(app).post("/sessions").send({
+        email: process.env.SESSION_ROUTER_TEST_MAIL,
+        password: process.env.SESSION_ROUTER_PASSWORD,
+      });
       expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
     });
 
@@ -213,12 +205,10 @@ describe("sessionRouter", () => {
         },
       );
 
-      const response = await request(app)
-        .post("/sessions")
-        .send({
-          email: process.env.SESSION_ROUTER_ERROR_LOGIN,
-          password: process.env.SESSION_ROUTER_PASSWORD,
-        });
+      const response = await request(app).post("/sessions").send({
+        email: process.env.SESSION_ROUTER_ERROR_LOGIN,
+        password: process.env.SESSION_ROUTER_PASSWORD,
+      });
       expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
     });
   });
