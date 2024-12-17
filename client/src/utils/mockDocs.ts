@@ -23,7 +23,7 @@ export const mockDocks: Document[] = [
     id: 2,
     title: "Document 2",
     description: "Description of document 2",
-    type: DocumentType.Design,
+    type: DocumentType.Informative,
     scale: {
       type: ScaleType.ArchitecturalScale,
       ratio: 450,
@@ -41,7 +41,7 @@ export const mockDocks: Document[] = [
     id: 3,
     title: "Document 3",
     description: "Description of document 3",
-    type: DocumentType.Design,
+    type: DocumentType.Informative,
     scale: {
       type: ScaleType.ArchitecturalScale,
       ratio: 470,
@@ -53,7 +53,7 @@ export const mockDocks: Document[] = [
     id: 4,
     title: "Document 4",
     description: "Description of document 4",
-    type: DocumentType.Design,
+    type: DocumentType.Informative,
     scale: {
       type: ScaleType.ArchitecturalScale,
       ratio: 100,
@@ -64,7 +64,7 @@ export const mockDocks: Document[] = [
     id: 5,
     title: "Document 5",
     description: "Description of document 5",
-    type: DocumentType.Design,
+    type: DocumentType.MaterialEffect,
     scale: {
       type: ScaleType.Text,
     },
@@ -74,7 +74,7 @@ export const mockDocks: Document[] = [
     id: 6,
     title: "Document 6",
     description: "Description of document 6",
-    type: DocumentType.Design,
+    type: DocumentType.MaterialEffect,
     scale: {
       type: ScaleType.BlueprintsOrEffect,
     },

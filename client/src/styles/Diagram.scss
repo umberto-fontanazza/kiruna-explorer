@@ -31,16 +31,14 @@
     stroke-width: 2;
     stroke: black;
     fill: white;
+  }
 
-    circle {
-      r: 1%;
-
-      &:hover {
-        r: 1.2%;
-        cursor: pointer;
-      }
-
-      transition: 350ms ease;
+  circle {
+    r: 1%;
+    transition: 350ms ease;
+    &:hover {
+      r: 1.2%;
+      cursor: pointer;
     }
   }
 
@@ -49,4 +47,18 @@
       stroke: black;
     }
   }
+
+  // .document {
+  //   &.design {
+  //     fill: red;
+  //   }
+
+  //   &.informative {
+  //     fill: green;
+  //   }
+
+  //   &.material-effect {
+  //     fill: url(document-material_effect-icon.png) brown;
+  //   }
+  // }
 }

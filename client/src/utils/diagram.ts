@@ -76,9 +76,16 @@ export const updateSvg = (
     .join("circle")
     .attr("cx", (data) => toPercentage(data.x, padMinX, padMaxX))
     .attr("cy", (data) => toPercentage(data.y, minY, maxY))
+    .attr("fill", (data) => `url(#${data.ref.type.replace("_", "-")})`)
     .on("click", (e) => {
       const data = e.target.__data__;
       onClick(data.ref);
+    })
+    .each(function (d) {
+      const classes = ["document", `${d.ref.type}`];
+      classes.forEach((c) => {
+        (this as HTMLElement).classList.add(c.replace("_", "-"));
+      });
     });
   d3sel
     .selectAll("g.links")
