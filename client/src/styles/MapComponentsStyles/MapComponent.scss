@@ -206,6 +206,6 @@
 
   &.selected {
     background-color: Color.$second;
-    border: 2px solid green;
+    border: 2px solid Color.$first;
   }
 }

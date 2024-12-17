@@ -205,7 +205,7 @@ export function convertPolygonAreaToPolygon(
     strokeColor: "#fecb00",
     strokeOpacity: 0.8,
     strokeWeight: 4,
-    fillColor: "rgb(0,255,0)",
+    fillColor: "#fecb00",
     fillOpacity: 0.35,
     map,
   });
