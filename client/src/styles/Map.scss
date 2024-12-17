@@ -31,7 +31,7 @@
     .button-overlay {
       position: fixed;
       bottom: 2rem;
-      left: 1.3%;
+      left: 1rem;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -39,14 +39,12 @@
       .doc-btn {
         border-radius: 1rem;
         width: 13vw;
-        height: 6.5vh;
+        height: 7vh;
         background-color: Color.$third;
         color: Color.$first;
         border: 0.2rem solid Color.$first;
+        padding: 0;
         cursor: pointer;
-        transition:
-          background-color 0.3s ease,
-          color 0.3s ease;
 
         &:hover {
           background-color: #bfbfac;

@@ -1,4 +1,5 @@
 import { FC, useContext, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import API from "../API/API";
 import Diagram from "../components/Diagram";
 import MapComponent from "../components/MapComponents/MapComponent";
@@ -24,7 +25,6 @@ const HomeMap: FC = (): JSX.Element => {
   } = useAppContext();
   const { isDeleted } = usePopupContext();
   const { isSubmit } = useDocumentFormContext();
-
   const [documents, setDocuments] = useState<Document[]>([]);
   const [docSelected, setDocSelected] = useState<Document | null>(null);
 
@@ -56,6 +56,7 @@ const HomeMap: FC = (): JSX.Element => {
       }
     };
     fetchDocument();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documents]);
 
   // Handle Add Document button click to open modal
@@ -69,6 +70,12 @@ const HomeMap: FC = (): JSX.Element => {
       setSidebarOpen(false);
     }
   }, [isDeleted]);
+
+  // Used to reset PoistionMode when navigating through the app. Otherwise PositionMode remains the same
+  const location = useLocation();
+  useEffect(() => {
+    setPositionMode(PositionMode.None);
+  }, [location.pathname, setPositionMode]);
 
   //Handle to edit the position of the document selected
   const handleEditPositionMode = () => {

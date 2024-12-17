@@ -2,15 +2,17 @@ import { useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/DocumentForm.scss";
+import { AlertType } from "../utils/alertType";
 import { documentFormDefaults, Link, Upload } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
+import { validateDate } from "../utils/utils";
 import FirstPageModal from "./DocumentFormPages/FirstPageModal";
 import SecondPageModal from "./DocumentFormPages/SecondPageModal";
 import ThirdPageModal from "./DocumentFormPages/ThirdPageModal";
 import ProgressBar from "./ProgressBar";
 
 const DocumentForm = () => {
-  const { setModalOpen, setEditDocumentMode, setPositionMode } =
+  const { alertRef, setModalOpen, setEditDocumentMode, setPositionMode } =
     useAppContext();
   const {
     documentFormSelected,
@@ -18,11 +20,25 @@ const DocumentForm = () => {
     handleAddNewDocument,
     handleUpdateDocument,
   } = useDocumentFormContext();
+
   const [page, setPage] = useState<number>(1);
   const [tableLinks, setTableLinks] = useState<Link[]>(
     documentFormSelected?.links || [],
   );
   const [filesToUpload, setFilesToUpload] = useState<Upload[]>([]);
+  const [errors, setErrors] = useState<Record<string, string> | null>(null);
+
+  const validateFirstPage = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    if (!validateDate(documentFormSelected.issuanceTime || "")) {
+      errors.issuanceTime =
+        "Invalid date or invalid date format.<br/>Please use YYYY, YYYY/MM or YYYY/MM/DD.";
+    }
+
+    setErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   const handleFormSubmit = (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -36,6 +52,11 @@ const DocumentForm = () => {
         },
         filesToUpload ?? [],
       );
+      alertRef.current?.showAlert(
+        "Document succesfully created!",
+        AlertType.Success,
+        4000,
+      );
     }
 
     // Update document
@@ -44,6 +65,11 @@ const DocumentForm = () => {
         { ...documentFormSelected, links: tableLinks },
         documentFormSelected.links,
         filesToUpload,
+      );
+      alertRef.current?.showAlert(
+        "Document succesfully updated!",
+        AlertType.Success,
+        4000,
       );
     }
 
@@ -67,12 +93,9 @@ const DocumentForm = () => {
       onSubmit={(ev) => {
         ev.preventDefault();
         if (page === 1) {
-          setPage(2);
-        } else if (page === 2) {
-          setPage(3);
-        } else {
-          handleFormSubmit(ev);
-        }
+          if (validateFirstPage()) setPage(2);
+        } else if (page === 2) setPage(3);
+        else handleFormSubmit(ev);
       }}
     >
       <button className="close" onClick={() => resetForm(true)}>
@@ -93,6 +116,8 @@ const DocumentForm = () => {
         <FirstPageModal
           documentForm={documentFormSelected}
           setDocumentForm={setDocumentFormSelected}
+          errors={errors}
+          setErrors={setErrors}
         />
       )}
       {page === 2 && (

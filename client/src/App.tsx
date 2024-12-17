@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import API from "./API/API";
+import Alert from "./components/Alert";
 import DocumentForm from "./components/DocumentForm";
 import NotFound from "./components/NotFound";
 import Popup from "./components/Popup";
@@ -15,9 +16,11 @@ import HomeMap from "./routes/Map";
 import UploadsList from "./routes/UploadsList";
 import "./styles/App.scss";
 import { User } from "./utils/interfaces";
+import { PositionMode } from "./utils/modes";
 const App: FC = () => {
   const [user, setUser] = useState<User | null>(null);
-  const { isPopupOpen, modalOpen } = useAppContext();
+  const { isPopupOpen, modalOpen, positionMode, alertRef, setPositionMode } =
+    useAppContext();
 
   useEffect(() => {
     (async () => {
@@ -38,6 +41,7 @@ const App: FC = () => {
   const logout = async () => {
     await API.logout();
     setUser(null);
+    if (positionMode != PositionMode.None) setPositionMode(PositionMode.None);
   };
 
   return (
@@ -49,6 +53,7 @@ const App: FC = () => {
               path="/"
               element={
                 <>
+                  <Alert ref={alertRef} />
                   {isPopupOpen && <Popup />}
                   {modalOpen && <DocumentForm />}
                   <Outlet />

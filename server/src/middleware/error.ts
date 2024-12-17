@@ -16,6 +16,7 @@ export function sinkErrorHandler(
     next(error);
     return;
   }
+
   if (error instanceof UserError) {
     response.status(error.statusCode).json({ message: error.message });
   } else {

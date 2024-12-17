@@ -1,12 +1,19 @@
 import { MarkerClusterer } from "@googlemaps/markerclusterer";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import "../../App";
 import { useAppContext } from "../../context/appContext";
 import { useDocumentFormContext } from "../../context/DocumentFormContext";
 import "../../styles/MapComponentsStyles/MapComponent.scss";
-import { createArea, useDrawingTools } from "../../utils/drawingTools";
+import { AlertType } from "../../utils/alertType";
+import {
+  handleClusterClick,
+  renderClusterMarker,
+} from "../../utils/clusterTools";
+import { rewindRing, useDrawingTools } from "../../utils/drawingTools";
 import {
   Coordinates,
+  CustomMarker,
   Document,
   Link,
   PolygonArea,
@@ -14,7 +21,8 @@ import {
 import { kirunaCoords, libraries, mapOptions } from "../../utils/map";
 import { createMarker } from "../../utils/markersTools";
 import { PositionMode } from "../../utils/modes";
-import { createMunicipalArea } from "../../utils/municipalArea";
+import { createArea } from "../../utils/polygonsTools";
+import DrawingControls from "../DrawingControls";
 import MapTypeSelector from "../MapTypeSelector";
 
 interface MapComponentProps {
@@ -36,6 +44,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const {
     visualLinks,
     positionMode,
+    alertRef,
     setModalOpen,
     handleEditPositionModeConfirm,
   } = useAppContext();
@@ -45,16 +54,25 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [markers, setMarkers] = useState<
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
-  const [newMarkerPosition, setNewMarkerPosition] =
-    useState<Coordinates | null>(null);
   const [saved, setSaved] = useState(false);
-  const [polygonArea, setPolygonArea] = useState<google.maps.Polygon | null>(
-    null,
-  );
   const [municipalArea, setMunicipalArea] = useState<
     google.maps.Polygon[] | undefined
   >(undefined);
   const [drawingMode, setDrawingMode] = useState<string>("");
+
+  const [drawingManager, setDrawingManager] = useState<
+    google.maps.drawing.DrawingManager | undefined
+  >(undefined);
+  const [drawnPolygon, setDrawnPolygon] = useState<
+    google.maps.Polygon | undefined
+  >(undefined);
+  const [drawnMarker, setDrawnMarker] = useState<
+    google.maps.Marker | undefined
+  >(undefined);
+  const [activeButton, setActiveButton] = useState<string>("");
+  const [infoWindow, setInfoWindow] = useState<google.maps.InfoWindow | null>(
+    null,
+  );
 
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
@@ -63,43 +81,19 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   });
 
   useEffect(() => {
-    if (positionMode === PositionMode.None && polygonArea) {
-      polygonArea?.setMap(null);
+    if (positionMode === PositionMode.None && drawnPolygon) {
+      drawnPolygon?.setMap(null);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionMode]);
-
-  const onMapClick = (event: google.maps.MapMouseEvent) => {
-    if (!event.latLng) return;
-
-    const lat = event.latLng.lat();
-    const lng = event.latLng.lng();
-
-    setDocumentFormSelected((prev) => ({
-      ...prev,
-      coordinates: { latitude: lat, longitude: lng },
-      area: undefined,
-    }));
-
-    if (positionMode === PositionMode.Insert) {
-      // Insert Document Position flow
-      setdocumentSelected(null);
-      setModalOpen(true);
-    }
-
-    setIsSubmit(false);
-  };
 
   useEffect(() => {
-    if (!isLoaded || !map || positionMode === PositionMode.None) return;
-
-    map.addListener("click", onMapClick);
-
-    return () => {
-      google.maps.event.clearInstanceListeners(map);
-    };
+    if (!map || !isLoaded || !infoWindow) return;
+    map.addListener("click", () => {
+      infoWindow.close();
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [positionMode]);
+  }, [infoWindow]);
 
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
@@ -124,16 +118,28 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
     if (positionMode === PositionMode.Update && docSelected?.area) {
       const area = createArea(docSelected, map, positionMode);
-      setPolygonArea(area);
+      if (area) {
+        const paths = area.getPaths();
+        const adjustedPaths = new google.maps.MVCArray(
+          paths.getArray().map((path, index) => {
+            const rewindClockwise = index === 0;
+            return new google.maps.MVCArray(
+              rewindRing(path.getArray(), rewindClockwise),
+            );
+          }),
+        );
+        area.setPaths(adjustedPaths);
+        setDrawnPolygon(area);
+      }
       return;
     }
 
-    const newMarkers: google.maps.marker.AdvancedMarkerElement[] = documents
+    const newMarkers: CustomMarker[] = documents
       .filter((doc) => {
         if (positionMode === PositionMode.Update) {
           return doc.id === docSelected?.id;
         }
-        return doc.coordinates || doc.area;
+        return doc.coordinates || doc.area; //Position mode None
       })
       .filter((doc) => (visualLinks ? isSelectedOrLinked(doc) : true))
       .map((doc) =>
@@ -142,8 +148,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           visualLinks && doc.id !== docSelected?.id,
           map,
           positionMode,
+          setDrawnMarker,
           setShowTooltipUploads,
-          setNewMarkerPosition,
           setdocumentSelected,
           setSidebarOpen,
         ),
@@ -155,32 +161,18 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       markers: newMarkers,
       map,
       renderer: {
-        render: ({ count, position }) => {
-          return new google.maps.marker.AdvancedMarkerElement({
-            position,
-            title: count.toString(),
-            content: (() => {
-              const div = document.createElement("div");
-              div.className = "cluster-icon";
-              div.textContent = count.toString();
-              return div;
-            })(),
-          });
-        },
+        render: renderClusterMarker,
       },
-      onClusterClick: (event, cluster, map) => {
-        if (cluster.bounds) {
-          const currentZoom = map.getZoom();
-
-          const newZoom = Math.min(
-            (currentZoom ?? 0) + 1,
-            (map.getZoom() ?? 0) + 2,
-          ); // Set new zoom level, (default zooms is the maximum zoom level)
-
-          map.fitBounds(cluster.bounds);
-          map.setZoom(newZoom);
-        }
-      },
+      algorithmOptions: { maxZoom: 18 },
+      onClusterClick: (event, cluster, map) =>
+        handleClusterClick(
+          event,
+          cluster,
+          map,
+          setdocumentSelected,
+          setSidebarOpen,
+          setInfoWindow,
+        ),
     });
 
     setMarkers(newMarkers);
@@ -198,37 +190,204 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     return () => {
       markerCluster.clearMarkers();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoaded, map, documents]);
 
   useEffect(() => {
     if (positionMode === PositionMode.None) {
-      polygonArea?.setMap(null);
-      setNewMarkerPosition(null);
-      setPolygonArea(null);
+      if (municipalArea) {
+        municipalArea?.forEach((area) => area.setMap(null));
+      }
+      drawnPolygon?.setMap(null);
+      drawnMarker?.setMap(null);
+      drawingManager?.setMap(null);
+      setActiveButton("");
+      setDrawnMarker(undefined);
+      setDrawnMarker(undefined);
+      setDrawnPolygon(undefined);
+      setDrawingManager(undefined);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionMode]);
 
   useEffect(() => {
-    if (docSelected && saved && positionMode === PositionMode.Update) {
-      if (polygonArea) {
-        const path = polygonArea.getPath();
-        const newPolygonArea: PolygonArea = {
-          include: path.getArray().map((latLng) => ({
-            latitude: latLng.lat(),
-            longitude: latLng.lng(),
-          })),
-          exclude: [],
-        };
-        handleEditPositionModeConfirm(docSelected, newPolygonArea);
-      } else if (newMarkerPosition) {
-        handleEditPositionModeConfirm(docSelected, newMarkerPosition);
-      }
+    if (!saved || positionMode === PositionMode.None) {
+      resetDrawingState();
+      return;
     }
-    setSaved(false);
+
+    // Gestione modalità Update
+    if (positionMode === PositionMode.Update && docSelected) {
+      handleUpdateMode();
+    } else {
+      handleInsertOrEditMode();
+    }
+
+    resetDrawingState();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [saved]);
 
-  useDrawingTools(map, () => setdocumentSelected);
+  // Funzione per resettare lo stato di disegno
+  const resetDrawingState = () => {
+    setSaved(false);
+  };
+
+  // Funzione per gestire la modalità Update
+  const handleUpdateMode = () => {
+    if (drawnPolygon) {
+      handlePolygonUpdate();
+    } else if (drawnMarker) {
+      handleMarkerUpdate();
+    }
+    alertRef.current?.showAlert(
+      "Position succesfully updated!",
+      AlertType.Success,
+      3000,
+    );
+  };
+
+  // Funzione per gestire il disegno o modifica (Insert/Edit)
+  const handleInsertOrEditMode = () => {
+    if (municipalArea) {
+      handleMunicipalArea();
+      alertRef.current?.showAlert(
+        "Municipal area attached to the document",
+        AlertType.Info,
+        2500,
+      );
+    } else if (drawnMarker && drawingManager) {
+      handleMarkerInsert();
+      alertRef.current?.showAlert(
+        "Marker attached to the document",
+        AlertType.Info,
+        2500,
+      );
+    } else if (drawnPolygon && drawingManager) {
+      handlePolygonInsertOrEdit();
+      alertRef.current?.showAlert(
+        "Polygon area attached to the document",
+        AlertType.Info,
+        2500,
+      );
+    } else {
+      alertRef.current?.showAlert(
+        "You cannot save the document without selecting an area type. \n Please choose either Municipal Area, Polygon, or Marker before saving.",
+        AlertType.Error,
+        5000,
+      );
+    }
+  };
+
+  // Funzione per gestire l'aggiornamento di un poligono esistente
+  const handlePolygonUpdate = () => {
+    const includePath = drawnPolygon!.getPath();
+    const excludePaths = drawnPolygon!.getPaths().getArray().slice(1);
+
+    const newPolygonArea: PolygonArea = {
+      include: includePath.getArray().map((latLng) => ({
+        latitude: latLng.lat(),
+        longitude: latLng.lng(),
+      })),
+      exclude: excludePaths.map((excludePath) =>
+        excludePath.getArray().map((latLng) => ({
+          latitude: latLng.lat(),
+          longitude: latLng.lng(),
+        })),
+      ),
+    };
+
+    handleEditPositionModeConfirm(docSelected!, newPolygonArea);
+  };
+
+  const handleMarkerUpdate = () => {
+    const markerPos = drawnMarker?.getPosition();
+
+    if (!markerPos) {
+      alert("Marker position is undefined");
+      return;
+    }
+
+    const posToUpdate: Coordinates = {
+      latitude: markerPos.lat(),
+      longitude: markerPos.lng(),
+    };
+
+    handleEditPositionModeConfirm(docSelected!, posToUpdate);
+  };
+
+  const handlePolygonInsertOrEdit = () => {
+    const paths = drawnPolygon!.getPaths().getArray();
+    const include: Coordinates[] = [];
+    const exclude: Coordinates[][] = [];
+
+    paths.forEach((path, index) => {
+      const pathArray = path.getArray().map((latLng) => ({
+        latitude: latLng.lat(),
+        longitude: latLng.lng(),
+      }));
+      if (index === 0) {
+        include.push(...pathArray);
+      } else {
+        exclude.push(pathArray);
+      }
+    });
+
+    if (include.length <= 2) {
+      alertRef.current?.showAlert(
+        "The Polygon must have three edges, try again!",
+        AlertType.Error,
+        3000,
+      );
+      return;
+    }
+
+    const newPolygonArea: PolygonArea = { include, exclude };
+
+    setDocumentFormSelected((prev) => ({
+      ...prev,
+      coordinates: undefined,
+      area: newPolygonArea,
+    }));
+
+    finalizePolygonInsertOrEdit();
+  };
+
+  const finalizePolygonInsertOrEdit = () => {
+    drawingManager!.setDrawingMode(null);
+    setdocumentSelected(null);
+    setModalOpen(true);
+  };
+
+  const handleMarkerInsert = () => {
+    const latLng = drawnMarker!.getPosition();
+    if (!latLng) return;
+
+    const lat = latLng.lat();
+    const lng = latLng.lng();
+
+    setDocumentFormSelected((prev) => ({
+      ...prev,
+      coordinates: { latitude: lat, longitude: lng },
+      area: undefined,
+    }));
+
+    if (positionMode === PositionMode.Insert) {
+      setdocumentSelected(null);
+      setModalOpen(true);
+    }
+
+    setIsSubmit(false);
+  };
+
+  useDrawingTools(
+    map,
+    drawnPolygon,
+    drawnMarker,
+    setDrawingManager,
+    setDrawnPolygon,
+    setDrawnMarker,
+    setActiveButton,
+  );
 
   useEffect(() => {
     if (municipalArea && municipalArea.length > 0) {
@@ -241,21 +400,20 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         });
       });
 
-      // Adatta la mappa ai confini calcolati
       map?.fitBounds(bounds);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [municipalArea]);
 
-  const handleMunicipalAreaButton = () => {
+  const handleMunicipalArea = () => {
     if (municipalArea) {
-      // Trasforma municipalArea in un PolygonArea
       const newPolygonArea: PolygonArea = {
         include: [],
         exclude: [],
       };
 
       municipalArea.forEach((polygon, i) => {
-        const paths = polygon.getPaths(); // Ottiene i percorsi (outer + inner)
+        const paths = polygon.getPaths();
 
         if (i === 16) {
           paths.forEach((path, j) => {
@@ -265,17 +423,13 @@ const MapComponent: FC<MapComponentProps> = (props) => {
             }));
 
             if (i === 16 && j === 0) {
-              console.log(coordinates);
-              // Primo percorso: include
               newPolygonArea.include = coordinates;
             } else {
-              // Percorsi successivi: exclude
               newPolygonArea.exclude.push(coordinates);
             }
           });
         }
       });
-      // Aggiorna il documento selezionato con l'area calcolata
       setDocumentFormSelected((prev) => ({
         ...prev,
         coordinates: undefined,
@@ -283,19 +437,12 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       }));
 
       if (positionMode === PositionMode.Insert) {
-        // Inserimento nuovo documento
         setdocumentSelected(null);
         setModalOpen(true);
       }
-      municipalArea?.forEach((area) => {
-        area.setMap(null);
-      });
       setIsSubmit(false);
-      setMunicipalArea(undefined);
     }
   };
-
-  const [isHovered, setIsHovered] = useState(false);
 
   return isLoaded ? (
     <section id="map">
@@ -321,7 +468,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
                 : "Draw a polygon on the map, where you want to update the position of the document selected"}
             </h3>
           )}
-          {positionMode === PositionMode.Update && (
+          {(positionMode === PositionMode.Update ||
+            positionMode === PositionMode.Insert) && (
             <button
               className="edit-area-btn"
               onClick={() => {
@@ -333,46 +481,19 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           )}
         </div>
       )}
+      <DrawingControls
+        positionMode={positionMode}
+        activeButton={activeButton}
+        setActiveButton={setActiveButton}
+        map={map}
+        drawnPolygon={drawnPolygon}
+        drawnMarker={drawnMarker}
+        drawingManager={drawingManager}
+        setDrawingMode={setDrawingMode}
+        municipalArea={municipalArea}
+        setMunicipalArea={setMunicipalArea}
+      />
 
-      {positionMode === PositionMode.Insert && (
-        <div className="drawing-controls">
-          <button
-            id="municipal-btn"
-            onMouseEnter={() => {
-              if (!isHovered && map) {
-                setIsHovered(true);
-                const municipalPolygons = createMunicipalArea(map);
-                setMunicipalArea(municipalPolygons);
-              }
-            }}
-            onMouseLeave={() => {
-              if (isHovered) {
-                setIsHovered(false);
-                municipalArea?.forEach((area) => area.setMap(null));
-                setMunicipalArea(undefined);
-              }
-            }}
-            onClick={handleMunicipalAreaButton}
-          >
-            <div className="municipal-container">
-              <span className="material-symbols-outlined">location_city</span>
-              <h4>Municipal Area</h4>
-            </div>
-          </button>
-          <button id="polygon-btn" onClick={() => setDrawingMode("polygon")}>
-            <div className="polygon-container">
-              <span className="material-symbols-outlined">polyline</span>
-              <h4>Polygon</h4>
-            </div>
-          </button>
-          <button id="marker-btn" onClick={() => setDrawingMode("marker")}>
-            <div className="marker-container">
-              <span className="material-symbols-outlined">explore_nearby</span>
-              <h4>Marker</h4>
-            </div>
-          </button>
-        </div>
-      )}
       <GoogleMap
         id="google-map"
         zoom={11}

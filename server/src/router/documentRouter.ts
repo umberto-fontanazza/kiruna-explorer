@@ -12,6 +12,7 @@ import {
 import { Area } from "../model/area";
 import { Document, DocumentType } from "../model/document";
 import { Scale, ScaleType } from "../model/scale";
+import { TimeInterval } from "../model/timeInterval";
 import { AreaBody } from "../validation/areaSchema";
 import {
   getQueryParameters,
@@ -90,8 +91,8 @@ documentRouter.post(
       stakeholders,
       coordinates,
       area,
-      issuanceDate,
-    } = request.body as PostBody;
+      issuanceTime,
+    } = request.locals!.bodyParsedData as PostBody;
     const insertedDocument = await Document.insert(
       title,
       description,
@@ -100,7 +101,7 @@ documentRouter.post(
       stakeholders,
       coordinates,
       area && (await Area.insert(area)),
-      issuanceDate ? dayjs(issuanceDate, "YYYY-MM-DD", true) : undefined,
+      issuanceTime as TimeInterval,
     );
     response.status(StatusCodes.CREATED).send({ id: insertedDocument.id });
     return;
@@ -123,8 +124,8 @@ documentRouter.patch(
       stakeholders,
       coordinates,
       area,
-      issuanceDate,
-    } = request.body as PatchBody;
+      issuanceTime,
+    } = request.locals!.bodyParsedData as PatchBody;
     let document: Document;
     try {
       document = await Document.get(id);
@@ -142,11 +143,11 @@ documentRouter.patch(
     document.type = type || document.type;
     document.scale = (parsedScale! as Scale) || document.scale;
     document.stakeholders = stakeholders || document.stakeholders;
-    document.coordinates = coordinates || document.coordinates;
+    await document.setCoordinates(coordinates);
     if (area) await document.setArea(await Area.insert(area as AreaBody));
-    document.issuanceDate = issuanceDate
-      ? dayjs(issuanceDate, "YYYY-MM-DD", true)
-      : document.issuanceDate;
+    document.issuanceTime = issuanceTime
+      ? (issuanceTime as TimeInterval)
+      : document.issuanceTime;
     await document.update();
     response.status(StatusCodes.NO_CONTENT).send();
     return;

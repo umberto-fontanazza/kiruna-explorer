@@ -35,7 +35,7 @@ const DocumentsList = () => {
   });
   const { isDeleted } = usePopupContext();
   const { isSubmit } = useDocumentFormContext();
-  const { handleEditPositionModeConfirm } = useAppContext();
+  const { handleEditPositionModeConfirm, modalOpen } = useAppContext();
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -72,6 +72,7 @@ const DocumentsList = () => {
 
   return (
     <div id="document-list">
+      {modalOpen && <div className="overlay" />}
       <NavHeader />
       <div className="doc-lists">
         <div className="header">

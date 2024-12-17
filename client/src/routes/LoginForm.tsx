@@ -1,27 +1,25 @@
-import { FC, useContext, useRef, useState } from "react";
-import { Form } from "react-bootstrap";
+import { FC, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppContext } from "../context/appContext";
 import { authContext } from "../context/auth";
 import "../styles/LoginForm.scss";
+import { AlertType } from "../utils/alertType";
 import { LoginErrors } from "../utils/interfaces";
 
 const LoginForm: FC = (): JSX.Element => {
   const { user, login } = useContext(authContext);
+  const { alertRef } = useAppContext();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<LoginErrors>({});
 
-  const [alertMessage, setAlertMessage] = useState<string | null>(null);
-  const timeoutRef = useRef<number | null>(null);
-
   const nav = useNavigate();
 
-  if (user) {
-    // interrupt rendering
-    nav("/map");
-  }
+  useEffect(() => {
+    if (user) nav("/map");
+  }, [nav, user]);
 
-  const handleSubmit = async (event: { preventDefault: () => void }) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
       await login(email, password);
@@ -33,20 +31,11 @@ const LoginForm: FC = (): JSX.Element => {
   };
 
   const handleNotImplemented = (message: string) => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-    }
-
-    setAlertMessage(message);
-    timeoutRef.current = setTimeout(() => {
-      setAlertMessage(null);
-      timeoutRef.current = null;
-    }, 2000);
+    alertRef.current?.showAlert(message, AlertType.Error, 3000);
   };
 
   return (
     <div className="form">
-      {alertMessage && <div className="custom-alert">{alertMessage}</div>}
       <div className="login-container">
         <div className="left-panel">
           <h1>Kiruna eXplorer.</h1>
@@ -69,9 +58,9 @@ const LoginForm: FC = (): JSX.Element => {
             <span className="material-symbols-outlined">home</span>
           </button>
           <h2>Welcome Back!</h2>
-          <Form onSubmit={handleSubmit}>
-            <Form.Label htmlFor="email">Email</Form.Label>
-            <Form.Control
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="email">Email</label>
+            <input
               type="email"
               id="email"
               name="email"
@@ -79,12 +68,11 @@ const LoginForm: FC = (): JSX.Element => {
               value={email}
               onChange={(ev) => setEmail(ev.target.value)}
               required
-              className="input-email"
-              isInvalid={errors.login ? true : false}
+              className={`input-email ${errors.login ? "is-invalid" : ""}`}
             />
 
-            <Form.Label htmlFor="password">Password</Form.Label>
-            <Form.Control
+            <label htmlFor="password">Password</label>
+            <input
               type="password"
               id="password"
               name="password"
@@ -92,11 +80,10 @@ const LoginForm: FC = (): JSX.Element => {
               value={password}
               onChange={(ev) => setPassword(ev.target.value)}
               required
-              className="input-password"
-              isInvalid={errors.login ? true : false}
+              className={`input-password ${errors.login ? "is-invalid" : ""}`}
             />
 
-            <p className="m-0 text-danger text-center">{errors.login}</p>
+            <p className="form-error">{errors.login}</p>
 
             <div className="forgot-password">
               <a
@@ -111,7 +98,7 @@ const LoginForm: FC = (): JSX.Element => {
               </a>
             </div>
             <button type="submit">Login</button>
-          </Form>
+          </form>
 
           <div className="signup">
             Doesn’t have an account?{" "}

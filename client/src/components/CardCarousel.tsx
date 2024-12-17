@@ -49,7 +49,6 @@ const ControlledCarousel: FC<CardCarouselProps> = ({
         setDocSelected(documents[0]);
       } else {
         const index = documents.findIndex((doc) => doc.id === docSelected.id);
-        console.log(index);
         if (index !== -1) {
           swiperRef.current?.swiper.slideTo(index);
         } else {

@@ -12,7 +12,7 @@
 
   .header {
     position: relative;
-    background-image: url("../../public/kiruna-with-background.webp");
+    background-image: url("kiruna-with-background.webp");
     background-position: center;
     background-size: cover;
     display: flex;
@@ -33,7 +33,7 @@
         rgba(0, 0, 0, 0.8) 70%,
         rgba(0, 0, 0, 0.9) 100%
       );
-      z-index: 1; // Assicurati che il contenuto sia sopra l'overlay
+      z-index: 1;
     }
 
     .hero-title {
@@ -78,18 +78,15 @@
       background-color: Color.$second;
       color: Color.$first-hover;
       padding: 0.8rem 1.5rem;
-      font-family: "SwedenSansBold", sans-serif;
       font-size: 2rem;
-      transition: all 0.3s ease;
 
       &:hover {
-        transform: scale(1.05);
+        transform: scale(1.1);
         background-color: Color.$second;
       }
 
       &:active {
         transform: scale(0.95);
-        filter: brightness(0.9);
       }
     }
   }
@@ -104,7 +101,7 @@
   font-family: "SwedenSansBold", sans-serif;
 
   .login-card {
-    background-image: url("../../public/architettura.jpg");
+    background-image: url("architettura.jpg");
     background-size: cover;
     background-position: center;
     display: flex;
@@ -130,7 +127,8 @@
       color: Color.$first-hover;
       align-self: center;
       background-color: Color.$second;
-      width: 20ch;
+      width: 50%;
+      font-size: 2ch;
       border-radius: 1rem;
     }
   }
