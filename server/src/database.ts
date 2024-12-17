@@ -65,3 +65,13 @@ export class Database {
     await pool.end();
   }
 }
+async function deleteAllDocuments(): Promise<void> {
+  try {
+    const connection = getConnection();
+    await connection.getRepository(Document).delete({});
+    console.log("All documents deleted.");
+  } catch (error) {
+    console.error("Error deleting documents:", error.message);
+    process.exit(1);
+  }
+}
