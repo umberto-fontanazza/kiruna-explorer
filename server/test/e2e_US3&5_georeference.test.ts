@@ -250,21 +250,21 @@ describe("Testing story 3 and 5", () => {
       .send({
         area: {
           include: [
-            { latitude: 67.85584273627312, longitude: 20.22534124638123 },
-            { latitude: 67.85971234872345, longitude: 20.21344576372931 },
-            { latitude: 67.84217863458723, longitude: 20.24528734962184 },
-            { latitude: 67.83997453827193, longitude: 20.23000083719327 },
+            { latitude: 67.8551234322, longitude: 20.225341123 },
+            { latitude: 67.8597123454, longitude: 20.213445762 },
+            { latitude: 67.8421786231, longitude: 20.245287347 },
+            { latitude: 67.8399745213, longitude: 20.230000837 },
           ],
           exclude: [
             [
-              { latitude: 67.85000000000012, longitude: 20.23500000000034 },
-              { latitude: 67.84500000000045, longitude: 20.24000000000082 },
-              { latitude: 67.8475000000006, longitude: 20.22800000000036 },
+              { latitude: 67.85, longitude: 20.23500000034 },
+              { latitude: 67.84503451, longitude: 20.24000000082 },
+              { latitude: 67.8475, longitude: 20.22800000036 },
             ],
             [
-              { latitude: 67.85800000000079, longitude: 20.22000000000075 },
-              { latitude: 67.86000000000089, longitude: 20.22600000000036 },
-              { latitude: 67.85750000000003, longitude: 20.23000000000058 },
+              { latitude: 67.85800079, longitude: 20.22000000075 },
+              { latitude: 67.86000509, longitude: 20.22600000036 },
+              { latitude: 67.85750003, longitude: 20.23000000058 },
             ],
           ],
         },
