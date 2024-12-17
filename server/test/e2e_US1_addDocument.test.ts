@@ -35,6 +35,14 @@ describe("Testing story 1", () => {
   };
   let testDocId1: number;
   let testDocIdAll1: number;
+  const testDocMandatoryFields1_1 = {
+    title: "Mandatory Fields test",
+    description: "This one will be tested for mandatory fields",
+    type: DocumentType.Prescriptive,
+    scale: { type: ScaleType.Text },
+    issuanceTime: "2024-12",
+  };
+  let testDocId1_1: number;
 
   test("US1.1 POST a document without being Urban Planner", async () => {
     const response = await request(app)
@@ -436,14 +444,14 @@ describe("Testing story 1", () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testDocMandatoryFields1 });
+      .send({ ...testDocMandatoryFields1_1 });
     expect(response.status).toBe(StatusCodes.CREATED);
     expect(response.body.id).toBeDefined();
     expect(typeof response.body.id).toBe("number");
-    testDocId1 = response.body.id;
+    testDocId1_1 = response.body.id;
 
     const response2 = await request(app)
-      .patch(`/documents/${testDocId1}`)
+      .patch(`/documents/${testDocId1_1}`)
       .set("Cookie", plannerCookie)
       .send({
         title: "New title",
