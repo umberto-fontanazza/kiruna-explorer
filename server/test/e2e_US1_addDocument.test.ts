@@ -36,13 +36,21 @@ describe("Testing story 1", () => {
   let testDocId1: number;
   let testDocIdAll1: number;
   const testDocMandatoryFields1_1 = {
-    title: "Mandatory Fields test",
-    description: "This one will be tested for mandatory fields",
-    type: DocumentType.Prescriptive,
+    title: "Mandatory test",
+    description: "This one will be tested fields",
+    type: DocumentType.Informative,
     scale: { type: ScaleType.Text },
-    issuanceTime: "2024-12",
+    issuanceTime: "2024",
+  };
+  const testDocMandatoryFields1_2 = {
+    title: "Only test",
+    description: "This one will be tested fields",
+    type: DocumentType.Technical,
+    scale: { type: ScaleType.Text },
+    issuanceTime: "2024-11-22",
   };
   let testDocId1_1: number;
+  let testDocId1_2: number;
 
   test("US1.1 POST a document without being Urban Planner", async () => {
     const response = await request(app)
@@ -469,19 +477,19 @@ describe("Testing story 1", () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testDocMandatoryFields1 });
+      .send({ ...testDocMandatoryFields1_2 });
     expect(response.status).toBe(StatusCodes.CREATED);
     expect(response.body.id).toBeDefined();
     expect(typeof response.body.id).toBe("number");
-    testDocId1 = response.body.id;
+    testDocId1_2 = response.body.id;
 
     const response2 = await request(app)
-      .del(`/documents/${testDocId1}`)
+      .del(`/documents/${testDocId1_2}`)
       .set("Cookie", plannerCookie);
     expect(response2.status).toStrictEqual(StatusCodes.NO_CONTENT);
 
     const response3 = await request(app)
-      .del(`/documents/${testDocId1}`)
+      .del(`/documents/${testDocId1_2}`)
       .set("Cookie", plannerCookie);
     expect(response3.status).toStrictEqual(StatusCodes.NOT_FOUND);
   });
