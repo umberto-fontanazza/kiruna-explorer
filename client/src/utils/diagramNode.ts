@@ -1,12 +1,33 @@
+import { Dayjs } from "dayjs";
 import { Document, LinkType, Scale, ScaleType } from "./interfaces";
+
 export type DiagramNode = { ref: Document; x: number; y: number };
 export type DiagramLink = { source: number; target: number; type: LinkType };
 export type IndexedLink = DiagramLink;
 
-const randValues = [30, 50, 120, 300];
+const dateToXFactory = (docs: Document[]) => {
+  if (docs.length === 0) return (date: Dayjs): number => date.toDate().getDay();
+  const dateInit = docs[0].issuanceDate!;
+  const { min, max } = docs
+    .map((d) => d.issuanceDate!)
+    .reduce(
+      (found: { min: Dayjs; max: Dayjs }, cur: Dayjs) => {
+        if (cur.diff(found.min) < 0) found.min = cur;
+        if (cur.diff(found.max) > 0) found.max = cur;
+        return found;
+      },
+      { min: dateInit, max: dateInit },
+    );
+  const range = max.diff(min, "day");
+  return (date: Dayjs): number => {
+    const a = date.diff(min, "day") / range;
+    console.log(a);
+    return a;
+  };
+};
 
 export const DISCRETE_RANGE = 1000;
-const scaleToY =
+const scaleToYFactory =
   (text = true, concept = true, maxRatio: number, blueprint = true) =>
   (scale: Scale): number => {
     let offset = 0;
@@ -35,15 +56,15 @@ const scaleToY =
 export const xyExtractor = (
   docs: Document[],
   ratioRange: number,
-): DiagramNode[] =>
-  docs.map(
+): DiagramNode[] => {
+  const scaleToY = scaleToYFactory(true, true, ratioRange, true);
+  const dateToX = dateToXFactory(docs);
+  return docs.map(
     (d: Document) =>
       ({
         ref: d,
-        x: d.id % 2 == 0 ? 40 : 20, //TODO: time
-        y: scaleToY(true, true, ratioRange, true)(d.scale),
-        // d.scale.type === ScaleType.ArchitecturalScale
-        //   ? d.scale.ratio
-        //   : randValues[Math.floor(Math.random() * randValues.length)], //TODO: parametrization
+        x: dateToX(d.issuanceDate!),
+        y: scaleToY(d.scale),
       }) as DiagramNode,
   );
+};

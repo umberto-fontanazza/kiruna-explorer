@@ -28,7 +28,7 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
   useEffect(() => {
     const extractedLinks: DiagramLink[] = linksExtractor(documents);
     updateSvg(svgRef, documents, extractedLinks, onDocumentClick);
-  }, [documents]);
+  }, [documents, onDocumentClick]);
 
   return (
     <section id="diagram">
