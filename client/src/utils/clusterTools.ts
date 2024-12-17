@@ -37,8 +37,8 @@ const haveSameArea = (documents: Document[]): boolean => {
   const roundedCentroids = centroids.map((centroid) =>
     centroid
       ? {
-          lat: roundTo(centroid.lat, 10),
-          lng: roundTo(centroid.lng, 10),
+          lat: roundTo(centroid.lat, 9),
+          lng: roundTo(centroid.lng, 9),
         }
       : null,
   );

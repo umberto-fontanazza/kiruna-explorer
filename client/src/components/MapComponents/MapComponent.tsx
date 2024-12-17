@@ -94,8 +94,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     map.addListener("click", () => {
       infoWindow.close();
     });
+    if (!map || !isLoaded || !docSelected) {
+      drawnMarker?.setMap(null);
+      drawnPolygon?.setMap(null);
+      setDrawnPolygon(undefined);
+      setDrawnMarker(undefined);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [infoWindow]);
+  }, [infoWindow, docSelected]);
 
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
