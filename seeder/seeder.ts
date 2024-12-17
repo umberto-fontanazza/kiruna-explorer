@@ -1,4 +1,11 @@
 import { newDocuments } from "./data";
+import { Database } from "./database";
+
+async function clearAutoincrementIds() {
+  await Database.query("ALTER SEQUENCE document_id_seq RESTART WITH 1");
+  await Database.query("ALTER SEQUENCE area_id_seq RESTART WITH 1");
+  await Database.query("ALTER SEQUENCE polygon_id_seq RESTART WITH 1");
+}
 
 async function loginAsPlanner() {
   try {
@@ -8,8 +15,8 @@ async function loginAsPlanner() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email: "testurban.planner@gmail.com",
-        password: "plannerPassword",
+        email: "se2.group15@gmail.com",
+        password: "password",
       }),
     });
 
@@ -105,6 +112,7 @@ async function populateDatabase() {
 }
 
 (async function main() {
-  await clearDatabase(); // Clear the database before populating it
-  await populateDatabase(); // Populate the database with new documents
+  await clearAutoincrementIds();
+  await clearDatabase();
+  await populateDatabase();
 })();
