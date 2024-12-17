@@ -143,7 +143,7 @@ documentRouter.patch(
     document.type = type || document.type;
     document.scale = (parsedScale! as Scale) || document.scale;
     document.stakeholders = stakeholders || document.stakeholders;
-    document.coordinates = coordinates || document.coordinates;
+    await document.setCoordinates(coordinates);
     if (area) await document.setArea(await Area.insert(area as AreaBody));
     document.issuanceTime = issuanceTime
       ? (issuanceTime as TimeInterval)
