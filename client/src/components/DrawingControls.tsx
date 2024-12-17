@@ -38,8 +38,10 @@ const DrawingControls: FC<DrawingControlsProps> = ({
     drawnMarker?.setMap(null);
 
     // Crea l'area municipale
-    const municipalPolygons = createMunicipalArea(map);
-    setMunicipalArea(municipalPolygons);
+    if (!municipalArea) {
+      const municipalPolygons = createMunicipalArea(map);
+      setMunicipalArea(municipalPolygons);
+    }
 
     // Resetta il drawing manager
     drawingManager?.setDrawingMode(null);

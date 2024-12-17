@@ -1,5 +1,12 @@
-import React, { createContext, ReactNode, useState } from "react";
+import React, {
+  createContext,
+  ReactNode,
+  RefObject,
+  useRef,
+  useState,
+} from "react";
 import API from "../API/API";
+import { AlertHandle } from "../components/Alert";
 import { Coordinates, Document, PolygonArea } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
 
@@ -11,6 +18,7 @@ interface AppContextType {
   positionMode: PositionMode;
   showTooltipUploads: boolean;
   visualLinks: boolean;
+  alertRef: RefObject<AlertHandle>;
   setModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setEditDocumentMode: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPopupOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -35,6 +43,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
   const [editDocumentMode, setEditDocumentMode] = useState<boolean>(false);
   const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
   const [showTooltipUploads, setShowTooltipUploads] = useState<boolean>(false);
+  const alertRef = useRef<AlertHandle>(null);
 
   // Questo controlla solo il cambio di una scritta
   const [positionMode, setPositionMode] = useState<PositionMode>(
@@ -87,6 +96,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         positionMode,
         showTooltipUploads,
         visualLinks,
+        alertRef,
         setModalOpen,
         setEditDocumentMode,
         setIsPopupOpen,
