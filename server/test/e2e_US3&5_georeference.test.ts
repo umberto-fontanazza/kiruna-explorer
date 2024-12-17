@@ -29,6 +29,15 @@ describe("Testing story 3 and 5", () => {
     type: DocumentType.Informative,
     issuanceTime: "2021-12-12",
   };
+
+  const testUS3_1 = {
+    title: "Coordinates test",
+    description: "This one will be tested with coordinates",
+    scale: { type: ScaleType.Text },
+    type: DocumentType.Informative,
+    issuanceTime: "2021-12-12",
+  };
+
   const wrongCoordinates = {
     latitude: 120,
     longitude: 40,
@@ -56,6 +65,7 @@ describe("Testing story 3 and 5", () => {
     longitude: 30,
   };
   let testUS3Id: number;
+  let testUS3Id_1: number;
 
   test("US3.1 POST with georeference without being an Urban Planner", async () => {
     const response = await request(app)
@@ -206,20 +216,20 @@ describe("Testing story 3 and 5", () => {
     const response = await request(app)
       .post("/documents/")
       .set("Cookie", plannerCookie)
-      .send({ ...testUS3, coordinates });
+      .send({ ...testUS3_1, coordinates });
     expect(response.status).toBe(StatusCodes.CREATED);
     expect(response.body.id).toBeDefined();
     expect(typeof response.body.id).toBe("number");
-    testUS3Id = response.body.id;
+    testUS3Id_1 = response.body.id;
 
     const response2 = await request(app)
-      .patch(`/documents/${testUS3Id}`)
+      .patch(`/documents/${testUS3Id_1}`)
       .set("Cookie", plannerCookie)
       .send({ coordinates: { latitude: 45, longitude: 20 } });
     expect(response2.status).toStrictEqual(StatusCodes.NO_CONTENT);
 
     const response3 = await request(app)
-      .del(`/documents/${testUS3Id}`)
+      .del(`/documents/${testUS3Id_1}`)
       .set("Cookie", plannerCookie);
     expect(response3.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });
