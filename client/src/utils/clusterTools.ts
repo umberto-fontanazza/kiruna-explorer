@@ -24,6 +24,9 @@ const haveSameCoordinates = (documents: Document[]): boolean => {
 const haveSameArea = (documents: Document[]): boolean => {
   if (documents.length === 0) return false;
 
+  const roundTo = (num: number, decimals: number): number =>
+    Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
+
   const centroids = documents.map((doc) => {
     if (!doc.area) return null;
     return getPolygonCentroid(doc.area);
@@ -31,10 +34,19 @@ const haveSameArea = (documents: Document[]): boolean => {
 
   if (centroids.includes(null)) return false;
 
-  return centroids.every(
+  const roundedCentroids = centroids.map((centroid) =>
+    centroid
+      ? {
+          lat: roundTo(centroid.lat, 10),
+          lng: roundTo(centroid.lng, 10),
+        }
+      : null,
+  );
+
+  return roundedCentroids.every(
     (centroid) =>
-      centroid!.lat === centroids[0]!.lat &&
-      centroid!.lng === centroids[0]!.lng,
+      centroid!.lat === roundedCentroids[0]!.lat &&
+      centroid!.lng === roundedCentroids[0]!.lng,
   );
 };
 
@@ -165,15 +177,14 @@ const createDocumentElement = (
       setdocumentSelected(doc);
       setSidebarOpen?.(true);
 
-      if (drawnPolygon) {
-        if (typeof drawnPolygon !== "function" && drawnPolygon) {
-          drawnPolygon.setMap(null);
-        }
-        setDrawnPolygon(undefined);
+      if (drawnPolygon instanceof google.maps.Polygon) {
+        drawnPolygon.setMap(null);
       }
+
+      setDrawnPolygon(undefined);
       if (doc.area && map) {
         const newPolygon = convertPolygonAreaToPolygon(doc.area, map);
-        setDrawnPolygon?.(newPolygon);
+        setDrawnPolygon(newPolygon);
       } else if (doc.coordinates && map) {
         const newMarker = convertCoordinatesToMarkers(doc.coordinates);
         setDrawnMarker?.(newMarker);

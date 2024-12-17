@@ -61,9 +61,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [markers, setMarkers] = useState<
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
-  const [hoverArea, setHoverArea] = useState<google.maps.Polygon | undefined>(
-    undefined,
-  );
   const previousPolygonRef = useRef<google.maps.Polygon | undefined>(undefined);
   const previousMarkerRef = useRef<CustomMarker | undefined>(undefined);
   const previousClusterElement = useRef<HTMLDivElement | undefined>(undefined);
@@ -177,7 +174,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       renderer: {
         render: renderClusterMarker,
       },
-      algorithmOptions: { maxZoom: 18 },
+      algorithmOptions: { maxZoom: 17 },
       onClusterClick: (event, cluster, map) =>
         handleClusterClick(
           event,
