@@ -1,11 +1,6 @@
 import { Cluster } from "@googlemaps/markerclusterer";
-import {
-  Coordinates,
-  CustomMarker,
-  Document,
-  fromDocumentTypeToIcon,
-  PolygonArea,
-} from "./interfaces";
+import { CustomMarker, Document, fromDocumentTypeToIcon } from "./interfaces";
+import { getPolygonCentroid } from "./polygonsTools";
 
 const haveSameCoordinates = (documents: Document[]): boolean => {
   if (documents.length === 0) return false;
@@ -24,35 +19,18 @@ const haveSameCoordinates = (documents: Document[]): boolean => {
 const haveSameArea = (documents: Document[]): boolean => {
   if (documents.length === 0) return false;
 
-  const serializeCoordinates = (coords: Coordinates[]): string =>
-    JSON.stringify(
-      coords.sort((a, b) =>
-        a.latitude === b.latitude
-          ? a.longitude - b.longitude
-          : a.latitude - b.latitude,
-      ),
-    );
-
-  const serializeArea = (area: PolygonArea): string => {
-    const includeSerialized = serializeCoordinates(area.include);
-    const excludeSerialized = area.exclude
-      .map((excludeSet) => serializeCoordinates(excludeSet))
-      .sort();
-    return JSON.stringify({
-      include: includeSerialized,
-      exclude: excludeSerialized,
-    });
-  };
-
-  const referenceArea = documents[0].area
-    ? serializeArea(documents[0].area)
-    : null;
-  if (!referenceArea) return false;
-
-  return documents.every((doc) => {
-    if (!doc.area) return false;
-    return serializeArea(doc.area) === referenceArea;
+  const centroids = documents.map((doc) => {
+    if (!doc.area) return null;
+    return getPolygonCentroid(doc.area);
   });
+
+  if (centroids.includes(null)) return false;
+
+  return centroids.every(
+    (centroid) =>
+      centroid!.lat === centroids[0]!.lat &&
+      centroid!.lng === centroids[0]!.lng,
+  );
 };
 
 const samePosition = (documents: Document[]): boolean => {
