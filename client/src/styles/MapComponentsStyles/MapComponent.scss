@@ -203,4 +203,9 @@
   &:hover {
     background-color: Color.$third;
   }
+
+  &.selected {
+    background-color: Color.$second;
+    border: 2px solid green;
+  }
 }

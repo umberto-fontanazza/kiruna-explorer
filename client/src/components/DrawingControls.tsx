@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, RefObject, SetStateAction } from "react";
 import { kirunaCoords } from "../utils/map";
 import { PositionMode } from "../utils/modes";
 import { createMunicipalArea } from "../utils/municipalArea";
@@ -13,7 +13,10 @@ interface DrawingControlsProps {
   drawingManager: google.maps.drawing.DrawingManager | undefined;
   setDrawingMode: Dispatch<SetStateAction<string>>;
   municipalArea: google.maps.Polygon[] | undefined;
+  previousPolygonRef: RefObject<google.maps.Polygon | undefined>;
+  drawingMode: string;
   setMunicipalArea: Dispatch<SetStateAction<google.maps.Polygon[] | undefined>>;
+  setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>;
 }
 
 const DrawingControls: FC<DrawingControlsProps> = ({
@@ -26,7 +29,10 @@ const DrawingControls: FC<DrawingControlsProps> = ({
   drawingManager,
   setDrawingMode,
   municipalArea,
+  previousPolygonRef,
+  drawingMode,
   setMunicipalArea,
+  setDrawnPolygon,
 }) => {
   const handleMunicipalButtonClick = () => {
     setActiveButton("municipal-btn");
@@ -38,17 +44,22 @@ const DrawingControls: FC<DrawingControlsProps> = ({
     drawnMarker?.setMap(null);
 
     // Crea l'area municipale
-    const municipalPolygons = createMunicipalArea(map);
-    setMunicipalArea(municipalPolygons);
+    if (!municipalArea) {
+      const municipalPolygons = createMunicipalArea(map);
+      setMunicipalArea(municipalPolygons);
+    }
 
     // Resetta il drawing manager
     drawingManager?.setDrawingMode(null);
-    setDrawingMode("");
+    setDrawingMode("municipal");
   };
 
   const handlePolygonButtonClick = () => {
     setActiveButton("polygon-btn");
-
+    if (drawingMode === "existing") {
+      previousPolygonRef?.current?.setMap(null);
+      setDrawnPolygon(undefined);
+    }
     if (positionMode !== PositionMode.Update) {
       map?.setZoom(11);
       map?.setCenter(kirunaCoords);
@@ -84,6 +95,9 @@ const DrawingControls: FC<DrawingControlsProps> = ({
   const handleExistingButtonClick = () => {
     setActiveButton("existing-btn");
 
+    drawnPolygon?.setMap(null);
+    drawnMarker?.setMap(null);
+
     if (positionMode !== PositionMode.Update) {
       map?.setZoom(11);
       map?.setCenter(kirunaCoords);
@@ -93,6 +107,7 @@ const DrawingControls: FC<DrawingControlsProps> = ({
       municipalArea.forEach((area) => area.setMap(null));
       setMunicipalArea(undefined);
     }
+    drawingManager?.setDrawingMode(null);
     setDrawingMode("existing");
   };
 

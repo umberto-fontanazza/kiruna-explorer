@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAppContext } from "../context/appContext";
 import { useDocumentFormContext } from "../context/DocumentFormContext";
 import "../styles/DocumentForm.scss";
+import { AlertType } from "../utils/alertType";
 import { documentFormDefaults, Link, Upload } from "../utils/interfaces";
 import { PositionMode } from "../utils/modes";
 import { validateDate } from "../utils/utils";
@@ -11,7 +12,7 @@ import ThirdPageModal from "./DocumentFormPages/ThirdPageModal";
 import ProgressBar from "./ProgressBar";
 
 const DocumentForm = () => {
-  const { setModalOpen, setEditDocumentMode, setPositionMode } =
+  const { alertRef, setModalOpen, setEditDocumentMode, setPositionMode } =
     useAppContext();
   const {
     documentFormSelected,
@@ -51,6 +52,11 @@ const DocumentForm = () => {
         },
         filesToUpload ?? [],
       );
+      alertRef.current?.showAlert(
+        "Document succesfully created!",
+        AlertType.Success,
+        4000,
+      );
     }
 
     // Update document
@@ -60,7 +66,13 @@ const DocumentForm = () => {
         documentFormSelected.links,
         filesToUpload,
       );
+      alertRef.current?.showAlert(
+        "Document succesfully updated!",
+        AlertType.Success,
+        4000,
+      );
     }
+
     resetForm(false);
   };
 

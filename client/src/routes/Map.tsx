@@ -54,6 +54,7 @@ const HomeMap: FC = (): JSX.Element => {
       }
     };
     fetchDocument();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [documents]);
 
   // Handle Add Document button click to open modal
