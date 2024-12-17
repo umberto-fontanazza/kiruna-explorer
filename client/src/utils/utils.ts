@@ -24,6 +24,7 @@ export function enumDefOrderComparator<T extends Record<string, string>>(
     }
     return indexA - indexB;
   };
+}
 export function validateDate(value: string): boolean {
   const validYear = /^\d{4}$/.test(value);
   const validYearMonth = dayjs(value, "YYYY/MM", true).isValid();
