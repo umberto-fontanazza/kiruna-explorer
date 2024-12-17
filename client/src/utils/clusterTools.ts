@@ -173,7 +173,6 @@ const createDocumentElement = (
 
   docElement.onclick = () => {
     if (drawingMode !== "existing") {
-      // Logica per modalità normale (non "existing")
       setdocumentSelected(doc);
       setSidebarOpen?.(true);
 
