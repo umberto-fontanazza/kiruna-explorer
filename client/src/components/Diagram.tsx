@@ -58,13 +58,13 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
                   y="0%"
                   height="100%"
                   width="100%"
-                  viewBox="0 0 128 128"
+                  viewBox="0 0 100 100"
                 >
                   <image
-                    x="0%"
-                    y="0%"
-                    width="128"
-                    height="128"
+                    x="10"
+                    y="10"
+                    width="80"
+                    height="80"
                     xlinkHref="/document-material_effect-icon.png" //TODO: parametrize
                   ></image>
                 </pattern>
