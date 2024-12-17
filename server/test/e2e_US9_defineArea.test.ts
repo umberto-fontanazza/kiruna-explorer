@@ -216,6 +216,43 @@ describe("Testing areas for document router", () => {
     expect(response.status).toStrictEqual(StatusCodes.BAD_REQUEST);
   });
 
+  test("US 9.13 PATCH said document, without area", async () => {
+    const response = await request(app)
+      .patch(`/documents/${documentId}`)
+      .send({ area: undefined })
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+
+  test("US 9.14 POST with area and PATCH with coordinates, then GET with coordinates success", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({
+        ...validDocument,
+        area: validAreaBody,
+      });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    const docId = response.body.id;
+
+    const response2 = await request(app)
+      .patch(`/documents/${docId}`)
+      .set("Cookie", plannerCookie)
+      .send({ coordinates: { latitude: 45, longitude: 20 } });
+    expect(response2.status).toStrictEqual(StatusCodes.NO_CONTENT);
+
+    const response3 = await request(app)
+      .get(`/documents/${docId}`)
+      .set("Cookie", plannerCookie);
+    expect(response3.status).toStrictEqual(StatusCodes.OK);
+    expect(response3.body.coordinates).toStrictEqual({
+      latitude: 45,
+      longitude: 20,
+    });
+  });
+
   test("US 9.13 DELETE document", async () => {
     const response = await request(app)
       .delete(`/documents/${documentId}`)
