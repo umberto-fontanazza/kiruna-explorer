@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction } from "react";
+import { Dispatch, FC, RefObject, SetStateAction } from "react";
 import { kirunaCoords } from "../utils/map";
 import { PositionMode } from "../utils/modes";
 import { createMunicipalArea } from "../utils/municipalArea";
@@ -13,7 +13,10 @@ interface DrawingControlsProps {
   drawingManager: google.maps.drawing.DrawingManager | undefined;
   setDrawingMode: Dispatch<SetStateAction<string>>;
   municipalArea: google.maps.Polygon[] | undefined;
+  previousPolygonRef: RefObject<google.maps.Polygon | undefined>;
+  drawingMode: string;
   setMunicipalArea: Dispatch<SetStateAction<google.maps.Polygon[] | undefined>>;
+  setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>;
 }
 
 const DrawingControls: FC<DrawingControlsProps> = ({
@@ -26,7 +29,10 @@ const DrawingControls: FC<DrawingControlsProps> = ({
   drawingManager,
   setDrawingMode,
   municipalArea,
+  previousPolygonRef,
+  drawingMode,
   setMunicipalArea,
+  setDrawnPolygon,
 }) => {
   const handleMunicipalButtonClick = () => {
     setActiveButton("municipal-btn");
@@ -50,7 +56,10 @@ const DrawingControls: FC<DrawingControlsProps> = ({
 
   const handlePolygonButtonClick = () => {
     setActiveButton("polygon-btn");
-
+    if (drawingMode === "existing") {
+      previousPolygonRef?.current?.setMap(null);
+      setDrawnPolygon(undefined);
+    }
     if (positionMode !== PositionMode.Update) {
       map?.setZoom(11);
       map?.setCenter(kirunaCoords);

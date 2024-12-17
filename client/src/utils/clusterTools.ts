@@ -1,5 +1,5 @@
 import { Cluster } from "@googlemaps/markerclusterer";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import { CustomMarker, Document, fromDocumentTypeToIcon } from "./interfaces";
 import {
   convertCoordinatesToMarkers,
@@ -126,6 +126,7 @@ const createDocumentElement = (
   doc: Document,
   drawingMode: string,
   map: google.maps.Map | undefined,
+  previousClusterElement: MutableRefObject<HTMLDivElement | undefined>,
   setdocumentSelected: (doc: Document) => void,
   setSidebarOpen?: (isOpen: boolean) => void,
   setDrawnPolygon?: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
@@ -150,9 +151,22 @@ const createDocumentElement = (
 
   docElement.onclick = () => {
     if (drawingMode !== "existing") {
+      // Logica per modalità normale (non "existing")
       setdocumentSelected(doc);
       setSidebarOpen?.(true);
     } else {
+      // Rimuove la classe "selected" dall'elemento precedente se esiste
+      if (previousClusterElement.current) {
+        previousClusterElement.current.classList.remove("selected");
+      }
+
+      // Aggiorna il riferimento all'elemento corrente
+      previousClusterElement.current = docElement;
+
+      // Imposta la nuova classe "selected" sull'elemento corrente
+      docElement.classList.add("selected");
+
+      // Aggiunge marker o poligono sulla mappa
       if (doc.area && map) {
         const newPolygon = convertPolygonAreaToPolygon(doc.area, map);
         setDrawnPolygon?.(newPolygon);
@@ -171,6 +185,7 @@ export const handleClusterClick = (
   cluster: Cluster,
   map: google.maps.Map | undefined,
   drawingMode: string,
+  previousClusterElement: MutableRefObject<HTMLDivElement | undefined>,
   setdocumentSelected: (doc: Document) => void,
   setSidebarOpen: (isOpen: boolean) => void,
   setInfoWindow: (infoWindow: google.maps.InfoWindow) => void,
@@ -198,6 +213,7 @@ export const handleClusterClick = (
           doc,
           drawingMode,
           map,
+          previousClusterElement,
           setdocumentSelected,
           drawingMode !== "existing" ? setSidebarOpen : undefined,
           drawingMode == "existing" ? setDrawnPolygon : undefined,

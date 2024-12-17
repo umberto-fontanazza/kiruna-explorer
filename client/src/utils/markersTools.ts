@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import "../styles/MapComponentsStyles/markers.scss";
 import { rewindRing } from "./drawingTools";
 import {
@@ -23,6 +23,9 @@ export const createMarker = (
   setShowTooltipUploads?: Dispatch<SetStateAction<boolean>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
+  previousMarkerRef?: MutableRefObject<CustomMarker | undefined>,
+  drawnPolygon?: google.maps.Polygon,
+  drawnMarker?: google.maps.Marker,
 ): google.maps.marker.AdvancedMarkerElement => {
   const markerDivChild = document.createElement("div");
   const iconName = fromDocumentTypeToIcon.get(doc.type) as string;
@@ -87,22 +90,45 @@ export const createMarker = (
     positionMode !== PositionMode.Update
   ) {
     marker.addListener("click", () => {
+      if (previousMarkerRef?.current) {
+        const prevMarkerContent = previousMarkerRef.current
+          .content as HTMLElement;
+        // Assicurati che il contenuto precedente esista prima di modificarlo
+        if (prevMarkerContent) {
+          prevMarkerContent.classList.remove("iytig");
+        }
+      }
+      // Aggiungi la nuova classe al contenuto del marker corrente
+      if (marker.content) {
+        const currentMarkerContent = marker.content as HTMLElement;
+        currentMarkerContent.classList.add("iytig");
+      }
+
+      // Aggiorna il riferimento al marker corrente
+      if (previousMarkerRef) {
+        previousMarkerRef.current = marker;
+      }
       if (drawingMode !== "existing") {
         setSidebarOpen(true);
         setdocumentSelected(doc);
         if (setShowTooltipUploads) setShowTooltipUploads(false);
-      } else {
-        if (doc.area) {
-          const newPolygon = convertPolygonAreaToPolygon(doc.area, map);
-          setDrawnPolygon(newPolygon);
-        } else if (doc.coordinates) {
-          if (marker.content) {
-            (marker.content as HTMLElement).className = "document-icon iytig";
-          }
-          const newMarker = convertCoordinatesToMarkers(doc.coordinates);
-          setDrawnMarker(newMarker);
-        }
       }
+      if (drawnPolygon) {
+        drawnPolygon.setMap(null);
+        setDrawnPolygon(undefined);
+      }
+      if (drawnMarker) {
+        drawnMarker.setMap(null);
+        setDrawnMarker(undefined);
+      }
+      if (doc.area) {
+        const newPolygon = convertPolygonAreaToPolygon(doc.area, map);
+        setDrawnPolygon(newPolygon);
+      } else if (doc.coordinates) {
+        const newMarker = convertCoordinatesToMarkers(doc.coordinates);
+        setDrawnMarker(newMarker);
+      }
+
       const newCenter = doc.coordinates
         ? {
             lat: doc.coordinates.latitude,
@@ -139,10 +165,8 @@ export function convertPolygonAreaToPolygon(
   polygonArea: PolygonArea,
   map: google.maps.Map,
 ): google.maps.Polygon {
-  // 1. Trasforma le coordinate incluse (include) e le escluse (exclude) in percorsi (paths)
   const paths: google.maps.LatLngLiteral[][] = [];
 
-  // Aggiungi il path principale (inclusione)
   const includePath = polygonArea.include.map((coord) => ({
     lat: coord.latitude,
     lng: coord.longitude,
@@ -150,7 +174,7 @@ export function convertPolygonAreaToPolygon(
   const includeLatLngs = includePath.map(
     (coord) => new google.maps.LatLng(coord),
   );
-  const orientedIncludePath = rewindRing(includeLatLngs, false); // Antiorario
+  const orientedIncludePath = rewindRing(includeLatLngs, false);
   paths.push(
     orientedIncludePath.map((latLng) => ({
       lat: latLng.lat(),
@@ -158,7 +182,6 @@ export function convertPolygonAreaToPolygon(
     })),
   );
 
-  // Aggiungi i percorsi esclusi (buchi)
   polygonArea.exclude.forEach((excludedPath) => {
     const excludePath = excludedPath.map((coord) => ({
       lat: coord.latitude,
@@ -179,9 +202,9 @@ export function convertPolygonAreaToPolygon(
   // 2. Crea e restituisci un oggetto google.maps.Polygon
   const polygon = new google.maps.Polygon({
     paths,
-    strokeColor: "rgb(0,255,0)",
+    strokeColor: "#fecb00",
     strokeOpacity: 0.8,
-    strokeWeight: 2,
+    strokeWeight: 4,
     fillColor: "rgb(0,255,0)",
     fillOpacity: 0.35,
     map,

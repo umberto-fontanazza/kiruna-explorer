@@ -61,13 +61,17 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const [markers, setMarkers] = useState<
     google.maps.marker.AdvancedMarkerElement[]
   >([]);
+  const [hoverArea, setHoverArea] = useState<google.maps.Polygon | undefined>(
+    undefined,
+  );
   const previousPolygonRef = useRef<google.maps.Polygon | undefined>(undefined);
+  const previousMarkerRef = useRef<CustomMarker | undefined>(undefined);
+  const previousClusterElement = useRef<HTMLDivElement | undefined>(undefined);
   const [saved, setSaved] = useState(false);
   const [municipalArea, setMunicipalArea] = useState<
     google.maps.Polygon[] | undefined
   >(undefined);
   const [drawingMode, setDrawingMode] = useState<string>("");
-
   const [drawingManager, setDrawingManager] = useState<
     google.maps.drawing.DrawingManager | undefined
   >(undefined);
@@ -159,6 +163,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           setShowTooltipUploads,
           setdocumentSelected,
           setSidebarOpen,
+          previousMarkerRef,
+          drawingMode === "existing" ? drawnPolygon : undefined,
+          drawingMode === "existing" ? drawnMarker : undefined,
         ),
       );
 
@@ -177,11 +184,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           cluster,
           map,
           drawingMode,
+          previousClusterElement,
           setdocumentSelected,
           setSidebarOpen,
           setInfoWindow,
-          drawingMode === "existing" ? setDrawnPolygon : undefined,
-          drawingMode === "existing" ? setDrawnMarker : undefined,
         ),
     });
 
@@ -205,6 +211,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   useEffect(() => {
     if (positionMode === PositionMode.None) {
+      // previousPolygonRef.current?.setMap(null);
+      // previousMarkerRef.current?.setMap(null);
       if (municipalArea) {
         municipalArea?.forEach((area) => area.setMap(null));
       }
@@ -217,6 +225,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       setDrawnMarker(undefined);
       setDrawnPolygon(undefined);
       setDrawingManager(undefined);
+    } else {
+      drawnPolygon?.setMap(null);
+      setDrawnPolygon(undefined);
+      setDrawnMarker(undefined);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [positionMode]);
@@ -236,6 +248,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   useEffect(() => {
     // Quando viene impostato un nuovo `drawnMarker`
+
     if (previousPolygonRef.current) {
       // Rimuovi il poligono precedente dalla mappa
       previousPolygonRef.current.setMap(null);
@@ -248,7 +261,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       resetDrawingState();
       return;
     }
-
     // Gestione modalità Update
     if (positionMode === PositionMode.Update && docSelected) {
       handleUpdateMode();
@@ -536,7 +548,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         drawingManager={drawingManager}
         setDrawingMode={setDrawingMode}
         municipalArea={municipalArea}
+        previousPolygonRef={previousPolygonRef}
+        drawingMode={drawingMode}
         setMunicipalArea={setMunicipalArea}
+        setDrawnPolygon={setDrawnPolygon}
       />
 
       <GoogleMap
