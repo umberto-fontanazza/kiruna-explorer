@@ -3,7 +3,7 @@ import "../styles/Alert.scss";
 import { AlertType } from "../utils/alertType";
 
 export interface AlertHandle {
-  showAlert: (message: string, alertType: AlertType, timeout: number) => void;
+  showAlert: (message: string, alertType: AlertType, timeout?: number) => void;
 }
 
 const Alert = forwardRef<AlertHandle, object>((_, ref) => {
