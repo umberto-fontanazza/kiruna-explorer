@@ -63,11 +63,11 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
         <svg ref={svgRef}>
           <defs>
             {Object.values(DocumentType)
-              .map((v) => v.replace("_", "-"))
-              .map((v) => (
+              .map((type) => [type, type.replace("_", "-")])
+              .map(([type, printType]) => (
                 <pattern
-                  id={v}
-                  key={v}
+                  id={printType}
+                  key={printType}
                   x="0%"
                   y="0%"
                   height="100%"
@@ -80,7 +80,7 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
                     y="10"
                     width="80"
                     height="80"
-                    xlinkHref="/document-material_effect-icon.png" //TODO: parametrize
+                    xlinkHref={`/document-${type}-icon.png`}
                   ></image>
                 </pattern>
               ))}
