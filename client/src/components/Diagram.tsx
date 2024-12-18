@@ -113,7 +113,7 @@ const Diagram: FC = () => {
   return (
     <>
       <NavHeader />
-      <section id="diagram">
+      <section id="diagram" className={sidebarOpen ? "with-sidebar" : ""}>
         <div className="time-axis">
           <div className="combine-axes"></div>
           <div className="time-cells-container">
