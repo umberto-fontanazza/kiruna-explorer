@@ -25,7 +25,6 @@ export const createMarker = (
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
   previousMarkerRef?: MutableRefObject<CustomMarker | undefined>,
-
   drawnPolygon?: google.maps.Polygon,
   drawnMarker?: google.maps.Marker,
 ): google.maps.marker.AdvancedMarkerElement => {
@@ -163,6 +162,7 @@ export const createMarker = (
           position: newLatLng,
         });
         setDrawnMarker(newMarker);
+        setDrawnPolygon(undefined);
       }
     });
   }
