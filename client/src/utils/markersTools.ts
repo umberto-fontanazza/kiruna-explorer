@@ -18,12 +18,14 @@ export const createMarker = (
   map: google.maps.Map,
   positionMode: PositionMode,
   drawingMode: string,
+  previousClusterElement: MutableRefObject<HTMLDivElement | undefined>,
   setDrawnMarker: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
   setShowTooltipUploads?: Dispatch<SetStateAction<boolean>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
   previousMarkerRef?: MutableRefObject<CustomMarker | undefined>,
+
   drawnPolygon?: google.maps.Polygon,
   drawnMarker?: google.maps.Marker,
 ): google.maps.marker.AdvancedMarkerElement => {
@@ -64,7 +66,8 @@ export const createMarker = (
 
   if (
     positionMode === PositionMode.None ||
-    (positionMode === PositionMode.Insert && drawingMode === "existing")
+    // (positionMode !== PositionMode.Insert &&
+    drawingMode === "existing"
   ) {
     marker.content?.addEventListener("mouseenter", () => {
       if (doc.area && map) {
@@ -86,8 +89,8 @@ export const createMarker = (
 
   if (
     setSidebarOpen &&
-    setdocumentSelected &&
-    positionMode !== PositionMode.Update
+    setdocumentSelected
+    // positionMode !== PositionMode.Update
   ) {
     marker.addListener("click", () => {
       if (previousMarkerRef?.current) {
@@ -107,6 +110,12 @@ export const createMarker = (
       // Aggiorna il riferimento al marker corrente
       if (previousMarkerRef) {
         previousMarkerRef.current = marker;
+      }
+
+      if (previousClusterElement?.current) {
+        console.log("aaaaaa");
+        previousClusterElement.current.classList.remove("selected");
+        previousClusterElement.current = undefined;
       }
       if (drawingMode !== "existing") {
         setSidebarOpen(true);

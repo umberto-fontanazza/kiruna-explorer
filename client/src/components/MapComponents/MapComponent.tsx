@@ -90,15 +90,6 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   });
 
   useEffect(() => {
-    if (!map || !isLoaded || !docSelected) {
-      drawnMarker?.setMap(null);
-      drawnPolygon?.setMap(null);
-      setDrawnPolygon(undefined);
-      setDrawnMarker(undefined);
-    }
-  }, [docSelected]);
-
-  useEffect(() => {
     if (!map || !isLoaded || !infoWindow) return;
     map.addListener("click", () => {
       infoWindow.close();
@@ -165,6 +156,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           map,
           positionMode,
           drawingMode,
+          previousClusterElement,
           setDrawnMarker,
           setDrawnPolygon,
           setShowTooltipUploads,
@@ -194,6 +186,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           drawnPolygon,
           previousClusterElement,
           previousMarkerRef,
+          previousPolygonRef,
           setdocumentSelected,
           setSidebarOpen,
           setInfoWindow,
@@ -217,7 +210,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       markerCluster.clearMarkers();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, map, documents, drawingMode]);
+  }, [isLoaded, map, documents, drawingMode, positionMode]);
 
   useEffect(() => {
     if (positionMode === PositionMode.None) {

@@ -152,6 +152,7 @@ const createDocumentElement = (
   previousMarkerRef: MutableRefObject<
     google.maps.marker.AdvancedMarkerElement | undefined
   >,
+  previousPolygonRef: MutableRefObject<google.maps.Polygon | undefined>,
   setdocumentSelected: (doc: Document) => void,
   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
   setSidebarOpen?: (isOpen: boolean) => void,
@@ -175,50 +176,50 @@ const createDocumentElement = (
   docElement.appendChild(docTitle);
 
   docElement.onclick = () => {
+    // Resetta il marker precedente
     if (previousMarkerRef?.current) {
       const prevMarkerContent = previousMarkerRef.current
         .content as HTMLElement;
-      // Assicurati che il contenuto precedente esista prima di modificarlo
       if (prevMarkerContent) {
         prevMarkerContent.classList.remove("iytig");
+        previousMarkerRef.current = undefined;
       }
     }
+
+    // Resetta il poligono precedente
+    if (previousPolygonRef?.current) {
+      previousPolygonRef.current.setMap(null);
+      previousPolygonRef.current = undefined;
+    }
+
+    // Rimuove la classe "selected" dall'elemento precedente
+    if (previousClusterElement.current) {
+      previousClusterElement.current.classList.remove("selected");
+    }
+
+    // Aggiorna il riferimento all'elemento corrente
+    previousClusterElement.current = docElement;
+
+    // Aggiunge la classe "selected" all'elemento corrente
+    docElement.classList.add("selected");
+
     if (drawingMode !== "existing") {
+      // Logica specifica per il caso "non existing"
       setdocumentSelected(doc);
       setSidebarOpen?.(true);
-
       if (drawnPolygon instanceof google.maps.Polygon) {
         drawnPolygon.setMap(null);
       }
-
       setDrawnPolygon(undefined);
-      if (doc.area && map) {
-        const newPolygon = convertPolygonAreaToPolygon(doc.area, map);
-        setDrawnPolygon(newPolygon);
-      } else if (doc.coordinates && map) {
-        const newMarker = convertCoordinatesToMarkers(doc.coordinates);
-        setDrawnMarker?.(newMarker);
-      }
-    } else {
-      // Rimuove la classe "selected" dall'elemento precedente se esiste
-      if (previousClusterElement.current) {
-        previousClusterElement.current.classList.remove("selected");
-      }
+    }
 
-      // Aggiorna il riferimento all'elemento corrente
-      previousClusterElement.current = docElement;
-
-      // Imposta la nuova classe "selected" sull'elemento corrente
-      docElement.classList.add("selected");
-
-      // Aggiunge marker o poligono sulla mappa
-      if (doc.area && map) {
-        const newPolygon = convertPolygonAreaToPolygon(doc.area, map);
-        setDrawnPolygon?.(newPolygon);
-      } else if (doc.coordinates && map) {
-        const newMarker = convertCoordinatesToMarkers(doc.coordinates);
-        setDrawnMarker?.(newMarker);
-      }
+    // Logica comune per aggiungere marker o poligoni sulla mappa
+    if (doc.area && map) {
+      const newPolygon = convertPolygonAreaToPolygon(doc.area, map);
+      setDrawnPolygon?.(newPolygon);
+    } else if (doc.coordinates && map) {
+      const newMarker = convertCoordinatesToMarkers(doc.coordinates);
+      setDrawnMarker?.(newMarker);
     }
   };
 
@@ -235,6 +236,7 @@ export const handleClusterClick = (
   previousMarkerRef: MutableRefObject<
     google.maps.marker.AdvancedMarkerElement | undefined
   >,
+  previousPolygonRef: MutableRefObject<google.maps.Polygon | undefined>,
   setdocumentSelected: (doc: Document) => void,
   setSidebarOpen: (isOpen: boolean) => void,
   setInfoWindow: (infoWindow: google.maps.InfoWindow) => void,
@@ -265,6 +267,7 @@ export const handleClusterClick = (
           map,
           previousClusterElement,
           previousMarkerRef,
+          previousPolygonRef,
           setdocumentSelected,
           setDrawnPolygon,
           drawingMode !== "existing" ? setSidebarOpen : undefined,
