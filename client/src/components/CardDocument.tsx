@@ -248,7 +248,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
         </h4>
         <div className="connection-group">
           <h4>
-            Links:&nbsp;
+            Connections:&nbsp;
             <span>
               {props.document?.links?.reduce(
                 (acc: number, link: Link) => acc + link.linkTypes.length,

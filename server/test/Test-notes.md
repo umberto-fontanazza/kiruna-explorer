@@ -35,7 +35,12 @@
 17. Update a document as Urban Planner filling wrong one field. DONE (BAD_REQUEST)
 18. Delete a document without being an Urban planner. DONE (UNAUTHORIZED)
 19. Delete an existing document as Urban Planner. DONE (NO_CONTENT)
-20. Delete a non-existing document being an Urban Planner. DONE (BAD_REQUEST)
+20. Create and update at the time (NO_CONTENT)
+21. Create and delete at the time (NO_CONTENT)
+22. Update a deleted document (NOT_FOUND)
+23. Create with some error and try to Update (Bad_request)
+24. Create with some error and try to DELETE (Bad_request)
+25. Create with DD-MM-YYYY date format and change date to YYYY-MM format (NO_CONTENT)
 
 ## US 2. As an Urban Planner I want to link documents to each other So that I can study their relationships
 
@@ -84,6 +89,8 @@
 2. Adjust georeference a document being an Urban Planner, filling in the information correctly. DONE (CREATED)
 3. Adjust georeferencing a document being an Urban planner, filling the information incorrectly. DONE (BAD_REQUEST)
 4. Adjust georeference a document being an Urban planner, with missing information. DONE (BAD_REQUEST)
+5. Create a document with area and Update with coordinates, then View coordinates are updated. DONE (OK)
+6. Create a document with coordinates and Update with polygon success. DONE (NO_CONTENT)
 
 ## US 6. As an Urban Planner I want to list all documents
 
@@ -141,3 +148,4 @@ All the filter part are writed in the US6, im waiting to do the search bar.
 11. Update the document, as Urban planner, with invalid area. DONE (BAD_RQEUEST)
 12. Update the document, as Urban Planner, with area and coordinates. DONE(BAD_REQUEST)
 13. Delete the document, as Urban Planner. DONE(NO_CONTENT)
+14. Create a document with area and Update with coordinates, then View coordinates are updated. DONE (OK)

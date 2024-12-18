@@ -51,6 +51,7 @@ const UploadBox: React.FC<UploadBoxProps> = ({ setFilesToUpload }) => {
       alertRef.current?.showAlert(
         `Error uploading file: "${file.name}". \nThe file is too large (max 10mb). Please reduce its size.`,
         AlertType.Error,
+        5000,
       );
       return;
     }
@@ -79,7 +80,7 @@ const UploadBox: React.FC<UploadBoxProps> = ({ setFilesToUpload }) => {
 
   return (
     <>
-      <Alert ref={alertRef} timeout={5000} />
+      <Alert ref={alertRef} />
       <div
         className="upload-box"
         onDragOver={handleDragOver}

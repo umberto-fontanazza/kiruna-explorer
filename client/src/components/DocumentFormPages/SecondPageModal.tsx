@@ -12,7 +12,6 @@ interface SecondPageModalProps {
 }
 
 const SecondPageModal: FC<SecondPageModalProps> = ({
-  documentForm,
   tableLinks,
   setTableLinks,
   goBack,
@@ -76,7 +75,7 @@ const SecondPageModal: FC<SecondPageModalProps> = ({
 
           <div className="search-link-row">
             <button className="add-link-button" onClick={handleAddLink}>
-              Add Link
+              Add Connection
             </button>
           </div>
         </div>
