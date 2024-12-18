@@ -88,6 +88,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   }, [positionMode]);
 
   useEffect(() => {
+    console.log(docSelected);
+  }, [docSelected]);
+
+  useEffect(() => {
     if (!map || !isLoaded || !infoWindow) return;
     map.addListener("click", () => {
       infoWindow.close();
