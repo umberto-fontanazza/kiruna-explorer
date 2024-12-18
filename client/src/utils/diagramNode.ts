@@ -1,11 +1,12 @@
 import { Dayjs } from "dayjs";
+import { DiagramDoc } from "../components/Diagram";
 import { Document, LinkType, Scale, ScaleType } from "./interfaces";
 
 export type DiagramNode = { ref: Document; x: number; y: number };
 export type DiagramLink = { source: number; target: number; type: LinkType };
 export type IndexedLink = DiagramLink;
 
-const dateToXFactory = (docs: Document[]) => {
+const dateToXFactory = (docs: DiagramDoc[]) => {
   if (docs.length === 0) return (date: Dayjs): number => date.toDate().getDay();
   const dateInit = docs[0].issuanceDate!;
   const { min, max } = docs
@@ -19,11 +20,7 @@ const dateToXFactory = (docs: Document[]) => {
       { min: dateInit, max: dateInit },
     );
   const range = max.diff(min, "day");
-  return (date: Dayjs): number => {
-    const a = date.diff(min, "day") / range;
-    console.log(a);
-    return a;
-  };
+  return (date: Dayjs): number => date.diff(min, "day") / range;
 };
 
 export const DISCRETE_RANGE = 1000;
@@ -54,13 +51,13 @@ const scaleToYFactory =
   };
 
 export const xyExtractor = (
-  docs: Document[],
+  docs: DiagramDoc[],
   ratioRange: number,
 ): DiagramNode[] => {
   const scaleToY = scaleToYFactory(true, true, ratioRange, true);
   const dateToX = dateToXFactory(docs);
   return docs.map(
-    (d: Document) =>
+    (d: DiagramDoc) =>
       ({
         ref: d,
         x: dateToX(d.issuanceDate!),

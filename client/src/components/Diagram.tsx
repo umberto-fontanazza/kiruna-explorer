@@ -32,7 +32,6 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
   const svgRef = useRef<SVGElement | null>(null);
 
   useEffect(() => {
-    console.log(documents);
     const diagDocuments = documents
       // .filter((d) => d.issuanceTime)
       .map((d) => ({
