@@ -24,15 +24,15 @@ const linksExtractor = (docs: DiagramDoc[]): DiagramLink[] =>
     )
     .filter((l) => l.target > l.source);
 interface DiagramProps {
-  documents: Document[];
+  docs: Document[];
   onDocumentClick: (d: Document) => void;
 }
 
-const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
+const Diagram: FC<DiagramProps> = ({ docs, onDocumentClick }) => {
   const svgRef = useRef<SVGElement | null>(null);
 
   useEffect(() => {
-    const diagDocuments = documents
+    const diagDocuments = docs
       // .filter((d) => d.issuanceTime)
       .map((d) => ({
         ...d,
@@ -41,7 +41,7 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
       }));
     const extractedLinks: DiagramLink[] = linksExtractor(diagDocuments);
     updateSvg(svgRef, diagDocuments, extractedLinks, onDocumentClick);
-  }, [documents, onDocumentClick]);
+  }, [docs, onDocumentClick]);
 
   return (
     <section id="diagram">
@@ -51,7 +51,7 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
       </div>
       <div className="scale-n-svg">
         <div className="scale-types-container">
-          {[...new Set((documents ?? []).map((d) => d.scale.type))]
+          {[...new Set((docs ?? []).map((d) => d.scale.type))]
             .sort(enumDefOrderComparator(ScaleType))
             .map((scaleTName) => (
               <span className={`scale-type ${scaleTName}`} key={scaleTName}>
