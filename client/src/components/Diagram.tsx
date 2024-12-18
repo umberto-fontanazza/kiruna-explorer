@@ -1,11 +1,17 @@
+import { Dayjs } from "dayjs";
 import { FC, useEffect, useRef } from "react";
 import "../styles/Diagram.scss";
 import { SVGElement, updateSvg } from "../utils/diagram";
 import { DiagramLink } from "../utils/diagramNode";
 import { Document, DocumentType, Link, ScaleType } from "../utils/interfaces";
+import { TimeInterval } from "../utils/timeInterval";
 import { capitalizeFirstLetter, enumDefOrderComparator } from "../utils/utils";
 
-const linksExtractor = (docs: Document[]): DiagramLink[] =>
+export type DiagramDoc = Omit<Document, "issuanceTime"> & {
+  issuanceDate: Dayjs;
+};
+
+const linksExtractor = (docs: DiagramDoc[]): DiagramLink[] =>
   docs
     .flatMap((d) =>
       (d.links ?? []).flatMap((l: Link) =>
@@ -26,8 +32,16 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
   const svgRef = useRef<SVGElement | null>(null);
 
   useEffect(() => {
-    const extractedLinks: DiagramLink[] = linksExtractor(documents);
-    updateSvg(svgRef, documents, extractedLinks, onDocumentClick);
+    console.log(documents);
+    const diagDocuments = documents
+      // .filter((d) => d.issuanceTime)
+      .map((d) => ({
+        ...d,
+        issuanceTime: undefined,
+        issuanceDate: TimeInterval.parse(d.issuanceTime!).toDayjs(),
+      }));
+    const extractedLinks: DiagramLink[] = linksExtractor(diagDocuments);
+    updateSvg(svgRef, diagDocuments, extractedLinks, onDocumentClick);
   }, [documents, onDocumentClick]);
 
   return (

@@ -1,5 +1,6 @@
 import * as d3 from "d3";
 import { MutableRefObject } from "react";
+import { DiagramDoc } from "../components/Diagram";
 import {
   DiagramLink,
   DiagramNode,
@@ -53,7 +54,7 @@ function toPercentage(value: number, min: number, max: number): string {
 
 export const updateSvg = (
   ref: MutableRefObject<SVGElement | null>,
-  documents: Document[],
+  documents: DiagramDoc[],
   rawLinks: DiagramLink[],
   onClick: (d: Document) => void,
 ) => {

@@ -1,4 +1,3 @@
-import dayjs from "dayjs";
 import { Document, DocumentType, LinkType, ScaleType } from "./interfaces";
 
 export const mockDocks: Document[] = [
@@ -11,7 +10,7 @@ export const mockDocks: Document[] = [
       type: ScaleType.ArchitecturalScale,
       ratio: 500,
     },
-    issuanceDate: dayjs("2024-12-01"),
+    issuanceTime: "2024-12-01",
     links: [
       {
         targetDocumentId: 2,
@@ -28,7 +27,7 @@ export const mockDocks: Document[] = [
       type: ScaleType.ArchitecturalScale,
       ratio: 450,
     },
-    issuanceDate: dayjs("2024-12-15"),
+    issuanceTime: "2024-12-01",
     links: [
       {
         targetDocumentId: 1,
@@ -46,7 +45,7 @@ export const mockDocks: Document[] = [
       type: ScaleType.ArchitecturalScale,
       ratio: 470,
     },
-    issuanceDate: dayjs("2024-12-21"),
+    issuanceTime: "2024-12-01",
     links: [{ targetDocumentId: 2, linkTypes: [LinkType.Projection] }],
   },
   {
@@ -58,7 +57,7 @@ export const mockDocks: Document[] = [
       type: ScaleType.ArchitecturalScale,
       ratio: 100,
     },
-    issuanceDate: dayjs("2024-12-21"),
+    issuanceTime: "2024-12-01",
   },
   {
     id: 5,
@@ -68,7 +67,7 @@ export const mockDocks: Document[] = [
     scale: {
       type: ScaleType.Text,
     },
-    issuanceDate: dayjs("2024-12-21"),
+    issuanceTime: "2024-12-01",
   },
   {
     id: 6,
@@ -78,7 +77,7 @@ export const mockDocks: Document[] = [
     scale: {
       type: ScaleType.BlueprintsOrEffect,
     },
-    issuanceDate: dayjs("2024-12-21"),
+    issuanceTime: "2024-12-01",
   },
   {
     id: 7,
@@ -88,7 +87,7 @@ export const mockDocks: Document[] = [
     scale: {
       type: ScaleType.Concept,
     },
-    issuanceDate: dayjs("2024-12-21"),
+    issuanceTime: "2024-12",
   },
   {
     id: 8,
@@ -99,6 +98,6 @@ export const mockDocks: Document[] = [
       type: ScaleType.ArchitecturalScale,
       ratio: 1,
     },
-    issuanceDate: dayjs("2024-12-21"),
+    issuanceTime: "2024-12-31",
   },
 ];
