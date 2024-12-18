@@ -447,40 +447,26 @@ export const newDocuments = [
   //     exclude: [],
   //   },
   // },
-  // {
-  //   title: "Construction of Block 1 begins",
-  //   description:
-  //     "Simultaneously with the start of construction on the Aurora Center, work also began on Block 1, another mixed-use building overlooking the main square and the road leading to old Kiruna. These are the first residential buildings in the new town.",
-  //   issuanceTime: "2019-06",
-  //   type: DocumentType.MaterialEffect,
-  //   stakeholders: [Stakeholder.Lkab],
-  //   scale: { type: ScaleType.BlueprintsOrEffect },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.5052, longitude: 20.1798 },
-  //       { latitude: 67.5056, longitude: 20.1805 },
-  //       { latitude: 67.505, longitude: 20.1802 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
-  // {
-  //   title: "Construction of Aurora Center begins",
-  //   description:
-  //     "Shortly after the construction of the Scandic hotel began, work on the Aurora Center also started, a multifunctional complex that includes the municipal library of Kiruna. The two buildings are close to each other and connected by a skywalk, just like in the old town center.",
-  //   issuanceTime: "2019-05",
-  //   type: DocumentType.MaterialEffect,
-  //   stakeholders: [Stakeholder.Lkab],
-  //   scale: { type: ScaleType.BlueprintsOrEffect },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.5055, longitude: 20.181 },
-  //       { latitude: 67.506, longitude: 20.182 },
-  //       { latitude: 67.5052, longitude: 20.1818 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
+  {
+    title: "Construction of Block 1 begins",
+    description:
+      "Simultaneously with the start of construction on the Aurora Center, work also began on Block 1, another mixed-use building overlooking the main square and the road leading to old Kiruna. These are the first residential buildings in the new town.",
+    issuanceTime: "2019-06",
+    type: DocumentType.MaterialEffect,
+    stakeholders: [Stakeholder.Lkab],
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    coordinates: { latitude: 67.50548, longitude: 20.18012 },
+  },
+  {
+    title: "Construction of Aurora Center begins",
+    description:
+      "Shortly after the construction of the Scandic hotel began, work on the Aurora Center also started, a multifunctional complex that includes the municipal library of Kiruna. The two buildings are close to each other and connected by a skywalk, just like in the old town center.",
+    issuanceTime: "2019-05",
+    type: DocumentType.MaterialEffect,
+    stakeholders: [Stakeholder.Lkab],
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    coordinates: { latitude: 60.5057, longitude: 20.18158 },
+  },
   // {
   //   title: "Town Hall demolition",
   //   description:
@@ -498,23 +484,16 @@ export const newDocuments = [
   //     exclude: [],
   //   },
   // },
-  // {
-  //   title: "Construction of Scandic Hotel begins",
-  //   description:
-  //     "After two extensions of the land acquisition agreement, necessary because this document in Sweden is valid for only two years, construction of the hotel finally began in 2019.",
-  //   issuanceTime: "2019-04",
-  //   type: DocumentType.MaterialEffect,
-  //   stakeholders: [Stakeholder.Lkab],
-  //   scale: { type: ScaleType.BlueprintsOrEffect },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.5052, longitude: 20.1815 },
-  //       { latitude: 67.5056, longitude: 20.182 },
-  //       { latitude: 67.505, longitude: 20.1818 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
+  {
+    title: "Construction of Scandic Hotel begins",
+    description:
+      "After two extensions of the land acquisition agreement, necessary because this document in Sweden is valid for only two years, construction of the hotel finally began in 2019.",
+    issuanceTime: "2019-04",
+    type: DocumentType.MaterialEffect,
+    stakeholders: [Stakeholder.Lkab],
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    coordinates: { latitude: 67.50547, longitude: 20.18172 },
+  },
   // {
   //   title: "Detail plan for square and commercial street",
   //   description:
@@ -566,23 +545,32 @@ export const newDocuments = [
   //     exclude: [],
   //   },
   // },
-  // {
-  //   title: "Development Plan",
-  //   description:
-  //     "The development plan shapes the form of the new city. The document, unlike previous competition documents, is written entirely in Swedish, which reflects the target audience: the citizens of Kiruna. The plan obviously contains many elements of the winning masterplan from the competition, some recommended by the jury, and others that were deemed appropriate to integrate later. The document is divided into four parts, with the third part, spanning 80 pages, describing the shape the new city will take and the strategies to be implemented for its relocation through plans, sections, images, diagrams, and texts. The document also includes numerous studies aimed at demonstrating the future success of the project.",
-  //   issuanceTime: "2014-03",
-  //   type: DocumentType.Design,
-  //   stakeholders: [Stakeholder.KirunaKommun, Stakeholder.WhiteArkitekter],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 2000 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8506, longitude: 20.304 },
-  //       { latitude: 67.851, longitude: 20.306 },
-  //       { latitude: 67.85, longitude: 20.305 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
+  {
+    title: "Development Plan",
+    description:
+      "The development plan shapes the form of the new city. The document, unlike previous competition documents, is written entirely in Swedish, which reflects the target audience: the citizens of Kiruna. The plan obviously contains many elements of the winning masterplan from the competition, some recommended by the jury, and others that were deemed appropriate to integrate later. The document is divided into four parts, with the third part, spanning 80 pages, describing the shape the new city will take and the strategies to be implemented for its relocation through plans, sections, images, diagrams, and texts. The document also includes numerous studies aimed at demonstrating the future success of the project.",
+    issuanceTime: "2014-03",
+    type: DocumentType.Design,
+    stakeholders: [Stakeholder.KirunaKommun, Stakeholder.WhiteArkitekter],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 2000 },
+    area: {
+      include: [
+        { latitude: 67.84830888510378, longitude: 20.277259119407915 },
+        { latitude: 67.85008879978339, longitude: 20.27816034163692 },
+        { latitude: 67.850266783781, longitude: 20.28086400832393 },
+        { latitude: 67.85381000068215, longitude: 20.281593569175982 },
+        { latitude: 67.85546008234459, longitude: 20.284039743797564 },
+        { latitude: 67.8549100680977, longitude: 20.292451151268267 },
+        { latitude: 67.8530819863569, longitude: 20.29335237349727 },
+        { latitude: 67.85207890716835, longitude: 20.295455225364947 },
+        { latitude: 67.85584831988426, longitude: 20.29687143172481 },
+        { latitude: 67.85282313134186, longitude: 20.309273966209673 },
+        { latitude: 67.85104342533077, longitude: 20.31313634719112 },
+        { latitude: 67.84790434009722, longitude: 20.316440828697466 },
+      ],
+      exclude: [],
+    },
+  },
   // {
   //   title: "Detail plan for Bolagsomradet Gruvstadspark",
   //   description:
