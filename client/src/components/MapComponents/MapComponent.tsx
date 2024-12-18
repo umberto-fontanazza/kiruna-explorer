@@ -64,6 +64,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   const previousPolygonRef = useRef<google.maps.Polygon | undefined>(undefined);
   const previousMarkerRef = useRef<CustomMarker | undefined>(undefined);
   const previousClusterElement = useRef<HTMLDivElement | undefined>(undefined);
+  const [lastSelectedElement, setLastSelectedElement] = useState<string>("");
   const [saved, setSaved] = useState(false);
   const [municipalArea, setMunicipalArea] = useState<
     google.maps.Polygon[] | undefined
@@ -88,6 +89,21 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,
     libraries: libraries,
   });
+
+  useEffect(() => {
+    if (!map || !isLoaded || !docSelected) {
+      drawnMarker?.setMap(null);
+      drawnPolygon?.setMap(null);
+      setDrawnPolygon(undefined);
+      setDrawnMarker(undefined);
+      previousClusterElement?.current?.classList.remove("selected");
+      if (previousMarkerRef.current) {
+        const prevMarkerContent = previousMarkerRef.current
+          .content as HTMLElement;
+        prevMarkerContent.classList.remove("iytig");
+      }
+    }
+  }, [docSelected]);
 
   useEffect(() => {
     if (!map || !isLoaded || !infoWindow) return;
@@ -210,7 +226,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       markerCluster.clearMarkers();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, map, documents, drawingMode, positionMode]);
+  }, [isLoaded, map, documents, drawingMode]);
 
   useEffect(() => {
     if (positionMode === PositionMode.None) {
@@ -282,9 +298,14 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   // Funzione per gestire la modalità Update
   const handleUpdateMode = () => {
-    if (drawnPolygon) {
+    console.log(drawnPolygon);
+    console.log(drawnMarker);
+    console.log(lastSelectedElement);
+    if (drawnPolygon && lastSelectedElement === "polygon") {
+      console.log("aaaaaa");
       handlePolygonUpdate();
-    } else if (drawnMarker) {
+    } else if (drawnMarker && lastSelectedElement === "marker") {
+      console.log("bbbb");
       handleMarkerUpdate();
     }
     alertRef.current?.showAlert(
@@ -435,6 +456,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     setDrawnPolygon,
     setDrawnMarker,
     setActiveButton,
+    positionMode === PositionMode.Update ? setLastSelectedElement : undefined,
   );
 
   useEffect(() => {

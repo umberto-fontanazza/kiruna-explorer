@@ -144,16 +144,18 @@ const DrawingControls: FC<DrawingControlsProps> = ({
             <h4>Marker</h4>
           </div>
         </button>
-        <button
-          id="existing-btn"
-          className={activeButton === "existing-btn" ? "active" : ""}
-          onClick={handleExistingButtonClick}
-        >
-          <div className="existing-container">
-            <h4 className="material-symbols-outlined">category_search</h4>
-            <h4>Existing Points & Areas</h4>
-          </div>
-        </button>
+        {positionMode === PositionMode.Insert && (
+          <button
+            id="existing-btn"
+            className={activeButton === "existing-btn" ? "active" : ""}
+            onClick={handleExistingButtonClick}
+          >
+            <div className="existing-container">
+              <h4 className="material-symbols-outlined">category_search</h4>
+              <h4>Existing Points & Areas</h4>
+            </div>
+          </button>
+        )}
       </div>
     )
   );

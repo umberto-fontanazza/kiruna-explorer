@@ -93,6 +93,7 @@ async function updateDocument(document: Document): Promise<void> {
     issuanceTime: document.issuanceTime?.replace(/\//g, "-"),
     links: undefined,
   };
+  console.log(requestBody);
   const response = await fetch(baseURL + `/documents/${document.id}`, {
     method: "PATCH",
     credentials: "include",
