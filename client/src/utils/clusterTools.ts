@@ -149,6 +149,9 @@ const createDocumentElement = (
   drawnPolygon: SetStateAction<google.maps.Polygon | undefined>,
   map: google.maps.Map | undefined,
   previousClusterElement: MutableRefObject<HTMLDivElement | undefined>,
+  previousMarkerRef: MutableRefObject<
+    google.maps.marker.AdvancedMarkerElement | undefined
+  >,
   setdocumentSelected: (doc: Document) => void,
   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
   setSidebarOpen?: (isOpen: boolean) => void,
@@ -172,6 +175,14 @@ const createDocumentElement = (
   docElement.appendChild(docTitle);
 
   docElement.onclick = () => {
+    if (previousMarkerRef?.current) {
+      const prevMarkerContent = previousMarkerRef.current
+        .content as HTMLElement;
+      // Assicurati che il contenuto precedente esista prima di modificarlo
+      if (prevMarkerContent) {
+        prevMarkerContent.classList.remove("iytig");
+      }
+    }
     if (drawingMode !== "existing") {
       setdocumentSelected(doc);
       setSidebarOpen?.(true);
@@ -221,6 +232,9 @@ export const handleClusterClick = (
   drawingMode: string,
   drawnPolygon: SetStateAction<google.maps.Polygon | undefined>,
   previousClusterElement: MutableRefObject<HTMLDivElement | undefined>,
+  previousMarkerRef: MutableRefObject<
+    google.maps.marker.AdvancedMarkerElement | undefined
+  >,
   setdocumentSelected: (doc: Document) => void,
   setSidebarOpen: (isOpen: boolean) => void,
   setInfoWindow: (infoWindow: google.maps.InfoWindow) => void,
@@ -250,6 +264,7 @@ export const handleClusterClick = (
           drawnPolygon,
           map,
           previousClusterElement,
+          previousMarkerRef,
           setdocumentSelected,
           setDrawnPolygon,
           drawingMode !== "existing" ? setSidebarOpen : undefined,

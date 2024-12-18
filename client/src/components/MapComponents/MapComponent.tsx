@@ -193,6 +193,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           drawingMode,
           drawnPolygon,
           previousClusterElement,
+          previousMarkerRef,
           setdocumentSelected,
           setSidebarOpen,
           setInfoWindow,
