@@ -143,7 +143,7 @@ const HomeMap: FC = (): JSX.Element => {
         documents={documents}
         onDocumentClick={(d) => {
           const { id: selectedDocumentId } = d;
-          const activeDoc = documents.find((d) => (d.id = selectedDocumentId))!;
+          const activeDoc = documents.find((d) => d.id == selectedDocumentId)!;
           setDocSelected(activeDoc);
           setSidebarOpen(true);
         }}
