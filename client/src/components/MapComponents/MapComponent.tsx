@@ -298,14 +298,9 @@ const MapComponent: FC<MapComponentProps> = (props) => {
 
   // Funzione per gestire la modalità Update
   const handleUpdateMode = () => {
-    console.log(drawnPolygon);
-    console.log(drawnMarker);
-    console.log(lastSelectedElement);
     if (drawnPolygon && lastSelectedElement === "polygon") {
-      console.log("aaaaaa");
       handlePolygonUpdate();
     } else if (drawnMarker && lastSelectedElement === "marker") {
-      console.log("bbbb");
       handleMarkerUpdate();
     }
     alertRef.current?.showAlert(

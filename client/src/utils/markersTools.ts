@@ -112,7 +112,6 @@ export const createMarker = (
       }
 
       if (previousClusterElement?.current) {
-        console.log("aaaaaa");
         previousClusterElement.current.classList.remove("selected");
         previousClusterElement.current = undefined;
       }
