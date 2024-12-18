@@ -420,23 +420,20 @@ export const newDocuments = [
     scale: { type: ScaleType.BlueprintsOrEffect },
     coordinates: { latitude: 60.5057, longitude: 20.18158 },
   },
-  // {
-  //   title: "Town Hall demolition",
-  //   description:
-  //     "After the construction of the new town hall was completed, the old building, nicknamed 'The Igloo,' was demolished. The only elements preserved were the door handles, a masterpiece of Sami art made of wood and bone, and the clock tower, which once stood on the roof of the old town hall. The clock tower was relocated to the central square of New Kiruna, in front of the new building.",
-  //   issuanceTime: "2019-04",
-  //   type: DocumentType.MaterialEffect,
-  //   stakeholders: [Stakeholder.Lkab],
-  //   scale: { type: ScaleType.BlueprintsOrEffect },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.5107, longitude: 20.1315 },
-  //       { latitude: 67.5111, longitude: 20.1325 },
-  //       { latitude: 67.5105, longitude: 20.132 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
+  //25
+  {
+    title: "Town Hall demolition",
+    description:
+      "After the construction of the new town hall was completed, the old building, nicknamed 'The Igloo,' was demolished. The only elements preserved were the door handles, a masterpiece of Sami art made of wood and bone, and the clock tower, which once stood on the roof of the old town hall. The clock tower was relocated to the central square of New Kiruna, in front of the new building.",
+    issuanceTime: "2019-04",
+    type: DocumentType.MaterialEffect,
+    stakeholders: [Stakeholder.Lkab],
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    area: {
+      coordinates: { latitude: 67.50547, longitude: 20.18172 },
+    },
+  },
+  //25
   {
     title: "Construction of Scandic Hotel begins",
     description:
@@ -447,23 +444,32 @@ export const newDocuments = [
     scale: { type: ScaleType.BlueprintsOrEffect },
     coordinates: { latitude: 67.50547, longitude: 20.18172 },
   },
-  // {
-  //   title: "Detail plan for square and commercial street",
-  //   description:
-  //     "This plan, approved in July 2016, is the first detailed plan to be implemented from the new masterplan (Adjusted development plan). The document defines the entire area near the town hall, comprising a total of 9 blocks known for their density. Among these are the 6 buildings that will face the main square. The functions are mixed, both public and private, with residential being prominent, as well as the possibility of incorporating accommodation facilities such as hotels. For all buildings in this plan, the only height limit is imposed by air traffic.",
-  //   issuanceTime: "2016-06-22",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 1000 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.849, longitude: 20.287 },
-  //       { latitude: 67.8495, longitude: 20.288 },
-  //       { latitude: 67.8485, longitude: 20.2875 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
+  //26
+  {
+    title: "Detail plan for square and commercial street",
+    description:
+      "This plan, approved in July 2016, is the first detailed plan to be implemented from the new masterplan (Adjusted development plan). The document defines the entire area near the town hall, comprising a total of 9 blocks known for their density. Among these are the 6 buildings that will face the main square. The functions are mixed, both public and private, with residential being prominent, as well as the possibility of incorporating accommodation facilities such as hotels. For all buildings in this plan, the only height limit is imposed by air traffic.",
+    issuanceTime: "2016-06-22",
+    type: DocumentType.Prescriptive,
+    stakeholders: [Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 1000 },
+    area: {
+      include: [
+        { latitude: 67.85007965050973, longitude: 20.30067266259144 },
+        { latitude: 67.85078348865999, longitude: 20.30374110970448 },
+        { latitude: 67.85127697170745, longitude: 20.30644477639149 },
+        { latitude: 67.85045988755056, longitude: 20.307775152062877 },
+        { latitude: 67.84936770065772, longitude: 20.30923427376698 },
+        { latitude: 67.84914116660194, longitude: 20.30747474465321 },
+        { latitude: 67.84878518006902, longitude: 20.30419172081898 },
+        { latitude: 67.84828355345998, longitude: 20.30367673668812 },
+        { latitude: 67.84828355345998, longitude: 20.300071847772106 },
+        { latitude: 67.84841300652086, longitude: 20.29749692711781 },
+        { latitude: 67.84925443390486, longitude: 20.297668588494762 },
+      ],
+    },
+  },
+  //27
   {
     title: "Adjusted development plan",
     description:
@@ -490,23 +496,37 @@ export const newDocuments = [
       exclude: [],
     },
   },
-  // {
-  //   title: "Deformation forecast",
-  //   description:
-  //     "The development plan shapes the form of the new city. The document, unlike previous competition documents, is written entirely in Swedish, which reflects the target audience: the citizens of Kiruna. The plan obviously contains many elements of the winning masterplan from the competition, some recommended by the jury, and others that were deemed appropriate to integrate later. The document is divided into four parts, with the third part, spanning 80 pages, describing the shape the new city will take and the strategies to be implemented for its relocation through plans, sections, images, diagrams, and texts. The document also includes numerous studies aimed at demonstrating the future success of the project.",
-  //   issuanceTime: "2014-12",
-  //   type: DocumentType.Technical,
-  //   stakeholders: [Stakeholder.Lkab],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 1600 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8515, longitude: 20.228 },
-  //       { latitude: 67.852, longitude: 20.23 },
-  //       { latitude: 67.8505, longitude: 20.229 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
+  //28
+  {
+    title: "Deformation forecast",
+    description:
+      "The development plan shapes the form of the new city. The document, unlike previous competition documents, is written entirely in Swedish, which reflects the target audience: the citizens of Kiruna. The plan obviously contains many elements of the winning masterplan from the competition, some recommended by the jury, and others that were deemed appropriate to integrate later. The document is divided into four parts, with the third part, spanning 80 pages, describing the shape the new city will take and the strategies to be implemented for its relocation through plans, sections, images, diagrams, and texts. The document also includes numerous studies aimed at demonstrating the future success of the project.",
+    issuanceTime: "2014-12",
+    type: DocumentType.Technical,
+    stakeholders: [Stakeholder.Lkab],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 1600 },
+    area: {
+      include: [
+        { latitude: 67.84704837132209, longitude: 20.231252065045478 },
+        { latitude: 67.84581846628663, longitude: 20.230565419537665 },
+        { latitude: 67.84453994363284, longitude: 20.23073708091462 },
+        { latitude: 67.84364979155248, longitude: 20.229835858685615 },
+        { latitude: 67.84068776830405, longitude: 20.2283837278247 },
+        { latitude: 67.84055827237046, longitude: 20.218427367961418 },
+        { latitude: 67.84308331345439, longitude: 20.218770690715324 },
+        { latitude: 67.84347175706083, longitude: 20.22186059550048 },
+        { latitude: 67.8449283629881, longitude: 20.21859902933837 },
+        { latitude: 67.84661143880155, longitude: 20.220058151042473 },
+        { latitude: 67.85703085845358, longitude: 20.211560912883293 },
+        { latitude: 67.85740289449402, longitude: 20.21314878062011 },
+        { latitude: 67.85345577478571, longitude: 20.22533673838378 },
+        { latitude: 67.85274392799057, longitude: 20.22465009287597 },
+        { latitude: 67.85125545083788, longitude: 20.224478431499016 },
+        { latitude: 67.84908728154416, longitude: 20.226491957256624 },
+      ],
+    },
+  },
+  //29
   {
     title: "Development Plan",
     description:
@@ -533,251 +553,324 @@ export const newDocuments = [
       exclude: [],
     },
   },
-  // {
-  //   title: "Detail plan for Bolagsomradet Gruvstadspark",
-  //   description:
-  //     "This is the first of 8 detailed plans located in the old center of Kiruna, aimed at transforming the residential areas into mining industry zones to allow the demolition of buildings. The area includes the town hall, the Ullspiran district, and the A10 highway, and it will be the first to be dismantled. The plan consists, like all detailed plans, of two documents: the area map that regulates it, and a text explaining the reasons that led to the drafting of the plan with these characteristics. The plan gained legal validity in 2012.",
-  //   issuanceTime: "2010-10",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 1400 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8525, longitude: 20.2775 },
-  //       { latitude: 67.8527, longitude: 20.2795 },
-  //       { latitude: 67.8519, longitude: 20.278 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
-  // {
-  //   title: "Compilation of responses “So what the people of Kiruna think?",
-  //   description:
-  //     "This document is a compilation of the responses to the survey 'What is your impression of Kiruna?' From the citizens' responses to this last part of the survey, it is evident that certain buildings, such as the Kiruna Church, the Hjalmar Lundbohmsgården, and the Town Hall, are considered of significant value to the population. The municipality views the experience of this survey positively, to the extent that over the years it will propose various consultation opportunities.",
-  //   issuanceTime: "2007",
-  //   type: DocumentType.Informative,
-  //   stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Residents],
-  //   scale: { type: ScaleType.Text },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8555, longitude: 20.225 },
-  //       { latitude: 67.856, longitude: 20.2258 },
-  //       { latitude: 67.8557, longitude: 20.2262 },
-  //       { latitude: 67.8553, longitude: 20.2256 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.8556, longitude: 20.2255 },
-  //         { latitude: 67.8558, longitude: 20.2257 },
-  //         { latitude: 67.8557, longitude: 20.2256 },
-  //       ],
-  //     ],
-  //   },
-  // },
-  // {
-  //   title: "Renewable Energy Initiative",
-  //   description:
-  //     "This document outlines Kiruna's efforts to shift to renewable energy sources, including solar and wind farms to meet urban energy demands.",
-  //   issuanceTime: "2024-02",
-  //   type: DocumentType.Technical,
-  //   stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Lkab],
-  //   scale: { type: ScaleType.Text },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.856, longitude: 20.3115 },
-  //       { latitude: 67.8565, longitude: 20.3125 },
-  //       { latitude: 67.857, longitude: 20.3118 },
-  //       { latitude: 67.8563, longitude: 20.3112 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.8562, longitude: 20.3116 },
-  //         { latitude: 67.8564, longitude: 20.3119 },
-  //         { latitude: 67.8563, longitude: 20.3117 },
-  //       ],
-  //     ],
-  //   },
-  // },
-  // {
-  //   title: "Construction of Hospital Complex",
-  //   description:
-  //     "The hospital complex includes advanced medical facilities, emergency care, and green building features to serve the relocated population.",
-  //   issuanceTime: "2023-11",
-  //   type: DocumentType.MaterialEffect,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 400 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8572, longitude: 20.3165 },
-  //       { latitude: 67.8576, longitude: 20.318 },
-  //       { latitude: 67.858, longitude: 20.3175 },
-  //       { latitude: 67.8574, longitude: 20.3168 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.8574, longitude: 20.317 },
-  //         { latitude: 67.8575, longitude: 20.3174 },
-  //         { latitude: 67.8573, longitude: 20.3173 },
-  //       ],
-  //     ],
-  //   },
-  // },
-  // {
-  //   title: "Public Consultation Summary",
-  //   description:
-  //     "This document summarizes feedback gathered from residents regarding the urban transformation plans and future projects.",
-  //   issuanceTime: "2022-03",
-  //   type: DocumentType.Informative,
-  //   stakeholders: [Stakeholder.Residents, Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.Text },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8523, longitude: 20.3035 },
-  //       { latitude: 67.853, longitude: 20.3055 },
-  //       { latitude: 67.8527, longitude: 20.306 },
-  //       { latitude: 67.852, longitude: 20.304 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.8524, longitude: 20.3042 },
-  //         { latitude: 67.8526, longitude: 20.3048 },
-  //         { latitude: 67.8525, longitude: 20.305 },
-  //         { latitude: 67.8523, longitude: 20.3045 },
-  //       ],
-  //     ],
-  //   },
-  // },
-  // {
-  //   title: "Railway Realignment Proposal",
-  //   description:
-  //     "A detailed proposal for realigning the railway infrastructure to facilitate better transportation access and minimize disruption.",
-  //   issuanceTime: "2024-05",
-  //   type: DocumentType.Design,
-  //   stakeholders: [Stakeholder.Lkab, Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.BlueprintsOrEffect },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8598, longitude: 20.3195 },
-  //       { latitude: 67.8606, longitude: 20.321 },
-  //       { latitude: 67.8604, longitude: 20.322 },
-  //       { latitude: 67.8596, longitude: 20.3215 },
-  //       { latitude: 67.8598, longitude: 20.3195 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.86, longitude: 20.32 },
-  //         { latitude: 67.8603, longitude: 20.3206 },
-  //         { latitude: 67.8601, longitude: 20.3208 },
-  //         { latitude: 67.86, longitude: 20.32 },
-  //       ],
-  //     ],
-  //   },
-  // },
-  // {
-  //   title: "New Residential Block Design",
-  //   description:
-  //     "This document provides the architectural blueprint for a new residential area with integrated public spaces and amenities.",
-  //   issuanceTime: "2023-08",
-  //   type: DocumentType.Design,
-  //   stakeholders: [Stakeholder.WhiteArkitekter, Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 500 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8555, longitude: 20.2988 },
-  //       { latitude: 67.856, longitude: 20.3005 },
-  //       { latitude: 67.8552, longitude: 20.3008 },
-  //       { latitude: 67.8549, longitude: 20.2995 },
-  //       { latitude: 67.8555, longitude: 20.2988 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.8554, longitude: 20.2993 },
-  //         { latitude: 67.8556, longitude: 20.2996 },
-  //         { latitude: 67.8553, longitude: 20.2997 },
-  //         { latitude: 67.8554, longitude: 20.2993 },
-  //       ],
-  //     ],
-  //   },
-  // },
-  // {
-  //   title: "Biodiversity Preservation Plan",
-  //   description:
-  //     "Guidelines for protecting biodiversity in Kiruna's green areas during urban and mining developments.",
-  //   issuanceTime: "2021-10",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.Text },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8515, longitude: 20.2825 },
-  //       { latitude: 67.852, longitude: 20.284 },
-  //       { latitude: 67.851, longitude: 20.2845 },
-  //       { latitude: 67.8505, longitude: 20.283 },
-  //       { latitude: 67.8515, longitude: 20.2825 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.8513, longitude: 20.283 },
-  //         { latitude: 67.8516, longitude: 20.2833 },
-  //         { latitude: 67.8514, longitude: 20.2835 },
-  //         { latitude: 67.8513, longitude: 20.283 },
-  //       ],
-  //     ],
-  //   },
-  // },
-  // {
-  //   title: "Sustainable Water Management Report",
-  //   description:
-  //     "A technical analysis of sustainable water resource management, including new drainage systems for the relocated city.",
-  //   issuanceTime: "2022-06",
-  //   type: DocumentType.Technical,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.BlueprintsOrEffect },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8485, longitude: 20.2905 },
-  //       { latitude: 67.8498, longitude: 20.292 },
-  //       { latitude: 67.849, longitude: 20.293 },
-  //       { latitude: 67.8478, longitude: 20.2915 },
-  //       { latitude: 67.8485, longitude: 20.2905 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.8489, longitude: 20.291 },
-  //         { latitude: 67.8492, longitude: 20.2913 },
-  //         { latitude: 67.849, longitude: 20.2915 },
-  //         { latitude: 67.8489, longitude: 20.291 },
-  //       ],
-  //     ],
-  //   },
-  // },
-  // {
-  //   title: "New Cultural Center Construction",
-  //   description:
-  //     "This document marks the beginning of the cultural center's construction, housing exhibition spaces and public event areas.",
-  //   issuanceTime: "2024-04",
-  //   type: DocumentType.MaterialEffect,
-  //   stakeholders: [Stakeholder.Lkab],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 600 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8565, longitude: 20.2945 },
-  //       { latitude: 67.857, longitude: 20.296 },
-  //       { latitude: 67.8562, longitude: 20.297 },
-  //       { latitude: 67.8558, longitude: 20.2958 },
-  //       { latitude: 67.8565, longitude: 20.2945 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.8566, longitude: 20.2952 },
-  //         { latitude: 67.8568, longitude: 20.2954 },
-  //         { latitude: 67.8567, longitude: 20.295 },
-  //         { latitude: 67.8566, longitude: 20.2952 },
-  //       ],
-  //     ],
-  //   },
-  // },
-  // {
+  //30
+  {
+    title: "Detail plan for Bolagsomradet Gruvstadspark",
+    description:
+      "This is the first of 8 detailed plans located in the old center of Kiruna, aimed at transforming the residential areas into mining industry zones to allow the demolition of buildings. The area includes the town hall, the Ullspiran district, and the A10 highway, and it will be the first to be dismantled. The plan consists, like all detailed plans, of two documents: the area map that regulates it, and a text explaining the reasons that led to the drafting of the plan with these characteristics. The plan gained legal validity in 2012.",
+    issuanceTime: "2010-10",
+    type: DocumentType.Prescriptive,
+    stakeholders: [Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 1400 },
+
+    area: {
+      include: [
+        { latitude: 67.84704837132209, longitude: 20.231252065045478 },
+        { latitude: 67.84581846628663, longitude: 20.230565419537665 },
+        { latitude: 67.84453994363284, longitude: 20.23073708091462 },
+        { latitude: 67.84364979155248, longitude: 20.229835858685615 },
+        { latitude: 67.84068776830405, longitude: 20.2283837278247 },
+        { latitude: 67.84055827237046, longitude: 20.218427367961418 },
+        { latitude: 67.84308331345439, longitude: 20.218770690715324 },
+        { latitude: 67.84347175706083, longitude: 20.22186059550048 },
+        { latitude: 67.8449283629881, longitude: 20.21859902933837 },
+        { latitude: 67.84661143880155, longitude: 20.220058151042473 },
+        { latitude: 67.85703085845358, longitude: 20.211560912883293 },
+        { latitude: 67.85740289449402, longitude: 20.21314878062011 },
+        { latitude: 67.85345577478571, longitude: 20.22533673838378 },
+        { latitude: 67.85274392799057, longitude: 20.22465009287597 },
+        { latitude: 67.85125545083788, longitude: 20.224478431499016 },
+        { latitude: 67.84908728154416, longitude: 20.226491957256624 },
+      ],
+    },
+  },
+  //31
+  {
+    title: "Compilation of responses “So what the people of Kiruna think?",
+    description:
+      "This document is a compilation of the responses to the survey 'What is your impression of Kiruna?' From the citizens' responses to this last part of the survey, it is evident that certain buildings, such as the Kiruna Church, the Hjalmar Lundbohmsgården, and the Town Hall, are considered of significant value to the population. The municipality views the experience of this survey positively, to the extent that over the years it will propose various consultation opportunities.",
+    issuanceTime: "2007",
+    type: DocumentType.Informative,
+    stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Residents],
+    scale: { type: ScaleType.Text },
+    area: {
+      include: [
+        { latitude: 67.85653094347411, longitude: 20.22260423897432 },
+        { latitude: 67.85740442873059, longitude: 20.222990477072464 },
+        { latitude: 67.85771175835312, longitude: 20.2235912918918 },
+        { latitude: 67.85716179721962, longitude: 20.226423704611527 },
+        { latitude: 67.8568544603476, longitude: 20.228912794577347 },
+        { latitude: 67.85742060407489, longitude: 20.229256117331254 },
+        { latitude: 67.85740442873059, longitude: 20.229942762839066 },
+        { latitude: 67.85615889352012, longitude: 20.231959784018265 },
+        { latitude: 67.85497799999416, longitude: 20.233933889853226 },
+        { latitude: 67.85465445708404, longitude: 20.23084398506807 },
+        { latitude: 67.85484858336883, longitude: 20.227539503561722 },
+        { latitude: 67.85518830047843, longitude: 20.225973093497025 },
+        { latitude: 67.85547139428904, longitude: 20.22412773369478 },
+        { latitude: 67.85572213165108, longitude: 20.222754442679154 },
+      ],
+      exclude: [
+        [
+          { latitude: 67.85571472847796, longitude: 20.226416403669557 },
+          { latitude: 67.8552375161909, longitude: 20.226201826948365 },
+          { latitude: 67.85510001253297, longitude: 20.227017218488893 },
+          { latitude: 67.85490588834138, longitude: 20.227939898390016 },
+          { latitude: 67.85536693065762, longitude: 20.228218848127565 },
+          { latitude: 67.85601399221748, longitude: 20.22834759416028 },
+          { latitude: 67.85611913802492, longitude: 20.226695353407106 },
+        ],
+      ],
+    },
+  },
+  //32
+  {
+    title: "Renewable Energy Initiative",
+    description:
+      "This document outlines Kiruna's efforts to shift to renewable energy sources, including solar and wind farms to meet urban energy demands.",
+    issuanceTime: "2024-02",
+    type: DocumentType.Technical,
+    stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Lkab],
+    scale: { type: ScaleType.Text },
+    area: {
+      include: [
+        { latitude: 67.85653094347411, longitude: 20.22260423897432 },
+        { latitude: 67.85740442873059, longitude: 20.222990477072464 },
+        { latitude: 67.85771175835312, longitude: 20.2235912918918 },
+        { latitude: 67.85716179721962, longitude: 20.226423704611527 },
+        { latitude: 67.8568544603476, longitude: 20.228912794577347 },
+        { latitude: 67.85742060407489, longitude: 20.229256117331254 },
+        { latitude: 67.85740442873059, longitude: 20.229942762839066 },
+        { latitude: 67.85615889352012, longitude: 20.231959784018265 },
+        { latitude: 67.85497799999416, longitude: 20.233933889853226 },
+        { latitude: 67.85465445708404, longitude: 20.23084398506807 },
+        { latitude: 67.85484858336883, longitude: 20.227539503561722 },
+        { latitude: 67.85518830047843, longitude: 20.225973093497025 },
+        { latitude: 67.85547139428904, longitude: 20.22412773369478 },
+        { latitude: 67.85572213165108, longitude: 20.222754442679154 },
+      ],
+      exclude: [
+        [
+          { latitude: 67.85571472847796, longitude: 20.226416403669557 },
+          { latitude: 67.8552375161909, longitude: 20.226201826948365 },
+          { latitude: 67.85510001253297, longitude: 20.227017218488893 },
+          { latitude: 67.85490588834138, longitude: 20.227939898390016 },
+          { latitude: 67.85536693065762, longitude: 20.228218848127565 },
+          { latitude: 67.85601399221748, longitude: 20.22834759416028 },
+          { latitude: 67.85611913802492, longitude: 20.226695353407106 },
+        ],
+      ],
+    },
+  },
+  //33
+  {
+    title: "Construction of Hospital Complex",
+    description:
+      "The hospital complex includes advanced medical facilities, emergency care, and green building features to serve the relocated population.",
+    issuanceTime: "2023-11",
+    type: DocumentType.MaterialEffect,
+    stakeholders: [Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 400 },
+    area: {
+      include: [
+        { latitude: 67.85406978031554, longitude: 20.27381399495136 },
+        { latitude: 67.85341457574474, longitude: 20.274650844164007 },
+        { latitude: 67.85268654907459, longitude: 20.275680812425726 },
+        { latitude: 67.8526299238254, longitude: 20.273191722459906 },
+        { latitude: 67.85268654907459, longitude: 20.27130344731342 },
+        { latitude: 67.85368151316251, longitude: 20.27108887059223 },
+        { latitude: 67.85453892783366, longitude: 20.271432193346136 },
+        { latitude: 67.85472496647725, longitude: 20.27332046849262 },
+      ],
+      exclude: [
+        [
+          { latitude: 67.85337371339556, longitude: 20.27273432213429 },
+          { latitude: 67.8527023106606, longitude: 20.272863068167005 },
+          { latitude: 67.85272657856605, longitude: 20.27372137505177 },
+          { latitude: 67.853365624321, longitude: 20.273420967642103 },
+        ],
+      ],
+    },
+  },
+  //34
+  {
+    title: "Public Consultation Summary",
+    description:
+      "This document summarizes feedback gathered from residents regarding the urban transformation plans and future projects.",
+    issuanceTime: "2022-03",
+    type: DocumentType.Informative,
+    stakeholders: [Stakeholder.Residents, Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.Text },
+    area: {
+      include: [
+        { latitude: 67.85406978031554, longitude: 20.27381399495136 },
+        { latitude: 67.85341457574474, longitude: 20.274650844164007 },
+        { latitude: 67.85268654907459, longitude: 20.275680812425726 },
+        { latitude: 67.8526299238254, longitude: 20.273191722459906 },
+        { latitude: 67.85268654907459, longitude: 20.27130344731342 },
+        { latitude: 67.85368151316251, longitude: 20.27108887059223 },
+        { latitude: 67.85453892783366, longitude: 20.271432193346136 },
+        { latitude: 67.85472496647725, longitude: 20.27332046849262 },
+      ],
+      exclude: [
+        [
+          { latitude: 67.85337371339556, longitude: 20.27273432213429 },
+          { latitude: 67.8527023106606, longitude: 20.272863068167005 },
+          { latitude: 67.85272657856605, longitude: 20.27372137505177 },
+          { latitude: 67.853365624321, longitude: 20.273420967642103 },
+        ],
+      ],
+    },
+  },
+
+  //35
+  {
+    title: "Railway Realignment Proposal",
+    description:
+      "A detailed proposal for realigning the railway infrastructure to facilitate better transportation access and minimize disruption.",
+    issuanceTime: "2024-05",
+    type: DocumentType.Design,
+    stakeholders: [Stakeholder.Lkab, Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    area: {
+      include: [
+        { latitude: 67.85406978031554, longitude: 20.27381399495136 },
+        { latitude: 67.85341457574474, longitude: 20.274650844164007 },
+        { latitude: 67.85268654907459, longitude: 20.275680812425726 },
+        { latitude: 67.8526299238254, longitude: 20.273191722459906 },
+        { latitude: 67.85268654907459, longitude: 20.27130344731342 },
+        { latitude: 67.85368151316251, longitude: 20.27108887059223 },
+        { latitude: 67.85453892783366, longitude: 20.271432193346136 },
+        { latitude: 67.85472496647725, longitude: 20.27332046849262 },
+      ],
+      exclude: [
+        [
+          { latitude: 67.85337371339556, longitude: 20.27273432213429 },
+          { latitude: 67.8527023106606, longitude: 20.272863068167005 },
+          { latitude: 67.85272657856605, longitude: 20.27372137505177 },
+          { latitude: 67.853365624321, longitude: 20.273420967642103 },
+        ],
+      ],
+    },
+  },
+
+  //36
+  {
+    title: "New Residential Block Design",
+    description:
+      "This document provides the architectural blueprint for a new residential area with integrated public spaces and amenities.",
+    issuanceTime: "2023-08",
+    type: DocumentType.Design,
+    stakeholders: [Stakeholder.WhiteArkitekter, Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 500 },
+    include: [
+      { latitude: 67.84707709867558, longitude: 20.264701576459107 },
+      { latitude: 67.84591192853563, longitude: 20.26459428809851 },
+      { latitude: 67.84582292009063, longitude: 20.258242817151245 },
+      { latitude: 67.84583910346952, longitude: 20.256719322430786 },
+      { latitude: 67.84652688669507, longitude: 20.25590393089026 },
+      { latitude: 67.84684245103571, longitude: 20.257191391217408 },
+      { latitude: 67.84710137243465, longitude: 20.2578565790531 },
+    ],
+    exclude: [
+      ,
+      [
+        { latitude: 67.84686825711366, longitude: 20.25811782855961 },
+        { latitude: 67.84627353680196, longitude: 20.25811782855961 },
+        { latitude: 67.84629376563306, longitude: 20.25982371349308 },
+        { latitude: 67.84690062240988, longitude: 20.25983444232914 },
+      ],
+    ],
+  },
+  //37
+  {
+    title: "Biodiversity Preservation Plan",
+    description:
+      "Guidelines for protecting biodiversity in Kiruna's green areas during urban and mining developments.",
+    issuanceTime: "2021-10",
+    type: DocumentType.Prescriptive,
+    stakeholders: [Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.Text },
+    include: [
+      { latitude: 67.84707709867558, longitude: 20.264701576459107 },
+      { latitude: 67.84591192853563, longitude: 20.26459428809851 },
+      { latitude: 67.84582292009063, longitude: 20.258242817151245 },
+      { latitude: 67.84583910346952, longitude: 20.256719322430786 },
+      { latitude: 67.84652688669507, longitude: 20.25590393089026 },
+      { latitude: 67.84684245103571, longitude: 20.257191391217408 },
+      { latitude: 67.84710137243465, longitude: 20.2578565790531 },
+    ],
+    exclude: [
+      ,
+      [
+        { latitude: 67.84686825711366, longitude: 20.25811782855961 },
+        { latitude: 67.84627353680196, longitude: 20.25811782855961 },
+        { latitude: 67.84629376563306, longitude: 20.25982371349308 },
+        { latitude: 67.84690062240988, longitude: 20.25983444232914 },
+      ],
+    ],
+  },
+  //38
+  {
+    title: "Sustainable Water Management Report",
+    description:
+      "A technical analysis of sustainable water resource management, including new drainage systems for the relocated city.",
+    issuanceTime: "2022-06",
+    type: DocumentType.Technical,
+    stakeholders: [Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    include: [
+      { latitude: 67.84707709867558, longitude: 20.264701576459107 },
+      { latitude: 67.84591192853563, longitude: 20.26459428809851 },
+      { latitude: 67.84582292009063, longitude: 20.258242817151245 },
+      { latitude: 67.84583910346952, longitude: 20.256719322430786 },
+      { latitude: 67.84652688669507, longitude: 20.25590393089026 },
+      { latitude: 67.84684245103571, longitude: 20.257191391217408 },
+      { latitude: 67.84710137243465, longitude: 20.2578565790531 },
+    ],
+    exclude: [
+      ,
+      [
+        { latitude: 67.84686825711366, longitude: 20.25811782855961 },
+        { latitude: 67.84627353680196, longitude: 20.25811782855961 },
+        { latitude: 67.84629376563306, longitude: 20.25982371349308 },
+        { latitude: 67.84690062240988, longitude: 20.25983444232914 },
+      ],
+    ],
+  },
+
+  //39
+  {
+    title: "New Cultural Center Construction",
+    description:
+      "This document marks the beginning of the cultural center's construction, housing exhibition spaces and public event areas.",
+    issuanceTime: "2024-04",
+    type: DocumentType.MaterialEffect,
+    stakeholders: [Stakeholder.Lkab],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 600 },
+    area: {
+      area: {
+        include: [
+          { latitude: 67.84707709867558, longitude: 20.264701576459107 },
+          { latitude: 67.84591192853563, longitude: 20.26459428809851 },
+          { latitude: 67.84582292009063, longitude: 20.258242817151245 },
+          { latitude: 67.84583910346952, longitude: 20.256719322430786 },
+          { latitude: 67.84652688669507, longitude: 20.25590393089026 },
+          { latitude: 67.84684245103571, longitude: 20.257191391217408 },
+          { latitude: 67.84710137243465, longitude: 20.2578565790531 },
+        ],
+        exclude: [
+          ,
+          [
+            { latitude: 67.84686825711366, longitude: 20.25811782855961 },
+            { latitude: 67.84627353680196, longitude: 20.25811782855961 },
+            { latitude: 67.84629376563306, longitude: 20.25982371349308 },
+            { latitude: 67.84690062240988, longitude: 20.25983444232914 },
+          ],
+        ],
+      },
+    },
+  },
   //40
   {
     title: "Road Infrastructure Expansion Plan",
@@ -1112,8 +1205,8 @@ export const newDocuments = [
       ],
     },
   },
+  //50
   {
-    //50
     title: "Winter Safety Infrastructure Plan",
     description:
       "A prescriptive plan addressing winter safety in Kiruna through improved snow removal techniques, heated pedestrian paths, and anti-slip road materials.",
