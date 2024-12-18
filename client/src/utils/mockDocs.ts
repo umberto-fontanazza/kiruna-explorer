@@ -10,7 +10,7 @@ export const mockDocks: Document[] = [
       type: ScaleType.ArchitecturalScale,
       ratio: 500,
     },
-    issuanceTime: "2024/12/01",
+    issuanceTime: "2024-12-01",
     links: [
       {
         targetDocumentId: 2,
@@ -27,7 +27,7 @@ export const mockDocks: Document[] = [
       type: ScaleType.ArchitecturalScale,
       ratio: 450,
     },
-    issuanceTime: "2024/12/01",
+    issuanceTime: "2024-12-01",
     links: [
       {
         targetDocumentId: 1,
@@ -45,7 +45,7 @@ export const mockDocks: Document[] = [
       type: ScaleType.ArchitecturalScale,
       ratio: 470,
     },
-    issuanceTime: "2024/12/01",
+    issuanceTime: "2024-12-01",
     links: [{ targetDocumentId: 2, linkTypes: [LinkType.Projection] }],
   },
   {
@@ -57,7 +57,7 @@ export const mockDocks: Document[] = [
       type: ScaleType.ArchitecturalScale,
       ratio: 100,
     },
-    issuanceTime: "2024/12/01",
+    issuanceTime: "2024-12-01",
   },
   {
     id: 5,
@@ -67,7 +67,7 @@ export const mockDocks: Document[] = [
     scale: {
       type: ScaleType.Text,
     },
-    issuanceTime: "2024/12/01",
+    issuanceTime: "2024-12-01",
   },
   {
     id: 6,
@@ -77,7 +77,7 @@ export const mockDocks: Document[] = [
     scale: {
       type: ScaleType.BlueprintsOrEffect,
     },
-    issuanceTime: "2024/12/01",
+    issuanceTime: "2024-12-01",
   },
   {
     id: 7,
@@ -87,7 +87,7 @@ export const mockDocks: Document[] = [
     scale: {
       type: ScaleType.Concept,
     },
-    issuanceTime: "2024/12",
+    issuanceTime: "2024-12",
   },
   {
     id: 8,
@@ -98,6 +98,6 @@ export const mockDocks: Document[] = [
       type: ScaleType.ArchitecturalScale,
       ratio: 1,
     },
-    issuanceTime: "2024/12/31",
+    issuanceTime: "2024-12-31",
   },
 ];
