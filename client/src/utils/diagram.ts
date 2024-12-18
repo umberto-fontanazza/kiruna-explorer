@@ -81,6 +81,8 @@ export const updateSvg = (
     .on("click", (e) => {
       const data = e.target.__data__;
       onClick(data.ref);
+      document.getElementById("root")!.scroll(0, 0);
+      window.scrollTo({ top: 1000, behavior: "smooth" });
     })
     .each(function (d) {
       const classes = ["document", `${d.ref.type}`];
