@@ -272,7 +272,7 @@ export const newDocuments = [
     },
   },
   {
-    title: "Demolition documentation, Kiruna City Hall",
+    title: "ok - Demolition documentation, Kiruna City Hall",
     description:
       "This document was created to preserve the memory of the symbolic building before its demolition in April 2019. Conducted by the Norrbotten Museum, the detailed 162-page study analyzed the building's materials, both physically and chemically, taking advantage of the demolition to explore aspects that couldn't be examined while it was in use. This meticulous effort reflects a commitment to preserving knowledge of every detail of the structure.",
     issuanceTime: "2020-11-26",
@@ -343,7 +343,7 @@ export const newDocuments = [
   //   },
   // },
   {
-    title: "Detail plan for square and commercial street",
+    title: "ok - Detail plan for square and commercial street",
     description:
       "This plan, approved in July 2016, is the first detailed plan to be implemented from the new masterplan (Adjusted development plan). The document defines the entire area near the town hall, comprising a total of 9 blocks known for their density. Among these are the 6 buildings that will face the main square. The functions are mixed, both public and private, with residential being prominent, as well as the possibility of incorporating accommodation facilities such as hotels. For all buildings in this plan, the only height limit is imposed by air traffic.",
     issuanceTime: "2016-06-22",
@@ -830,7 +830,7 @@ export const newDocuments = [
   // {
   //40
   {
-    title: "Road Infrastructure Expansion Plan",
+    title: "ok - Road Infrastructure Expansion Plan",
     description:
       "Design and implementation plan for expanding key roads to accommodate increased traffic in new urban zones.",
     issuanceTime: "2023-02",
@@ -862,7 +862,7 @@ export const newDocuments = [
   },
   //41
   {
-    title: "Affordable Housing Program",
+    title: "ok - Affordable Housing Program",
     description:
       "A design initiative to build affordable housing units for low-income residents, ensuring accessibility and sustainability.",
     issuanceTime: "2021-09",
@@ -897,7 +897,7 @@ export const newDocuments = [
   },
   //42
   {
-    title: "Heritage Building Relocation Plan",
+    title: "ok - Heritage Building Relocation Plan",
     description:
       "A relocation strategy for heritage buildings, including logistics and timelines for safely moving structures of cultural significance.",
     issuanceTime: "2023-04",
@@ -932,7 +932,7 @@ export const newDocuments = [
   },
   //43
   {
-    title: "Public Park Development",
+    title: "ok - Public Park Development",
     description:
       "This plan outlines the design and construction of a large public park with recreational and green areas for the community.",
     issuanceTime: "2024-01",
@@ -966,7 +966,7 @@ export const newDocuments = [
   },
   //44
   {
-    title: "Noise Pollution Control Measures",
+    title: "ok - Noise Pollution Control Measures",
     description:
       "Technical guidelines for reducing noise pollution in residential and public areas affected by mining activities.",
     issuanceTime: "2023-07",
@@ -993,7 +993,7 @@ export const newDocuments = [
   },
   //45
   {
-    title: "Public Safety Improvements",
+    title: "ok - Public Safety Improvements",
     description:
       "Prescriptive measures for improving safety standards in public spaces, including lighting and security installations.",
     issuanceTime: "2022-12",
@@ -1026,7 +1026,7 @@ export const newDocuments = [
   },
   //46
   {
-    title: "Smart Waste Management Plan",
+    title: "ok - Smart Waste Management Plan",
     description:
       "A prescriptive plan introducing a smart waste management system in Kiruna, including automated waste sorting and underground container networks for better efficiency.",
     issuanceTime: "2024-09",
@@ -1055,7 +1055,7 @@ export const newDocuments = [
   },
   //47
   {
-    title: "Public Wi-Fi Infrastructure Project",
+    title: "ok - Public Wi-Fi Infrastructure Project",
     description:
       "This project outlines the implementation of free public Wi-Fi across key public spaces in the new Kiruna city center, promoting digital accessibility for residents and visitors.",
     issuanceTime: "2023-12",
