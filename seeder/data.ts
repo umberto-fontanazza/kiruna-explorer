@@ -919,26 +919,20 @@ export const newDocuments = [
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.BlueprintsOrEffect },
     area: {
-      include: [
-        { latitude: 67.8575, longitude: 20.312 },
-        { latitude: 67.858, longitude: 20.313 },
-        { latitude: 67.8578, longitude: 20.3135 },
-        { latitude: 67.857, longitude: 20.3132 },
-        { latitude: 67.8575, longitude: 20.312 },
+      include: [ 
+     
+      ,{latitude: 67.84962565527675, longitude: 20.245489935811296}
+      ,{latitude: 67.8494153046243, longitude: 20.246777396138445}
+      ,{latitude: 67.8483473412781, longitude: 20.24810777180983}
+      ,{latitude: 67.84736024076348, longitude: 20.244030814107195}
+      ,{latitude: 67.84915640890931, longitude: 20.24192796223952
       ],
       exclude: [
-        [
-          { latitude: 67.8576, longitude: 20.3124 },
-          { latitude: 67.8577, longitude: 20.3126 },
-          { latitude: 67.8575, longitude: 20.3125 },
-          { latitude: 67.8576, longitude: 20.3124 },
-        ],
-        [
-          { latitude: 67.8579, longitude: 20.3129 },
-          { latitude: 67.858, longitude: 20.3131 },
-          { latitude: 67.8578, longitude: 20.313 },
-          { latitude: 67.8579, longitude: 20.3129 },
-        ],
+
+        ,{latitude: 67.84859349239242, longitude: 20.245099246720336}
+        ,{latitude: 67.84824558835413, longitude: 20.245807349900268}
+        ,{latitude: 67.84842763181209, longitude: 20.246440351227783}
+        ,{latitude: 67.84871080770053, longitude: 20.24554985783484}
       ],
     },
   },
@@ -953,25 +947,20 @@ export const newDocuments = [
     scale: { type: ScaleType.BlueprintsOrEffect },
     area: {
       include: [
-        { latitude: 67.855, longitude: 20.311 },
-        { latitude: 67.856, longitude: 20.312 },
-        { latitude: 67.8545, longitude: 20.313 },
-        { latitude: 67.854, longitude: 20.311 },
-        { latitude: 67.855, longitude: 20.311 },
-      ],
-      exclude: [
-        [
-          { latitude: 67.8553, longitude: 20.3112 },
-          { latitude: 67.8555, longitude: 20.3117 },
-          { latitude: 67.8552, longitude: 20.3116 },
-          { latitude: 67.8553, longitude: 20.3112 },
-        ],
-        [
-          { latitude: 67.8547, longitude: 20.3125 },
-          { latitude: 67.8549, longitude: 20.3128 },
-          { latitude: 67.8546, longitude: 20.3127 },
-          { latitude: 67.8547, longitude: 20.3125 },
-        ],
+        
+        ,{latitude: 67.84707709867558, longitude: 20.264701576459107}
+        ,{latitude: 67.84591192853563, longitude: 20.26459428809851}
+        ,{latitude: 67.84582292009063, longitude: 20.258242817151245}
+        ,{latitude: 67.84583910346952, longitude: 20.256719322430786}
+        ,{latitude: 67.84652688669507, longitude: 20.25590393089026}
+        ,{latitude: 67.84684245103571, longitude: 20.257191391217408}
+        ,{latitude: 67.84710137243465, longitude: 20.2578565790531}
+        
+      ,{exclude: [   
+         ,{latitude: 67.84686825711366, longitude: 20.25811782855961}
+          ,{latitude: 67.84627353680196, longitude: 20.25811782855961}
+          ,{latitude: 67.84629376563306, longitude: 20.25982371349308}
+         ,{latitude: 67.84690062240988, longitude: 20.25983444232914}
       ],
     },
   },
