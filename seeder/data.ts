@@ -13,7 +13,7 @@ export const newDocuments = [
     coordinates: { latitude: 67.8558, longitude: 20.2253 },
   },
   {
-    title: "Mining Impact Study",
+    title: "ok - Mining Impact Study",
     description: "Technical analysis of mining effects on surrounding areas.",
     issuanceTime: "2023",
     type: DocumentType.MaterialEffect,
@@ -89,7 +89,7 @@ export const newDocuments = [
     },
   },
   {
-    title: "Cultural Heritage Preservation",
+    title: "ok - Cultural Heritage Preservation",
     description:
       "Prescriptive measures for preserving Kiruna's cultural sites.",
     issuanceTime: "2023-08",
