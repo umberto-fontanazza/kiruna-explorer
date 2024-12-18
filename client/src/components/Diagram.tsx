@@ -1,5 +1,5 @@
 import { Dayjs } from "dayjs";
-import { FC, useEffect, useRef } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import "../styles/Diagram.scss";
 import { SVGElement, updateSvg } from "../utils/diagram";
 import { DiagramLink } from "../utils/diagramNode";
@@ -30,6 +30,7 @@ interface DiagramProps {
 
 const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
   const svgRef = useRef<SVGElement | null>(null);
+  const [interval, setInterval] = useState<TimeInterval | null>(null);
 
   useEffect(() => {
     const diagDocuments = documents
@@ -39,6 +40,20 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
         issuanceTime: undefined,
         issuanceDate: TimeInterval.parse(d.issuanceTime!).toDayjs(),
       }));
+    if (diagDocuments.length > 0) {
+      const dateInit = diagDocuments[0].issuanceDate!;
+      const { min, max } = diagDocuments
+        .map((d) => d.issuanceDate!)
+        .reduce(
+          (found: { min: Dayjs; max: Dayjs }, cur: Dayjs) => {
+            if (cur.diff(found.min) < 0) found.min = cur;
+            if (cur.diff(found.max) > 0) found.max = cur;
+            return found;
+          },
+          { min: dateInit, max: dateInit },
+        );
+      setInterval(new TimeInterval(min, max));
+    }
     const extractedLinks: DiagramLink[] = linksExtractor(diagDocuments);
     updateSvg(svgRef, diagDocuments, extractedLinks, onDocumentClick);
   }, [documents, onDocumentClick]);
@@ -47,7 +62,11 @@ const Diagram: FC<DiagramProps> = ({ documents, onDocumentClick }) => {
     <section id="diagram">
       <div className="time-axis">
         <div className="combine-axes"></div>
-        <div className="time-cells-container"></div>
+        <div className="time-cells-container">
+          {interval && (
+            <p>{`Time range ${interval?.begin.format().split("T")[0]} to ${interval?.end.format().split("T")[0]}`}</p>
+          )}
+        </div>
       </div>
       <div className="scale-n-svg">
         <div className="scale-types-container">
