@@ -133,15 +133,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 2000 },
     area: {
-        include: [
-            { latitude: 67.8620, longitude: 20.2271 },
-            { latitude: 67.8622, longitude: 20.2273 },
-            { latitude: 67.8621, longitude: 20.2274 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.862, longitude: 20.2271 },
+        { latitude: 67.8622, longitude: 20.2273 },
+        { latitude: 67.8621, longitude: 20.2274 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Demolition documentation, Kiruna City Hall",
     description:
       "This document was created to preserve the memory of the symbolic building before its demolition in April 2019. Conducted by the Norrbotten Museum, the detailed 162-page study analyzed the building's materials, both physically and chemically, taking advantage of the demolition to explore aspects that couldn't be examined while it was in use. This meticulous effort reflects a commitment to preserving knowledge of every detail of the structure.",
@@ -150,15 +150,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.Others],
     scale: { type: ScaleType.Text },
     area: {
-        include: [
-            { latitude: 67.5056, longitude: 20.1814 },
-            { latitude: 67.5058, longitude: 20.1816 },
-            { latitude: 67.5057, longitude: 20.1817 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.5056, longitude: 20.1814 },
+        { latitude: 67.5058, longitude: 20.1816 },
+        { latitude: 67.5057, longitude: 20.1817 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Deformation forecast",
     description:
       "The third deformation forecast was published in 2019, five years after the second. The line has not moved; what changes, as in the previous version, are the timing of the interventions and the shape of the areas underlying the deformation zone.",
@@ -167,15 +167,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.Lkab],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 1500 },
     area: {
-        include: [
-            { latitude: 67.8653, longitude: 20.2052 },
-            { latitude: 67.8655, longitude: 20.2054 },
-            { latitude: 67.8654, longitude: 20.2055 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.8653, longitude: 20.2052 },
+        { latitude: 67.8655, longitude: 20.2054 },
+        { latitude: 67.8654, longitude: 20.2055 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Detailed plan for Gruvstaspark 2, etapp 3, del av SJ-området m m.",
     description:
       "The third Detailed Plan of the second demolition phase covers a narrow, elongated area straddling the old railway. Like all areas within the 'Gruvstadpark 2' zone, its sole designated land use is for mining activities, although it will temporarily be used as a park during an interim phase.",
@@ -184,16 +184,14 @@ export const newDocuments = [
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 1300 },
     area: {
-        include: [
-            { latitude: 67.8632, longitude: 20.2060 },
-            { latitude: 67.8634, longitude: 20.2062 },
-            { latitude: 67.8633, longitude: 20.2063 }
-        ],
-        exclude: []
-    }
-}
-
-
+      include: [
+        { latitude: 67.8632, longitude: 20.206 },
+        { latitude: 67.8634, longitude: 20.2062 },
+        { latitude: 67.8633, longitude: 20.2063 },
+      ],
+      exclude: [],
+    },
+  },
   {
     title: "Vision 2099",
     description:
@@ -203,15 +201,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.Text },
     area: {
-        include: [
-            { latitude: 67.8593, longitude: 20.2556 },
-            { latitude: 67.8595, longitude: 20.2558 },
-            { latitude: 67.8594, longitude: 20.2559 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.8593, longitude: 20.2556 },
+        { latitude: 67.8595, longitude: 20.2558 },
+        { latitude: 67.8594, longitude: 20.2559 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Detail plan for square and commercial street",
     description:
       "This plan, approved in July 2016, is the first detailed plan to be implemented from the new masterplan (Adjusted development plan). The document defines the entire area near the town hall, comprising a total of 9 blocks known for their density. Among these are the 6 buildings that will face the main square. The functions are mixed, both public and private, with residential being prominent, as well as the possibility of incorporating accommodation facilities such as hotels. For all buildings in this plan, the only height limit is imposed by air traffic.",
@@ -220,15 +218,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 500 },
     area: {
-        include: [
-            { latitude: 67.8484, longitude: 20.2907 },
-            { latitude: 67.8486, longitude: 20.2909 },
-            { latitude: 67.8485, longitude: 20.2910 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.8484, longitude: 20.2907 },
+        { latitude: 67.8486, longitude: 20.2909 },
+        { latitude: 67.8485, longitude: 20.291 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Construction of new city hall begins",
     description:
       "The Kiruna Town Hall was the first building to be rebuild in the new town center in 2015. It remained isolated for quite some time due to a slowdown in mining activities.",
@@ -237,15 +235,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.Lkab],
     scale: { type: ScaleType.BlueprintsOrEffect },
     area: {
-        include: [
-            { latitude: 67.8487, longitude: 20.3028 },
-            { latitude: 67.8489, longitude: 20.3030 },
-            { latitude: 67.8488, longitude: 20.3031 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.8487, longitude: 20.3028 },
+        { latitude: 67.8489, longitude: 20.303 },
+        { latitude: 67.8488, longitude: 20.3031 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Detailed Overview Plan for the Central Area of Kiruna 2014.",
     description:
       "The Detailed Overview Plan is one of the three planning instruments available to Swedish administrations and represents an intermediate scale. Like the Overview Plan, compliance with it is not mandatory, but it serves as a supporting plan for Detailed Plans, sharing the characteristic of regulating a specific area of the Kiruna municipality rather than its entire extent, as the Overview Plan does. This specific plan focuses on the central area of Kiruna and its surroundings, incorporating all the projections of the Development Plan into a prescriptive tool.",
@@ -254,16 +252,14 @@ export const newDocuments = [
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 300 },
     area: {
-        include: [
-            { latitude: 67.8352, longitude: 20.2591 },
-            { latitude: 67.8354, longitude: 20.2593 },
-            { latitude: 67.8353, longitude: 20.2594 }
-        ],
-        exclude: []
-    }
-}
-
-
+      include: [
+        { latitude: 67.8352, longitude: 20.2591 },
+        { latitude: 67.8354, longitude: 20.2593 },
+        { latitude: 67.8353, longitude: 20.2594 },
+      ],
+      exclude: [],
+    },
+  },
   {
     title: "Detailed plan for LINBANAN 1.",
     description:
@@ -273,15 +269,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.Text },
     area: {
-        include: [
-            { latitude: 67.8487, longitude: 20.2965 },
-            { latitude: 67.8491, longitude: 20.2969 },
-            { latitude: 67.8489, longitude: 20.2970 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.8487, longitude: 20.2965 },
+        { latitude: 67.8491, longitude: 20.2969 },
+        { latitude: 67.8489, longitude: 20.297 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Mail to Kiruna kommun",
     description:
       "This document is considered the act that initiates the process of relocating Kiruna. The company communicates its intention to construct a new mining level at a depth of 1,365 meters. Along with this, LKAB urges the municipality to begin the necessary planning to relocate the city, referring to a series of meetings held in previous months between the two stakeholders.",
@@ -290,15 +286,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.Lkab],
     scale: { type: ScaleType.Text },
     area: {
-        include: [
-            { latitude: 67.8567, longitude: 20.2528 },
-            { latitude: 67.8571, longitude: 20.2532 },
-            { latitude: 67.8569, longitude: 20.2534 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.8567, longitude: 20.2528 },
+        { latitude: 67.8571, longitude: 20.2532 },
+        { latitude: 67.8569, longitude: 20.2534 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Kiruna Church closes",
     description:
       "On June 2, the Kiruna Church was closed to begin the necessary preparations for its relocation, following a solemn ceremony. The relocation is scheduled for the summer of 2025 and will take two days. Both the new site and the route for the move have already been determined. A significant period will pass between the relocation and the reopening of the church, voted 'Sweden's most beautiful building constructed before 1950.'",
@@ -307,15 +303,14 @@ export const newDocuments = [
     stakeholders: [Stakeholder.Lkab],
     scale: { type: ScaleType.BlueprintsOrEffect },
     area: {
-        include: [
-            { latitude: 67.8516, longitude: 20.2330 },
-            { latitude: 67.8520, longitude: 20.2332 },
-            { latitude: 67.8518, longitude: 20.2334 }
-        ],
-        exclude: []
-    }
-}
-
+      include: [
+        { latitude: 67.8516, longitude: 20.233 },
+        { latitude: 67.852, longitude: 20.2332 },
+        { latitude: 67.8518, longitude: 20.2334 },
+      ],
+      exclude: [],
+    },
+  },
   {
     title: "Construction of Block 1 begins",
     description:
@@ -325,15 +320,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.Lkab],
     scale: { type: ScaleType.BlueprintsOrEffect },
     area: {
-        include: [
-            { latitude: 67.5052, longitude: 20.1798 },
-            { latitude: 67.5056, longitude: 20.1805 },
-            { latitude: 67.5050, longitude: 20.1802 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.5052, longitude: 20.1798 },
+        { latitude: 67.5056, longitude: 20.1805 },
+        { latitude: 67.505, longitude: 20.1802 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Construction of Aurora Center begins",
     description:
       "Shortly after the construction of the Scandic hotel began, work on the Aurora Center also started, a multifunctional complex that includes the municipal library of Kiruna. The two buildings are close to each other and connected by a skywalk, just like in the old town center.",
@@ -342,15 +337,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.Lkab],
     scale: { type: ScaleType.BlueprintsOrEffect },
     area: {
-        include: [
-            { latitude: 67.5055, longitude: 20.1810 },
-            { latitude: 67.5060, longitude: 20.1820 },
-            { latitude: 67.5052, longitude: 20.1818 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.5055, longitude: 20.181 },
+        { latitude: 67.506, longitude: 20.182 },
+        { latitude: 67.5052, longitude: 20.1818 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Town Hall demolition",
     description:
       "After the construction of the new town hall was completed, the old building, nicknamed 'The Igloo,' was demolished. The only elements preserved were the door handles, a masterpiece of Sami art made of wood and bone, and the clock tower, which once stood on the roof of the old town hall. The clock tower was relocated to the central square of New Kiruna, in front of the new building.",
@@ -359,15 +354,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.Lkab],
     scale: { type: ScaleType.BlueprintsOrEffect },
     area: {
-        include: [
-            { latitude: 67.5107, longitude: 20.1315 },
-            { latitude: 67.5111, longitude: 20.1325 },
-            { latitude: 67.5105, longitude: 20.1320 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.5107, longitude: 20.1315 },
+        { latitude: 67.5111, longitude: 20.1325 },
+        { latitude: 67.5105, longitude: 20.132 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Construction of Scandic Hotel begins",
     description:
       "After two extensions of the land acquisition agreement, necessary because this document in Sweden is valid for only two years, construction of the hotel finally began in 2019.",
@@ -376,15 +371,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.Lkab],
     scale: { type: ScaleType.BlueprintsOrEffect },
     area: {
-        include: [
-            { latitude: 67.5052, longitude: 20.1815 },
-            { latitude: 67.5056, longitude: 20.1820 },
-            { latitude: 67.5050, longitude: 20.1818 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.5052, longitude: 20.1815 },
+        { latitude: 67.5056, longitude: 20.182 },
+        { latitude: 67.505, longitude: 20.1818 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Detail plan for square and commercial street",
     description:
       "This plan, approved in July 2016, is the first detailed plan to be implemented from the new masterplan (Adjusted development plan). The document defines the entire area near the town hall, comprising a total of 9 blocks known for their density. Among these are the 6 buildings that will face the main square. The functions are mixed, both public and private, with residential being prominent, as well as the possibility of incorporating accommodation facilities such as hotels. For all buildings in this plan, the only height limit is imposed by air traffic.",
@@ -393,15 +388,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 1000 },
     area: {
-        include: [
-            { latitude: 67.8490, longitude: 20.2870 },
-            { latitude: 67.8495, longitude: 20.2880 },
-            { latitude: 67.8485, longitude: 20.2875 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.849, longitude: 20.287 },
+        { latitude: 67.8495, longitude: 20.288 },
+        { latitude: 67.8485, longitude: 20.2875 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Adjusted development plan",
     description:
       "This document is the update of the Development Plan, one year after its creation, modifications are made to the general master plan, which is published under the name 'Adjusted Development Plan91,' and still represents the version used today after 10 years. Certainly, there are no drastic differences compared to the previous plan, but upon careful comparison, several modified elements stand out. For example, the central square now takes its final shape, as well as the large school complex just north of it, which appears for the first time.",
@@ -410,15 +405,14 @@ export const newDocuments = [
     stakeholders: [Stakeholder.KirunaKommun, Stakeholder.WhiteArkitekter],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 100 },
     area: {
-        include: [
-            { latitude: 67.8520, longitude: 20.2940 },
-            { latitude: 67.8525, longitude: 20.2955 },
-            { latitude: 67.8518, longitude: 20.2945 }
-        ],
-        exclude: []
-    }
-}
-
+      include: [
+        { latitude: 67.852, longitude: 20.294 },
+        { latitude: 67.8525, longitude: 20.2955 },
+        { latitude: 67.8518, longitude: 20.2945 },
+      ],
+      exclude: [],
+    },
+  },
   {
     title: "Deformation forecast",
     description:
@@ -428,15 +422,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.Lkab],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 1600 },
     area: {
-        include: [
-            { latitude: 67.8515, longitude: 20.2280 },
-            { latitude: 67.8520, longitude: 20.2300 },
-            { latitude: 67.8505, longitude: 20.2290 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.8515, longitude: 20.228 },
+        { latitude: 67.852, longitude: 20.23 },
+        { latitude: 67.8505, longitude: 20.229 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Development Plan",
     description:
       "The development plan shapes the form of the new city. The document, unlike previous competition documents, is written entirely in Swedish, which reflects the target audience: the citizens of Kiruna. The plan obviously contains many elements of the winning masterplan from the competition, some recommended by the jury, and others that were deemed appropriate to integrate later. The document is divided into four parts, with the third part, spanning 80 pages, describing the shape the new city will take and the strategies to be implemented for its relocation through plans, sections, images, diagrams, and texts. The document also includes numerous studies aimed at demonstrating the future success of the project.",
@@ -445,15 +439,15 @@ export const newDocuments = [
     stakeholders: [Stakeholder.KirunaKommun, Stakeholder.WhiteArkitekter],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 2000 },
     area: {
-        include: [
-            { latitude: 67.8506, longitude: 20.3040 },
-            { latitude: 67.8510, longitude: 20.3060 },
-            { latitude: 67.8500, longitude: 20.3050 }
-        ],
-        exclude: []
-    }
-},
-{
+      include: [
+        { latitude: 67.8506, longitude: 20.304 },
+        { latitude: 67.851, longitude: 20.306 },
+        { latitude: 67.85, longitude: 20.305 },
+      ],
+      exclude: [],
+    },
+  },
+  {
     title: "Detail plan for Bolagsomradet Gruvstadspark",
     description:
       "This is the first of 8 detailed plans located in the old center of Kiruna, aimed at transforming the residential areas into mining industry zones to allow the demolition of buildings. The area includes the town hall, the Ullspiran district, and the A10 highway, and it will be the first to be dismantled. The plan consists, like all detailed plans, of two documents: the area map that regulates it, and a text explaining the reasons that led to the drafting of the plan with these characteristics. The plan gained legal validity in 2012.",
@@ -462,15 +456,14 @@ export const newDocuments = [
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 1400 },
     area: {
-        include: [
-            { latitude: 67.8525, longitude: 20.2775 },
-            { latitude: 67.8527, longitude: 20.2795 },
-            { latitude: 67.8519, longitude: 20.2780 }
-        ],
-        exclude: []
-    }
-}
-
+      include: [
+        { latitude: 67.8525, longitude: 20.2775 },
+        { latitude: 67.8527, longitude: 20.2795 },
+        { latitude: 67.8519, longitude: 20.278 },
+      ],
+      exclude: [],
+    },
+  },
   {
     title: "Compilation of responses “So what the people of Kiruna think?",
     description:
@@ -481,21 +474,20 @@ export const newDocuments = [
     scale: { type: ScaleType.Text },
     area: {
       include: [
-        { latitude: 67.8555, longitude: 20.2250 },
-        { latitude: 67.8560, longitude: 20.2258 },
+        { latitude: 67.8555, longitude: 20.225 },
+        { latitude: 67.856, longitude: 20.2258 },
         { latitude: 67.8557, longitude: 20.2262 },
-        { latitude: 67.8553, longitude: 20.2256 }
+        { latitude: 67.8553, longitude: 20.2256 },
       ],
       exclude: [
         [
           { latitude: 67.8556, longitude: 20.2255 },
           { latitude: 67.8558, longitude: 20.2257 },
-          { latitude: 67.8557, longitude: 20.2256 }
-        ]
-      ]
-    }
-  }
-  
+          { latitude: 67.8557, longitude: 20.2256 },
+        ],
+      ],
+    },
+  },
   {
     title: "Renewable Energy Initiative",
     description:
@@ -506,21 +498,20 @@ export const newDocuments = [
     scale: { type: ScaleType.Text },
     area: {
       include: [
-        { latitude: 67.8560, longitude: 20.3115 },
+        { latitude: 67.856, longitude: 20.3115 },
         { latitude: 67.8565, longitude: 20.3125 },
-        { latitude: 67.8570, longitude: 20.3118 },
-        { latitude: 67.8563, longitude: 20.3112 }
+        { latitude: 67.857, longitude: 20.3118 },
+        { latitude: 67.8563, longitude: 20.3112 },
       ],
       exclude: [
         [
           { latitude: 67.8562, longitude: 20.3116 },
           { latitude: 67.8564, longitude: 20.3119 },
-          { latitude: 67.8563, longitude: 20.3117 }
-        ]
-      ]
-    }
-  }
-  
+          { latitude: 67.8563, longitude: 20.3117 },
+        ],
+      ],
+    },
+  },
   {
     title: "Construction of Hospital Complex",
     description:
@@ -532,20 +523,19 @@ export const newDocuments = [
     area: {
       include: [
         { latitude: 67.8572, longitude: 20.3165 },
-        { latitude: 67.8576, longitude: 20.3180 },
-        { latitude: 67.8580, longitude: 20.3175 },
-        { latitude: 67.8574, longitude: 20.3168 }
+        { latitude: 67.8576, longitude: 20.318 },
+        { latitude: 67.858, longitude: 20.3175 },
+        { latitude: 67.8574, longitude: 20.3168 },
       ],
       exclude: [
         [
-          { latitude: 67.8574, longitude: 20.3170 },
+          { latitude: 67.8574, longitude: 20.317 },
           { latitude: 67.8575, longitude: 20.3174 },
-          { latitude: 67.8573, longitude: 20.3173 }
-        ]
-      ]
-    }
-  }
-  
+          { latitude: 67.8573, longitude: 20.3173 },
+        ],
+      ],
+    },
+  },
   {
     title: "Public Consultation Summary",
     description:
@@ -557,21 +547,20 @@ export const newDocuments = [
     area: {
       include: [
         { latitude: 67.8523, longitude: 20.3035 },
-        { latitude: 67.8530, longitude: 20.3055 },
-        { latitude: 67.8527, longitude: 20.3060 },
-        { latitude: 67.8520, longitude: 20.3040 }
+        { latitude: 67.853, longitude: 20.3055 },
+        { latitude: 67.8527, longitude: 20.306 },
+        { latitude: 67.852, longitude: 20.304 },
       ],
       exclude: [
         [
           { latitude: 67.8524, longitude: 20.3042 },
           { latitude: 67.8526, longitude: 20.3048 },
-          { latitude: 67.8525, longitude: 20.3050 },
-          { latitude: 67.8523, longitude: 20.3045 }
-        ]
-      ]
-    }
-  }
-  
+          { latitude: 67.8525, longitude: 20.305 },
+          { latitude: 67.8523, longitude: 20.3045 },
+        ],
+      ],
+    },
+  },
   {
     title: "Railway Realignment Proposal",
     description:
@@ -583,22 +572,21 @@ export const newDocuments = [
     area: {
       include: [
         { latitude: 67.8598, longitude: 20.3195 },
-        { latitude: 67.8606, longitude: 20.3210 },
-        { latitude: 67.8604, longitude: 20.3220 },
+        { latitude: 67.8606, longitude: 20.321 },
+        { latitude: 67.8604, longitude: 20.322 },
         { latitude: 67.8596, longitude: 20.3215 },
-        { latitude: 67.8598, longitude: 20.3195 }
+        { latitude: 67.8598, longitude: 20.3195 },
       ],
       exclude: [
         [
-          { latitude: 67.8600, longitude: 20.3200 },
+          { latitude: 67.86, longitude: 20.32 },
           { latitude: 67.8603, longitude: 20.3206 },
           { latitude: 67.8601, longitude: 20.3208 },
-          { latitude: 67.8600, longitude: 20.3200 }
-        ]
-      ]
-    }
-  }
-  
+          { latitude: 67.86, longitude: 20.32 },
+        ],
+      ],
+    },
+  },
   {
     title: "New Residential Block Design",
     description:
@@ -610,22 +598,21 @@ export const newDocuments = [
     area: {
       include: [
         { latitude: 67.8555, longitude: 20.2988 },
-        { latitude: 67.8560, longitude: 20.3005 },
+        { latitude: 67.856, longitude: 20.3005 },
         { latitude: 67.8552, longitude: 20.3008 },
         { latitude: 67.8549, longitude: 20.2995 },
-        { latitude: 67.8555, longitude: 20.2988 }
+        { latitude: 67.8555, longitude: 20.2988 },
       ],
       exclude: [
         [
           { latitude: 67.8554, longitude: 20.2993 },
           { latitude: 67.8556, longitude: 20.2996 },
           { latitude: 67.8553, longitude: 20.2997 },
-          { latitude: 67.8554, longitude: 20.2993 }
-        ]
-      ]
-    }
-  }
-  
+          { latitude: 67.8554, longitude: 20.2993 },
+        ],
+      ],
+    },
+  },
   {
     title: "Biodiversity Preservation Plan",
     description:
@@ -637,22 +624,21 @@ export const newDocuments = [
     area: {
       include: [
         { latitude: 67.8515, longitude: 20.2825 },
-        { latitude: 67.8520, longitude: 20.2840 },
-        { latitude: 67.8510, longitude: 20.2845 },
-        { latitude: 67.8505, longitude: 20.2830 },
-        { latitude: 67.8515, longitude: 20.2825 }
+        { latitude: 67.852, longitude: 20.284 },
+        { latitude: 67.851, longitude: 20.2845 },
+        { latitude: 67.8505, longitude: 20.283 },
+        { latitude: 67.8515, longitude: 20.2825 },
       ],
       exclude: [
         [
-          { latitude: 67.8513, longitude: 20.2830 },
+          { latitude: 67.8513, longitude: 20.283 },
           { latitude: 67.8516, longitude: 20.2833 },
           { latitude: 67.8514, longitude: 20.2835 },
-          { latitude: 67.8513, longitude: 20.2830 }
-        ]
-      ]
-    }
-  }
-  
+          { latitude: 67.8513, longitude: 20.283 },
+        ],
+      ],
+    },
+  },
   {
     title: "Sustainable Water Management Report",
     description:
@@ -664,22 +650,21 @@ export const newDocuments = [
     area: {
       include: [
         { latitude: 67.8485, longitude: 20.2905 },
-        { latitude: 67.8498, longitude: 20.2920 },
-        { latitude: 67.8490, longitude: 20.2930 },
+        { latitude: 67.8498, longitude: 20.292 },
+        { latitude: 67.849, longitude: 20.293 },
         { latitude: 67.8478, longitude: 20.2915 },
-        { latitude: 67.8485, longitude: 20.2905 }
+        { latitude: 67.8485, longitude: 20.2905 },
       ],
       exclude: [
         [
-          { latitude: 67.8489, longitude: 20.2910 },
+          { latitude: 67.8489, longitude: 20.291 },
           { latitude: 67.8492, longitude: 20.2913 },
-          { latitude: 67.8490, longitude: 20.2915 },
-          { latitude: 67.8489, longitude: 20.2910 }
-        ]
-      ]
-    }
-  }
-  
+          { latitude: 67.849, longitude: 20.2915 },
+          { latitude: 67.8489, longitude: 20.291 },
+        ],
+      ],
+    },
+  },
   {
     title: "New Cultural Center Construction",
     description:
@@ -691,22 +676,21 @@ export const newDocuments = [
     area: {
       include: [
         { latitude: 67.8565, longitude: 20.2945 },
-        { latitude: 67.8570, longitude: 20.2960 },
-        { latitude: 67.8562, longitude: 20.2970 },
+        { latitude: 67.857, longitude: 20.296 },
+        { latitude: 67.8562, longitude: 20.297 },
         { latitude: 67.8558, longitude: 20.2958 },
-        { latitude: 67.8565, longitude: 20.2945 }
+        { latitude: 67.8565, longitude: 20.2945 },
       ],
       exclude: [
         [
           { latitude: 67.8566, longitude: 20.2952 },
           { latitude: 67.8568, longitude: 20.2954 },
-          { latitude: 67.8567, longitude: 20.2950 },
-          { latitude: 67.8566, longitude: 20.2952 }
-        ]
-      ]
-    }
-  }
-  
+          { latitude: 67.8567, longitude: 20.295 },
+          { latitude: 67.8566, longitude: 20.2952 },
+        ],
+      ],
+    },
+  },
   {
     title: "Road Infrastructure Expansion Plan",
     description:
@@ -717,29 +701,28 @@ export const newDocuments = [
     scale: { type: ScaleType.ArchitecturalScale, ratio: 700 },
     area: {
       include: [
-        { latitude: 67.8580, longitude: 20.3085 },
-        { latitude: 67.8590, longitude: 20.3100 },
-        { latitude: 67.8575, longitude: 20.3110 },
+        { latitude: 67.858, longitude: 20.3085 },
+        { latitude: 67.859, longitude: 20.31 },
+        { latitude: 67.8575, longitude: 20.311 },
         { latitude: 67.8565, longitude: 20.3095 },
-        { latitude: 67.8580, longitude: 20.3085 }
+        { latitude: 67.858, longitude: 20.3085 },
       ],
       exclude: [
         [
-          { latitude: 67.8577, longitude: 20.3090 },
+          { latitude: 67.8577, longitude: 20.309 },
           { latitude: 67.8579, longitude: 20.3093 },
           { latitude: 67.8578, longitude: 20.3088 },
-          { latitude: 67.8577, longitude: 20.3090 }
+          { latitude: 67.8577, longitude: 20.309 },
         ],
         [
-          { latitude: 67.8582, longitude: 20.3100 },
+          { latitude: 67.8582, longitude: 20.31 },
           { latitude: 67.8584, longitude: 20.3103 },
           { latitude: 67.8583, longitude: 20.3098 },
-          { latitude: 67.8582, longitude: 20.3100 }
-        ]
-      ]
-    }
-  }
-  
+          { latitude: 67.8582, longitude: 20.31 },
+        ],
+      ],
+    },
+  },
   {
     title: "Affordable Housing Program",
     description:
@@ -750,29 +733,29 @@ export const newDocuments = [
     scale: { type: ScaleType.ArchitecturalScale, ratio: 2000 },
     area: {
       include: [
-        { latitude: 67.8540, longitude: 20.3095 },
-        { latitude: 67.8550, longitude: 20.3110 },
-        { latitude: 67.8545, longitude: 20.3120 },
+        { latitude: 67.854, longitude: 20.3095 },
+        { latitude: 67.855, longitude: 20.311 },
+        { latitude: 67.8545, longitude: 20.312 },
         { latitude: 67.8535, longitude: 20.3115 },
-        { latitude: 67.8540, longitude: 20.3095 }, 
+        { latitude: 67.854, longitude: 20.3095 },
       ],
       exclude: [
         [
           { latitude: 67.8544, longitude: 20.3102 },
           { latitude: 67.8546, longitude: 20.3104 },
-          { latitude: 67.8545, longitude: 20.3100 },
-          { latitude: 67.8544, longitude: 20.3102 }, 
+          { latitude: 67.8545, longitude: 20.31 },
+          { latitude: 67.8544, longitude: 20.3102 },
         ],
         [
-          { latitude: 67.8548, longitude: 20.3110 },
-          { latitude: 67.8550, longitude: 20.3112 },
+          { latitude: 67.8548, longitude: 20.311 },
+          { latitude: 67.855, longitude: 20.3112 },
           { latitude: 67.8549, longitude: 20.3108 },
-          { latitude: 67.8548, longitude: 20.3110 }, 
+          { latitude: 67.8548, longitude: 20.311 },
         ],
       ],
     },
   },
-  
+
   {
     title: "Heritage Building Relocation Plan",
     description:
@@ -783,29 +766,29 @@ export const newDocuments = [
     scale: { type: ScaleType.BlueprintsOrEffect },
     area: {
       include: [
-        { latitude: 67.8545, longitude: 20.2800 },
-        { latitude: 67.8560, longitude: 20.2815 },
-        { latitude: 67.8555, longitude: 20.2830 },
-        { latitude: 67.8540, longitude: 20.2820 },
-        { latitude: 67.8545, longitude: 20.2800 },
+        { latitude: 67.8545, longitude: 20.28 },
+        { latitude: 67.856, longitude: 20.2815 },
+        { latitude: 67.8555, longitude: 20.283 },
+        { latitude: 67.854, longitude: 20.282 },
+        { latitude: 67.8545, longitude: 20.28 },
       ],
       exclude: [
         [
-          { latitude: 67.8550, longitude: 20.2810 },
+          { latitude: 67.855, longitude: 20.281 },
           { latitude: 67.8552, longitude: 20.2812 },
           { latitude: 67.8551, longitude: 20.2808 },
-          { latitude: 67.8550, longitude: 20.2810 }, 
+          { latitude: 67.855, longitude: 20.281 },
         ],
         [
           { latitude: 67.8548, longitude: 20.2825 },
-          { latitude: 67.8550, longitude: 20.2827 },
+          { latitude: 67.855, longitude: 20.2827 },
           { latitude: 67.8549, longitude: 20.2823 },
-          { latitude: 67.8548, longitude: 20.2825 }, 
+          { latitude: 67.8548, longitude: 20.2825 },
         ],
       ],
     },
   },
-  
+
   {
     title: "Public Park Development",
     description:
@@ -818,27 +801,27 @@ export const newDocuments = [
       include: [
         { latitude: 67.8585, longitude: 20.3125 },
         { latitude: 67.8595, longitude: 20.3145 },
-        { latitude: 67.8600, longitude: 20.3130 },
-        { latitude: 67.8590, longitude: 20.3115 },
-        { latitude: 67.8585, longitude: 20.3125 }, 
+        { latitude: 67.86, longitude: 20.313 },
+        { latitude: 67.859, longitude: 20.3115 },
+        { latitude: 67.8585, longitude: 20.3125 },
       ],
       exclude: [
         [
-          { latitude: 67.8592, longitude: 20.3130 },
+          { latitude: 67.8592, longitude: 20.313 },
           { latitude: 67.8594, longitude: 20.3132 },
           { latitude: 67.8593, longitude: 20.3128 },
-          { latitude: 67.8592, longitude: 20.3130 }, 
+          { latitude: 67.8592, longitude: 20.313 },
         ],
         [
-          { latitude: 67.8596, longitude: 20.3140 },
+          { latitude: 67.8596, longitude: 20.314 },
           { latitude: 67.8598, longitude: 20.3142 },
           { latitude: 67.8597, longitude: 20.3138 },
-          { latitude: 67.8596, longitude: 20.3140 }, 
+          { latitude: 67.8596, longitude: 20.314 },
         ],
       ],
     },
   },
-  
+
   {
     title: "Noise Pollution Control Measures",
     description:
@@ -849,12 +832,12 @@ export const newDocuments = [
     scale: { type: ScaleType.Text },
     area: {
       include: [
-        { latitude: 67.8500, longitude: 20.2830 },
-        { latitude: 67.8510, longitude: 20.2840 },
-        { latitude: 67.8508, longitude: 20.2850 },
+        { latitude: 67.85, longitude: 20.283 },
+        { latitude: 67.851, longitude: 20.284 },
+        { latitude: 67.8508, longitude: 20.285 },
         { latitude: 67.8495, longitude: 20.2845 },
-        { latitude: 67.8500, longitude: 20.2830 }, 
-      ]
+        { latitude: 67.85, longitude: 20.283 },
+      ],
       exclude: [
         [
           { latitude: 67.8503, longitude: 20.2835 },
@@ -866,12 +849,12 @@ export const newDocuments = [
           { latitude: 67.8506, longitude: 20.2842 },
           { latitude: 67.8507, longitude: 20.2844 },
           { latitude: 67.8505, longitude: 20.2843 },
-          { latitude: 67.8506, longitude: 20.2842 }, 
+          { latitude: 67.8506, longitude: 20.2842 },
         ],
       ],
     },
   },
-  
+
   {
     title: "Public Safety Improvements",
     description:
@@ -882,29 +865,29 @@ export const newDocuments = [
     scale: { type: ScaleType.BlueprintsOrEffect },
     area: {
       include: [
-        { latitude: 67.8575, longitude: 20.3120 },
-        { latitude: 67.8580, longitude: 20.3130 },
+        { latitude: 67.8575, longitude: 20.312 },
+        { latitude: 67.858, longitude: 20.313 },
         { latitude: 67.8578, longitude: 20.3135 },
-        { latitude: 67.8570, longitude: 20.3132 },
-        { latitude: 67.8575, longitude: 20.3120 }, 
+        { latitude: 67.857, longitude: 20.3132 },
+        { latitude: 67.8575, longitude: 20.312 },
       ],
       exclude: [
         [
           { latitude: 67.8576, longitude: 20.3124 },
           { latitude: 67.8577, longitude: 20.3126 },
           { latitude: 67.8575, longitude: 20.3125 },
-          { latitude: 67.8576, longitude: 20.3124 }, 
+          { latitude: 67.8576, longitude: 20.3124 },
         ],
         [
           { latitude: 67.8579, longitude: 20.3129 },
-          { latitude: 67.8580, longitude: 20.3131 },
-          { latitude: 67.8578, longitude: 20.3130 },
-          { latitude: 67.8579, longitude: 20.3129 }, 
+          { latitude: 67.858, longitude: 20.3131 },
+          { latitude: 67.8578, longitude: 20.313 },
+          { latitude: 67.8579, longitude: 20.3129 },
         ],
       ],
     },
   },
-  
+
   {
     title: "Smart Waste Management Plan",
     description:
@@ -915,29 +898,29 @@ export const newDocuments = [
     scale: { type: ScaleType.BlueprintsOrEffect },
     area: {
       include: [
-        { latitude: 67.8550, longitude: 20.3110 },
-        { latitude: 67.8560, longitude: 20.3120 },
-        { latitude: 67.8545, longitude: 20.3130 },
-        { latitude: 67.8540, longitude: 20.3110 },
-        { latitude: 67.8550, longitude: 20.3110 }, 
+        { latitude: 67.855, longitude: 20.311 },
+        { latitude: 67.856, longitude: 20.312 },
+        { latitude: 67.8545, longitude: 20.313 },
+        { latitude: 67.854, longitude: 20.311 },
+        { latitude: 67.855, longitude: 20.311 },
       ],
       exclude: [
         [
           { latitude: 67.8553, longitude: 20.3112 },
           { latitude: 67.8555, longitude: 20.3117 },
           { latitude: 67.8552, longitude: 20.3116 },
-          { latitude: 67.8553, longitude: 20.3112 }, 
+          { latitude: 67.8553, longitude: 20.3112 },
         ],
         [
           { latitude: 67.8547, longitude: 20.3125 },
           { latitude: 67.8549, longitude: 20.3128 },
           { latitude: 67.8546, longitude: 20.3127 },
-          { latitude: 67.8547, longitude: 20.3125 }, 
+          { latitude: 67.8547, longitude: 20.3125 },
         ],
       ],
     },
   },
-  
+
   {
     title: "Public Wi-Fi Infrastructure Project",
     description:
@@ -949,28 +932,28 @@ export const newDocuments = [
     area: {
       include: [
         { latitude: 67.8575, longitude: 20.3025 },
-        { latitude: 67.8580, longitude: 20.3040 },
+        { latitude: 67.858, longitude: 20.304 },
         { latitude: 67.8565, longitude: 20.3045 },
-        { latitude: 67.8560, longitude: 20.3020 },
+        { latitude: 67.856, longitude: 20.302 },
         { latitude: 67.8575, longitude: 20.3025 },
       ],
       exclude: [
         [
-          { latitude: 67.8576, longitude: 20.3030 },
+          { latitude: 67.8576, longitude: 20.303 },
           { latitude: 67.8578, longitude: 20.3036 },
           { latitude: 67.8574, longitude: 20.3035 },
-          { latitude: 67.8576, longitude: 20.3030 }, 
+          { latitude: 67.8576, longitude: 20.303 },
         ],
         [
           { latitude: 67.8567, longitude: 20.3038 },
           { latitude: 67.8569, longitude: 20.3042 },
-          { latitude: 67.8566, longitude: 20.3040 },
-          { latitude: 67.8567, longitude: 20.3038 }, 
+          { latitude: 67.8566, longitude: 20.304 },
+          { latitude: 67.8567, longitude: 20.3038 },
         ],
       ],
     },
   },
-  
+
   {
     title: "Green Rooftop Initiative",
     description:
@@ -982,22 +965,22 @@ export const newDocuments = [
     area: {
       include: [
         { latitude: 67.8586, longitude: 20.3085 },
-        { latitude: 67.8590, longitude: 20.3105 },
-        { latitude: 67.8575, longitude: 20.3110 },
-        { latitude: 67.8570, longitude: 20.3090 },
-        { latitude: 67.8586, longitude: 20.3085 }
+        { latitude: 67.859, longitude: 20.3105 },
+        { latitude: 67.8575, longitude: 20.311 },
+        { latitude: 67.857, longitude: 20.309 },
+        { latitude: 67.8586, longitude: 20.3085 },
       ],
       exclude: [
         [
           { latitude: 67.8582, longitude: 20.3092 },
-          { latitude: 67.8584, longitude: 20.3100 },
+          { latitude: 67.8584, longitude: 20.31 },
           { latitude: 67.8578, longitude: 20.3102 },
           { latitude: 67.8576, longitude: 20.3094 },
-          { latitude: 67.8582, longitude: 20.3092 }
-        ]
-      ]
-    }
-  },  
+          { latitude: 67.8582, longitude: 20.3092 },
+        ],
+      ],
+    },
+  },
   {
     title: "Renewable Energy Storage Report",
     description:
@@ -1008,29 +991,29 @@ export const newDocuments = [
     scale: { type: ScaleType.Text },
     area: {
       include: [
-        { latitude: 67.8500, longitude: 20.2900 },
-        { latitude: 67.8510, longitude: 20.2910 },
-        { latitude: 67.8505, longitude: 20.2920 },
+        { latitude: 67.85, longitude: 20.29 },
+        { latitude: 67.851, longitude: 20.291 },
+        { latitude: 67.8505, longitude: 20.292 },
         { latitude: 67.8495, longitude: 20.2915 },
-        { latitude: 67.8500, longitude: 20.2900 }, 
+        { latitude: 67.85, longitude: 20.29 },
       ],
       exclude: [
         [
           { latitude: 67.8503, longitude: 20.2905 },
           { latitude: 67.8504, longitude: 20.2907 },
           { latitude: 67.8502, longitude: 20.2906 },
-          { latitude: 67.8503, longitude: 20.2905 }, 
+          { latitude: 67.8503, longitude: 20.2905 },
         ],
         [
           { latitude: 67.8508, longitude: 20.2912 },
-          { latitude: 67.8510, longitude: 20.2914 },
+          { latitude: 67.851, longitude: 20.2914 },
           { latitude: 67.8509, longitude: 20.2913 },
-          { latitude: 67.8508, longitude: 20.2912 }, 
+          { latitude: 67.8508, longitude: 20.2912 },
         ],
       ],
     },
   },
-  
+
   {
     title: "Winter Safety Infrastructure Plan",
     description:
