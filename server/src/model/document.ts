@@ -74,7 +74,7 @@ export class Document {
   type: DocumentType;
   scale: Scale;
   stakeholders?: Stakeholder[];
-  coordinates?: Coordinates;
+  private _coordinates?: Coordinates;
   private _area?: Area;
   issuanceTime?: TimeInterval;
   links?: LinkResponseBody[];
@@ -97,7 +97,7 @@ export class Document {
     this.type = type;
     this.scale = scale;
     this.stakeholders = stakeholders;
-    this.coordinates = coordinates;
+    if (coordinates) this.setCoordinates(coordinates);
     if (area) this.setArea(area);
     this.issuanceTime = issuanceTime;
     this.links = links;
@@ -153,11 +153,21 @@ export class Document {
   get area(): Area | undefined {
     return this._area;
   }
-  async setArea(area: Area): Promise<void> {
+  async setArea(area?: Area): Promise<void> {
+    if (this._coordinates && area) await this.setCoordinates();
     if (this._area) {
       await this._area.delete();
     }
     this._area = area;
+  }
+
+  get coordinates(): Coordinates | undefined {
+    return this._coordinates;
+  }
+
+  async setCoordinates(coordinates?: Coordinates): Promise<void> {
+    if (coordinates && this._area) await this.setArea();
+    this._coordinates = coordinates;
   }
 
   async update(): Promise<void> {
@@ -279,7 +289,9 @@ export class Document {
     return {
       ...this,
       area: this.area?.toResponseBody(),
-      _area: undefined, //TODO: ho bisogno di un po' di refactoring
+      _area: undefined,
+      coordinates: this._coordinates,
+      _coordinates: undefined,
       issuanceTime: this.issuanceTime ? this.issuanceTime.format() : undefined,
       stakeholders:
         this.stakeholders?.length === 0 ? undefined : this.stakeholders,
