@@ -213,13 +213,13 @@ describe("Testing story 7", () => {
   });
 
   // Here is happening an error, because the upload.ts is always waiting for a True.
-  //   test("US 7.10 GET a resource for a specific document, as Urban Planner, but that document does not have any resources", async () => {
-  //     const response = await request(app)
-  //       .get(`/uploads/${testDocId2}`)
-  //       .set("Cookie", plannerCookie);
-  //     expect(response.status).toBe(StatusCodes.NOT_FOUND);
-  //     expect(response.body).toEqual([]);
-  //   });
+  // test("US 7.10 GET a resource for a specific document, as Urban Planner, but that document does not have any resources", async () => {
+  //   const response = await request(app)
+  //     .get(`/uploads/${testDocId2}`)
+  //     .set("Cookie", plannerCookie);
+  //   expect(response.status).toBe(StatusCodes.NOT_FOUND);
+  //   expect(response.body).toEqual([]);
+  // });
 
   test("US 7.11 PATCH a resource for a specific document, as Urban Planner", async () => {
     const response = await request(app)

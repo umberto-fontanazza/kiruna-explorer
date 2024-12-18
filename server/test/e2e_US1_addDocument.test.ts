@@ -35,6 +35,22 @@ describe("Testing story 1", () => {
   };
   let testDocId1: number;
   let testDocIdAll1: number;
+  const testDocMandatoryFields1_1 = {
+    title: "Mandatory test",
+    description: "This one will be tested fields",
+    type: DocumentType.Informative,
+    scale: { type: ScaleType.Text },
+    issuanceTime: "2024",
+  };
+  const testDocMandatoryFields1_2 = {
+    title: "Only test",
+    description: "This one will be tested fields",
+    type: DocumentType.Technical,
+    scale: { type: ScaleType.Text },
+    issuanceTime: "2024-11-22",
+  };
+  let testDocId1_1: number;
+  let testDocId1_2: number;
 
   test("US1.1 POST a document without being Urban Planner", async () => {
     const response = await request(app)
@@ -382,5 +398,124 @@ describe("Testing story 1", () => {
     await request(app)
       .del(`/documents/${testDocIdAll1}`)
       .set("Cookie", plannerCookie);
+  });
+
+  test("US1.20 POST and PATCH at the time", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDocMandatoryFields1 });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    testDocId1 = response.body.id;
+
+    const response2 = await request(app)
+      .patch(`/documents/${testDocId1}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        title: "New title",
+        description: "This one will be tested for all fields",
+        type: DocumentType.Design,
+        scale: { type: ScaleType.BlueprintsOrEffect },
+        stakeholders: [Stakeholder.Lkab],
+        issuanceTime: "2021-12-30",
+        coordinates: { latitude: 20, longitude: 40 },
+      });
+    expect(response2.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+
+  test("US1.21 POST and DELETE at the time", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDocMandatoryFields1 });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    testDocId1 = response.body.id;
+
+    const response2 = await request(app)
+      .del(`/documents/${testDocId1}`)
+      .set("Cookie", plannerCookie);
+    expect(response2.status).toStrictEqual(StatusCodes.NO_CONTENT);
+  });
+
+  test("US1.22 PATCH a deleted document", async () => {
+    const response = await request(app)
+      .del(`/documents/${testDocId1}`)
+      .set("Cookie", plannerCookie);
+    expect(response.status).toStrictEqual(StatusCodes.NOT_FOUND);
+  });
+
+  test("US1.23 POST with some error and try to PATCH", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDocMandatoryFields1_1 });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    testDocId1_1 = response.body.id;
+
+    const response2 = await request(app)
+      .patch(`/documents/${testDocId1_1}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        title: "New title",
+        description: "This one will be tested for all fields",
+        type: DocumentType.Design,
+        scale: { type: ScaleType.BlueprintsOrEffect },
+        stakeholders: [Stakeholder.Lkab],
+        issuanceTime: "2021-12-30",
+        coordinates: { latitude: 200, longitude: 40 },
+      });
+    expect(response2.status).toStrictEqual(StatusCodes.BAD_REQUEST);
+  });
+
+  test("US1.24 POST with some error and try to DELETE", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({ ...testDocMandatoryFields1_2 });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    testDocId1_2 = response.body.id;
+
+    const response2 = await request(app)
+      .del(`/documents/${testDocId1_2}`)
+      .set("Cookie", plannerCookie);
+    expect(response2.status).toStrictEqual(StatusCodes.NO_CONTENT);
+
+    const response3 = await request(app)
+      .del(`/documents/${testDocId1_2}`)
+      .set("Cookie", plannerCookie);
+    expect(response3.status).toStrictEqual(StatusCodes.NOT_FOUND);
+  });
+
+  test("US1.25 POST with DD-MM-YYYY date format and change date to YYYY-MM format", async () => {
+    const response = await request(app)
+      .post("/documents/")
+      .set("Cookie", plannerCookie)
+      .send({
+        title: "Title",
+        description: "Description",
+        type: DocumentType.Design,
+        scale: { type: ScaleType.Text },
+        issuanceTime: "2021-12-23",
+      });
+    expect(response.status).toBe(StatusCodes.CREATED);
+    expect(response.body.id).toBeDefined();
+    expect(typeof response.body.id).toBe("number");
+    testDocId1 = response.body.id;
+
+    const response2 = await request(app)
+      .patch(`/documents/${testDocId1}`)
+      .set("Cookie", plannerCookie)
+      .send({
+        issuanceTime: "2021-12",
+      });
+    expect(response2.status).toStrictEqual(StatusCodes.NO_CONTENT);
   });
 });
