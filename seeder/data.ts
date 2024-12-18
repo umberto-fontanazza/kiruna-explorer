@@ -187,49 +187,110 @@ export const newDocuments = [
       exclude: [],
     },
   },
-  // {
-  //   title: "Environmental Impact Analysis",
-  //   description: "Analysis of environmental changes in the region.",
-  //   issuanceTime: "2020-09",
-  //   type: DocumentType.MaterialEffect,
-  //   stakeholders: [Stakeholder.Others],
-  //   scale: { type: ScaleType.Concept },
-  //   coordinates: { latitude: 67.8525, longitude: 20.2295 },
-  // },
-  // {
-  //   title: "Gruvstadspark 2, etapp 5, Kyrkan",
-  //   description:
-  //     "The last detailed plan of the second planning phase concerns the area surrounding the Kiruna Church. Situated within a park, the area includes only six buildings, half of which serve religious functions. The plan also specifies that the church will be dismantled between 2025 and 2026 and reassembled at its new site by 2029.",
-  //   issuanceTime: "2021-09-04",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 2000 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.862, longitude: 20.2271 },
-  //       { latitude: 67.8622, longitude: 20.2273 },
-  //       { latitude: 67.8621, longitude: 20.2274 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
-  // {
-  //   title: "Demolition documentation, Kiruna City Hall",
-  //   description:
-  //     "This document was created to preserve the memory of the symbolic building before its demolition in April 2019. Conducted by the Norrbotten Museum, the detailed 162-page study analyzed the building's materials, both physically and chemically, taking advantage of the demolition to explore aspects that couldn't be examined while it was in use. This meticulous effort reflects a commitment to preserving knowledge of every detail of the structure.",
-  //   issuanceTime: "2020-11-26",
-  //   type: DocumentType.Informative,
-  //   stakeholders: [Stakeholder.Others],
-  //   scale: { type: ScaleType.Text },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.5056, longitude: 20.1814 },
-  //       { latitude: 67.5058, longitude: 20.1816 },
-  //       { latitude: 67.5057, longitude: 20.1817 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
+  {
+    title: "ok - Environmental Impact Analysis",
+    description: "Analysis of environmental changes in the region.",
+    issuanceTime: "2020-09",
+    type: DocumentType.MaterialEffect,
+    stakeholders: [Stakeholder.Others],
+    scale: { type: ScaleType.Concept },
+    area: {
+      include: [
+        { latitude: 67.86483119574645, longitude: 20.283756236157238 },
+        { latitude: 67.86447544869145, longitude: 20.29148099812013 },
+        { latitude: 67.86098237103553, longitude: 20.319461802563488 },
+        { latitude: 67.8504999967592, longitude: 20.350189189038097 },
+        { latitude: 67.84752266099878, longitude: 20.35508153828126 },
+        { latitude: 67.84078989212594, longitude: 20.349073390087902 },
+        { latitude: 67.83758467057628, longitude: 20.34812925251466 },
+        { latitude: 67.8381998482436, longitude: 20.33843038471681 },
+        { latitude: 67.84344438878158, longitude: 20.319547633251965 },
+        { latitude: 67.84347675882816, longitude: 20.301609019360363 },
+        { latitude: 67.85295924835783, longitude: 20.293283442578137 },
+        { latitude: 67.85425348714607, longitude: 20.292900216716532 },
+        { latitude: 67.86072360371789, longitude: 20.282085549968485 },
+        { latitude: 67.8637962801442, longitude: 20.281570565837626 },
+      ],
+      exclude: [],
+    },
+  },
+  {
+    title: "ok - Gruvstadspark 2, etapp 5, Kyrkan",
+    description:
+      "The last detailed plan of the second planning phase concerns the area surrounding the Kiruna Church. Situated within a park, the area includes only six buildings, half of which serve religious functions. The plan also specifies that the church will be dismantled between 2025 and 2026 and reassembled at its new site by 2029.",
+    issuanceTime: "2021-09-04",
+    type: DocumentType.Prescriptive,
+    stakeholders: [Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 2000 },
+    area: {
+      include: [
+        { latitude: 67.88012318323153, longitude: 20.161098645019536 },
+        { latitude: 67.88361339245219, longitude: 20.176033184814457 },
+        { latitude: 67.88477667928173, longitude: 20.19714753417969 },
+        { latitude: 67.88270857362512, longitude: 20.217231915283207 },
+        { latitude: 67.87960607070767, longitude: 20.230449841308598 },
+        { latitude: 67.86835603217598, longitude: 20.231479809570317 },
+        { latitude: 67.86395798873623, longitude: 20.24315278320313 },
+        { latitude: 67.86356988623047, longitude: 20.257229016113286 },
+        { latitude: 67.85891215206298, longitude: 20.278171704101567 },
+        { latitude: 67.85386522305183, longitude: 20.30907075195313 },
+        { latitude: 67.84713428483691, longitude: 20.319370434570317 },
+        { latitude: 67.84337964855365, longitude: 20.308727429199223 },
+        { latitude: 67.83237119836456, longitude: 20.30632416992188 },
+        { latitude: 67.82576363540026, longitude: 20.292247937011723 },
+        { latitude: 67.82200555967694, longitude: 20.264438793945317 },
+        { latitude: 67.81759876968103, longitude: 20.24761597900391 },
+        { latitude: 67.81046837842769, longitude: 20.23662965087891 },
+        { latitude: 67.80424371314075, longitude: 20.21637360839844 },
+        { latitude: 67.80541096415635, longitude: 20.181354687500004 },
+        { latitude: 67.8100793854116, longitude: 20.15972535400391 },
+        { latitude: 67.82990977581507, longitude: 20.139125988769536 },
+        { latitude: 67.84350912882985, longitude: 20.139812634277348 },
+        { latitude: 67.85192380560808, longitude: 20.145305798339848 },
+        { latitude: 67.86331114763632, longitude: 20.14873902587891 },
+        { latitude: 67.86822668980359, longitude: 20.15800874023438 },
+        { latitude: 67.87779608645016, longitude: 20.161098645019536 },
+      ],
+      exclude: [
+        [
+          { latitude: 67.84648697686427, longitude: 20.22049348144531 },
+          { latitude: 67.84234378047543, longitude: 20.23525635986328 },
+          { latitude: 67.84247326650026, longitude: 20.25379578857422 },
+          { latitude: 67.83379611385995, longitude: 20.25242249755859 },
+          { latitude: 67.8296506636077, longitude: 20.269416973876957 },
+          { latitude: 67.8286141860213, longitude: 20.291904614257817 },
+          { latitude: 67.83807033850333, longitude: 20.29980103759766 },
+          { latitude: 67.84829939392411, longitude: 20.30014436035156 },
+          { latitude: 67.8552888264596, longitude: 20.288471386718754 },
+          { latitude: 67.85865336176464, longitude: 20.25345246582031 },
+          { latitude: 67.86240553993785, longitude: 20.23834626464844 },
+          { latitude: 67.86680387632343, longitude: 20.22735993652344 },
+          { latitude: 67.86977875088941, longitude: 20.21328370361328 },
+          { latitude: 67.86796800290507, longitude: 20.20229737548828 },
+        ],
+      ],
+    },
+  },
+  {
+    title: "Demolition documentation, Kiruna City Hall",
+    description:
+      "This document was created to preserve the memory of the symbolic building before its demolition in April 2019. Conducted by the Norrbotten Museum, the detailed 162-page study analyzed the building's materials, both physically and chemically, taking advantage of the demolition to explore aspects that couldn't be examined while it was in use. This meticulous effort reflects a commitment to preserving knowledge of every detail of the structure.",
+    issuanceTime: "2020-11-26",
+    type: DocumentType.Informative,
+    stakeholders: [Stakeholder.Others],
+    scale: { type: ScaleType.Text },
+    area: {
+      include: [
+        { latitude: 67.84948495425536, longitude: 20.309499255600937 },
+        { latitude: 67.84799626909546, longitude: 20.30913447517491 },
+        { latitude: 67.84827945022069, longitude: 20.297568789902694 },
+        { latitude: 67.84929078331835, longitude: 20.297633162919052 },
+        { latitude: 67.85023735136862, longitude: 20.301817408982284 },
+        { latitude: 67.84879725824473, longitude: 20.304285041275985 },
+      ],
+      exclude: [],
+    },
+  },
   // {
   //   title: "Deformation forecast",
   //   description:
@@ -281,23 +342,26 @@ export const newDocuments = [
   //     exclude: [],
   //   },
   // },
-  // {
-  //   title: "Detail plan for square and commercial street",
-  //   description:
-  //     "This plan, approved in July 2016, is the first detailed plan to be implemented from the new masterplan (Adjusted development plan). The document defines the entire area near the town hall, comprising a total of 9 blocks known for their density. Among these are the 6 buildings that will face the main square. The functions are mixed, both public and private, with residential being prominent, as well as the possibility of incorporating accommodation facilities such as hotels. For all buildings in this plan, the only height limit is imposed by air traffic.",
-  //   issuanceTime: "2016-06-22",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 500 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8484, longitude: 20.2907 },
-  //       { latitude: 67.8486, longitude: 20.2909 },
-  //       { latitude: 67.8485, longitude: 20.291 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
+  {
+    title: "Detail plan for square and commercial street",
+    description:
+      "This plan, approved in July 2016, is the first detailed plan to be implemented from the new masterplan (Adjusted development plan). The document defines the entire area near the town hall, comprising a total of 9 blocks known for their density. Among these are the 6 buildings that will face the main square. The functions are mixed, both public and private, with residential being prominent, as well as the possibility of incorporating accommodation facilities such as hotels. For all buildings in this plan, the only height limit is imposed by air traffic.",
+    issuanceTime: "2016-06-22",
+    type: DocumentType.Prescriptive,
+    stakeholders: [Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 500 },
+    area: {
+      include: [
+        { latitude: 67.84948495425536, longitude: 20.309499255600937 },
+        { latitude: 67.84799626909546, longitude: 20.30913447517491 },
+        { latitude: 67.84827945022069, longitude: 20.297568789902694 },
+        { latitude: 67.84929078331835, longitude: 20.297633162919052 },
+        { latitude: 67.85023735136862, longitude: 20.301817408982284 },
+        { latitude: 67.84879725824473, longitude: 20.304285041275985 },
+      ],
+      exclude: [],
+    },
+  },
   // {
   //   title: "Construction of new city hall begins",
   //   description:
@@ -1008,7 +1072,7 @@ export const newDocuments = [
   // },
 
   {
-    title: "Green Rooftop Initiative",
+    title: "ok - Green Rooftop Initiative",
     description:
       "A design plan promoting the construction of green rooftops on public and residential buildings to improve urban air quality and energy efficiency.",
     issuanceTime: "2024-07",
@@ -1043,7 +1107,7 @@ export const newDocuments = [
   },
 
   {
-    title: "Renewable Energy Storage Report",
+    title: "ok - Renewable Energy Storage Report",
     description:
       "A technical document analyzing energy storage solutions, including battery systems, to support the city's transition to renewable energy sources.",
     issuanceTime: "2023-10",
