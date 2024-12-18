@@ -6,8 +6,8 @@ dayjs.extend(utc);
 dayjs.extend(customParseFormat);
 
 const precisionFormat = {
-  day: "YYYY-MM-DD",
-  month: "YYYY-MM",
+  day: "YYYY/MM/DD",
+  month: "YYYY/MM",
   year: "YYYY",
 };
 
@@ -31,8 +31,8 @@ export class TimeInterval {
    */
   static parse(time: string): TimeInterval {
     let precision: TimePrecision;
-    const dayRegex = /^\d{4}-\d{2}-\d{2}$/;
-    const monthRegex = /^\d{4}-\d{2}$/;
+    const dayRegex = /^\d{4}\/\d{2}\/\d{2}$/;
+    const monthRegex = /^\d{4}\/\d{2}$/;
     const yearRegex = /^\d{4}$/;
     while (true) {
       if (dayRegex.test(time)) {

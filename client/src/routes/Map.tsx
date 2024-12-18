@@ -11,7 +11,6 @@ import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/Map.scss";
 import { Document } from "../utils/interfaces";
-import { mockDocks } from "../utils/mockDocs";
 import { PositionMode } from "../utils/modes";
 
 const HomeMap: FC = (): JSX.Element => {
@@ -141,7 +140,7 @@ const HomeMap: FC = (): JSX.Element => {
         </div>
       </div>
       <Diagram
-        documents={mockDocks}
+        documents={documents}
         onDocumentClick={(d) => {
           setDocSelected(d);
           setSidebarOpen(true);
