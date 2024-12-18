@@ -1062,8 +1062,6 @@ export const newDocuments = [
     type: DocumentType.Technical,
     stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Others],
     scale: { type: ScaleType.Text },
-  },
-  {
     area: {
       include: [
         { latitude: 67.85007965050973, longitude: 20.30067266259144 },
