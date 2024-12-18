@@ -764,250 +764,272 @@ export const newDocuments = [
   //   },
   // },
   // {
-  //   title: "Road Infrastructure Expansion Plan",
-  //   description:
-  //     "Design and implementation plan for expanding key roads to accommodate increased traffic in new urban zones.",
-  //   issuanceTime: "2023-02",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 700 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.858, longitude: 20.3085 },
-  //       { latitude: 67.859, longitude: 20.31 },
-  //       { latitude: 67.8575, longitude: 20.311 },
-  //       { latitude: 67.8565, longitude: 20.3095 },
-  //       { latitude: 67.858, longitude: 20.3085 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.8577, longitude: 20.309 },
-  //         { latitude: 67.8579, longitude: 20.3093 },
-  //         { latitude: 67.8578, longitude: 20.3088 },
-  //         { latitude: 67.8577, longitude: 20.309 },
-  //       ],
-  //       [
-  //         { latitude: 67.8582, longitude: 20.31 },
-  //         { latitude: 67.8584, longitude: 20.3103 },
-  //         { latitude: 67.8583, longitude: 20.3098 },
-  //         { latitude: 67.8582, longitude: 20.31 },
-  //       ],
-  //     ],
-  //   },
-  // },
-  // {
-  //   title: "Affordable Housing Program",
-  //   description:
-  //     "A design initiative to build affordable housing units for low-income residents, ensuring accessibility and sustainability.",
-  //   issuanceTime: "2021-09",
-  //   type: DocumentType.Design,
-  //   stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Residents],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 2000 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.854, longitude: 20.3095 },
-  //       { latitude: 67.855, longitude: 20.311 },
-  //       { latitude: 67.8545, longitude: 20.312 },
-  //       { latitude: 67.8535, longitude: 20.3115 },
-  //       { latitude: 67.854, longitude: 20.3095 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.8544, longitude: 20.3102 },
-  //         { latitude: 67.8546, longitude: 20.3104 },
-  //         { latitude: 67.8545, longitude: 20.31 },
-  //         { latitude: 67.8544, longitude: 20.3102 },
-  //       ],
-  //       [
-  //         { latitude: 67.8548, longitude: 20.311 },
-  //         { latitude: 67.855, longitude: 20.3112 },
-  //         { latitude: 67.8549, longitude: 20.3108 },
-  //         { latitude: 67.8548, longitude: 20.311 },
-  //       ],
-  //     ],
-  //   },
-  // },
+    //40
+    { title: "Road Infrastructure Expansion Plan",
+     description:
+       "Design and implementation plan for expanding key roads to accommodate increased traffic in new urban zones.",
+     issuanceTime: "2023-02",
+     type: DocumentType.Prescriptive,
+     stakeholders: [Stakeholder.KirunaKommun],
+     scale: { type: ScaleType.ArchitecturalScale, ratio: 700 },
+  area: {
+    include: [
+      { latitude: 67.85040290496156, longitude: 20.22620590795398 },
+      { latitude: 67.85143841523734, longitude: 20.225819669855834 },
+      { latitude: 67.85174582349991, longitude: 20.22740753759265 },
+      { latitude: 67.85270038122525, longitude: 20.229553304804565 },
+      { latitude: 67.85295923760278, longitude: 20.23268612493396 },
+      { latitude: 67.85206940676726, longitude: 20.234788976801635 },
+      { latitude: 67.85181054051256, longitude: 20.237320982111694 },
+      { latitude: 67.84985277142708, longitude: 20.23470314611316 },
+      { latitude: 67.84933498683509, longitude: 20.232771955622436 },
+      { latitude: 67.8494482531968, longitude: 20.22745045293689 }
+    ],
+    exclude: [
+      [
+        { latitude: 67.85118531146645, longitude: 20.229882825932627 },
+        { latitude: 67.8506271063625, longitude: 20.233358968815928 },
+        { latitude: 67.85202663884309, longitude: 20.23408852966798 },
+        { latitude: 67.85263334648099, longitude: 20.230354894719248 }
+      ]
+    ]
+  }
+}
+    //41
+  {   title: "Affordable Housing Program",
+     description:
+       "A design initiative to build affordable housing units for low-income residents, ensuring accessibility and sustainability.",
+     issuanceTime: "2021-09",
+     type: DocumentType.Design,
+     stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Residents],
+     scale: { type: ScaleType.ArchitecturalScale, ratio: 2000 },
+  area: {
+    include: [
+      { latitude: 67.84987665152228, longitude: 20.182680432329402 },
+      { latitude: 67.8562185734983, longitude: 20.19499713612579 },
+      { latitude: 67.8555715176158, longitude: 20.19748622609161 },
+      { latitude: 67.8544876587844, longitude: 20.197099987993465 },
+      { latitude: 67.85223889544942, longitude: 20.197314564714656 },
+      { latitude: 67.85037824387096, longitude: 20.197400395403132 },
+      { latitude: 67.8490676088743, longitude: 20.198559109697566 },
+      { latitude: 67.84764362565288, longitude: 20.197572056780086 },
+      { latitude: 67.84714197449387, longitude: 20.193538014421687 },
+      { latitude: 67.84986047094434, longitude: 20.183109585771785 }
+    ],
+    exclude: [
+      [
+        { latitude: 67.85189712845792, longitude: 20.19039244927797 },
+        { latitude: 67.85063511900312, longitude: 20.19185157098207 },
+        { latitude: 67.85121759339106, longitude: 20.194769814390273 },
+        { latitude: 67.85225306749581, longitude: 20.19335360803041 },
+        { latitude: 67.85181623246439, longitude: 20.191465332883926 },
+        { latitude: 67.85204274053912, longitude: 20.190950348753066 },
+        { latitude: 67.85201038237741, longitude: 20.190478279966445 }
+      ]
+    ]
+  }
+}
 
-  // {
-  //   title: "Heritage Building Relocation Plan",
-  //   description:
-  //     "A relocation strategy for heritage buildings, including logistics and timelines for safely moving structures of cultural significance.",
-  //   issuanceTime: "2023-04",
-  //   type: DocumentType.Technical,
-  //   stakeholders: [Stakeholder.WhiteArkitekter, Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.BlueprintsOrEffect },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8545, longitude: 20.28 },
-  //       { latitude: 67.856, longitude: 20.2815 },
-  //       { latitude: 67.8555, longitude: 20.283 },
-  //       { latitude: 67.854, longitude: 20.282 },
-  //       { latitude: 67.8545, longitude: 20.28 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.855, longitude: 20.281 },
-  //         { latitude: 67.8552, longitude: 20.2812 },
-  //         { latitude: 67.8551, longitude: 20.2808 },
-  //         { latitude: 67.855, longitude: 20.281 },
-  //       ],
-  //       [
-  //         { latitude: 67.8548, longitude: 20.2825 },
-  //         { latitude: 67.855, longitude: 20.2827 },
-  //         { latitude: 67.8549, longitude: 20.2823 },
-  //         { latitude: 67.8548, longitude: 20.2825 },
-  //       ],
-  //     ],
-  //   },
-  // },
+//42
+   {
+     title: "Heritage Building Relocation Plan",
+     description:
+       "A relocation strategy for heritage buildings, including logistics and timelines for safely moving structures of cultural significance.",
+     issuanceTime: "2023-04",
+     type: DocumentType.Technical,
+     stakeholders: [Stakeholder.WhiteArkitekter, Stakeholder.KirunaKommun],
+     scale: { type: ScaleType.BlueprintsOrEffect },
+  area: {
+    include: [
+      { latitude: 67.85452760216266, longitude: 20.262670359239685 },
+      { latitude: 67.85472981810761, longitude: 20.263635954485046 },
+      { latitude: 67.85472981810761, longitude: 20.264901957140076 },
+      { latitude: 67.85479452683971, longitude: 20.26556714497577 },
+      { latitude: 67.85461657739448, longitude: 20.26606067143451 },
+      { latitude: 67.85421214178677, longitude: 20.266146502122986 },
+      { latitude: 67.85352458515524, longitude: 20.266146502122986 },
+      { latitude: 67.85324955682633, longitude: 20.2652667375661 },
+      { latitude: 67.85263477589172, longitude: 20.264966330156433 },
+      { latitude: 67.85273184764306, longitude: 20.264344057664978 },
+      { latitude: 67.85282082972685, longitude: 20.26256307087909 },
+      { latitude: 67.8531120414455, longitude: 20.261683306322205 },
+      { latitude: 67.85414743143862, longitude: 20.261661848650085 }
+    ],
+    exclude: [
+      [
+        { latitude: 67.85292850101874, longitude: 20.26257197647095 },
+        { latitude: 67.85287996560285, longitude: 20.26390235214234 },
+        { latitude: 67.85314690914021, longitude: 20.26388089447022 },
+        { latitude: 67.85319544400053, longitude: 20.262529061126713 }
+      ]
+    ]
+  }
+}
+//43
+   ,{
+     title: "Public Park Development",
+     description:
+       "This plan outlines the design and construction of a large public park with recreational and green areas for the community.",
+     issuanceTime: "2024-01",
+     type: DocumentType.MaterialEffect,
+     stakeholders: [Stakeholder.KirunaKommun],
+   scale: { type: ScaleType.ArchitecturalScale, ratio: 100 },
+    area: {
+      include: [
+        { latitude: 67.8499868054724, longitude: 20.268718544002382 },
+        { latitude: 67.85086053588583, longitude: 20.271121803279726 },
+        { latitude: 67.85042367477058, longitude: 20.277473274226992 },
+        { latitude: 67.84929103377051, longitude: 20.276915374751894 },
+        { latitude: 67.84909686121918, longitude: 20.275070014949648 },
+        { latitude: 67.84932339570527, longitude: 20.269834342952578 }
+      ],
+      exclude: [
+        [
+          { latitude: 67.84995097181232, longitude: 20.27321487669084 },
+          { latitude: 67.8499833328314, longitude: 20.274116098919844 },
+          { latitude: 67.85016940781985, longitude: 20.274062454739546 },
+          { latitude: 67.8502867152018, longitude: 20.27442723516557 },
+          { latitude: 67.85022199396057, longitude: 20.275038778820967 },
+          { latitude: 67.85036357144249, longitude: 20.27522116903398 },
+          { latitude: 67.85042020219461, longitude: 20.2741804719362 },
+          { latitude: 67.85052941825681, longitude: 20.271905958691573 },
+          { latitude: 67.8501734529118, longitude: 20.271594822445845 },
+          { latitude: 67.85008041561927, longitude: 20.272925198117232 }
+        ]
+      ]
+    }
+  }
+//44
+   ,{
+     title: "Noise Pollution Control Measures",
+     description:
+       "Technical guidelines for reducing noise pollution in residential and public areas affected by mining activities.",
+     issuanceTime: "2023-07",
+     type: DocumentType.Technical,
+     stakeholders: [Stakeholder.Lkab],
+     scale: { type: ScaleType.Text },
+    area: {
+      include: [
+        { latitude: 67.84962565527675, longitude: 20.245489935811296 },
+        { latitude: 67.8494153046243, longitude: 20.246777396138445 },
+        { latitude: 67.8483473412781, longitude: 20.24810777180983 },
+        { latitude: 67.84736024076348, longitude: 20.244030814107195 },
+        { latitude: 67.84915640890931, longitude: 20.24192796223952 }
+      ],
+      exclude: [
+        [
+          { latitude: 67.84859349239242, longitude: 20.245099246720336 },
+          { latitude: 67.84824558835413, longitude: 20.245807349900268 },
+          { latitude: 67.84842763181209, longitude: 20.246440351227783 },
+          { latitude: 67.84871080770053, longitude: 20.24554985783484 }
+        ]
+      ]
+    }
+  }
+  
+//45
+   ,{
+     title: "Public Safety Improvements",
+     description:
+       "Prescriptive measures for improving safety standards in public spaces, including lighting and security installations.",
+     issuanceTime: "2022-12",
+     type: DocumentType.Prescriptive,
+     stakeholders: [Stakeholder.KirunaKommun],
+     scale: { type: ScaleType.BlueprintsOrEffect },
+     area: {
+    include: [
+      { latitude: 67.84494057849872, longitude: 20.278526003663536 },
+      { latitude: 67.84615434666841, longitude: 20.2834183529067 },
+      { latitude: 67.84678548115987, longitude: 20.287280733888146 },
+      { latitude: 67.8460248810724, longitude: 20.288053210084435 },
+      { latitude: 67.84581449794646, longitude: 20.28719490319967 },
+      { latitude: 67.84524807240771, longitude: 20.28788154870748 },
+      { latitude: 67.84424465626532, longitude: 20.285049135987755 },
+      { latitude: 67.84508623401348, longitude: 20.28371876031637 },
+      { latitude: 67.84382385600681, longitude: 20.278740580384728 },
+      { latitude: 67.84485965837538, longitude: 20.27698105127096 }
+    ],
+    exclude: [
+      [
+        { latitude: 67.84627744626354, longitude: 20.28487004156938 },
+        { latitude: 67.84569484849759, longitude: 20.282230747898726 },
+        { latitude: 67.8450272706701, longitude: 20.283271444996505 },
+        { latitude: 67.84566652740203, longitude: 20.285814179142623 },
+        { latitude: 67.84626935472755, longitude: 20.284945143421798 }
+      ]
+    ]
+  }
+}
 
-  // {
-  //   title: "Public Park Development",
-  //   description:
-  //     "This plan outlines the design and construction of a large public park with recreational and green areas for the community.",
-  //   issuanceTime: "2024-01",
-  //   type: DocumentType.MaterialEffect,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 100 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8585, longitude: 20.3125 },
-  //       { latitude: 67.8595, longitude: 20.3145 },
-  //       { latitude: 67.86, longitude: 20.313 },
-  //       { latitude: 67.859, longitude: 20.3115 },
-  //       { latitude: 67.8585, longitude: 20.3125 },
-  //     ],
-  //     exclude: [
-  //       [
-  //         { latitude: 67.8592, longitude: 20.313 },
-  //         { latitude: 67.8594, longitude: 20.3132 },
-  //         { latitude: 67.8593, longitude: 20.3128 },
-  //         { latitude: 67.8592, longitude: 20.313 },
-  //       ],
-  //       [
-  //         { latitude: 67.8596, longitude: 20.314 },
-  //         { latitude: 67.8598, longitude: 20.3142 },
-  //         { latitude: 67.8597, longitude: 20.3138 },
-  //         { latitude: 67.8596, longitude: 20.314 },
-  //       ],
-  //     ],
-  //   },
-  // },
+  //46
+   ,{
+     title: "Smart Waste Management Plan",
+     description:
+       "A prescriptive plan introducing a smart waste management system in Kiruna, including automated waste sorting and underground container networks for better efficiency.",
+     issuanceTime: "2024-09",
+     type: DocumentType.Prescriptive,
+     stakeholders: [Stakeholder.KirunaKommun],
+     scale: { type: ScaleType.BlueprintsOrEffect },
+    area: {
+      include: [
+        { latitude: 67.84707709867558, longitude: 20.264701576459107 },
+        { latitude: 67.84591192853563, longitude: 20.26459428809851 },
+        { latitude: 67.84582292009063, longitude: 20.258242817151245 },
+        { latitude: 67.84583910346952, longitude: 20.256719322430786 },
+        { latitude: 67.84652688669507, longitude: 20.25590393089026 },
+        { latitude: 67.84684245103571, longitude: 20.257191391217408 },
+        { latitude: 67.84710137243465, longitude: 20.2578565790531 }
+      ],
+      exclude: [
+        [
+          { latitude: 67.84686825711366, longitude: 20.25811782855961 },
+          { latitude: 67.84627353680196, longitude: 20.25811782855961 },
+          { latitude: 67.84629376563306, longitude: 20.25982371349308 },
+          { latitude: 67.84690062240988, longitude: 20.25983444232914 }
+        ]
+      ]
+    }
+  }
+//47
+   ,{
+     title: "Public Wi-Fi Infrastructure Project",
+     description:
+       "This project outlines the implementation of free public Wi-Fi across key public spaces in the new Kiruna city center, promoting digital accessibility for residents and visitors.",
+     issuanceTime: "2023-12",
+     type: DocumentType.Technical,
+     stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Others],
+      scale: { type: ScaleType.Text },
+   },
+      {
+        area:{
+    include: [
+      { latitude: 67.85007965050973, longitude: 20.30067266259144 },
+      { latitude: 67.85078348865999, longitude: 20.30374110970448 },
+      { latitude: 67.85127697170745, longitude: 20.30644477639149 },
+      { latitude: 67.85045988755056, longitude: 20.307775152062877 },
+      { latitude: 67.84936770065772, longitude: 20.30923427376698 },
+      { latitude: 67.84914116660194, longitude: 20.30747474465321 },
+      { latitude: 67.84878518006902, longitude: 20.30419172081898 },
+      { latitude: 67.84828355345998, longitude: 20.30367673668812 },
+      { latitude: 67.84828355345998, longitude: 20.300071847772106 },
+      { latitude: 67.84841300652086, longitude: 20.29749692711781 },
+      { latitude: 67.84925443390486, longitude: 20.297668588494762 }
+    ],
+    exclude: [
+      [
+        { latitude: 67.84939728586292, longitude: 20.30329863815308 },
+        { latitude: 67.84882690199171, longitude: 20.304253504562382 },
+        { latitude: 67.84909389192316, longitude: 20.305691168594365 },
+        { latitude: 67.84995552040104, longitude: 20.304392979431157 },
+        { latitude: 67.85054205678951, longitude: 20.303234265136723 },
+        { latitude: 67.85031148907215, longitude: 20.302000448989872 }
+      ]
+    ]
+  }
+}
 
-  // {
-  //   title: "Noise Pollution Control Measures",
-  //   description:
-  //     "Technical guidelines for reducing noise pollution in residential and public areas affected by mining activities.",
-  //   issuanceTime: "2023-07",
-  //   type: DocumentType.Technical,
-  //   stakeholders: [Stakeholder.Lkab],
-  //   scale: { type: ScaleType.Text },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.86212994962993, longitude: 20.28448094123235 },
-  //       { latitude: 67.86166904103813, longitude: 20.284888637002613 },
-  //       { latitude: 67.86205717519502, longitude: 20.29169071906438 },
-  //       { latitude: 67.86083614801261, longitude: 20.291561973031666 },
-  //       { latitude: 67.86045608014197, longitude: 20.286798369821216 },
-  //       { latitude: 67.86056929249611, longitude: 20.28546799414983 },
-  //       { latitude: 67.8602296537842, longitude: 20.285339248117115 },
-  //       { latitude: 67.8605288595756, longitude: 20.282356631692554 },
-  //       { latitude: 67.86186310892442, longitude: 20.281863105233814 },
-  //     ],
-  //     exclude: [
-  //       { latitude: 67.8610938449713, longitude: 20.283786412184277 },
-  //       { latitude: 67.86056822336235, longitude: 20.284151192610302 },
-  //       { latitude: 67.86070569477381, longitude: 20.285610314314404 },
-  //       { latitude: 67.86126365865037, longitude: 20.285116787855664 },
-  //     ],
-  //   },
-  // },
-
-  // {
-  //   title: "Public Safety Improvements",
-  //   description:
-  //     "Prescriptive measures for improving safety standards in public spaces, including lighting and security installations.",
-  //   issuanceTime: "2022-12",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.BlueprintsOrEffect },
-  //   area: {
-  //     include: [
-  //       ,
-  //       { latitude: 67.84962565527675, longitude: 20.245489935811296 },
-  //       { latitude: 67.8494153046243, longitude: 20.246777396138445 },
-  //       { latitude: 67.8483473412781, longitude: 20.24810777180983 },
-  //       { latitude: 67.84736024076348, longitude: 20.244030814107195 },
-  //       { latitude: 67.84915640890931, longitude: 20.24192796223952 },
-  //     ],
-  //     exclude: [
-  //       ,
-  //       { latitude: 67.84859349239242, longitude: 20.245099246720336 },
-  //       { latitude: 67.84824558835413, longitude: 20.245807349900268 },
-  //       { latitude: 67.84842763181209, longitude: 20.246440351227783 },
-  //       { latitude: 67.84871080770053, longitude: 20.24554985783484 },
-  //     ],
-  //   },
-  // },
-
-  // {
-  //   title: "Smart Waste Management Plan",
-  //   description:
-  //     "A prescriptive plan introducing a smart waste management system in Kiruna, including automated waste sorting and underground container networks for better efficiency.",
-  //   issuanceTime: "2024-09",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.BlueprintsOrEffect },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.84707709867558, longitude: 20.264701576459107 },
-  //       { latitude: 67.84591192853563, longitude: 20.26459428809851 },
-  //       { latitude: 67.84582292009063, longitude: 20.258242817151245 },
-  //       { latitude: 67.84583910346952, longitude: 20.256719322430786 },
-  //       { latitude: 67.84652688669507, longitude: 20.25590393089026 },
-  //       { latitude: 67.84684245103571, longitude: 20.257191391217408 },
-  //       { latitude: 67.84710137243465, longitude: 20.2578565790531 },
-  //     ],
-  //     exclude: [
-  //       { latitude: 67.84686825711366, longitude: 20.25811782855961 },
-  //       { latitude: 67.84627353680196, longitude: 20.25811782855961 },
-  //       { latitude: 67.84629376563306, longitude: 20.25982371349308 },
-  //       { latitude: 67.84690062240988, longitude: 20.25983444232914 },
-  //     ],
-  //   },
-  // },
-
-  // {
-  //   title: "Public Wi-Fi Infrastructure Project",
-  //   description:
-  //     "This project outlines the implementation of free public Wi-Fi across key public spaces in the new Kiruna city center, promoting digital accessibility for residents and visitors.",
-  //   issuanceTime: "2023-12",
-  //   type: DocumentType.Technical,
-  //   stakeholders: [Stakeholder.KirunaKommun, Stakeholder.Others],
-  //   scale: { type: ScaleType.Text },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.85296976637349, longitude: 20.24547513128649 },
-  //       { latitude: 67.85387574065886, longitude: 20.247363406432974 },
-  //       { latitude: 67.85470079375983, longitude: 20.24972375036608 },
-  //       { latitude: 67.85434489208082, longitude: 20.24998124243151 },
-  //       { latitude: 67.85309919342637, longitude: 20.2501958191527 },
-  //       { latitude: 67.85203139875776, longitude: 20.250109988464224 },
-  //       { latitude: 67.8526300169421, longitude: 20.245045977844107 },
-  //     ],
-  //     exclude: [
-  //       ,
-  //       { latitude: 67.85371954491548, longitude: 20.248683231816116 },
-  //       { latitude: 67.85333936101739, longitude: 20.247739094242874 },
-  //       { latitude: 67.85298343855918, longitude: 20.247009533390823 },
-  //       { latitude: 67.85278929674686, longitude: 20.24756743286592 },
-  //       { latitude: 67.85265986797407, longitude: 20.24786784027559 },
-  //       { latitude: 67.85311286553615, longitude: 20.24986340378267 },
-  //     ],
-  //   },
-  // },
-
-  {
+//48
+  ,{
     title: "Green Rooftop Initiative",
     description:
       "A design plan promoting the construction of green rooftops on public and residential buildings to improve urban air quality and energy efficiency.",
@@ -1041,7 +1063,7 @@ export const newDocuments = [
       ],
     },
   },
-
+//49
   {
     title: "Renewable Energy Storage Report",
     description:
@@ -1081,6 +1103,7 @@ export const newDocuments = [
     },
   },
   {
+    //50
     title: "ok - Winter Safety Infrastructure Plan",
     description:
       "A prescriptive plan addressing winter safety in Kiruna through improved snow removal techniques, heated pedestrian paths, and anti-slip road materials.",
