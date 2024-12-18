@@ -5,6 +5,7 @@ import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/CardDocument.scss";
 
+import { useLocation } from "react-router-dom";
 import API from "../API/API";
 import {
   Coordinates,
@@ -42,6 +43,8 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   } = useAppContext();
   const { setDocumentToDelete, setIsDeleted } = usePopupContext();
   const { setDocumentFormSelected } = useDocumentFormContext();
+
+  const location = useLocation();
 
   const [uploadsById, setUploadsByID] = useState<Upload[]>([]);
 
@@ -271,6 +274,7 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
             </button>
           )}
         </div>
+
         {user && props.isDocSelected && (
           <div className="btn-group">
             <button

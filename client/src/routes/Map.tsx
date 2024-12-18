@@ -1,7 +1,6 @@
 import { FC, useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import API from "../API/API";
-import Diagram from "../components/Diagram";
 import MapComponent from "../components/MapComponents/MapComponent";
 import NavHeader from "../components/NavHeader";
 import Sidebar from "../components/Sidebar";
@@ -139,15 +138,6 @@ const HomeMap: FC = (): JSX.Element => {
           }
         </div>
       </div>
-      <Diagram
-        documents={documents}
-        onDocumentClick={(d) => {
-          const { id: selectedDocumentId } = d;
-          const activeDoc = documents.find((d) => d.id == selectedDocumentId)!;
-          setDocSelected(activeDoc);
-          setSidebarOpen(true);
-        }}
-      />
     </>
   );
 };

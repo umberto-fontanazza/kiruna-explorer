@@ -23,6 +23,12 @@ const NavHeader: FC = (): JSX.Element => {
           Map
         </button>
         <button
+          className={location.pathname === "/diagram" ? "active" : ""}
+          onClick={() => navigate("/diagram")}
+        >
+          Diagram
+        </button>
+        <button
           className={location.pathname === "/documents" ? "active" : ""}
           onClick={() => navigate("/documents")}
         >
@@ -34,9 +40,6 @@ const NavHeader: FC = (): JSX.Element => {
         >
           Uploads
         </button>
-        <a className="diagram" href="#diagram">
-          Diagram
-        </a>
       </div>
       <div className={`${user ? "logged-in" : ""}`}>
         {user ? <span className="user-name">Hi {user.name}!</span> : null}
