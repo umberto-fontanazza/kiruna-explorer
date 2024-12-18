@@ -1,5 +1,11 @@
 import { Cluster } from "@googlemaps/markerclusterer";
+import { Dispatch, MutableRefObject, SetStateAction } from "react";
 import { CustomMarker, Document, fromDocumentTypeToIcon } from "./interfaces";
+import {
+  convertCoordinatesToMarkers,
+  convertPolygonAreaToPolygon,
+} from "./markersTools";
+import { getPolygonCentroid } from "./polygonsTools";
 
 const haveSameCoordinates = (documents: Document[]): boolean => {
   if (documents.length === 0) return false;
@@ -18,10 +24,30 @@ const haveSameCoordinates = (documents: Document[]): boolean => {
 const haveSameArea = (documents: Document[]): boolean => {
   if (documents.length === 0) return false;
 
-  const area = documents[0].area;
-  if (!area) return false;
+  const roundTo = (num: number, decimals: number): number =>
+    Math.round(num * Math.pow(10, decimals)) / Math.pow(10, decimals);
 
-  return documents.every((doc) => doc.area === area);
+  const centroids = documents.map((doc) => {
+    if (!doc.area) return null;
+    return getPolygonCentroid(doc.area);
+  });
+
+  if (centroids.includes(null)) return false;
+
+  const roundedCentroids = centroids.map((centroid) =>
+    centroid
+      ? {
+          lat: roundTo(centroid.lat, 9),
+          lng: roundTo(centroid.lng, 9),
+        }
+      : null,
+  );
+
+  return roundedCentroids.every(
+    (centroid) =>
+      centroid!.lat === roundedCentroids[0]!.lat &&
+      centroid!.lng === roundedCentroids[0]!.lng,
+  );
 };
 
 const samePosition = (documents: Document[]): boolean => {
@@ -119,8 +145,18 @@ export const renderClusterMarker = (
 
 const createDocumentElement = (
   doc: Document,
+  drawingMode: string,
+  drawnPolygon: SetStateAction<google.maps.Polygon | undefined>,
+  map: google.maps.Map | undefined,
+  previousClusterElement: MutableRefObject<HTMLDivElement | undefined>,
+  previousMarkerRef: MutableRefObject<
+    google.maps.marker.AdvancedMarkerElement | undefined
+  >,
+  previousPolygonRef: MutableRefObject<google.maps.Polygon | undefined>,
   setdocumentSelected: (doc: Document) => void,
-  setSidebarOpen: (isOpen: boolean) => void,
+  setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
+  setSidebarOpen?: (isOpen: boolean) => void,
+  setDrawnMarker?: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
 ): HTMLElement => {
   const docElement = document.createElement("div");
   docElement.className = "doc-item";
@@ -140,8 +176,51 @@ const createDocumentElement = (
   docElement.appendChild(docTitle);
 
   docElement.onclick = () => {
-    setdocumentSelected(doc);
-    setSidebarOpen(true);
+    // Resetta il marker precedente
+    if (previousMarkerRef?.current) {
+      const prevMarkerContent = previousMarkerRef.current
+        .content as HTMLElement;
+      if (prevMarkerContent) {
+        prevMarkerContent.classList.remove("iytig");
+        previousMarkerRef.current = undefined;
+      }
+    }
+
+    // Resetta il poligono precedente
+    if (previousPolygonRef?.current) {
+      previousPolygonRef.current.setMap(null);
+      previousPolygonRef.current = undefined;
+    }
+
+    // Rimuove la classe "selected" dall'elemento precedente
+    if (previousClusterElement.current) {
+      previousClusterElement.current.classList.remove("selected");
+    }
+
+    // Aggiorna il riferimento all'elemento corrente
+    previousClusterElement.current = docElement;
+
+    // Aggiunge la classe "selected" all'elemento corrente
+    docElement.classList.add("selected");
+
+    if (drawingMode !== "existing") {
+      // Logica specifica per il caso "non existing"
+      setdocumentSelected(doc);
+      setSidebarOpen?.(true);
+      if (drawnPolygon instanceof google.maps.Polygon) {
+        drawnPolygon.setMap(null);
+      }
+      setDrawnPolygon(undefined);
+    }
+
+    // Logica comune per aggiungere marker o poligoni sulla mappa
+    if (doc.area && map) {
+      const newPolygon = convertPolygonAreaToPolygon(doc.area, map);
+      setDrawnPolygon?.(newPolygon);
+    } else if (doc.coordinates && map) {
+      const newMarker = convertCoordinatesToMarkers(doc.coordinates);
+      setDrawnMarker?.(newMarker);
+    }
   };
 
   return docElement;
@@ -151,9 +230,18 @@ export const handleClusterClick = (
   _event: google.maps.MapMouseEvent,
   cluster: Cluster,
   map: google.maps.Map | undefined,
+  drawingMode: string,
+  drawnPolygon: SetStateAction<google.maps.Polygon | undefined>,
+  previousClusterElement: MutableRefObject<HTMLDivElement | undefined>,
+  previousMarkerRef: MutableRefObject<
+    google.maps.marker.AdvancedMarkerElement | undefined
+  >,
+  previousPolygonRef: MutableRefObject<google.maps.Polygon | undefined>,
   setdocumentSelected: (doc: Document) => void,
   setSidebarOpen: (isOpen: boolean) => void,
   setInfoWindow: (infoWindow: google.maps.InfoWindow) => void,
+  setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
+  setDrawnMarker?: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
 ) => {
   const currentZoom = map?.getZoom() ?? 0;
 
@@ -174,8 +262,16 @@ export const handleClusterClick = (
       if (doc) {
         const docElement = createDocumentElement(
           doc,
+          drawingMode,
+          drawnPolygon,
+          map,
+          previousClusterElement,
+          previousMarkerRef,
+          previousPolygonRef,
           setdocumentSelected,
-          setSidebarOpen,
+          setDrawnPolygon,
+          drawingMode !== "existing" ? setSidebarOpen : undefined,
+          drawingMode == "existing" ? setDrawnMarker : undefined,
         );
         content.appendChild(docElement);
       }

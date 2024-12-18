@@ -13,6 +13,7 @@ export const useDrawingTools = (
   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
   setDrawnMarker: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
   setActiveButton: Dispatch<SetStateAction<string>>,
+  setLastSelectedElement?: Dispatch<SetStateAction<string>>,
 ) => {
   const { positionMode, alertRef } = useAppContext();
   const [drawingMode, setDrawingMode] =
@@ -76,6 +77,7 @@ export const useDrawingTools = (
             newPolygon.setEditable(true);
             newPolygon.setDraggable(true);
             setDrawnPolygon(newPolygon);
+            setLastSelectedElement?.("polygon");
           } else {
             if (isPolygonInsidePolygon(newPolygon, drawnPolygon)) {
               const adjustedPath = rewindRing(path, false);
@@ -86,6 +88,7 @@ export const useDrawingTools = (
               drawnPolygon.setEditable(true);
               drawnPolygon.setDraggable(true);
               setDrawnPolygon(drawnPolygon);
+              setLastSelectedElement?.("polygon");
             } else {
               newPolygon.setMap(null);
               alertRef.current?.showAlert(
@@ -109,6 +112,7 @@ export const useDrawingTools = (
         setActiveButton("");
         setDrawnMarker(marker);
         setDrawingMode(null);
+        setLastSelectedElement?.("marker");
       },
     );
 
