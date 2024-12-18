@@ -90,18 +90,22 @@ const MapComponent: FC<MapComponentProps> = (props) => {
   });
 
   useEffect(() => {
-    if (!map || !isLoaded || !infoWindow) return;
-    map.addListener("click", () => {
-      infoWindow.close();
-    });
     if (!map || !isLoaded || !docSelected) {
       drawnMarker?.setMap(null);
       drawnPolygon?.setMap(null);
       setDrawnPolygon(undefined);
       setDrawnMarker(undefined);
     }
+  }, [docSelected]);
+
+  useEffect(() => {
+    if (!map || !isLoaded || !infoWindow) return;
+    map.addListener("click", () => {
+      infoWindow.close();
+    });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [infoWindow, docSelected]);
+  }, [infoWindow]);
 
   const isSelectedOrLinked = (doc: Document) => {
     const linkedIDs: number[] =
