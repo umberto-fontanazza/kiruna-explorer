@@ -57,4 +57,9 @@
       border: 0.1rem solid Color.$first;
     }
   }
+
+  a.diagram {
+    @extend button;
+    text-decoration: none;
+  }
 }
