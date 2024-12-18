@@ -12,7 +12,6 @@ interface SecondPageModalProps {
 }
 
 const SecondPageModal: FC<SecondPageModalProps> = ({
-  documentForm,
   tableLinks,
   setTableLinks,
   goBack,

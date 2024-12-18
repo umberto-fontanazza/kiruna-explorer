@@ -104,11 +104,7 @@ const createAdvancedMarker = (
   });
 };
 
-export const renderClusterMarker = (
-  cluster: Cluster,
-  stats: any,
-  map: google.maps.Map,
-) => {
+export const renderClusterMarker = (cluster: Cluster) => {
   const clusterDocuments =
     cluster.markers?.map((marker) => (marker as CustomMarker).document) || [];
   const result = samePosition(

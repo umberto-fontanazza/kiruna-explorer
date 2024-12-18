@@ -36,7 +36,7 @@ const Minimap: FC<MinimapProps> = ({
   const [municipalArea, setMunicipalArea] = useState<
     google.maps.Polygon[] | undefined
   >(undefined);
-  const [drawingMode, setDrawingMode] = useState<string>("");
+  const [, setDrawingMode] = useState<string>("");
   const [activeButton, setActiveButton] = useState<string>("");
   const [saved, setSaved] = useState<boolean>(false);
   const { isLoaded } = useJsApiLoader({

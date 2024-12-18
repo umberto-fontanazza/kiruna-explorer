@@ -79,7 +79,7 @@ const UploadBox: React.FC<UploadBoxProps> = ({ setFilesToUpload }) => {
 
   return (
     <>
-      <Alert ref={alertRef} timeout={5000} />
+      <Alert ref={alertRef} />
       <div
         className="upload-box"
         onDragOver={handleDragOver}

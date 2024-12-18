@@ -13,6 +13,8 @@ import { sessionRouter } from "./router/sessionRouter";
 import { uploadRouter } from "./router/uploadRouter";
 import { userRouter } from "./router/userRouter";
 
+import path from "path";
+
 dotenv.config();
 
 const app = express();
@@ -46,6 +48,13 @@ app.use("/documents", documentRouter);
 app.use("/users", userRouter);
 app.use("/sessions", sessionRouter);
 app.use("/uploads", uploadRouter);
+
+// Production
+app.use(express.static(path.join(__dirname, "../dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});
 
 // Error handler middleware. Do not move
 app.use(sinkErrorHandler);
