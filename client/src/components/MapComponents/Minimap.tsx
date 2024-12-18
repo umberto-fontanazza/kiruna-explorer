@@ -2,10 +2,13 @@ import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { FC, useEffect, useState } from "react";
 import { useAppContext } from "../../context/appContext";
 import "../../styles/MapComponentsStyles/Minimap.scss";
-import { useDrawingTools } from "../../utils/drawingTools";
+import { rewindRing, useDrawingTools } from "../../utils/drawingTools";
 import { Coordinates, Document, PolygonArea } from "../../utils/interfaces";
 import { libraries, mapOptions } from "../../utils/map";
-import { createMarker } from "../../utils/markersTools";
+import {
+  convertCoordinatesToMarkers,
+  createMarker,
+} from "../../utils/markersTools";
 import { PositionMode } from "../../utils/modes";
 import { createArea } from "../../utils/polygonsTools";
 import DrawingControls from "../DrawingControls";
@@ -63,17 +66,65 @@ const Minimap: FC<MinimapProps> = ({
           false,
           minimap,
           positionMode,
+          drawingMode,
           setDrawnMarker,
+          setDrawnPolygon,
         );
+        if (positionMode === PositionMode.Update) {
+          const newMarker = convertCoordinatesToMarkers(
+            documentSelected.coordinates,
+          );
+          setDrawnMarker(newMarker);
+        }
       } else {
-        createArea(documentSelected, minimap, positionMode);
+        const area = createArea(documentSelected, minimap, positionMode);
+        if (area && positionMode === PositionMode.Update) {
+          const paths = area.getPaths();
+          const adjustedPaths = new google.maps.MVCArray(
+            paths.getArray().map((path, index) => {
+              const rewindClockwise = index === 0;
+              return new google.maps.MVCArray(
+                rewindRing(path.getArray(), rewindClockwise),
+              );
+            }),
+          );
+          area.setPaths(adjustedPaths);
+          setDrawnPolygon(area);
+        }
       }
     }
-  }, [documentLocation, minimap, documentSelected, positionMode]);
+  }, [minimap, documentSelected, documentLocation, positionMode]);
 
   useEffect(() => {
     if (documentSelected && saved && positionMode === PositionMode.Update) {
-      if (drawnPolygon) {
+      if (municipalArea) {
+        const newPolygonArea: PolygonArea = {
+          include: [],
+          exclude: [],
+        };
+
+        municipalArea.forEach((polygon, i) => {
+          const paths = polygon.getPaths();
+
+          if (i === 16) {
+            paths.forEach((path, j) => {
+              const coordinates = path.getArray().map((latLng) => ({
+                latitude: latLng.lat(),
+                longitude: latLng.lng(),
+              }));
+
+              if (i === 16 && j === 0) {
+                newPolygonArea.include = coordinates;
+              } else {
+                newPolygonArea.exclude.push(coordinates);
+              }
+            });
+          }
+        });
+        municipalArea.forEach((area) => area.setMap(null));
+        setMunicipalArea(undefined);
+        handleEditPositionModeConfirm(documentSelected!, newPolygonArea);
+      } else if (drawnPolygon) {
         const includePath = drawnPolygon.getPath();
         const excludePaths = drawnPolygon.getPaths().getArray().slice(1);
         const newPolygonArea: PolygonArea = {
@@ -103,6 +154,7 @@ const Minimap: FC<MinimapProps> = ({
           longitude: markerPos.lng(),
         };
         handleEditPositionModeConfirm(documentSelected, posToUpdate);
+        drawnMarker.setMap(null);
       }
       setDrawnMarker(undefined);
       setDrawnPolygon(undefined);
@@ -197,6 +249,7 @@ const Minimap: FC<MinimapProps> = ({
           setDrawingMode={setDrawingMode}
           municipalArea={municipalArea}
           setMunicipalArea={setMunicipalArea}
+          setDrawnPolygon={setDrawnPolygon}
         />
         <GoogleMap
           id="minimap"
