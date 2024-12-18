@@ -4,7 +4,7 @@ import { Stakeholder } from "../server/src/model/stakeholder";
 
 export const newDocuments = [
   {
-    title: "ok - Urban Development Plan",
+    title: "Urban Development Plan",
     description: "A detailed design for the expansion of central Kiruna.",
     issuanceTime: "2024-11",
     type: DocumentType.Design,
@@ -13,7 +13,7 @@ export const newDocuments = [
     coordinates: { latitude: 67.8558, longitude: 20.2253 },
   },
   {
-    title: "ok - Mining Impact Study",
+    title: "Mining Impact Study",
     description: "Technical analysis of mining effects on surrounding areas.",
     issuanceTime: "2023",
     type: DocumentType.MaterialEffect,
@@ -51,7 +51,7 @@ export const newDocuments = [
     },
   },
   {
-    title: "ok - Works restart in the mining area",
+    title: "Works restart in the mining area",
     description: "After a 4 days of stop the works resterded",
     issuanceTime: "2003-05",
     type: DocumentType.Informative,
@@ -89,7 +89,7 @@ export const newDocuments = [
     },
   },
   {
-    title: "ok - Cultural Heritage Preservation",
+    title: "Cultural Heritage Preservation",
     description:
       "Prescriptive measures for preserving Kiruna's cultural sites.",
     issuanceTime: "2023-08",
@@ -115,7 +115,7 @@ export const newDocuments = [
     },
   },
   {
-    title: "ok - New School Construction",
+    title: "New School Construction",
     description: "Plans for the construction of a new school building.",
     issuanceTime: "2024-01",
     type: DocumentType.Technical,
@@ -124,28 +124,17 @@ export const newDocuments = [
     coordinates: { latitude: 67.8567, longitude: 20.2244 },
   },
   {
-    title: "ok - Energy Efficiency Standards",
+    title: "Energy Efficiency Standards",
     description:
       "Technical guidelines for improving energy usage in buildings.",
     issuanceTime: "2021",
     type: DocumentType.Technical,
     stakeholders: [Stakeholder.Others],
     scale: { type: ScaleType.BlueprintsOrEffect },
-    area: {
-      include: [
-        { latitude: 67.84883315002244, longitude: 20.18996209059532 },
-        { latitude: 67.85048098608428, longitude: 20.18721550856407 },
-        { latitude: 67.85112818322777, longitude: 20.18245190535362 },
-        { latitude: 67.85175918315123, longitude: 20.18167942915733 },
-        { latitude: 67.8553992339756, longitude: 20.19665688429649 },
-        { latitude: 67.84907327028522, longitude: 20.19841641341026 },
-        { latitude: 67.846856350174, longitude: 20.196613968952253 },
-      ],
-      exclude: [],
-    },
+    coordinates: { latitude: 67.8567, longitude: 20.2244 },
   },
   {
-    title: "ok - Tourism Strategy Report",
+    title: "Tourism Strategy Report",
     description: "Informative study to boost tourism in Kiruna.",
     issuanceTime: "2022",
     type: DocumentType.Informative,
@@ -154,7 +143,7 @@ export const newDocuments = [
     coordinates: { latitude: 67.8539, longitude: 20.227 },
   },
   {
-    title: "ok - Safety Regulations Update",
+    title: "Safety Regulations Update",
     description: "New safety rules for underground mining operations.",
     issuanceTime: "2023-12",
     type: DocumentType.Prescriptive,
@@ -163,7 +152,7 @@ export const newDocuments = [
     coordinates: { latitude: 67.8545, longitude: 20.2285 },
   },
   {
-    title: "ok - Urban Relocation Plan",
+    title: "Urban Relocation Plan",
     description: "Guidelines for moving parts of the city due to mining.",
     issuanceTime: "2024-06",
     type: DocumentType.Design,
@@ -188,7 +177,7 @@ export const newDocuments = [
     },
   },
   {
-    title: "ok - Environmental Impact Analysis",
+    title: "Environmental Impact Analysis",
     description: "Analysis of environmental changes in the region.",
     issuanceTime: "2020-09",
     type: DocumentType.MaterialEffect,
@@ -215,7 +204,7 @@ export const newDocuments = [
     },
   },
   {
-    title: "ok - Gruvstadspark 2, etapp 5, Kyrkan",
+    title: "Gruvstadspark 2, etapp 5, Kyrkan",
     description:
       "The last detailed plan of the second planning phase concerns the area surrounding the Kiruna Church. Situated within a park, the area includes only six buildings, half of which serve religious functions. The plan also specifies that the church will be dismantled between 2025 and 2026 and reassembled at its new site by 2029.",
     issuanceTime: "2021-09-04",
@@ -272,7 +261,7 @@ export const newDocuments = [
     },
   },
   {
-    title: "ok - Demolition documentation, Kiruna City Hall",
+    title: "Demolition documentation, Kiruna City Hall",
     description:
       "This document was created to preserve the memory of the symbolic building before its demolition in April 2019. Conducted by the Norrbotten Museum, the detailed 162-page study analyzed the building's materials, both physically and chemically, taking advantage of the demolition to explore aspects that couldn't be examined while it was in use. This meticulous effort reflects a commitment to preserving knowledge of every detail of the structure.",
     issuanceTime: "2020-11-26",
@@ -291,59 +280,48 @@ export const newDocuments = [
       exclude: [],
     },
   },
-  // {
-  //   title: "Deformation forecast",
-  //   description:
-  //     "The third deformation forecast was published in 2019, five years after the second. The line has not moved; what changes, as in the previous version, are the timing of the interventions and the shape of the areas underlying the deformation zone.",
-  //   issuanceTime: "2019-04",
-  //   type: DocumentType.Technical,
-  //   stakeholders: [Stakeholder.Lkab],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 1500 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8653, longitude: 20.2052 },
-  //       { latitude: 67.8655, longitude: 20.2054 },
-  //       { latitude: 67.8654, longitude: 20.2055 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
-  // {
-  //   title: "Detailed plan for Gruvstaspark 2, etapp 3, del av SJ-området m m.",
-  //   description:
-  //     "The third Detailed Plan of the second demolition phase covers a narrow, elongated area straddling the old railway. Like all areas within the 'Gruvstadpark 2' zone, its sole designated land use is for mining activities, although it will temporarily be used as a park during an interim phase.",
-  //   issuanceTime: "2018-10",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 1300 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8632, longitude: 20.206 },
-  //       { latitude: 67.8634, longitude: 20.2062 },
-  //       { latitude: 67.8633, longitude: 20.2063 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
-  // {
-  //   title: "Vision 2099",
-  //   description:
-  //     "Vision 2099 is to be considered the first project for the new city of Kiruna. It was created by the municipality in response to the letter from LKAB. In these few lines, all the main aspects and expectations of the municipality for the new city are condensed. The document, which despite being a project document is presented anonymously, had the strength to influence the design process. The principles it contains proved to be fundamental in subsequent planning documents.",
-  //   issuanceTime: "2004",
-  //   type: DocumentType.Design,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.Text },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8593, longitude: 20.2556 },
-  //       { latitude: 67.8595, longitude: 20.2558 },
-  //       { latitude: 67.8594, longitude: 20.2559 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
   {
-    title: "ok - Detail plan for square and commercial street",
+    title: "Deformation forecast",
+    description:
+      "The third deformation forecast was published in 2019, five years after the second. The line has not moved; what changes, as in the previous version, are the timing of the interventions and the shape of the areas underlying the deformation zone.",
+    issuanceTime: "2019-04",
+    type: DocumentType.Technical,
+    stakeholders: [Stakeholder.Lkab],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 1500 },
+    area: {
+      include: [
+        { latitude: 67.85316538461178, longitude: 20.239561214444333 },
+        { latitude: 67.83717575427852, longitude: 20.243509426114255 },
+        { latitude: 67.83510342125422, longitude: 20.227544918057614 },
+        { latitude: 67.85840656175391, longitude: 20.209863796231442 },
+        { latitude: 67.86073559568011, longitude: 20.214326992032223 },
+        { latitude: 67.86008866515158, longitude: 20.223253383633786 },
+      ],
+      exclude: [],
+    },
+  },
+  {
+    title: "Detailed plan for Gruvstaspark 2, etapp 3, del av SJ-området m m.",
+    description:
+      "The third Detailed Plan of the second demolition phase covers a narrow, elongated area straddling the old railway. Like all areas within the 'Gruvstadpark 2' zone, its sole designated land use is for mining activities, although it will temporarily be used as a park during an interim phase.",
+    issuanceTime: "2018-10",
+    type: DocumentType.Prescriptive,
+    stakeholders: [Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 1300 },
+    coordinates: { latitude: 67.8558, longitude: 20.2253 },
+  },
+  {
+    title: "Vision 2099",
+    description:
+      "Vision 2099 is to be considered the first project for the new city of Kiruna. It was created by the municipality in response to the letter from LKAB. In these few lines, all the main aspects and expectations of the municipality for the new city are condensed. The document, which despite being a project document is presented anonymously, had the strength to influence the design process. The principles it contains proved to be fundamental in subsequent planning documents.",
+    issuanceTime: "2004",
+    type: DocumentType.Design,
+    stakeholders: [Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.Text },
+    coordinates: { latitude: 67.8558, longitude: 20.2253 },
+  },
+  {
+    title: "Detail plan for square and commercial street",
     description:
       "This plan, approved in July 2016, is the first detailed plan to be implemented from the new masterplan (Adjusted development plan). The document defines the entire area near the town hall, comprising a total of 9 blocks known for their density. Among these are the 6 buildings that will face the main square. The functions are mixed, both public and private, with residential being prominent, as well as the possibility of incorporating accommodation facilities such as hotels. For all buildings in this plan, the only height limit is imposed by air traffic.",
     issuanceTime: "2016-06-22",
@@ -362,91 +340,66 @@ export const newDocuments = [
       exclude: [],
     },
   },
-  // {
-  //   title: "Construction of new city hall begins",
-  //   description:
-  //     "The Kiruna Town Hall was the first building to be rebuild in the new town center in 2015. It remained isolated for quite some time due to a slowdown in mining activities.",
-  //   issuanceTime: "2015",
-  //   type: DocumentType.MaterialEffect,
-  //   stakeholders: [Stakeholder.Lkab],
-  //   scale: { type: ScaleType.BlueprintsOrEffect },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8487, longitude: 20.3028 },
-  //       { latitude: 67.8489, longitude: 20.303 },
-  //       { latitude: 67.8488, longitude: 20.3031 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
-  // {
-  //   title: "Detailed Overview Plan for the Central Area of Kiruna 2014.",
-  //   description:
-  //     "The Detailed Overview Plan is one of the three planning instruments available to Swedish administrations and represents an intermediate scale. Like the Overview Plan, compliance with it is not mandatory, but it serves as a supporting plan for Detailed Plans, sharing the characteristic of regulating a specific area of the Kiruna municipality rather than its entire extent, as the Overview Plan does. This specific plan focuses on the central area of Kiruna and its surroundings, incorporating all the projections of the Development Plan into a prescriptive tool.",
-  //   issuanceTime: "2014-06",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 300 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8352, longitude: 20.2591 },
-  //       { latitude: 67.8354, longitude: 20.2593 },
-  //       { latitude: 67.8353, longitude: 20.2594 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
-  // {
-  //   title: "Detailed plan for LINBANAN 1.",
-  //   description:
-  //     "This is the first Detailed Plan for the new city center, covering a very small area. It regulates the use of a portion of land that will host a single building. Its boundaries coincide with the outer footprint of the new Town Hall, 'Kristallen,' the first building to be constructed in the new Kiruna.",
-  //   issuanceTime: "2014-03",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.KirunaKommun],
-  //   scale: { type: ScaleType.Text },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8487, longitude: 20.2965 },
-  //       { latitude: 67.8491, longitude: 20.2969 },
-  //       { latitude: 67.8489, longitude: 20.297 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
-  // {
-  //   title: "Mail to Kiruna kommun",
-  //   description:
-  //     "This document is considered the act that initiates the process of relocating Kiruna. The company communicates its intention to construct a new mining level at a depth of 1,365 meters. Along with this, LKAB urges the municipality to begin the necessary planning to relocate the city, referring to a series of meetings held in previous months between the two stakeholders.",
-  //   issuanceTime: "2004-03-19",
-  //   type: DocumentType.Prescriptive,
-  //   stakeholders: [Stakeholder.Lkab],
-  //   scale: { type: ScaleType.Text },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8567, longitude: 20.2528 },
-  //       { latitude: 67.8571, longitude: 20.2532 },
-  //       { latitude: 67.8569, longitude: 20.2534 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
-  // {
-  //   title: "Kiruna Church closes",
-  //   description:
-  //     "On June 2, the Kiruna Church was closed to begin the necessary preparations for its relocation, following a solemn ceremony. The relocation is scheduled for the summer of 2025 and will take two days. Both the new site and the route for the move have already been determined. A significant period will pass between the relocation and the reopening of the church, voted 'Sweden's most beautiful building constructed before 1950.'",
-  //   issuanceTime: "2024-06-02",
-  //   type: DocumentType.MaterialEffect,
-  //   stakeholders: [Stakeholder.Lkab],
-  //   scale: { type: ScaleType.BlueprintsOrEffect },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.8516, longitude: 20.233 },
-  //       { latitude: 67.852, longitude: 20.2332 },
-  //       { latitude: 67.8518, longitude: 20.2334 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
+  {
+    title: "Construction of new city hall begins",
+    description:
+      "The Kiruna Town Hall was the first building to be rebuild in the new town center in 2015. It remained isolated for quite some time due to a slowdown in mining activities.",
+    issuanceTime: "2015",
+    type: DocumentType.MaterialEffect,
+    stakeholders: [Stakeholder.Lkab],
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    coordinates: { latitude: 67.85515797343452, longitude: 20.287129275273376 },
+  },
+  {
+    title: "Detailed Overview Plan for the Central Area of Kiruna 2014.",
+    description:
+      "The Detailed Overview Plan is one of the three planning instruments available to Swedish administrations and represents an intermediate scale. Like the Overview Plan, compliance with it is not mandatory, but it serves as a supporting plan for Detailed Plans, sharing the characteristic of regulating a specific area of the Kiruna municipality rather than its entire extent, as the Overview Plan does. This specific plan focuses on the central area of Kiruna and its surroundings, incorporating all the projections of the Development Plan into a prescriptive tool.",
+    issuanceTime: "2014-06",
+    type: DocumentType.Prescriptive,
+    stakeholders: [Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 300 },
+    coordinates: { latitude: 67.85515797343452, longitude: 20.287129275273376 },
+  },
+  {
+    title: "Detailed plan for LINBANAN 1.",
+    description:
+      "This is the first Detailed Plan for the new city center, covering a very small area. It regulates the use of a portion of land that will host a single building. Its boundaries coincide with the outer footprint of the new Town Hall, 'Kristallen,' the first building to be constructed in the new Kiruna.",
+    issuanceTime: "2014-03",
+    type: DocumentType.Prescriptive,
+    stakeholders: [Stakeholder.KirunaKommun],
+    scale: { type: ScaleType.Text },
+    coordinates: { latitude: 67.85515797343452, longitude: 20.287129275273376 },
+  },
+  {
+    title: "Mail to Kiruna kommun",
+    description:
+      "This document is considered the act that initiates the process of relocating Kiruna. The company communicates its intention to construct a new mining level at a depth of 1,365 meters. Along with this, LKAB urges the municipality to begin the necessary planning to relocate the city, referring to a series of meetings held in previous months between the two stakeholders.",
+    issuanceTime: "2004-03-19",
+    type: DocumentType.Prescriptive,
+    stakeholders: [Stakeholder.Lkab],
+    scale: { type: ScaleType.Text },
+    area: {
+      include: [
+        { latitude: 67.85316538461178, longitude: 20.239561214444333 },
+        { latitude: 67.83717575427852, longitude: 20.243509426114255 },
+        { latitude: 67.83510342125422, longitude: 20.227544918057614 },
+        { latitude: 67.85840656175391, longitude: 20.209863796231442 },
+        { latitude: 67.86073559568011, longitude: 20.214326992032223 },
+        { latitude: 67.86008866515158, longitude: 20.223253383633786 },
+      ],
+      exclude: [],
+    },
+  },
+  {
+    title: "Kiruna Church closes",
+    description:
+      "On June 2, the Kiruna Church was closed to begin the necessary preparations for its relocation, following a solemn ceremony. The relocation is scheduled for the summer of 2025 and will take two days. Both the new site and the route for the move have already been determined. A significant period will pass between the relocation and the reopening of the church, voted 'Sweden's most beautiful building constructed before 1950.'",
+    issuanceTime: "2024-06-02",
+    type: DocumentType.MaterialEffect,
+    stakeholders: [Stakeholder.Lkab],
+    scale: { type: ScaleType.BlueprintsOrEffect },
+    coordinates: { latitude: 67.8516, longitude: 20.233 },
+  },
   {
     title: "Construction of Block 1 begins",
     description:
@@ -511,23 +464,32 @@ export const newDocuments = [
   //     exclude: [],
   //   },
   // },
-  // {
-  //   title: "Adjusted development plan",
-  //   description:
-  //     "This document is the update of the Development Plan, one year after its creation, modifications are made to the general master plan, which is published under the name 'Adjusted Development Plan91,' and still represents the version used today after 10 years. Certainly, there are no drastic differences compared to the previous plan, but upon careful comparison, several modified elements stand out. For example, the central square now takes its final shape, as well as the large school complex just north of it, which appears for the first time.",
-  //   issuanceTime: "2015",
-  //   type: DocumentType.Design,
-  //   stakeholders: [Stakeholder.KirunaKommun, Stakeholder.WhiteArkitekter],
-  //   scale: { type: ScaleType.ArchitecturalScale, ratio: 100 },
-  //   area: {
-  //     include: [
-  //       { latitude: 67.852, longitude: 20.294 },
-  //       { latitude: 67.8525, longitude: 20.2955 },
-  //       { latitude: 67.8518, longitude: 20.2945 },
-  //     ],
-  //     exclude: [],
-  //   },
-  // },
+  {
+    title: "Adjusted development plan",
+    description:
+      "This document is the update of the Development Plan, one year after its creation, modifications are made to the general master plan, which is published under the name 'Adjusted Development Plan91,' and still represents the version used today after 10 years. Certainly, there are no drastic differences compared to the previous plan, but upon careful comparison, several modified elements stand out. For example, the central square now takes its final shape, as well as the large school complex just north of it, which appears for the first time.",
+    issuanceTime: "2015",
+    type: DocumentType.Design,
+    stakeholders: [Stakeholder.KirunaKommun, Stakeholder.WhiteArkitekter],
+    scale: { type: ScaleType.ArchitecturalScale, ratio: 100 },
+    area: {
+      include: [
+        { latitude: 67.84830888510378, longitude: 20.277259119407915 },
+        { latitude: 67.85008879978339, longitude: 20.27816034163692 },
+        { latitude: 67.850266783781, longitude: 20.28086400832393 },
+        { latitude: 67.85381000068215, longitude: 20.281593569175982 },
+        { latitude: 67.85546008234459, longitude: 20.284039743797564 },
+        { latitude: 67.8549100680977, longitude: 20.292451151268267 },
+        { latitude: 67.8530819863569, longitude: 20.29335237349727 },
+        { latitude: 67.85207890716835, longitude: 20.295455225364947 },
+        { latitude: 67.85584831988426, longitude: 20.29687143172481 },
+        { latitude: 67.85282313134186, longitude: 20.309273966209673 },
+        { latitude: 67.85104342533077, longitude: 20.31313634719112 },
+        { latitude: 67.84790434009722, longitude: 20.316440828697466 },
+      ],
+      exclude: [],
+    },
+  },
   // {
   //   title: "Deformation forecast",
   //   description:
@@ -818,7 +780,7 @@ export const newDocuments = [
   // {
   //40
   {
-    title: "ok - Road Infrastructure Expansion Plan",
+    title: "Road Infrastructure Expansion Plan",
     description:
       "Design and implementation plan for expanding key roads to accommodate increased traffic in new urban zones.",
     issuanceTime: "2023-02",
@@ -850,7 +812,7 @@ export const newDocuments = [
   },
   //41
   {
-    title: "ok - Affordable Housing Program",
+    title: "Affordable Housing Program",
     description:
       "A design initiative to build affordable housing units for low-income residents, ensuring accessibility and sustainability.",
     issuanceTime: "2021-09",
@@ -885,7 +847,7 @@ export const newDocuments = [
   },
   //42
   {
-    title: "ok - Heritage Building Relocation Plan",
+    title: "Heritage Building Relocation Plan",
     description:
       "A relocation strategy for heritage buildings, including logistics and timelines for safely moving structures of cultural significance.",
     issuanceTime: "2023-04",
@@ -920,7 +882,7 @@ export const newDocuments = [
   },
   //43
   {
-    title: "ok - Public Park Development",
+    title: "Public Park Development",
     description:
       "This plan outlines the design and construction of a large public park with recreational and green areas for the community.",
     issuanceTime: "2024-01",
@@ -954,7 +916,7 @@ export const newDocuments = [
   },
   //44
   {
-    title: "ok - Noise Pollution Control Measures",
+    title: "Noise Pollution Control Measures",
     description:
       "Technical guidelines for reducing noise pollution in residential and public areas affected by mining activities.",
     issuanceTime: "2023-07",
@@ -981,7 +943,7 @@ export const newDocuments = [
   },
   //45
   {
-    title: "ok - Public Safety Improvements",
+    title: "Public Safety Improvements",
     description:
       "Prescriptive measures for improving safety standards in public spaces, including lighting and security installations.",
     issuanceTime: "2022-12",
@@ -1014,7 +976,7 @@ export const newDocuments = [
   },
   //46
   {
-    title: "ok - Smart Waste Management Plan",
+    title: "Smart Waste Management Plan",
     description:
       "A prescriptive plan introducing a smart waste management system in Kiruna, including automated waste sorting and underground container networks for better efficiency.",
     issuanceTime: "2024-09",
@@ -1043,7 +1005,7 @@ export const newDocuments = [
   },
   //47
   {
-    title: "ok - Public Wi-Fi Infrastructure Project",
+    title: "Public Wi-Fi Infrastructure Project",
     description:
       "This project outlines the implementation of free public Wi-Fi across key public spaces in the new Kiruna city center, promoting digital accessibility for residents and visitors.",
     issuanceTime: "2023-12",
@@ -1078,7 +1040,7 @@ export const newDocuments = [
   },
   //48
   {
-    title: "ok - Green Rooftop Initiative",
+    title: "Green Rooftop Initiative",
     description:
       "A design plan promoting the construction of green rooftops on public and residential buildings to improve urban air quality and energy efficiency.",
     issuanceTime: "2024-07",
@@ -1113,7 +1075,7 @@ export const newDocuments = [
   },
   //49
   {
-    title: "ok - Renewable Energy Storage Report",
+    title: "Renewable Energy Storage Report",
     description:
       "A technical document analyzing energy storage solutions, including battery systems, to support the city's transition to renewable energy sources.",
     issuanceTime: "2023-10",
@@ -1152,7 +1114,7 @@ export const newDocuments = [
   },
   {
     //50
-    title: "ok - Winter Safety Infrastructure Plan",
+    title: "Winter Safety Infrastructure Plan",
     description:
       "A prescriptive plan addressing winter safety in Kiruna through improved snow removal techniques, heated pedestrian paths, and anti-slip road materials.",
     issuanceTime: "2024-01",
