@@ -1002,33 +1002,34 @@ export const newDocuments = [
     type: DocumentType.Design,
     stakeholders: [Stakeholder.WhiteArkitekter, Stakeholder.KirunaKommun],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 200 },
-    area: {
-      include: [
-        ,
-        { latitude: 67.85007965050973, longitude: 20.30067266259144 },
-        { latitude: 67.85078348865999, longitude: 20.30374110970448 },
-        { latitude: 67.85127697170745, longitude: 20.30644477639149 },
-        { latitude: 67.85045988755056, longitude: 20.307775152062877 },
-        { latitude: 67.84936770065772, longitude: 20.30923427376698 },
-        { latitude: 67.84914116660194, longitude: 20.30747474465321 },
-        { latitude: 67.84878518006902, longitude: 20.30419172081898 },
-        { latitude: 67.84828355345998, longitude: 20.30367673668812 },
-        { latitude: 67.84828355345998, longitude: 20.300071847772106 },
-        { latitude: 67.84841300652086, longitude: 20.29749692711781 },
-        { latitude: 67.84925443390486, longitude: 20.297668588494762 },
-      ],
-      exclude: [
-        [
-          { latitude: 67.84939728586292, longitude: 20.30329863815308 },
-          { latitude: 67.84882690199171, longitude: 20.304253504562382 },
-          { latitude: 67.84909389192316, longitude: 20.305691168594365 },
-          { latitude: 67.84995552040104, longitude: 20.304392979431157 },
-          { latitude: 67.85054205678951, longitude: 20.303234265136723 },
-          { latitude: 67.85031148907215, longitude: 20.302000448989872 },
+    {
+      area: {
+        include: [
+          { latitude: 67.85007965050973, longitude: 20.30067266259144 },
+          { latitude: 67.85078348865999, longitude: 20.30374110970448 },
+          { latitude: 67.85127697170745, longitude: 20.30644477639149 },
+          { latitude: 67.85045988755056, longitude: 20.307775152062877 },
+          { latitude: 67.84936770065772, longitude: 20.30923427376698 },
+          { latitude: 67.84914116660194, longitude: 20.30747474465321 },
+          { latitude: 67.84878518006902, longitude: 20.30419172081898 },
+          { latitude: 67.84828355345998, longitude: 20.30367673668812 },
+          { latitude: 67.84828355345998, longitude: 20.300071847772106 },
+          { latitude: 67.84841300652086, longitude: 20.29749692711781 },
+          { latitude: 67.84925443390486, longitude: 20.297668588494762 }
         ],
-      ],
+        exclude: [
+          [
+            { latitude: 67.84939728586292, longitude: 20.30329863815308 },
+            { latitude: 67.84882690199171, longitude: 20.304253504562382 },
+            { latitude: 67.84909389192316, longitude: 20.305691168594365 },
+            { latitude: 67.84995552040104, longitude: 20.304392979431157 },
+            { latitude: 67.85054205678951, longitude: 20.303234265136723 },
+            { latitude: 67.85031148907215, longitude: 20.302000448989872 }
+          ],
+        ],
+      },
     },
-  },
+    
   {
     title: "Renewable Energy Storage Report",
     description:
@@ -1052,20 +1053,21 @@ export const newDocuments = [
         { latitude: 67.85484858336883, longitude: 20.227539503561722 },
         { latitude: 67.85518830047843, longitude: 20.225973093497025 },
         { latitude: 67.85547139428904, longitude: 20.22412773369478 },
-        { latitude: 67.85572213165108, longitude: 20.222754442679154 },
+        { latitude: 67.85572213165108, longitude: 20.222754442679154 }
       ],
       exclude: [
-        { latitude: 67.85571472847796, longitude: 20.226416403669557 },
-        { latitude: 67.8552375161909, longitude: 20.226201826948365 },
-        { latitude: 67.85510001253297, longitude: 20.227017218488893 },
-        { latitude: 67.85490588834138, longitude: 20.227939898390016 },
-        { latitude: 67.85536693065762, longitude: 20.228218848127565 },
-        { latitude: 67.85601399221748, longitude: 20.22834759416028 },
-        { latitude: 67.85611913802492, longitude: 20.226695353407106 },
+        [
+          { latitude: 67.85571472847796, longitude: 20.226416403669557 },
+          { latitude: 67.8552375161909, longitude: 20.226201826948365 },
+          { latitude: 67.85510001253297, longitude: 20.227017218488893 },
+          { latitude: 67.85490588834138, longitude: 20.227939898390016 },
+          { latitude: 67.85536693065762, longitude: 20.228218848127565 },
+          { latitude: 67.85601399221748, longitude: 20.22834759416028 },
+          { latitude: 67.85611913802492, longitude: 20.226695353407106 }
+        ],
       ],
     },
   },
-
   {
     title: "ok - Winter Safety Infrastructure Plan",
     description:
