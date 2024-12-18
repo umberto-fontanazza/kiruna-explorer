@@ -137,7 +137,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
     if (
       !isLoaded ||
       !map ||
-      (positionMode === PositionMode.Insert && drawingMode !== "existing")
+      (positionMode === PositionMode.Insert && drawingMode !== "existing") ||
+      municipalArea
     ) {
       clearMarkers();
       return;
@@ -157,6 +158,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         );
         area.setPaths(adjustedPaths);
         setDrawnPolygon(area);
+        setLastSelectedElement("polygon");
       }
       return;
     }
@@ -176,9 +178,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           map,
           positionMode,
           drawingMode,
-          previousClusterElement,
           setDrawnMarker,
           setDrawnPolygon,
+          setLastSelectedElement,
+          previousClusterElement,
           setShowTooltipUploads,
           setdocumentSelected,
           setSidebarOpen,
@@ -238,6 +241,7 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       // previousMarkerRef.current?.setMap(null);
       if (municipalArea) {
         municipalArea?.forEach((area) => area.setMap(null));
+        setMunicipalArea(undefined);
       }
       drawnPolygon?.setMap(null);
       drawnMarker?.setMap(null);
@@ -306,6 +310,8 @@ const MapComponent: FC<MapComponentProps> = (props) => {
       handlePolygonUpdate();
     } else if (drawnMarker && lastSelectedElement === "marker") {
       handleMarkerUpdate();
+    } else if (municipalArea) {
+      handleMunicipalArea();
     }
     alertRef.current?.showAlert(
       "Position succesfully updated!",
@@ -499,15 +505,21 @@ const MapComponent: FC<MapComponentProps> = (props) => {
           });
         }
       });
-      setDocumentFormSelected((prev) => ({
-        ...prev,
-        coordinates: undefined,
-        area: newPolygonArea,
-      }));
-
       if (positionMode === PositionMode.Insert) {
+        setDocumentFormSelected((prev) => ({
+          ...prev,
+          coordinates: undefined,
+          area: newPolygonArea,
+        }));
+
         setdocumentSelected(null);
         setModalOpen(true);
+      } else {
+        if (municipalArea) {
+          municipalArea.forEach((area) => area.setMap(null));
+          setMunicipalArea(undefined);
+        }
+        handleEditPositionModeConfirm(docSelected!, newPolygonArea);
       }
       setIsSubmit(false);
     }
@@ -572,10 +584,10 @@ const MapComponent: FC<MapComponentProps> = (props) => {
         drawingManager={drawingManager}
         setDrawingMode={setDrawingMode}
         municipalArea={municipalArea}
-        previousPolygonRef={previousPolygonRef}
-        drawingMode={drawingMode}
         setMunicipalArea={setMunicipalArea}
         setDrawnPolygon={setDrawnPolygon}
+        previousPolygonRef={previousPolygonRef}
+        setLastElementSelected={setLastSelectedElement}
       />
 
       <GoogleMap
