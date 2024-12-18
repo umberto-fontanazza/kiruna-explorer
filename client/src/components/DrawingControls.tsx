@@ -13,10 +13,10 @@ interface DrawingControlsProps {
   drawingManager: google.maps.drawing.DrawingManager | undefined;
   setDrawingMode: Dispatch<SetStateAction<string>>;
   municipalArea: google.maps.Polygon[] | undefined;
-  previousPolygonRef: RefObject<google.maps.Polygon | undefined>;
-  drawingMode: string;
   setMunicipalArea: Dispatch<SetStateAction<google.maps.Polygon[] | undefined>>;
   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>;
+  previousPolygonRef?: RefObject<google.maps.Polygon | undefined>;
+  setLastElementSelected?: Dispatch<SetStateAction<string>>;
 }
 
 const DrawingControls: FC<DrawingControlsProps> = ({
@@ -30,9 +30,9 @@ const DrawingControls: FC<DrawingControlsProps> = ({
   setDrawingMode,
   municipalArea,
   previousPolygonRef,
-  drawingMode,
   setMunicipalArea,
   setDrawnPolygon,
+  setLastElementSelected,
 }) => {
   const handleMunicipalButtonClick = () => {
     setActiveButton("municipal-btn");
@@ -42,6 +42,9 @@ const DrawingControls: FC<DrawingControlsProps> = ({
     // Nascondi poligoni o marker esistenti
     drawnPolygon?.setMap(null);
     drawnMarker?.setMap(null);
+    if (positionMode !== PositionMode.Update) {
+      setDrawnPolygon(undefined);
+    }
 
     // Crea l'area municipale
     if (!municipalArea) {
@@ -52,18 +55,15 @@ const DrawingControls: FC<DrawingControlsProps> = ({
     // Resetta il drawing manager
     drawingManager?.setDrawingMode(null);
     setDrawingMode("municipal");
+    setLastElementSelected?.("municipal");
   };
 
   const handlePolygonButtonClick = () => {
     setActiveButton("polygon-btn");
-    if (drawingMode === "existing") {
-      previousPolygonRef?.current?.setMap(null);
-      setDrawnPolygon(undefined);
-    }
-    if (positionMode !== PositionMode.Update) {
-      map?.setZoom(11);
-      map?.setCenter(kirunaCoords);
-    }
+    previousPolygonRef?.current?.setMap(null);
+
+    map?.setZoom(11);
+    map?.setCenter(kirunaCoords);
 
     // Rimuovi eventuali aree municipali esistenti
     if (municipalArea) {

@@ -18,9 +18,10 @@ export const createMarker = (
   map: google.maps.Map,
   positionMode: PositionMode,
   drawingMode: string,
-  previousClusterElement: MutableRefObject<HTMLDivElement | undefined>,
   setDrawnMarker: Dispatch<SetStateAction<google.maps.Marker | undefined>>,
   setDrawnPolygon: Dispatch<SetStateAction<google.maps.Polygon | undefined>>,
+  setLastSelectedElement?: Dispatch<SetStateAction<string>>,
+  previousClusterElement?: MutableRefObject<HTMLDivElement | undefined>,
   setShowTooltipUploads?: Dispatch<SetStateAction<boolean>>,
   setdocumentSelected?: Dispatch<SetStateAction<Document | null>>,
   setSidebarOpen?: Dispatch<SetStateAction<boolean>>,
@@ -162,6 +163,7 @@ export const createMarker = (
         });
         setDrawnMarker(newMarker);
         setDrawnPolygon(undefined);
+        setLastSelectedElement?.("marker");
       }
     });
   }
@@ -170,12 +172,13 @@ export const createMarker = (
 };
 
 export function convertPolygonAreaToPolygon(
-  polygonArea: PolygonArea,
+  polygonArea: PolygonArea | undefined,
   map: google.maps.Map,
+  isMinimap?: boolean,
 ): google.maps.Polygon {
   const paths: google.maps.LatLngLiteral[][] = [];
 
-  const includePath = polygonArea.include.map((coord) => ({
+  const includePath = polygonArea!.include.map((coord) => ({
     lat: coord.latitude,
     lng: coord.longitude,
   }));
@@ -190,7 +193,7 @@ export function convertPolygonAreaToPolygon(
     })),
   );
 
-  polygonArea.exclude.forEach((excludedPath) => {
+  polygonArea!.exclude.forEach((excludedPath) => {
     const excludePath = excludedPath.map((coord) => ({
       lat: coord.latitude,
       lng: coord.longitude,
@@ -215,17 +218,17 @@ export function convertPolygonAreaToPolygon(
     strokeWeight: 4,
     fillColor: "#fecb00",
     fillOpacity: 0.35,
-    map,
+    map: !isMinimap ? map : undefined,
   });
 
   return polygon;
 }
 
 export function convertCoordinatesToMarkers(
-  coordinates: Coordinates,
+  coordinates: Coordinates | undefined,
 ): google.maps.Marker {
   // Crea il singolo marker
   return new google.maps.Marker({
-    position: { lat: coordinates.latitude, lng: coordinates.longitude }, // Converte in LatLngLiteral
+    position: { lat: coordinates!.latitude, lng: coordinates!.longitude }, // Converte in LatLngLiteral
   });
 }
