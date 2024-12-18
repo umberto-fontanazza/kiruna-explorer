@@ -3,7 +3,7 @@
 #map {
   width: 100%;
   height: 100%;
-  --shared-width: 30vw;
+  --shared-width: 37vw;
 
   .insert-mode {
     display: flex;
@@ -137,7 +137,8 @@
 
   .municipal-container,
   .polygon-container,
-  .marker-container {
+  .marker-container,
+  .existing-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -146,6 +147,16 @@
     h4 {
       font-size: 1.2rem;
     }
+  }
+
+  .municipal-container {
+    justify-content: space-around;
+  }
+
+  .polygon-container,
+  .marker-container,
+  .existing-container {
+    justify-content: space-evenly;
   }
 }
 
@@ -191,5 +202,10 @@
 
   &:hover {
     background-color: Color.$third;
+  }
+
+  &.selected {
+    background-color: Color.$second;
+    border: 2px solid Color.$first;
   }
 }

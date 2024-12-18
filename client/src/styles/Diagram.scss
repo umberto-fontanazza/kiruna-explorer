@@ -1,0 +1,80 @@
+#diagram {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .time-axis {
+    flex: 1;
+    display: flex;
+    border-bottom: 1px solid black;
+    .combine-axes {
+      flex: 1;
+      border-right: 1px solid black;
+    }
+    .time-cells-container {
+      flex: 9;
+    }
+  }
+
+  .scale-n-svg {
+    display: flex;
+    flex: 9;
+  }
+
+  .scale-types-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid black;
+  }
+
+  .scale-type {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .architectural_scale {
+    flex: 3;
+  }
+
+  svg {
+    flex: 9;
+    width: 100%;
+    height: 100%;
+  }
+
+  g.documents {
+    stroke-width: 2;
+    stroke: black;
+    fill: white;
+  }
+
+  circle {
+    r: 1%;
+    transition: 350ms ease;
+    &:hover {
+      r: 1.2%;
+      cursor: pointer;
+    }
+  }
+
+  g.links {
+    line {
+      stroke: black;
+    }
+  }
+
+  .time-cells-container {
+    display: flex;
+    align-items: center;
+
+    p {
+      font-size: 1.5rem;
+      margin-left: 10ch;
+      width: 50%;
+    }
+  }
+}

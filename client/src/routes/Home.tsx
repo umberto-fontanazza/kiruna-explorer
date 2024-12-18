@@ -24,7 +24,7 @@ const Home = () => {
             </p>
             <div className="hero-btns">
               <button onClick={() => nav("/map")}>View Map</button>
-              <button onClick={() => nav("/diagram")}>View Diagram</button>
+              {/* <button onClick={() => nav("/diagram")}>View Diagram</button> */}
             </div>
           </div>
         </div>

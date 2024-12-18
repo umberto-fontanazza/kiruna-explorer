@@ -34,6 +34,9 @@ const NavHeader: FC = (): JSX.Element => {
         >
           Uploads
         </button>
+        <a className="diagram" href="#diagram">
+          Diagram
+        </a>
       </div>
       <div className={`${user ? "logged-in" : ""}`}>
         {user ? <span className="user-name">Hi {user.name}!</span> : null}
