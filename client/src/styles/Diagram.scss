@@ -1,16 +1,25 @@
+@use "Color";
+
 #diagram {
   width: 100%;
-  height: 100%;
+  height: 90%;
   display: flex;
   flex-direction: column;
+  font-family: "SwedenSansBold", sans-serif;
+  transition: width 0.3s linear;
+
+  &.with-sidebar {
+    width: 70%;
+  }
 
   .time-axis {
     flex: 1;
     display: flex;
-    border-bottom: 1px solid black;
+    border-bottom: 4px solid Color.$first-hover;
+    background-color: Color.$first;
+    color: white;
     .combine-axes {
       flex: 1;
-      border-right: 1px solid black;
     }
     .time-cells-container {
       flex: 9;
@@ -19,14 +28,18 @@
 
   .scale-n-svg {
     display: flex;
-    flex: 9;
+    flex: 13;
   }
 
   .scale-types-container {
     flex: 1;
     display: flex;
     flex-direction: column;
-    border-right: 1px solid black;
+    border-right: 4px solid Color.$first-hover;
+    background-color: Color.$first;
+    color: white;
+    font-size: 2.2ch;
+    text-align: center;
   }
 
   .scale-type {
@@ -34,6 +47,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border-bottom: 4px solid Color.$first-hover;
   }
 
   .architectural_scale {
@@ -44,6 +58,8 @@
     flex: 9;
     width: 100%;
     height: 100%;
+    border-right: 4px solid Color.$first-hover;
+    border-bottom: 4px solid Color.$first-hover;
   }
 
   g.documents {
@@ -53,10 +69,10 @@
   }
 
   circle {
-    r: 1%;
+    r: 1.5%;
     transition: 350ms ease;
     &:hover {
-      r: 1.2%;
+      r: 2%;
       cursor: pointer;
     }
   }
@@ -70,11 +86,10 @@
   .time-cells-container {
     display: flex;
     align-items: center;
-
     p {
-      font-size: 1.5rem;
-      margin-left: 10ch;
-      width: 50%;
+      font-size: 2rem;
+      width: 100%;
+      text-align: center;
     }
   }
 }

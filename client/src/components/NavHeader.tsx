@@ -12,7 +12,7 @@ const NavHeader: FC = (): JSX.Element => {
     <nav className="nav-header">
       <div className="nav-title-btns">
         <span className="brand">
-          <Link style={{ color: "white" }} to={"/home"}>
+          <Link style={{ color: "white", textDecoration: "none" }} to={"/home"}>
             Kiruna eXplorer.
           </Link>
         </span>
@@ -21,6 +21,12 @@ const NavHeader: FC = (): JSX.Element => {
           onClick={() => navigate("/map")}
         >
           Map
+        </button>
+        <button
+          className={location.pathname === "/diagram" ? "active" : ""}
+          onClick={() => navigate("/diagram")}
+        >
+          Diagram
         </button>
         <button
           className={location.pathname === "/documents" ? "active" : ""}
@@ -34,9 +40,6 @@ const NavHeader: FC = (): JSX.Element => {
         >
           Uploads
         </button>
-        <a className="diagram" href="#diagram">
-          Diagram
-        </a>
       </div>
       <div className={`${user ? "logged-in" : ""}`}>
         {user ? <span className="user-name">Hi {user.name}!</span> : null}

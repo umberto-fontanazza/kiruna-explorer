@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import API from "./API/API";
 import Alert from "./components/Alert";
+import Diagram from "./components/Diagram";
 import DocumentForm from "./components/DocumentForm";
 import NotFound from "./components/NotFound";
 import Popup from "./components/Popup";
@@ -69,6 +70,9 @@ const App: FC = () => {
 
               {/* Route /home for the Home page with the map and diagram */}
               <Route path="/map" element={<HomeMap />} />
+
+              {/* Route /home for the Home page with the map and diagram */}
+              <Route path="/diagram" element={<Diagram />} />
 
               {/* Route /documents where can be find the list of all documents */}
               <Route path="/documents" element={<DocumentsList />} />

@@ -5,6 +5,7 @@ import { useDocumentFormContext } from "../context/DocumentFormContext";
 import { usePopupContext } from "../context/PopupContext";
 import "../styles/CardDocument.scss";
 
+import { useLocation } from "react-router-dom";
 import API from "../API/API";
 import {
   Coordinates,
@@ -42,6 +43,8 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
   } = useAppContext();
   const { setDocumentToDelete, setIsDeleted } = usePopupContext();
   const { setDocumentFormSelected } = useDocumentFormContext();
+
+  const location = useLocation();
 
   const [uploadsById, setUploadsByID] = useState<Upload[]>([]);
 
@@ -113,10 +116,6 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     setEditDocumentMode(true);
     setModalOpen(true);
     setDocumentFormSelected(props.document as DocumentForm);
-    if (props.document?.coordinates) {
-      //TODO: I have to handle this
-      //setCoordinates(props.document.coordinates);
-    }
   };
 
   const handleDeleteButton = () => {
@@ -256,21 +255,24 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
               ) || 0}
             </span>
           </h4>
-          {props.document?.links && props.document?.links.length > 0 && (
-            <button
-              className={`see-links ${visualLinks ? "fill" : "no-fill"}`}
-              onClick={() =>
-                visualLinks ? setVisualLinks(false) : setVisualLinks(true)
-              }
-            >
-              <span
-                className={`material-symbols-outlined dark ${visualLinks ? "fill" : "no-fill"}`}
+          {location.pathname === "/map" &&
+            props.document?.links &&
+            props.document?.links.length > 0 && (
+              <button
+                className={`see-links ${visualLinks ? "fill" : "no-fill"}`}
+                onClick={() =>
+                  visualLinks ? setVisualLinks(false) : setVisualLinks(true)
+                }
               >
-                visibility
-              </span>
-            </button>
-          )}
+                <span
+                  className={`material-symbols-outlined dark ${visualLinks ? "fill" : "no-fill"}`}
+                >
+                  visibility
+                </span>
+              </button>
+            )}
         </div>
+
         {user && props.isDocSelected && (
           <div className="btn-group">
             <button
