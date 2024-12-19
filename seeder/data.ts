@@ -429,9 +429,7 @@ export const newDocuments = [
     type: DocumentType.MaterialEffect,
     stakeholders: [Stakeholder.Lkab],
     scale: { type: ScaleType.BlueprintsOrEffect },
-    area: {
-      coordinates: { latitude: 67.50547, longitude: 20.18172 },
-    },
+    coordinates: { latitude: 67.50547, longitude: 20.18172 },
   },
   //25
   {
@@ -467,6 +465,7 @@ export const newDocuments = [
         { latitude: 67.84841300652086, longitude: 20.29749692711781 },
         { latitude: 67.84925443390486, longitude: 20.297668588494762 },
       ],
+      exclude: [],
     },
   },
   //27
@@ -524,6 +523,7 @@ export const newDocuments = [
         { latitude: 67.85125545083788, longitude: 20.224478431499016 },
         { latitude: 67.84908728154416, longitude: 20.226491957256624 },
       ],
+      exclude: [],
     },
   },
   //29
@@ -562,7 +562,6 @@ export const newDocuments = [
     type: DocumentType.Prescriptive,
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 1400 },
-
     area: {
       include: [
         { latitude: 67.84704837132209, longitude: 20.231252065045478 },
@@ -582,6 +581,7 @@ export const newDocuments = [
         { latitude: 67.85125545083788, longitude: 20.224478431499016 },
         { latitude: 67.84908728154416, longitude: 20.226491957256624 },
       ],
+      exclude: [],
     },
   },
   //31
@@ -763,24 +763,25 @@ export const newDocuments = [
     type: DocumentType.Design,
     stakeholders: [Stakeholder.WhiteArkitekter, Stakeholder.KirunaKommun],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 500 },
-    include: [
-      { latitude: 67.84707709867558, longitude: 20.264701576459107 },
-      { latitude: 67.84591192853563, longitude: 20.26459428809851 },
-      { latitude: 67.84582292009063, longitude: 20.258242817151245 },
-      { latitude: 67.84583910346952, longitude: 20.256719322430786 },
-      { latitude: 67.84652688669507, longitude: 20.25590393089026 },
-      { latitude: 67.84684245103571, longitude: 20.257191391217408 },
-      { latitude: 67.84710137243465, longitude: 20.2578565790531 },
-    ],
-    exclude: [
-      ,
-      [
-        { latitude: 67.84686825711366, longitude: 20.25811782855961 },
-        { latitude: 67.84627353680196, longitude: 20.25811782855961 },
-        { latitude: 67.84629376563306, longitude: 20.25982371349308 },
-        { latitude: 67.84690062240988, longitude: 20.25983444232914 },
+    area: {
+      include: [
+        { latitude: 67.84707709867558, longitude: 20.264701576459107 },
+        { latitude: 67.84591192853563, longitude: 20.26459428809851 },
+        { latitude: 67.84582292009063, longitude: 20.258242817151245 },
+        { latitude: 67.84583910346952, longitude: 20.256719322430786 },
+        { latitude: 67.84652688669507, longitude: 20.25590393089026 },
+        { latitude: 67.84684245103571, longitude: 20.257191391217408 },
+        { latitude: 67.84710137243465, longitude: 20.2578565790531 },
       ],
-    ],
+      exclude: [
+        [
+          { latitude: 67.84686825711366, longitude: 20.25811782855961 },
+          { latitude: 67.84627353680196, longitude: 20.25811782855961 },
+          { latitude: 67.84629376563306, longitude: 20.25982371349308 },
+          { latitude: 67.84690062240988, longitude: 20.25983444232914 },
+        ],
+      ],
+    },
   },
   //37
   {
@@ -791,24 +792,25 @@ export const newDocuments = [
     type: DocumentType.Prescriptive,
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.Text },
-    include: [
-      { latitude: 67.84707709867558, longitude: 20.264701576459107 },
-      { latitude: 67.84591192853563, longitude: 20.26459428809851 },
-      { latitude: 67.84582292009063, longitude: 20.258242817151245 },
-      { latitude: 67.84583910346952, longitude: 20.256719322430786 },
-      { latitude: 67.84652688669507, longitude: 20.25590393089026 },
-      { latitude: 67.84684245103571, longitude: 20.257191391217408 },
-      { latitude: 67.84710137243465, longitude: 20.2578565790531 },
-    ],
-    exclude: [
-      ,
-      [
-        { latitude: 67.84686825711366, longitude: 20.25811782855961 },
-        { latitude: 67.84627353680196, longitude: 20.25811782855961 },
-        { latitude: 67.84629376563306, longitude: 20.25982371349308 },
-        { latitude: 67.84690062240988, longitude: 20.25983444232914 },
+    area: {
+      include: [
+        { latitude: 67.84707709867558, longitude: 20.264701576459107 },
+        { latitude: 67.84591192853563, longitude: 20.26459428809851 },
+        { latitude: 67.84582292009063, longitude: 20.258242817151245 },
+        { latitude: 67.84583910346952, longitude: 20.256719322430786 },
+        { latitude: 67.84652688669507, longitude: 20.25590393089026 },
+        { latitude: 67.84684245103571, longitude: 20.257191391217408 },
+        { latitude: 67.84710137243465, longitude: 20.2578565790531 },
       ],
-    ],
+      exclude: [
+        [
+          { latitude: 67.84686825711366, longitude: 20.25811782855961 },
+          { latitude: 67.84627353680196, longitude: 20.25811782855961 },
+          { latitude: 67.84629376563306, longitude: 20.25982371349308 },
+          { latitude: 67.84690062240988, longitude: 20.25983444232914 },
+        ],
+      ],
+    },
   },
   //38
   {
@@ -819,24 +821,25 @@ export const newDocuments = [
     type: DocumentType.Technical,
     stakeholders: [Stakeholder.KirunaKommun],
     scale: { type: ScaleType.BlueprintsOrEffect },
-    include: [
-      { latitude: 67.84707709867558, longitude: 20.264701576459107 },
-      { latitude: 67.84591192853563, longitude: 20.26459428809851 },
-      { latitude: 67.84582292009063, longitude: 20.258242817151245 },
-      { latitude: 67.84583910346952, longitude: 20.256719322430786 },
-      { latitude: 67.84652688669507, longitude: 20.25590393089026 },
-      { latitude: 67.84684245103571, longitude: 20.257191391217408 },
-      { latitude: 67.84710137243465, longitude: 20.2578565790531 },
-    ],
-    exclude: [
-      ,
-      [
-        { latitude: 67.84686825711366, longitude: 20.25811782855961 },
-        { latitude: 67.84627353680196, longitude: 20.25811782855961 },
-        { latitude: 67.84629376563306, longitude: 20.25982371349308 },
-        { latitude: 67.84690062240988, longitude: 20.25983444232914 },
+    area: {
+      include: [
+        { latitude: 67.84707709867558, longitude: 20.264701576459107 },
+        { latitude: 67.84591192853563, longitude: 20.26459428809851 },
+        { latitude: 67.84582292009063, longitude: 20.258242817151245 },
+        { latitude: 67.84583910346952, longitude: 20.256719322430786 },
+        { latitude: 67.84652688669507, longitude: 20.25590393089026 },
+        { latitude: 67.84684245103571, longitude: 20.257191391217408 },
+        { latitude: 67.84710137243465, longitude: 20.2578565790531 },
       ],
-    ],
+      exclude: [
+        [
+          { latitude: 67.84686825711366, longitude: 20.25811782855961 },
+          { latitude: 67.84627353680196, longitude: 20.25811782855961 },
+          { latitude: 67.84629376563306, longitude: 20.25982371349308 },
+          { latitude: 67.84690062240988, longitude: 20.25983444232914 },
+        ],
+      ],
+    },
   },
 
   //39
@@ -849,26 +852,23 @@ export const newDocuments = [
     stakeholders: [Stakeholder.Lkab],
     scale: { type: ScaleType.ArchitecturalScale, ratio: 600 },
     area: {
-      area: {
-        include: [
-          { latitude: 67.84707709867558, longitude: 20.264701576459107 },
-          { latitude: 67.84591192853563, longitude: 20.26459428809851 },
-          { latitude: 67.84582292009063, longitude: 20.258242817151245 },
-          { latitude: 67.84583910346952, longitude: 20.256719322430786 },
-          { latitude: 67.84652688669507, longitude: 20.25590393089026 },
-          { latitude: 67.84684245103571, longitude: 20.257191391217408 },
-          { latitude: 67.84710137243465, longitude: 20.2578565790531 },
+      include: [
+        { latitude: 67.84707709867558, longitude: 20.264701576459107 },
+        { latitude: 67.84591192853563, longitude: 20.26459428809851 },
+        { latitude: 67.84582292009063, longitude: 20.258242817151245 },
+        { latitude: 67.84583910346952, longitude: 20.256719322430786 },
+        { latitude: 67.84652688669507, longitude: 20.25590393089026 },
+        { latitude: 67.84684245103571, longitude: 20.257191391217408 },
+        { latitude: 67.84710137243465, longitude: 20.2578565790531 },
+      ],
+      exclude: [
+        [
+          { latitude: 67.84686825711366, longitude: 20.25811782855961 },
+          { latitude: 67.84627353680196, longitude: 20.25811782855961 },
+          { latitude: 67.84629376563306, longitude: 20.25982371349308 },
+          { latitude: 67.84690062240988, longitude: 20.25983444232914 },
         ],
-        exclude: [
-          ,
-          [
-            { latitude: 67.84686825711366, longitude: 20.25811782855961 },
-            { latitude: 67.84627353680196, longitude: 20.25811782855961 },
-            { latitude: 67.84629376563306, longitude: 20.25982371349308 },
-            { latitude: 67.84690062240988, longitude: 20.25983444232914 },
-          ],
-        ],
-      },
+      ],
     },
   },
   //40
