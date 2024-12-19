@@ -81,13 +81,20 @@ sections:
 
 - What caused your errors in estimation (if any)?
 
+  - Adopting libraries never used before.
+
 - What lessons did you learn (both positive and negative) in this sprint?
 
+  - Enthusiasm in development is the driving force for quality.
+  - Team fatigue must be managed
+  - The best man for the job is not always the most skilled one but the most interested about that piece of the application
+
 - Which improvement goals set in the previous retrospective were you able to achieve?
+
+  Goals set in previous sprint were not applicable to this sprint.
+
 - Which ones you were not able to achieve? Why?
 
-- Improvement goals for the next sprint and how to achieve them (technical tasks, team coordination, etc.)
+  Previous sprint goals were not applicable since there was no backend change.
 
-> Propose one or two
-
-- One thing you are proud of as a Team!!
+- One thing you are proud of as a Team?
