@@ -88,6 +88,7 @@ sections:
   - Enthusiasm in development is the driving force for quality.
   - Team fatigue must be managed
   - The best man for the job is not always the most skilled one but the most interested about that piece of the application
+  - Libraries are not always speeding up development
 
 - Which improvement goals set in the previous retrospective were you able to achieve?
 
