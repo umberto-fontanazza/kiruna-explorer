@@ -255,20 +255,22 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
               ) || 0}
             </span>
           </h4>
-          {props.document?.links && props.document?.links.length > 0 && (
-            <button
-              className={`see-links ${visualLinks ? "fill" : "no-fill"}`}
-              onClick={() =>
-                visualLinks ? setVisualLinks(false) : setVisualLinks(true)
-              }
-            >
-              <span
-                className={`material-symbols-outlined dark ${visualLinks ? "fill" : "no-fill"}`}
+          {location.pathname === "/map" &&
+            props.document?.links &&
+            props.document?.links.length > 0 && (
+              <button
+                className={`see-links ${visualLinks ? "fill" : "no-fill"}`}
+                onClick={() =>
+                  visualLinks ? setVisualLinks(false) : setVisualLinks(true)
+                }
               >
-                visibility
-              </span>
-            </button>
-          )}
+                <span
+                  className={`material-symbols-outlined dark ${visualLinks ? "fill" : "no-fill"}`}
+                >
+                  visibility
+                </span>
+              </button>
+            )}
         </div>
 
         {user && props.isDocSelected && (

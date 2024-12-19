@@ -12,7 +12,7 @@ const NavHeader: FC = (): JSX.Element => {
     <nav className="nav-header">
       <div className="nav-title-btns">
         <span className="brand">
-          <Link style={{ color: "white" }} to={"/home"}>
+          <Link style={{ color: "white", textDecoration: "none" }} to={"/home"}>
             Kiruna eXplorer.
           </Link>
         </span>

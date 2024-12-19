@@ -53,8 +53,8 @@ const SecondPageModal: FC<SecondPageModalProps> = ({
           <LinksTable tableLinks={tableLinks} setTableLinks={setTableLinks} />
         ) : (
           <p>
-            If you need to add links to other documents, please use the search
-            bar below.
+            If you need to add connections to other documents, please use the
+            search bar below.
           </p>
         )}
 

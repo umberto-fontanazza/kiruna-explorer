@@ -15,8 +15,8 @@ const Home = () => {
           {/* Info + bottoni sulla destra */}
           <div className="info">
             <h1>
-              Discover the city that is shifting to become UNESCO heritage in
-              2029.
+              Discover the city that is shifting to become European Capital Of
+              Colture in 2029.
             </h1>
             <p>
               Explore the map, discover the details of the buildings and follow
@@ -98,13 +98,13 @@ const Home = () => {
                 >
                   <img src="wikipedia-logo.svg" alt="Wikipedia" />
                 </a>
-                <a
+                {/* <a
                   href="https://www.instagram.com/umberto.fontanazza/"
                   target="_blank"
                   aria-label="Stavo facendo un po' di refactoring"
                 >
                   <img src="ig-logo.svg" alt="Instagram" />
-                </a>
+                </a> */}
               </div>
             </div>
             <p className="footer-credits">
