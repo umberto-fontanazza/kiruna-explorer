@@ -60,7 +60,6 @@ const DrawingControls: FC<DrawingControlsProps> = ({
 
   const handlePolygonButtonClick = () => {
     setActiveButton("polygon-btn");
-    previousPolygonRef?.current?.setMap(null);
 
     map?.setZoom(11);
     map?.setCenter(kirunaCoords);
