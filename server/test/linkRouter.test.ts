@@ -1,130 +1,168 @@
-import request from "supertest";
-import app from "../src/app";
-import { Link } from "../src/model/link";
+import express from 'express';
 import { StatusCodes } from "http-status-codes";
+import request from "supertest";
+import { Database } from "../src/database";
+import { UserRole } from "../src/model/user";
+import { linkRouter } from "../src/router/linkRouter";
 
-jest.mock("../model/link", () => ({
-  Link: {
-    fromDocumentAll: jest.fn(),
-    update: jest.fn(),
-    delete: jest.fn(),
-  },
-}));
+jest.mock("../src/database");
+
+const mockQuery = Database.query as jest.Mock;
+const mockWithTransaction = Database.withTransaction as jest.Mock;
+
+
+function mockIsAuthenticated(isAuthenticated: boolean, role?: UserRole) {
+  return (req: any, _res: any, next: any) => {
+    req.isAuthenticated = () => isAuthenticated;
+    if (isAuthenticated && role) {
+      req.user = { role };
+    }
+    next();
+  };
+}
+
+function createApp(
+  isAuthenticated: boolean = false,
+  role?: UserRole,
+): express.Express {
+  const app = express();
+  app.use(express.json());
+
+  app.use((req, _res, next) => {
+    req.locals = {};
+    next();
+  });
+
+  app.use(mockIsAuthenticated(isAuthenticated, role));
+  app.use("/documents/:id/links", linkRouter);
+  return app;
+}
 
 describe("linkRouter", () => {
-  const sourceDocumentId = 1;
-  const targetDocumentId = 2;
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-  describe("GET /", () => {
-    it("should return links for the given document", async () => {
-      const mockLinks = [
-        { sourceDocumentId, targetDocumentId, linkTypes: ["type1"] },
-        { sourceDocumentId, targetDocumentId: 3, linkTypes: ["type2"] },
-      ];
-      (Link.fromDocumentAll as jest.Mock).mockResolvedValue(mockLinks);
+  describe("GET /documents/:id/links", () => {
+    it("should return 200 and the links array", async () => {
+      const app = createApp();
 
-      const response = await request(app).get(
-        `http://localhost:3000/links/${sourceDocumentId}`,
-      );
+      const linksFromDb = {
+        links: {
+          "2": ["direct", "update"],
+          "3": ["collateral"],
+        },
+      };
+      mockQuery.mockResolvedValueOnce({ rows: [linksFromDb] });
 
-      expect(response.status).toBe(StatusCodes.OK);
-      expect(response.body).toEqual(mockLinks);
-      expect(Link.fromDocumentAll).toHaveBeenCalledWith(sourceDocumentId);
-    });
-
-    it("should return an empty array if no links found", async () => {
-      (Link.fromDocumentAll as jest.Mock).mockResolvedValue([]);
-
-      const response = await request(app).get(
-        `http://localhost:3000/links/${sourceDocumentId}`,
-      );
+      const response = await request(app).get("/documents/1/links");
 
       expect(response.status).toBe(StatusCodes.OK);
-      expect(response.body).toEqual([]);
+      expect(response.body).toEqual([
+        { targetDocumentId: 2, linkTypes: ["direct", "update"] },
+        { targetDocumentId: 3, linkTypes: ["collateral"] },
+      ]);
+      expect(mockQuery).toHaveBeenCalledWith(
+        "SELECT links FROM document WHERE id = $1",
+        [1],
+      );
     });
 
-    it("should handle errors when retrieving links", async () => {
-      (Link.fromDocumentAll as jest.Mock).mockRejectedValue(
-        new Error("Database error"),
-      );
-
-      const response = await request(app).get(
-        `http://localhost:3000/links/${sourceDocumentId}`,
-      );
-
-      expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-      expect(response.body.message).toBe(
-        "An unexpected error occurred on the server",
-      );
+    it("should return 400 if id is not a positive number", async () => {
+      const app = createApp();
+      const response = await request(app).get("/documents/foo/links");
+      expect(response.status).toBe(StatusCodes.BAD_REQUEST);
     });
   });
 
-  describe("PUT /", () => {
-    it("should update a link successfully", async () => {
-      const body = {
-        targetDocumentId: targetDocumentId,
-        linkTypes: ["type1"],
-      };
-      const linkInstance = {
-        update: jest.fn(),
-      };
-      (Link.prototype.update as jest.Mock).mockResolvedValue(linkInstance);
+  describe("PUT /documents/:id/links", () => {
+    it("should return 401 if user is not authenticated", async () => {
+      const app = createApp(false);
+      const response = await request(app)
+        .put("/documents/1/links")
+        .send({ targetDocumentId: 2, linkTypes: ["direct"] });
+      expect(response.status).toBe(StatusCodes.UNAUTHORIZED);
+    });
+
+    it("should return 403 if user is logged in but not a planner", async () => {
+      const app = createApp(true, UserRole.Resident);
+      const response = await request(app)
+        .put("/documents/1/links")
+        .send({ targetDocumentId: 2, linkTypes: ["direct"] });
+      expect(response.status).toBe(StatusCodes.FORBIDDEN);
+    });
+
+    it("should return 400 if request body is invalid (missing fields)", async () => {
+      const app = createApp(true, UserRole.UrbanPlanner);
+      const response = await request(app)
+        .put("/documents/1/links")
+        .send({ linkTypes: ["direct"] });
+      expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+    });
+
+    it("should return 400 if trying to link a document to itself", async () => {
+      const app = createApp(true, UserRole.UrbanPlanner);
+      const response = await request(app)
+        .put("/documents/1/links")
+        .send({ targetDocumentId: 1, linkTypes: ["direct"] });
+      expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+    });
+
+    it("should return 201 and update the link if valid and user is planner", async () => {
+      const app = createApp(true, UserRole.UrbanPlanner);
+
+      mockWithTransaction.mockImplementation(async (fn: any) => {
+        await fn({
+          query: jest.fn().mockResolvedValue({ rowCount: 1 }),
+        });
+      });
 
       const response = await request(app)
-        .put(`http://localhost:3000/links/${sourceDocumentId}`)
-        .send(body);
+        .put("/documents/1/links")
+        .send({ targetDocumentId: 2, linkTypes: ["direct", "collateral"] });
 
       expect(response.status).toBe(StatusCodes.CREATED);
-      expect(Link.prototype.update).toHaveBeenCalled();
-    });
-
-    it("should handle errors during link update", async () => {
-      const body = {
-        targetDocumentId: targetDocumentId,
-        linkTypes: ["type1"],
-      };
-      (Link.prototype.update as jest.Mock).mockRejectedValue(
-        new Error("Update error"),
-      );
-
-      const response = await request(app)
-        .put(`http://localhost:3000/links/${sourceDocumentId}`)
-        .send(body);
-
-      expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-      expect(response.body.message).toBe(
-        "An unexpected error occurred on the server",
-      );
+      expect(mockWithTransaction).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe("DELETE /", () => {
-    it("should delete a link successfully", async () => {
-      const linkDeleteMock = jest.fn().mockResolvedValue(undefined);
-      (Link.delete as jest.Mock).mockResolvedValue(linkDeleteMock);
-
-      const response = await request(app)
-        .delete(`http://localhost:3000/links/${sourceDocumentId}`)
-        .query({ targetId: targetDocumentId });
-
-      expect(response.status).toBe(StatusCodes.NO_CONTENT);
-      expect(Link.delete).toHaveBeenCalledWith(
-        sourceDocumentId,
-        targetDocumentId,
+  describe("DELETE /documents/:id/links?targetDocumentId=", () => {
+    it("should return 401 if user is not authenticated", async () => {
+      const app = createApp(false);
+      const response = await request(app).delete(
+        "/documents/1/links?targetDocumentId=2",
       );
+      expect(response.status).toBe(StatusCodes.UNAUTHORIZED);
     });
 
-    it("should handle errors during link deletion", async () => {
-      (Link.delete as jest.Mock).mockRejectedValue(new Error("Deletion error"));
-
-      const response = await request(app)
-        .delete(`http://localhost:3000/links/${sourceDocumentId}`)
-        .query({ targetId: targetDocumentId });
-
-      expect(response.status).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
-      expect(response.body.message).toBe(
-        "An unexpected error occurred on the server",
+    it("should return 403 if user is logged in but not a planner", async () => {
+      const app = createApp(true, UserRole.Resident);
+      const response = await request(app).delete(
+        "/documents/1/links?targetDocumentId=2",
       );
+      expect(response.status).toBe(StatusCodes.FORBIDDEN);
+    });
+
+    it("should return 400 if targetDocumentId query param is missing", async () => {
+      const app = createApp(true, UserRole.UrbanPlanner);
+      const response = await request(app).delete("/documents/1/links");
+      expect(response.status).toBe(StatusCodes.BAD_REQUEST);
+    });
+
+    it("should return 204 and delete the link if valid and user is planner", async () => {
+      const app = createApp(true, UserRole.UrbanPlanner);
+
+      mockWithTransaction.mockImplementation(async (fn: any) => {
+        await fn({
+          query: jest.fn().mockResolvedValue({ rowCount: 1 }),
+        });
+      });
+
+      const response = await request(app).delete(
+        "/documents/1/links?targetDocumentId=2",
+      );
+      expect(response.status).toBe(StatusCodes.NO_CONTENT);
+      expect(mockWithTransaction).toHaveBeenCalledTimes(1);
     });
   });
 });
