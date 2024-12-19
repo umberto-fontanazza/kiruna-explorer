@@ -1,14 +1,13 @@
 import { strict as assert } from "assert";
+import dotenv from "dotenv";
 import { Pool, PoolClient, QueryResult, types } from "pg";
+
+dotenv.config();
 
 let pool: Pool | undefined;
 
 export class Database {
   static setup() {
-    const env = process.env.NODE_ENV
-      ? process.env.NODE_ENV.trim()
-      : "development";
-
     // 58509 is the OID for type _stakeholder(array of type staholder) in our postgres database
     types.setTypeParser(58509, (val) => {
       const parsed = val.slice(1, -1).split(",");
@@ -20,15 +19,7 @@ export class Database {
       return parsed;
     });
 
-    let dbName = undefined;
-
-    if (env === "development") {
-      dbName = process.env.DB_NAME;
-    } else if (env === "test") {
-      dbName = process.env.DB_TEST_NAME;
-    } else {
-      dbName = process.env.DB_SEEDER_NAME;
-    }
+    const dbName = process.env.DB_NAME;
 
     pool = new Pool({
       host: process.env.DB_HOST,
@@ -53,7 +44,7 @@ export class Database {
   }
 
   static async withTransaction<T>(
-    action: (client: PoolClient) => Promise<T>,
+    action: (client: PoolClient) => Promise<T>
   ): Promise<T> {
     const client = await Database.getClient();
     try {
