@@ -116,10 +116,6 @@ const CardDocument: FC<CardDocumentProps> = (props) => {
     setEditDocumentMode(true);
     setModalOpen(true);
     setDocumentFormSelected(props.document as DocumentForm);
-    if (props.document?.coordinates) {
-      //TODO: I have to handle this
-      //setCoordinates(props.document.coordinates);
-    }
   };
 
   const handleDeleteButton = () => {

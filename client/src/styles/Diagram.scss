@@ -20,7 +20,6 @@
     color: white;
     .combine-axes {
       flex: 1;
-      border-right: 4px solid Color.$first-hover;
     }
     .time-cells-container {
       flex: 9;
@@ -29,7 +28,7 @@
 
   .scale-n-svg {
     display: flex;
-    flex: 9;
+    flex: 13;
   }
 
   .scale-types-container {
@@ -89,8 +88,8 @@
     align-items: center;
     p {
       font-size: 2rem;
-      margin-left: 10ch;
-      width: 50%;
+      width: 100%;
+      text-align: center;
     }
   }
 }

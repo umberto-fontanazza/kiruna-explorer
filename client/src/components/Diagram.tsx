@@ -118,7 +118,7 @@ const Diagram: FC = () => {
           <div className="combine-axes"></div>
           <div className="time-cells-container">
             {interval && (
-              <p>{`Time range ${interval?.begin.format().split("T")[0]} to ${interval?.end.format().split("T")[0]}`}</p>
+              <p>{`Time range - From ${interval?.begin.format("DD MMMM of YYYY")} to ${interval?.end.format("DD MMMM of YYYY")}`}</p>
             )}
           </div>
         </div>
