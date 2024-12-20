@@ -62,10 +62,27 @@ sections:
 - Unit Testing:
   - Total hours estimated: 10h
   - Total hours spent: 10h 30m
-  - Nr of automated unit test cases:65
+  - Nr of automated unit test cases:66
   - Coverage:
-    
 
+    ## Code Coverage Summary
+
+    | File               | Statements       | Branches       | Functions      | Lines            |
+    | ------------------ | ---------------- | -------------- | -------------- | ---------------- |
+    | `src`              | 92% (706/768)    | 69/75 (50%)    | 100% (6/6)     | 93.15% (68/73)   |
+    | `src/error`        | 80% (8/10)       | 33.33% (1/3)   | 50% (1/2)      | 80% (8/10)       |
+    | `src/middleware`   | 88.88% (56/63)   | 73.68% (14/19) | 100% (11/11)   | 88.52% (54/61)   |
+    | `src/model`        | 96.66% (319/330) | 87.43% (160/183) | 96.07% (98/102) | 97.34% (293/301) |
+    | `src/router`       | 82.77% (173/209) | 67.5% (27/40)  | 79.48% (31/39) | 83.74% (170/203) |
+    | `src/validation`   | 95.08% (58/61)   | 81.25% (13/16) | 100% (6/6)     | 96.61% (57/59)   |
+    | `test`             | 95% (19/20)      | 0% (0/1)       | 100% (3/3)     | 95% (19/20)      |
+
+### Coverage Totals
+
+    - **Statements:** 91.4% (782/768)
+    - **Branches:** 80.65% (221/274)
+    - **Functions:** 92.04% (162/176)
+    - **Lines:** 92.02% (669/727)
 
 
 - E2E testing:
