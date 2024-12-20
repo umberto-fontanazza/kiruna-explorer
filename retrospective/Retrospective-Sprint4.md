@@ -62,7 +62,7 @@ sections:
 - Unit Testing:
   - Total hours estimated: 10h
   - Total hours spent: 10h 30m
-  - Nr of automated unit test cases:66
+  - Nr of automated unit test cases: 66
   - Coverage:
 
     ## Code Coverage Summary
