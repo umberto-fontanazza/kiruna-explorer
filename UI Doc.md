@@ -53,6 +53,58 @@ Key Features:
 Search Bar: Users can search for files by name.
 Pagination: Navigates between pages of uploaded files.
 
-Design Highlights:
+Design diagram
+
+![Figma Prototype for Uploads Page](client/public/66.png)
+
+Design:
 Action Icons on Left: Easy access to frequently used actions.
-Simple Table Layout: Organized and readable at a glance.
+
+Overview
+The diagram page helps users:
+
+See all documents related to the project.
+Understand how documents are connected.
+Explore documents based on their time (2025, 2030, 2035).
+View details about each document, like status and stakeholders.
+
+2. Users of This Page
+   Urban Planners: Want to see plans and connections.
+   Urban Developers: Interested in how changes affect buildings.
+   Visitors: Researchers or people curious about the project.
+
+3. Key Features
+
+3.1 Main Diagram
+What it does: Shows all documents (nodes) and their connections.
+How it works:
+Nodes (dots): Represent documents.
+🔴 Red: Important connections (Direct Consequence).
+🔵 Blue: Future plans (Projection).
+🟡 Yellow: Side effects (Collateral Consequence).
+
+Lines: Connect the documents:
+Red line: Shows strong, direct connections.
+Solid blue line: Future connections.
+Dashed blue line: Indirect or side-effect connections.
+
+3.2 Sidebar
+Information displayed:
+Document name
+Status
+Stakeholders involved
+Links to download the document
+
+3.3 Time Table
+
+What it does: Groups documents by year.
+How it works:
+Years like 2025, 2030, and 2035 are shown.
+Arrows show the flow of time.
+Clicking on a year filters the diagram to show only documents from that time.
+
+3.4 Scale Switcher
+What it does: Helps users zoom in or out on the diagram.
+How it works: Users can:
+Adjust the scale to see more or fewer documents.
+Focus on connections or detailed nodes.
