@@ -201,3 +201,207 @@ another mixed-use building overlooking the main
 square and the road leading to old Kiruna. These are
 the first residential buildings in the new town.
 -------------------------------------------------------
+Title: Kiruna Church closes (102)
+Stakeholders: LKAB
+Scale: blueprints/effects
+Issuance date: 02/06/2024
+Type: Material effect
+Connections: 2
+Language: -
+Pages: -
+Coordinates: 67°85'18.9"N 20°23'31.5"E
+Description:
+On June 2, the Kiruna Church was closed to begin
+the necessary preparations for its relocation,
+following a solemn ceremony. The relocation is
+scheduled for the summer of 2025 and will take two
+days. Both the new site and the route for the move
+have already been determined. A significant period
+will pass between the relocation and the reopening
+of the church, voted "Sweden's most beautiful
+building constructed before 1950."
+---------------------------------------------------------
+Title: Mail to Kiruna kommun (2)
+Stakeholders: LKAB
+Scale: Text
+Issuance date: 19/03/2004
+Type: Prescriptive document
+Connections: 4
+Language: Swedish
+Pages: 1
+Description:
+This document is considered the act that initiates
+the process of relocating Kiruna. The company communicates
+its intention to construct a new mining
+level at a depth of 1,365 meters. Along with this,
+LKAB urges the municipality to begin the necessary
+planning to relocate the city, referring to a series of
+meetings held in previous months between the two
+stakeholders.
+------------------------------------------------------------
+Title: Detailed plan for LINBANAN 1. (42)
+Stakeholders: Kiruna kommun
+Scale: 1 : 500
+Issuance date: 03/2014
+Type: Prescriptive document
+Connections: 4
+Language: Swedish
+Pages: 1-15
+Description:
+This is the first Detailed Plan for the new city center,
+covering a very small area. It regulates the use of a
+portion of land that will host a single building. Its
+boundaries coincide with the outer footprint of the
+new Town Hall, "Kristallen," the first building to be
+constructed in the new Kiruna.
+---------------------------------------------------------------
+Title: Detailed Overview Plan for the Central Area
+of Kiruna 2014. (44)
+Stakeholders: Kiruna kommun
+Scale: 1 : 30,000
+Issuance date: 06/2014
+Type: Prescriptive document
+Connections: 4
+Language: Swedish
+Pages: 18-136-3-1
+Description:
+The Detailed Overview Plan is one of the three planning
+instruments available to Swedish administrations
+and represents an intermediate scale. Like the
+Overview Plan, compliance with it is not mandatory,
+but it serves as a supporting plan for Detailed Plans,
+sharing the characteristic of regulating a specific
+area of the Kiruna municipality rather than its entire
+extent, as the Overview Plan does. This specific plan
+focuses on the central area of Kiruna and its
+surroundings, incorporating all the projections of
+the Development Plan into a prescriptive tool.
+--------------------------------------------------------------------
+Title: Construction of new city hall begins (48)
+Stakeholders: LKAB
+Scale: blueprints/effects
+Issuance date: 2015
+Type: Material effect
+Connections: 5
+Language: -
+Pages: -
+Coordinates: 67°84'88.97"N 20°30'29.16"E
+Description:
+The Kiruna Town Hall was the first building to be
+rebuild in the new town center in 2015. It remained
+isolated for quite some time due to a slowdown in
+mining activities.
+----------------------------------------------------------------------------
+Title: Detail plan for square and commercial
+street (49)
+Stakeholders: Kiruna kommun
+Scale: 1 : 1,000
+Issuance date: 22/06/2016
+Type: Prescriptive document
+Connections: 7
+Language: Swedish
+Pages: 1-43
+Description:
+This plan, approved in July 2016, is the first detailed
+plan to be implemented from the new masterplan
+(Adjusted development plan). The document
+defines the entire area near the town hall, comprising
+a total of 9 blocks known for their density.
+Among these are the 6 buildings that will face the
+main square. The functions are mixed, both public
+and private, with residential being prominent, as
+well as the possibility of incorporating accommodation
+facilities such as hotels. For all buildings in this
+plan, the only height limit is imposed by air traffic
+--------------------------------------------------------------------------------
+Title: Vision 2099 (4)
+Stakeholders: Kiruna kommun
+Scale: Text
+Issuance date: 2004
+Type: Design document
+Connections: 3
+Language: Swedish
+Pages: 2-2
+Description:
+Vision 2099 is to be considered the first project for
+the new city of Kiruna. It was created by the municipality
+in response to the letter from LKAB. In these
+few lines, all the main aspects and expectations of
+the municipality for the new city are condensed.
+The document, which despite being a project document
+is presented anonymously, had the strength
+to influence the design process. The principles it
+contains proved to be fundamental in subsequent
+planning documents
+--------------------------------------------------------------------------------
+Title: Detailed plan for Gruvstaspark 2, etapp 3,
+del av SJ-området m m. (58)
+Stakeholders: Kiruna kommun
+Scale: 1 : 1,500
+Issuance date: 10/2018
+Type: Prescriptive document
+Connections: 3
+Language: Swedish
+Pages: 1-46
+Description:
+The third Detailed Plan of the second demolition
+phase covers a narrow, elongated area straddling
+the old railway. Like all areas within the "Gruvstadpark
+2" zone, its sole designated land use is for
+mining activities, although it will temporarily be
+used as a park during an interim phase.
+-------------------------------------------------------------
+Title: Deformation forecast (62)
+Stakeholders: LKAB
+Scale: 1: 12,000
+Issuance date: 04/2019
+Type: Technical document
+Connections: 9
+Language: Swedish
+Pages: 1
+Description:
+The third deformation forecast was published in
+2019, five years after the second. The line has not
+moved; what changes, as in the previous version,
+are the timing of the interventions and the shape
+of the areas underlying the deformation zone.
+--------------------------------------------------------
+Title: Demolition documentation, Kiruna City Hall
+(76)
+Stakeholders: Norrbotten Museum
+Scale: text
+Issuance date: 26/11/2020
+Type: Informative document
+Connections: 1
+Language: Swedish
+Pages: 162
+Coordinates: 67°50'57.0"N 20°18'15.8"E
+Description:
+This document was created to preserve the
+memory of the symbolic building before its demolition
+in April 2019. Conducted by the Norrbotten
+Museum, the detailed 162-page study analyzed the
+building's materials, both physically and chemically,
+taking advantage of the demolition to explore
+aspects that couldn't be examined while it was in
+use. This meticulous effort reflects a commitment
+to preserving knowledge of every detail of the
+structure.
+---------------------------------------------------------
+Title: Gruvstadspark 2, etapp 5, Kyrkan (81)
+Stakeholders: Kiruna kommun
+Scale: 1 : 2,000
+Issuance date: 04/09/2021
+Type: Prescriptive document
+Connections: 3
+Language: Swedish
+Pages: 1-56
+Description:
+The last detailed plan of the second planning phase
+concerns the area surrounding the Kiruna Church.
+Situated within a park, the area includes only six
+buildings, half of which serve religious functions.
+The plan also specifies that the church will be
+dismantled between 2025 and 2026 and reassembled
+at its new site by 2029.
+-----------------------------–---––-----------------------------

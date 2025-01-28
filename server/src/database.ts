@@ -20,13 +20,22 @@ export class Database {
       return parsed;
     });
 
+    let dbName = undefined;
+
+    if (env === "development") {
+      dbName = process.env.DB_NAME;
+    } else if (env === "test") {
+      dbName = process.env.DB_TEST_NAME;
+    } else {
+      dbName = process.env.DB_SEEDER_NAME;
+    }
+
     pool = new Pool({
       host: process.env.DB_HOST,
       port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 5432,
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
-      database:
-        env === "development" ? process.env.DB_NAME : process.env.DB_TEST_NAME,
+      database: dbName,
     });
   }
 
